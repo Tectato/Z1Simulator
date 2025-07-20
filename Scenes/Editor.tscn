@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpd75raqrkglk"]
+
+[ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
+[ext_resource type="Script" uid="uid://d3m2bxblodkx5" path="res://Scripts/Editor/viewController.gd" id="2_0hhuw"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
+radius = 0.01
+height = 0.02
+radial_segments = 8
+rings = 16
+
+[node name="Editor" type="Node3D"]
+
+[node name="Workspace" parent="." instance=ExtResource("1_0lbib")]
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint", "debugLabel")]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 2, 2, 2)
+current = true
+script = ExtResource("2_0hhuw")
+focusPoint = NodePath("../FocusPoint")
+debugLabel = NodePath("Interface/Label")
+
+[node name="Interface" type="Control" parent="Camera3D"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Camera3D/Interface"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Test"
+
+[node name="FocusPoint" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FocusPoint"]
+mesh = SubResource("SphereMesh_0hhuw")
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 6, 7)

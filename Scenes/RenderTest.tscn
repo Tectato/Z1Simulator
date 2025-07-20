@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://cmkc344t6gxaa"]
+
+[ext_resource type="Shader" uid="uid://cgembklie4r0e" path="res://Shaders/Sheet.gdshader" id="1_k631a"]
+[ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="1_w3eco"]
+[ext_resource type="Texture2D" uid="uid://dxh7g5m63sd3c" path="res://Test/11b_2.svg" id="3_sk2i1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mcx6c"]
+render_priority = 0
+shader = ExtResource("1_k631a")
+shader_parameter/albedo = ExtResource("1_w3eco")
+shader_parameter/thickness = 0.02
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sk2i1"]
+render_priority = 0
+shader = ExtResource("1_k631a")
+shader_parameter/albedo = ExtResource("3_sk2i1")
+shader_parameter/thickness = 0.02
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_t7i6u"]
+top_radius = 0.3
+bottom_radius = 0.3
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+material_override = SubResource("ShaderMaterial_mcx6c")
+axis = 1
+alpha_cut = 1
+texture = ExtResource("1_w3eco")
+
+[node name="Sprite3D2" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145658, -0.665908, 1.22769)
+material_override = SubResource("ShaderMaterial_sk2i1")
+axis = 1
+alpha_cut = 1
+texture = ExtResource("3_sk2i1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.748309, -0.414208, -1.32606)
+mesh = SubResource("CylinderMesh_t7i6u")
