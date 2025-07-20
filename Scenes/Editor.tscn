@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=6 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://d3m2bxblodkx5" path="res://Scripts/Editor/viewController.gd" id="2_0hhuw"]
+[ext_resource type="Script" uid="uid://s5h5vbrpbbx1" path="res://Scripts/Editor/selector.gd" id="3_trcuy"]
+[ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -22,20 +24,52 @@ debugLabel = NodePath("Interface/Label")
 
 [node name="Interface" type="Control" parent="Camera3D"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Label" type="Label" parent="Camera3D/Interface"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -63.0
+offset_top = -41.0
+offset_right = 63.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
 text = "Test"
+
+[node name="ClickArea" type="Control" parent="Camera3D/Interface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "debugLabel")]
+enabled = false
+collide_with_areas = true
+script = ExtResource("3_trcuy")
+camera = NodePath("..")
+debugLabel = NodePath("../Interface/Label")
+
+[node name="MoveRay" type="RayCast3D" parent="Camera3D"]
+enabled = false
+collision_mask = 3
+script = ExtResource("4_6ykgs")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="FocusPoint"]
 mesh = SubResource("SphereMesh_0hhuw")
 
-[node name="Camera3D2" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 6, 7)
+[connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
