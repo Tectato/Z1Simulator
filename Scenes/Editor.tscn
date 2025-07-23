@@ -1,9 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=12 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
+[ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
 [ext_resource type="Script" uid="uid://d3m2bxblodkx5" path="res://Scripts/Editor/viewController.gd" id="2_0hhuw"]
 [ext_resource type="Script" uid="uid://s5h5vbrpbbx1" path="res://Scripts/Editor/selector.gd" id="3_trcuy"]
 [ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
+[ext_resource type="Script" uid="uid://bg6t6is4srjq6" path="res://Scripts/Editor/editorInterface.gd" id="5_brgpd"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -28,6 +30,7 @@ radius = 0.1
 height = 0.2
 
 [node name="Editor" type="Node3D"]
+script = ExtResource("1_5v8xv")
 
 [node name="Workspace" parent="." instance=ExtResource("1_0lbib")]
 
@@ -49,18 +52,24 @@ script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
 debugLabel = NodePath("Interface/Label")
 
-[node name="Interface" type="Control" parent="Camera3D"]
+[node name="Interface" type="Control" parent="Camera3D" node_paths=PackedStringArray("editor")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_brgpd")
+editor = NodePath("../..")
 
 [node name="Label" type="Label" parent="Camera3D/Interface"]
 layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -88.0
 offset_right = 129.0
-offset_bottom = 88.0
+grow_vertical = 0
 theme_override_font_sizes/font_size = 64
 text = "Test"
 
@@ -71,6 +80,52 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MenuBar" type="MenuBar" parent="Camera3D/Interface"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="File" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
+size = Vector2i(121, 143)
+item_count = 6
+item_0/text = "New Project"
+item_0/id = 0
+item_1/text = "Save"
+item_1/id = 1
+item_2/text = "Save as..."
+item_2/id = 2
+item_3/text = "Load Project"
+item_3/id = 3
+item_4/text = "Import Project as Instance"
+item_4/id = 4
+item_5/text = "Import Sheet"
+item_5/id = 5
+
+[node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
+title = "Save Project"
+filters = PackedStringArray("*.json;Project File;project.json")
+
+[node name="LoadProjectDialog" type="FileDialog" parent="Camera3D/Interface"]
+auto_translate_mode = 1
+title = "Open Project"
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.json;Project File;project.json")
+
+[node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface"]
+auto_translate_mode = 1
+title = "Import Project as Instance"
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.json;Project File;project.json")
+
+[node name="ImportSheetDialog" type="FileDialog" parent="Camera3D/Interface"]
+auto_translate_mode = 1
+title = "Import Sheet"
+ok_button_text = "Open"
+file_mode = 1
+filters = PackedStringArray("*.svg;Vector Images;sheet.svg")
 
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
 enabled = false
@@ -95,3 +150,8 @@ visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
+[connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
+[connection signal="file_selected" from="Camera3D/Interface/SaveDialog" to="." method="saveAs"]
+[connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="loadProject"]
+[connection signal="file_selected" from="Camera3D/Interface/ImportProjectInstaceDialog" to="." method="importProjectInstace"]
+[connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]
