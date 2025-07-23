@@ -15,6 +15,7 @@ func _ready():
 		loadSVG(path)
 	else:
 		sprite.material_override.set_shader_parameter("albedo", sprite.texture)
+		sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	pass
 
 func setSelected(value):
@@ -26,6 +27,7 @@ func loadSVG(filepath : String):
 	var image = ImageTexture.create_from_image(Image.load_from_file(filepath))
 	sprite.set_texture(image)
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
+	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	
 	var rawString = FileAccess.get_file_as_string(path)
 	var elements = rawString.split("\n")

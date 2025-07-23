@@ -1,13 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=10 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://d3m2bxblodkx5" path="res://Scripts/Editor/viewController.gd" id="2_0hhuw"]
 [ext_resource type="Script" uid="uid://s5h5vbrpbbx1" path="res://Scripts/Editor/selector.gd" id="3_trcuy"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_6ykgs"]
-top_radius = 0.01
-bottom_radius = 0.01
-height = 100.0
+[ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -15,9 +11,36 @@ height = 0.02
 radial_segments = 8
 rings = 16
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ykgs"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_dfuwn"]
+material = SubResource("StandardMaterial3D_6ykgs")
+radius = 0.1
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5v8xv"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_brgpd"]
+material = SubResource("StandardMaterial3D_5v8xv")
+radius = 0.1
+height = 0.2
+
 [node name="Editor" type="Node3D"]
 
 [node name="Workspace" parent="." instance=ExtResource("1_0lbib")]
+
+[node name="MoveRay" type="RayCast3D" parent="." node_paths=PackedStringArray("selector", "debug1", "debug2")]
+transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 2, 2, 2)
+enabled = false
+exclude_parent = false
+collision_mask = 3
+collide_with_areas = true
+script = ExtResource("4_6ykgs")
+selector = NodePath("../Camera3D/SelectionRay")
+debug1 = NodePath("../Debug1")
+debug2 = NodePath("../Debug2")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint", "debugLabel")]
 transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.499999, -0.707107, -0.353553, 0.612372, 2, 2, 2)
@@ -36,17 +59,8 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="Camera3D/Interface"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -63.0
-offset_top = -41.0
-offset_right = 63.0
-offset_bottom = 41.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 129.0
+offset_bottom = 88.0
 theme_override_font_sizes/font_size = 64
 text = "Test"
 
@@ -58,31 +72,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "downcaster", "debugLabel")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
 enabled = false
 collide_with_areas = true
 script = ExtResource("3_trcuy")
 camera = NodePath("..")
-mover = NodePath("../MoveRay")
-downcaster = NodePath("../DowncastRay")
+mover = NodePath("../../MoveRay")
 debugLabel = NodePath("../Interface/Label")
-
-[node name="MoveRay" type="RayCast3D" parent="Camera3D"]
-enabled = false
-collide_with_areas = true
-
-[node name="DowncastRay" type="RayCast3D" parent="Camera3D"]
-transform = Transform3D(0.707107, 0, -0.707107, -0.353553, 0.866026, -0.353553, 0.612373, 0.5, 0.612373, 0, 0, 0)
-enabled = false
-collision_mask = 3
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/DowncastRay"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -50, 0)
-mesh = SubResource("CylinderMesh_6ykgs")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="FocusPoint"]
 mesh = SubResource("SphereMesh_0hhuw")
+
+[node name="Debug1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02645, 0)
+visible = false
+mesh = SubResource("SphereMesh_dfuwn")
+
+[node name="Debug2" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("SphereMesh_brgpd")
 
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]

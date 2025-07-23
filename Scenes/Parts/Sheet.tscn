@@ -1,13 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=7 format=3 uid="uid://b2845uayksbce"]
 
 [ext_resource type="Shader" uid="uid://cgembklie4r0e" path="res://Shaders/Sheet.gdshader" id="1_cw2qr"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
 [ext_resource type="Script" uid="uid://dqb3hgknwtj7k" path="res://Scripts/Parts/sheet.gd" id="3_k6d36"]
+[ext_resource type="Shader" uid="uid://n0vyy28prjuf" path="res://Shaders/SheetHighlight.gdshader" id="4_ptygs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k6d36"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("1_cw2qr")
+shader_parameter/albedo = ExtResource("2_k6d36")
+shader_parameter/thickness = 0.02
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ptygs"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("4_ptygs")
 shader_parameter/albedo = ExtResource("2_k6d36")
 shader_parameter/thickness = 0.02
 
@@ -17,6 +25,7 @@ collider = NodePath("Outline")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 material_override = SubResource("ShaderMaterial_k6d36")
+material_overlay = SubResource("ShaderMaterial_ptygs")
 centered = false
 pixel_size = 0.001
 axis = 1

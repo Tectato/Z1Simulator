@@ -1,10 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://b7jvhmxdbxm1d"]
+[gd_scene load_steps=7 format=3 uid="uid://b7jvhmxdbxm1d"]
 
 [ext_resource type="Script" uid="uid://d3u1k7kcoct3t" path="res://Scripts/Parts/selectable.gd" id="1_5g07p"]
+[ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_ax1co"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqpos"]
 metallic = 1.0
 roughness = 0.48
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ag57m"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_ax1co")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_vqpos"]
 top_radius = 0.02
@@ -21,6 +27,7 @@ collider = NodePath("Area3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_vqpos")
+material_overlay = SubResource("ShaderMaterial_ag57m")
 mesh = SubResource("CylinderMesh_vqpos")
 
 [node name="Area3D" type="Area3D" parent="."]
