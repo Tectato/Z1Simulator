@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://b7jvhmxdbxm1d"]
+
+[ext_resource type="Script" uid="uid://d3u1k7kcoct3t" path="res://Scripts/Parts/selectable.gd" id="1_5g07p"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqpos"]
+metallic = 1.0
+roughness = 0.48
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vqpos"]
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ax1co"]
+height = 0.2
+radius = 0.02
+
+[node name="Pin" type="Node3D" node_paths=PackedStringArray("collider")]
+script = ExtResource("1_5g07p")
+collider = NodePath("Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_vqpos")
+mesh = SubResource("CylinderMesh_vqpos")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_ax1co")

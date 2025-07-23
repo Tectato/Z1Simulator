@@ -11,18 +11,26 @@ shader = ExtResource("1_cw2qr")
 shader_parameter/albedo = ExtResource("2_k6d36")
 shader_parameter/thickness = 0.02
 
-[node name="Sheet" type="Node3D"]
+[node name="Sheet" type="Node3D" node_paths=PackedStringArray("collider")]
 script = ExtResource("3_k6d36")
+collider = NodePath("Outline")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 material_override = SubResource("ShaderMaterial_k6d36")
+centered = false
 pixel_size = 0.001
 axis = 1
 texture = ExtResource("2_k6d36")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Outline" type="Area3D" parent="."]
 
-[node name="CollisionPolygon3D" type="CollisionPolygon3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+[node name="Polygon" type="CollisionPolygon3D" parent="Outline"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 depth = 0.05
-polygon = PackedVector2Array(-0.162606, 0.246996, -0.207889, 0.102915, -0.341678, 0.0987986, -0.33962, -0.0576325, -0.199655, -0.0535159, -0.162606, -0.244938, -0.00411654, -0.246996, 0.0349911, -0.0617491, 0.181131, -0.0596908, 0.185247, 0.100857, 0.0411662, 0.0987986, 0.00617492, 0.249055)
+polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+visible = false
+polygon = PackedVector2Array()
+depth = 0.01

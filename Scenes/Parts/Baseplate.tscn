@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://b3mp481i5xfq"]
+
+[ext_resource type="Shader" uid="uid://b6laiy3d8ygyk" path="res://Shaders/Baseplate.gdshader" id="1_83lyt"]
+[ext_resource type="Texture2D" uid="uid://u4svysosanbt" path="res://Sprites/staticPinGrid.png" id="2_83lyt"]
+[ext_resource type="PackedScene" uid="uid://bthy0n8a2w4j" path="res://Scenes/Parts/StaticPin.tscn" id="3_ax0fx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3p2xn"]
+render_priority = 0
+shader = ExtResource("1_83lyt")
+shader_parameter/albedo = ExtResource("2_83lyt")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_frs87"]
+size = Vector2(4, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ax0fx"]
+size = Vector3(4, 0.1, 4)
+
+[node name="Baseplate" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_3p2xn")
+mesh = SubResource("PlaneMesh_frs87")
+
+[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+shape = SubResource("BoxShape3D_ax0fx")
+
+[node name="StaticPin" parent="." instance=ExtResource("3_ax0fx")]
+
+[node name="StaticPin2" parent="." instance=ExtResource("3_ax0fx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
+
+[node name="StaticPin3" parent="." instance=ExtResource("3_ax0fx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
+
+[node name="StaticPin4" parent="." instance=ExtResource("3_ax0fx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0.3)

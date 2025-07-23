@@ -1,25 +1,28 @@
 [gd_scene load_steps=9 format=3 uid="uid://sbi6ilpar4vc"]
 
 [ext_resource type="Script" uid="uid://dmrnm764to46c" path="res://Scripts/Parts/movable.gd" id="1_8btax"]
+[ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
+[ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_muvhk"]
-[ext_resource type="Shader" uid="uid://cgembklie4r0e" path="res://Shaders/Sheet.gdshader" id="3_jtmtj"]
-[ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="4_fpxkw"]
-[ext_resource type="Texture2D" uid="uid://dxh7g5m63sd3c" path="res://Test/11b_2.svg" id="5_lxv6g"]
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="6_fpxkw"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gfx74"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8btax"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_w0wfr"]
-resource_local_to_scene = true
-render_priority = 0
-shader = ExtResource("3_jtmtj")
-shader_parameter/albedo = ExtResource("4_fpxkw")
-shader_parameter/thickness = 0.02
+[sub_resource type="Environment" id="Environment_jtmtj"]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ssao_enabled = true
+ssao_radius = 0.16
+ssao_intensity = 4.3
+ssao_light_affect = 1.0
 
 [node name="Workspace" type="Node3D"]
+script = ExtResource("1_lxv6g")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 mesh = SubResource("BoxMesh_gfx74")
 script = ExtResource("1_8btax")
 
@@ -29,37 +32,37 @@ script = ExtResource("1_8btax")
 shape = SubResource("BoxShape3D_8btax")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.60321, -0.28427, -0.560475)
 mesh = SubResource("BoxMesh_gfx74")
 script = ExtResource("1_8btax")
 
-[node name="Area3D_2" type="Area3D" parent="MeshInstance3D2"]
+[node name="Area3D" type="Area3D" parent="MeshInstance3D2"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/Area3D_2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/Area3D"]
 shape = SubResource("BoxShape3D_8btax")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -2, 2)
-mesh = SubResource("BoxMesh_gfx74")
-script = ExtResource("1_8btax")
-
-[node name="Area3D_3" type="Area3D" parent="MeshInstance3D3"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D3/Area3D_3"]
-shape = SubResource("BoxShape3D_8btax")
+[node name="Baseplate" parent="." instance=ExtResource("2_fpxkw")]
 
 [node name="Sheet" parent="." instance=ExtResource("2_muvhk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.157725, 0.163191, 0.270155)
+path = "G:\\codingProjects\\z1simulator\\Test\\AA.svg"
+
+[node name="Sheet3" parent="." instance=ExtResource("2_muvhk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.458015, 0.207477, 0.270155)
+path = "G:\\codingProjects\\z1simulator\\Test\\AA.svg"
 
 [node name="Sheet2" parent="." instance=ExtResource("2_muvhk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23683, 0.121636, 0.551206)
+path = "G:\\codingProjects\\z1simulator\\Test\\11b_2.svg"
 
-[node name="Sprite3D" parent="Sheet2" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0718143, 0)
-material_override = SubResource("ShaderMaterial_w0wfr")
-texture = ExtResource("5_lxv6g")
+[node name="Pin" parent="." instance=ExtResource("6_fpxkw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11294, 0.127545, -0.118007)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.612372, -0.707107, -0.353553, 0.5, -3.78552e-08, 0.866025, -0.612372, -0.707107, 0.353553, 0, 0, 0)
+transform = Transform3D(0.612372, -0.707107, -0.353554, 0.5, -2.2954e-08, 0.866025, -0.612372, -0.707107, 0.353554, 0, 2, 0)
+shadow_enabled = true
+shadow_blur = 0.606
+directional_shadow_mode = 1
 
-[editable path="Sheet2"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jtmtj")

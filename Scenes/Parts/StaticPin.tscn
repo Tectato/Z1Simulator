@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bthy0n8a2w4j"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nvwym"]
+albedo_color = Color(0.589096, 0.589096, 0.589096, 1)
+metallic = 1.0
+roughness = 0.38
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nvwym"]
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.5
+
+[node name="StaticPin" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+material_override = SubResource("StandardMaterial3D_nvwym")
+mesh = SubResource("CylinderMesh_nvwym")

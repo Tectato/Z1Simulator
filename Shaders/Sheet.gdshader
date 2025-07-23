@@ -16,7 +16,7 @@ float getHeight(vec4 color){
 
 void fragment() {
 	vec3 viewDir = normalize(vec3(VIEW) * mat3(TANGENT, -BINORMAL, NORMAL));
-	
+
 	vec4 topColor = texture(albedo, UV);
 	float topHeight = getHeight(topColor);
 	if (selected){

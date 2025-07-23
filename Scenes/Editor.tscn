@@ -3,7 +3,11 @@
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://d3m2bxblodkx5" path="res://Scripts/Editor/viewController.gd" id="2_0hhuw"]
 [ext_resource type="Script" uid="uid://s5h5vbrpbbx1" path="res://Scripts/Editor/selector.gd" id="3_trcuy"]
-[ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_6ykgs"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 100.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -16,7 +20,7 @@ rings = 16
 [node name="Workspace" parent="." instance=ExtResource("1_0lbib")]
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint", "debugLabel")]
-transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 2, 2, 2)
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.499999, -0.707107, -0.353553, 0.612372, 2, 2, 2)
 current = true
 script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
@@ -31,7 +35,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="Camera3D/Interface"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -55,17 +58,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "debugLabel")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "downcaster", "debugLabel")]
 enabled = false
 collide_with_areas = true
 script = ExtResource("3_trcuy")
 camera = NodePath("..")
+mover = NodePath("../MoveRay")
+downcaster = NodePath("../DowncastRay")
 debugLabel = NodePath("../Interface/Label")
 
 [node name="MoveRay" type="RayCast3D" parent="Camera3D"]
 enabled = false
+collide_with_areas = true
+
+[node name="DowncastRay" type="RayCast3D" parent="Camera3D"]
+transform = Transform3D(0.707107, 0, -0.707107, -0.353553, 0.866026, -0.353553, 0.612373, 0.5, 0.612373, 0, 0, 0)
+enabled = false
 collision_mask = 3
-script = ExtResource("4_6ykgs")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/DowncastRay"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -50, 0)
+mesh = SubResource("CylinderMesh_6ykgs")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 

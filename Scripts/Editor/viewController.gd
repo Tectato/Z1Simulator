@@ -34,10 +34,12 @@ func _process(delta: float) -> void:
 			var lookDelta = -mouseDelta * Global.lookSensitivity
 			var posRelative = global_position - focusPoint.global_position
 			var posRelativeFlat = posRelative * Vector3(1,0,1)
-			var currentAngle = posRelativeFlat.normalized().angle_to(Vector3(0,0,1)) * sign(Vector3(1,0,0).dot(posRelativeFlat))
-			posRelative = posRelative.rotated(Vector3(0,1,0), -currentAngle)
-			posRelative = posRelative.rotated(Vector3(1,0,0), lookDelta.y)
-			posRelative = posRelative.rotated(Vector3(0,1,0), currentAngle + lookDelta.x)
+			var currentYaw = posRelativeFlat.normalized().angle_to(Vector3(0,0,1)) * sign(Vector3(1,0,0).dot(posRelativeFlat))
+			var currentPitch = rotation.x
+			posRelative = posRelative.rotated(Vector3(0,1,0), -currentYaw)
+			if abs(rad_to_deg(currentPitch + lookDelta.y)) < 89.0:
+				posRelative = posRelative.rotated(Vector3(1,0,0), lookDelta.y)
+			posRelative = posRelative.rotated(Vector3(0,1,0), currentYaw + lookDelta.x)
 			global_position = focusPoint.global_position + posRelative
 			look_at(focusPoint.global_position)
 
