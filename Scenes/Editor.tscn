@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=28 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -6,6 +6,41 @@
 [ext_resource type="Script" uid="uid://s5h5vbrpbbx1" path="res://Scripts/Editor/selector.gd" id="3_trcuy"]
 [ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
 [ext_resource type="Script" uid="uid://bg6t6is4srjq6" path="res://Scripts/Editor/editorInterface.gd" id="5_brgpd"]
+[ext_resource type="Texture2D" uid="uid://c6j8lhvash62a" path="res://Sprites/Buttons/Modes/select_inactive.png" id="6_847jc"]
+[ext_resource type="Texture2D" uid="uid://bewgkcvn3nn6i" path="res://Sprites/Buttons/Modes/select_active.png" id="7_ir51w"]
+[ext_resource type="Texture2D" uid="uid://bppmh3gus1iap" path="res://Sprites/Buttons/Modes/select_lit.png" id="8_fx05v"]
+[ext_resource type="Texture2D" uid="uid://drhwv66r33u5r" path="res://Sprites/Buttons/Modes/edit_inactive.png" id="9_crs40"]
+[ext_resource type="Texture2D" uid="uid://bhgjl4wm26jc4" path="res://Sprites/Buttons/Modes/edit_active.png" id="10_jrc0q"]
+[ext_resource type="Texture2D" uid="uid://cs3h7n2dx4dt7" path="res://Sprites/Buttons/Modes/edit_lit.png" id="11_8k47n"]
+[ext_resource type="Texture2D" uid="uid://dmnw7b8snx2qp" path="res://Sprites/Buttons/Modes/manage_inactive.png" id="12_jnb0j"]
+[ext_resource type="Texture2D" uid="uid://bjfsdwf0v20em" path="res://Sprites/Buttons/Modes/manage_active.png" id="13_i66mr"]
+[ext_resource type="Texture2D" uid="uid://vqwumundj5ds" path="res://Sprites/Buttons/Modes/manage_lit.png" id="14_1k7u0"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_crs40"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_crs40"]
+device = -1
+keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_jrc0q"]
+events = [SubResource("InputEventKey_crs40")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_8k47n"]
+device = -1
+keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_jnb0j"]
+events = [SubResource("InputEventKey_8k47n")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_i66mr"]
+device = -1
+keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_1k7u0"]
+events = [SubResource("InputEventKey_i66mr")]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -38,7 +73,7 @@ script = ExtResource("1_5v8xv")
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 2, 2, 2)
 enabled = false
 exclude_parent = false
-collision_mask = 3
+collision_mask = 7
 collide_with_areas = true
 script = ExtResource("4_6ykgs")
 selector = NodePath("../Camera3D/SelectionRay")
@@ -108,27 +143,70 @@ filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="LoadProjectDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
-title = "Open Project"
+title = "Open a File"
 ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
-title = "Import Project as Instance"
+title = "Open a File"
 ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="ImportSheetDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
-title = "Import Sheet"
+title = "Open File(s)"
 ok_button_text = "Open"
 file_mode = 1
 filters = PackedStringArray("*.svg;Vector Images;sheet.svg")
 
+[node name="ModeBar" type="HBoxContainer" parent="Camera3D/Interface"]
+texture_filter = 1
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_right = -44.0
+offset_bottom = 16.0
+grow_horizontal = 0
+scale = Vector2(2, 2)
+theme_override_constants/separation = 1
+
+[node name="Select" type="TextureButton" parent="Camera3D/Interface/ModeBar"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_crs40")
+shortcut = SubResource("Shortcut_jrc0q")
+texture_normal = ExtResource("6_847jc")
+texture_pressed = ExtResource("7_ir51w")
+texture_hover = ExtResource("8_fx05v")
+
+[node name="Edit" type="TextureButton" parent="Camera3D/Interface/ModeBar"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_crs40")
+shortcut = SubResource("Shortcut_jnb0j")
+texture_normal = ExtResource("9_crs40")
+texture_pressed = ExtResource("10_jrc0q")
+texture_hover = ExtResource("11_8k47n")
+
+[node name="Manage" type="TextureButton" parent="Camera3D/Interface/ModeBar"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_crs40")
+shortcut = SubResource("Shortcut_1k7u0")
+texture_normal = ExtResource("12_jnb0j")
+texture_pressed = ExtResource("13_i66mr")
+texture_hover = ExtResource("14_1k7u0")
+
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
 enabled = false
+collision_mask = 3
 collide_with_areas = true
 script = ExtResource("3_trcuy")
 camera = NodePath("..")
@@ -155,3 +233,6 @@ mesh = SubResource("SphereMesh_brgpd")
 [connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="loadProject"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportProjectInstaceDialog" to="." method="importProjectInstace"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]
+[connection signal="toggled" from="Camera3D/Interface/ModeBar/Select" to="Camera3D/Interface" method="_on_select_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/ModeBar/Edit" to="Camera3D/Interface" method="_on_edit_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/ModeBar/Manage" to="Camera3D/Interface" method="_on_manage_toggled"]

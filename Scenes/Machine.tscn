@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bid8yuc1ufp1d"]
+
+[ext_resource type="Script" uid="uid://baw1bypo5hmfp" path="res://Scripts/Editor/machine.gd" id="1_ovuu0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ovuu0"]
+
+[node name="Machine" type="Node3D"]
+script = ExtResource("1_ovuu0")
+
+[node name="AlignmentManager" type="Node" parent="."]
+
+[node name="BoundingBox" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundingBox"]
+shape = SubResource("BoxShape3D_ovuu0")
+
+[node name="Parts" type="Node3D" parent="."]

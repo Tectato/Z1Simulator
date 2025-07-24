@@ -6,6 +6,10 @@ extends Control
 @onready var importProjectDialog = $ImportProjectInstaceDialog
 @onready var importSheetDialog = $ImportSheetDialog
 
+@onready var ModeSelect = $ModeBar/Select
+@onready var ModeEdit = $ModeBar/Edit
+@onready var ModeManage = $ModeBar/Manage
+
 func _on_file_id_pressed(id: int) -> void:
 	match(id):
 		0:
@@ -23,3 +27,16 @@ func _on_file_id_pressed(id: int) -> void:
 			importProjectDialog.popup()
 		5:
 			importSheetDialog.popup()
+
+
+func _on_select_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		Global.workspace.setMode(Workspace.Mode.Select)
+
+func _on_edit_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		Global.workspace.setMode(Workspace.Mode.Edit)
+
+func _on_manage_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		Global.workspace.setMode(Workspace.Mode.Manage)

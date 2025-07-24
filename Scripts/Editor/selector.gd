@@ -13,6 +13,19 @@ var dragging = false
 var selected : Selectable
 var ignoreList = []
 
+func _ready() -> void:
+	Global.workspace.modeChanged.connect(modeChanged)
+
+func modeChanged(mode):
+	deselect()
+	match(mode):
+		Workspace.Mode.Select:
+			collision_mask = 0b1000
+		Workspace.Mode.Edit:
+			collision_mask = 0b0011
+		Workspace.Mode.Manage:
+			collision_mask = 0b0010
+
 func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
 		if event.is_action_pressed("mouse_left"):
@@ -74,9 +87,7 @@ func setGrabpoint():
 	#debugLabel.text = str(mouseRelative) + "\n" + str(selected.global_position)
 
 func select(target):
-	if selected:
-		selected.setSelected(false)
-		selected = null
+	deselect()
 	if target:
 		ignoreList.append(target)
 		var targetParent = target.get_parent()
@@ -89,3 +100,8 @@ func select(target):
 			print("Not selectable")
 	else:
 		print("No Hit")
+
+func deselect():
+	if selected:
+		selected.setSelected(false)
+		selected = null

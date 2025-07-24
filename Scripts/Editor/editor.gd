@@ -3,6 +3,7 @@ class_name Editor
 
 var savePath = ""
 
+
 func newProject():
 	pass
 
