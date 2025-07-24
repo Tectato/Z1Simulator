@@ -139,11 +139,13 @@ item_5/id = 5
 
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
 title = "Save Project"
+initial_position = 1
 filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="LoadProjectDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
 title = "Open a File"
+initial_position = 1
 ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json;Project File;project.json")
@@ -151,6 +153,7 @@ filters = PackedStringArray("*.json;Project File;project.json")
 [node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
 title = "Open a File"
+initial_position = 1
 ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.json;Project File;project.json")
@@ -158,6 +161,7 @@ filters = PackedStringArray("*.json;Project File;project.json")
 [node name="ImportSheetDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
 title = "Open File(s)"
+initial_position = 1
 ok_button_text = "Open"
 file_mode = 1
 filters = PackedStringArray("*.svg;Vector Images;sheet.svg")
@@ -204,6 +208,19 @@ texture_normal = ExtResource("12_jnb0j")
 texture_pressed = ExtResource("13_i66mr")
 texture_hover = ExtResource("14_1k7u0")
 
+[node name="ImportChoice" type="ConfirmationDialog" parent="Camera3D/Interface"]
+initial_position = 1
+size = Vector2i(412, 100)
+ok_button_text = "Import into current Project"
+dialog_text = "Add or load Machine"
+cancel_button_text = "Load as Project"
+
+[node name="SaveRequest" type="ConfirmationDialog" parent="Camera3D/Interface"]
+initial_position = 1
+ok_button_text = "Yes"
+dialog_text = "Save current project?"
+cancel_button_text = "No"
+
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
 enabled = false
 collision_mask = 3
@@ -230,9 +247,15 @@ mesh = SubResource("SphereMesh_brgpd")
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
 [connection signal="file_selected" from="Camera3D/Interface/SaveDialog" to="." method="saveAs"]
-[connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="loadProject"]
+[connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="_on_load_project_dialog_file_selected"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportProjectInstaceDialog" to="." method="importProjectInstace"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]
+[connection signal="files_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheets"]
 [connection signal="toggled" from="Camera3D/Interface/ModeBar/Select" to="Camera3D/Interface" method="_on_select_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/ModeBar/Edit" to="Camera3D/Interface" method="_on_edit_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/ModeBar/Manage" to="Camera3D/Interface" method="_on_manage_toggled"]
+[connection signal="canceled" from="Camera3D/Interface/ImportChoice" to="Camera3D/Interface" method="_on_import_choice_canceled"]
+[connection signal="confirmed" from="Camera3D/Interface/ImportChoice" to="Camera3D/Interface" method="_on_import_choice_confirmed"]
+[connection signal="canceled" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_canceled"]
+[connection signal="confirmed" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_confirmed"]
+[connection signal="custom_action" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_custom_action"]

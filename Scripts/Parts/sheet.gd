@@ -9,6 +9,7 @@ const scaleFactor = 0.001
 @onready var debugPolygon = $CSGPolygon3D
 @export var path : String
 var partOffset : Vector2
+var bounds = []
 
 func _ready():
 	if path:
@@ -22,12 +23,21 @@ func setSelected(value):
 	super.setSelected(value)
 	sprite.set_instance_shader_parameter("selected", value)
 
+func getBounds():
+	if bounds.size() > 0:
+		return bounds
+	else:
+		return super.getBounds()
+
 func loadSVG(filepath : String):
 	path = filepath
 	var image = ImageTexture.create_from_image(Image.load_from_file(filepath))
 	sprite.set_texture(image)
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
+	
+	var size = sprite.texture.get_size()/100.0
+	bounds = [-size.x/2,-0.05,-size.y/2,size.x/2,0.05,size.y/2]
 	
 	var rawString = FileAccess.get_file_as_string(path)
 	var elements = rawString.split("\n")

@@ -5,10 +5,15 @@ extends Control
 @onready var loadProjectDialog = $LoadProjectDialog
 @onready var importProjectDialog = $ImportProjectInstaceDialog
 @onready var importSheetDialog = $ImportSheetDialog
+@onready var importChoiceDialog = $ImportChoice
+@onready var saveRequestDialog = $SaveRequest
 
 @onready var ModeSelect = $ModeBar/Select
 @onready var ModeEdit = $ModeBar/Edit
 @onready var ModeManage = $ModeBar/Manage
+
+func _ready() -> void:
+	saveRequestDialog.add_button("Cancel", true, "Cancel")
 
 func _on_file_id_pressed(id: int) -> void:
 	match(id):
@@ -40,3 +45,26 @@ func _on_edit_toggled(toggled_on: bool) -> void:
 func _on_manage_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		Global.workspace.setMode(Workspace.Mode.Manage)
+
+func _on_import_choice_confirmed() -> void:
+	editor.importProjectInstace()
+
+func _on_import_choice_canceled() -> void:
+	if !editor.saved:
+		saveRequestDialog.popup()
+	else:
+		editor.loadProject()
+
+
+func _on_save_request_confirmed() -> void:
+	if editor.savePath.length() > 0:
+		editor.save()
+		editor.loadProject()
+	else:
+		saveDialog.popup()
+
+func _on_save_request_custom_action(action: StringName) -> void:
+	saveRequestDialog.hide()
+
+func _on_save_request_canceled() -> void:
+	editor.loadProject()

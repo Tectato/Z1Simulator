@@ -7,8 +7,10 @@ void fragment() {
 	if (selected){
 		ALPHA = 0.2;
 		EMISSION = selectedColor;
+		DEPTH = 1000.0;
 	} else {
 		ALPHA = 0.0;
 		EMISSION = vec3(0,0,0);
+		DEPTH = FRAGCOORD.z;
 	}
 }

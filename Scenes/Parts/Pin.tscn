@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://b7jvhmxdbxm1d"]
 
-[ext_resource type="Script" uid="uid://d3u1k7kcoct3t" path="res://Scripts/Parts/selectable.gd" id="1_5g07p"]
+[ext_resource type="Script" uid="uid://3ryssge2xugi" path="res://Scripts/Parts/pin.gd" id="1_ax1co"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_ax1co"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqpos"]
@@ -21,9 +21,8 @@ height = 0.2
 height = 0.2
 radius = 0.02
 
-[node name="Pin" type="Node3D" node_paths=PackedStringArray("collider")]
-script = ExtResource("1_5g07p")
-collider = NodePath("Area3D")
+[node name="Pin" type="Node3D"]
+script = ExtResource("1_ax1co")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_vqpos")

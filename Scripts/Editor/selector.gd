@@ -10,6 +10,7 @@ var mouseDragOrigin : Vector3
 var mouseRelative : Vector3
 var partDragOrigin : Vector3
 var dragging = false
+var placing = false
 var selected : Selectable
 var ignoreList = []
 
@@ -30,7 +31,10 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
 		if event.is_action_pressed("mouse_left"):
 			clickPos = get_viewport().get_mouse_position()
-			if selected:
+			if placing:
+				placing = false
+				deselect()
+			elif selected:
 				setGrabpoint()
 		if event.is_action_released("mouse_left"):
 			if dragging:
@@ -40,12 +44,12 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 			dragging = false
 
 func _process(delta: float) -> void:
-	if selected and Input.is_action_pressed("mouse_left"):
+	if selected and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if dist > 5:
 				dragging = true
-		else:
+		if dragging or placing:
 			if selected != null:
 				mover.move()
 
@@ -85,6 +89,13 @@ func setGrabpoint():
 	mouseRelative = mouseDragOrigin - selected.global_position
 	mouseRelative = Vector3(mouseRelative.x,0,mouseRelative.z)
 	#debugLabel.text = str(mouseRelative) + "\n" + str(selected.global_position)
+
+func place(part : Movable):
+	select(part.collider)
+	setGrabpoint()
+	var bounds = part.getBounds()
+	mouseRelative = -Vector3((bounds[0]+bounds[3])/2, (bounds[1]+bounds[4])/2, (bounds[2]+bounds[5])/2)
+	placing = true
 
 func select(target):
 	deselect()
