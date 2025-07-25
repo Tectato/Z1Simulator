@@ -13,3 +13,8 @@ func serialize():
 func deserialize(path):
 	pass
 	
+
+func addPart(newPart):
+	parts.append(newPart)
+	if newPart is Pin:
+		newPart.scale = Vector3(1,4,1) #TODO determine height

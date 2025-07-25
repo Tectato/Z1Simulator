@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=56 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -15,6 +15,28 @@
 [ext_resource type="Texture2D" uid="uid://dmnw7b8snx2qp" path="res://Sprites/Buttons/Modes/manage_inactive.png" id="12_jnb0j"]
 [ext_resource type="Texture2D" uid="uid://bjfsdwf0v20em" path="res://Sprites/Buttons/Modes/manage_active.png" id="13_i66mr"]
 [ext_resource type="Texture2D" uid="uid://vqwumundj5ds" path="res://Sprites/Buttons/Modes/manage_lit.png" id="14_1k7u0"]
+[ext_resource type="Script" uid="uid://udlbwpk5xf3g" path="res://Scripts/Editor/simulationControls.gd" id="15_df5t7"]
+[ext_resource type="Texture2D" uid="uid://cju8trkoxxpcl" path="res://Sprites/Buttons/Simulation/prevStep.png" id="15_jnb0j"]
+[ext_resource type="Texture2D" uid="uid://md4mw8iyane0" path="res://Sprites/Buttons/Simulation/reset.png" id="15_pswvd"]
+[ext_resource type="Texture2D" uid="uid://kotm4prd5hmq" path="res://Sprites/Buttons/Simulation/reset_pressed.png" id="16_df5t7"]
+[ext_resource type="Texture2D" uid="uid://dpgev7qdbsqhh" path="res://Sprites/Buttons/Simulation/prevStep_pressed.png" id="16_i66mr"]
+[ext_resource type="Texture2D" uid="uid://c2edvy5n0vf4o" path="res://Sprites/Buttons/Simulation/prevStep_lit.png" id="17_1k7u0"]
+[ext_resource type="Texture2D" uid="uid://mhfr41cywtes" path="res://Sprites/Buttons/Simulation/reset_lit.png" id="17_pux46"]
+[ext_resource type="Texture2D" uid="uid://edgb7ojftx35" path="res://Sprites/Buttons/Simulation/play.png" id="18_m0sft"]
+[ext_resource type="Texture2D" uid="uid://u4fi7if67ey4" path="res://Sprites/Buttons/Simulation/play_lit.png" id="20_7v7kd"]
+[ext_resource type="Texture2D" uid="uid://bieydcou0i65q" path="res://Sprites/Buttons/Simulation/nextStep.png" id="21_pswvd"]
+[ext_resource type="Texture2D" uid="uid://cf61d7y28d3xl" path="res://Sprites/Buttons/Simulation/nextStep_pressed.png" id="22_df5t7"]
+[ext_resource type="Texture2D" uid="uid://b52qrp6glscax" path="res://Sprites/Buttons/Simulation/pause_pressed.png" id="23_df5t7"]
+[ext_resource type="Texture2D" uid="uid://cgnvvipy2yh1n" path="res://Sprites/Buttons/Simulation/nextStep_lit.png" id="23_pux46"]
+[ext_resource type="Texture2D" uid="uid://n0qiwa4hm45i" path="res://Sprites/Buttons/Parts/sheet.png" id="28_v7xow"]
+[ext_resource type="Texture2D" uid="uid://c2l2wry5ai8c4" path="res://Sprites/Buttons/Parts/sheet_active.png" id="29_cv1oh"]
+[ext_resource type="Texture2D" uid="uid://ddu37tpwiuc7u" path="res://Sprites/Buttons/Parts/sheet_lit.png" id="30_vtcxi"]
+[ext_resource type="Texture2D" uid="uid://rx1h2lhhnpk3" path="res://Sprites/Buttons/Parts/logicPin.png" id="31_y3ns8"]
+[ext_resource type="Texture2D" uid="uid://uxguglkdmj7s" path="res://Sprites/Buttons/Parts/logicPin_active.png" id="32_625ua"]
+[ext_resource type="Texture2D" uid="uid://bfmtr4ye6rroe" path="res://Sprites/Buttons/Parts/logicPin_lit.png" id="33_2ery0"]
+[ext_resource type="Texture2D" uid="uid://rk7b7u020vb3" path="res://Sprites/Buttons/Parts/clockPin.png" id="34_syg30"]
+[ext_resource type="Texture2D" uid="uid://c75i67tcahpo7" path="res://Sprites/Buttons/Parts/clockPin_active.png" id="35_n4fht"]
+[ext_resource type="Texture2D" uid="uid://7tivbhc2qew7" path="res://Sprites/Buttons/Parts/clockPin_lit.png" id="36_3icuf"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_crs40"]
 
@@ -41,6 +63,28 @@ unicode = 51
 
 [sub_resource type="Shortcut" id="Shortcut_1k7u0"]
 events = [SubResource("InputEventKey_i66mr")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_df5t7"]
+device = -1
+keycode = 4194319
+
+[sub_resource type="Shortcut" id="Shortcut_pux46"]
+events = [SubResource("InputEventKey_df5t7")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_d7gmq"]
+device = -1
+keycode = 32
+unicode = 32
+
+[sub_resource type="Shortcut" id="Shortcut_pqyk3"]
+events = [SubResource("InputEventKey_d7gmq")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_tfrx0"]
+device = -1
+keycode = 4194321
+
+[sub_resource type="Shortcut" id="Shortcut_6cyjk"]
+events = [SubResource("InputEventKey_tfrx0")]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -221,6 +265,86 @@ ok_button_text = "Yes"
 dialog_text = "Save current project?"
 cancel_button_text = "No"
 
+[node name="SimulationControls" type="HBoxContainer" parent="Camera3D/Interface"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -64.0
+offset_right = -128.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(2, 2)
+theme_override_constants/separation = 0
+script = ExtResource("15_df5t7")
+
+[node name="Reset" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
+layout_mode = 2
+texture_normal = ExtResource("15_pswvd")
+texture_pressed = ExtResource("16_df5t7")
+texture_hover = ExtResource("17_pux46")
+
+[node name="PrevStep" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_pux46")
+texture_normal = ExtResource("15_jnb0j")
+texture_pressed = ExtResource("16_i66mr")
+texture_hover = ExtResource("17_1k7u0")
+
+[node name="PausePlay" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
+layout_mode = 2
+toggle_mode = true
+shortcut = SubResource("Shortcut_pqyk3")
+texture_normal = ExtResource("18_m0sft")
+texture_pressed = ExtResource("23_df5t7")
+texture_hover = ExtResource("20_7v7kd")
+
+[node name="NextStep" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
+layout_mode = 2
+shortcut = SubResource("Shortcut_6cyjk")
+texture_normal = ExtResource("21_pswvd")
+texture_pressed = ExtResource("22_df5t7")
+texture_hover = ExtResource("23_pux46")
+
+[node name="PartPlacers" type="VBoxContainer" parent="Camera3D/Interface"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = 20.0
+grow_vertical = 2
+scale = Vector2(2, 2)
+theme_override_constants/separation = 1
+
+[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Import sheet"
+texture_normal = ExtResource("28_v7xow")
+texture_pressed = ExtResource("29_cv1oh")
+texture_hover = ExtResource("30_vtcxi")
+
+[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place logic pin"
+texture_normal = ExtResource("31_y3ns8")
+texture_pressed = ExtResource("32_625ua")
+texture_hover = ExtResource("33_2ery0")
+
+[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place clock pin"
+texture_normal = ExtResource("34_syg30")
+texture_pressed = ExtResource("35_n4fht")
+texture_hover = ExtResource("36_3icuf")
+
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
 enabled = false
 collision_mask = 3
@@ -259,3 +383,8 @@ mesh = SubResource("SphereMesh_brgpd")
 [connection signal="canceled" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_canceled"]
 [connection signal="confirmed" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_confirmed"]
 [connection signal="custom_action" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_custom_action"]
+[connection signal="pressed" from="Camera3D/Interface/SimulationControls/Reset" to="Camera3D/Interface/SimulationControls" method="_on_reset_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/SimulationControls/PrevStep" to="Camera3D/Interface/SimulationControls" method="_on_prev_step_pressed"]
+[connection signal="toggled" from="Camera3D/Interface/SimulationControls/PausePlay" to="Camera3D/Interface/SimulationControls" method="_on_pause_play_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/SimulationControls/NextStep" to="Camera3D/Interface/SimulationControls" method="_on_next_step_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/PartPlacers/Sheet" to="Camera3D/Interface" method="requestSheet"]

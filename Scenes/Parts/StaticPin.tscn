@@ -6,8 +6,8 @@ metallic = 1.0
 roughness = 0.38
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_nvwym"]
-top_radius = 0.02
-bottom_radius = 0.02
+top_radius = 0.03
+bottom_radius = 0.03
 height = 0.5
 
 [node name="StaticPin" type="Node3D"]

@@ -1,6 +1,10 @@
 extends Movable
 class_name Sheet
 
+const POINTHOLE = preload("res://Scenes/Parts/SheetElements/PointHole.tscn")
+const LONGHOLE = preload("res://Scenes/Parts/SheetElements/LongHole.tscn")
+const LOGICHOLE = preload("res://Scenes/Parts/SheetElements/LogicHole.tscn")
+const SQUAREHOLE = preload("res://Scenes/Parts/SheetElements/SquareHole.tscn")
 const CUSTOMHOLE = preload("res://Scenes/Parts/SheetElements/CustomHole.tscn")
 
 const scaleFactor = 0.001
@@ -10,6 +14,9 @@ const scaleFactor = 0.001
 @export var path : String
 var partOffset : Vector2
 var bounds = []
+var holes = []
+
+var sortTargetPos : Vector3
 
 func _ready():
 	if path:
@@ -80,8 +87,16 @@ func parseElement(part : String):
 	match(dict["type"]):
 		"path":
 			if id.contains("longHole"):
+				var newHole = addHole(LONGHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
+				newHole.setRadius(float(dict["r"])/100)
+				newHole.setTravelLength(float(dict["length"])/1000)
+				if float(dict["horizontal"]) < 1:
+					newHole.rotate_y(PI/2)
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10, float(dict["horizontal"]) > 0, float(dict["length"]), false)
 			if id.contains("logicHole"):
+				var newHole = addHole(LOGICHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
+				newHole.setOpenLeft(float(dict["openLeft"]) > 0)
+				newHole.rotate_y(-int(dict["pinTravelDir"]) * PI/2)
 				pass#Global.partHandler.addLogicHole(float(dict["cx"]), float(dict["cy"]), int(dict["pinTravelDir"]), float(dict["openLeft"]) > 0)
 			if id.contains("customHole") or id.contains("outlinePath"):
 				var pointString = dict["d"]
@@ -91,11 +106,20 @@ func parseElement(part : String):
 					segments.append_array(chunk.split("A "))
 				addPolygon(segments, id.contains("outlinePath"))
 		"circle":
+			var newHole = addHole(POINTHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
+			newHole.setRadius(float(dict["r"])/100)
 			pass#Global.partHandler.addPointHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10)
 		"rect":
 			if id.contains("rectHole"):
+				var newHole = addHole(LONGHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
+				newHole.setRadius(float(dict["width"])/200)
+				newHole.setTravelLength(float(dict["length"])/1000)
+				if float(dict["horizontal"]) < 1:
+					newHole.rotate_y(PI/2)
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["width"])/20, float(dict["horizontal"]) > 0, float(dict["length"]), true)
 			if id.contains("squareHole"):
+				var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
+				newHole.setSideLength(float(dict["edgeLength"])/100)
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
 			pass
 		"svg":
@@ -103,15 +127,25 @@ func parseElement(part : String):
 			var viewBox = Vector4(float(raw[0]),float(raw[1]),float(raw[2]),float(raw[3]))
 			partOffset = Vector2(-viewBox.x, -viewBox.y - viewBox.w) * scaleFactor
 
+func addHole(prefab, pos):
+	var newHole = prefab.instantiate()
+	add_child(newHole)
+	holes.append(newHole)
+	newHole.position = Vector3(pos.x, 0, pos.y)/1000 + Vector3(partOffset.x,0,partOffset.y)
+	return newHole
+
 func addPolygon(segments, isOutline):
+	var polygonParent : Node3D
 	var polygon : PackedVector2Array
 	if isOutline:
 		polygon = outline.polygon
+		polygonParent = outline
 	else:
 		var hole = CUSTOMHOLE.instantiate()
 		add_child(hole)
-		hole.location = Vector3.ZERO
+		hole.position = Vector3.ZERO
 		polygon = hole.find_child("Polygon").polygon
+		polygonParent = hole.find_child("Polygon")
 	polygon.clear()
 	var prevPoint : Vector2
 	var segmentDir : Vector2
@@ -123,6 +157,25 @@ func addPolygon(segments, isOutline):
 		else:
 			polygon.push_back(Vector2(float(numbers[0]), float(numbers[1])) * scaleFactor + partOffset)
 	if isOutline:
-		outline.polygon = polygon
 		debugPolygon.polygon = polygon
+	polygonParent.polygon = polygon
+
+#TODO
+func snap(srcPos):
+	if holes.size() < 1:
+		return srcPos
+	sortTargetPos = srcPos
+	var candidates = []
+	for hole in holes:
+		if hole is LongHole:
+			candidates.append(hole.start.globalPosition)
+			candidates.append(hole.end.globalPosition)
+		elif hole is SquareHole:
+			candidates.append_array(hole.getSnapPositions())
+		else:
+			candidates.append(hole.globalPosition)
+	candidates.sort_custom(sortByDistance)
 	
+
+func sortByDistance(a : Vector3, b : Vector3):
+	return a.distance_squared_to(sortTargetPos) < b.distance_squared_to(sortTargetPos)

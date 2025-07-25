@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://by83vnhw218sk"]
+
+[ext_resource type="Script" uid="uid://dohbt3xgt4hm4" path="res://Scripts/Parts/SheetElements/longHole.gd" id="1_7vhs4"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_7vhs4"]
+radius = 0.01
+height = 0.02
+
+[node name="LongHole" type="Node3D"]
+script = ExtResource("1_7vhs4")
+
+[node name="Start" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Start"]
+mesh = SubResource("SphereMesh_7vhs4")
+
+[node name="End" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="End"]
+mesh = SubResource("SphereMesh_7vhs4")
+skeleton = NodePath("../../Start")

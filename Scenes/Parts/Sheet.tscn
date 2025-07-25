@@ -33,6 +33,7 @@ texture = ExtResource("2_k6d36")
 
 [node name="Outline" type="Area3D" parent="."]
 collision_mask = 0
+monitoring = false
 
 [node name="Polygon" type="CollisionPolygon3D" parent="Outline"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

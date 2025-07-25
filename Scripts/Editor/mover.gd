@@ -22,6 +22,13 @@ func cast():
 	clear_exceptions()
 
 func projectDown(src : Vector3):
+	var part = selector.selected
+	if part is Pin:
+		if part.global:
+			return src * Vector3(1,0,1)
+		else:
+			return src * Vector3(1,0,1) + Vector3.UP * Global.workspace.selectedLayer.global_position.y
+	
 	rotation = Vector3.ZERO
 	global_position = src + Vector3.UP * 5
 	target_position = Vector3.DOWN * 10

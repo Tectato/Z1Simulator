@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://sbi6ilpar4vc"]
+[gd_scene load_steps=11 format=3 uid="uid://sbi6ilpar4vc"]
 
 [ext_resource type="Script" uid="uid://dmrnm764to46c" path="res://Scripts/Parts/movable.gd" id="1_8btax"]
 [ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
 [ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_muvhk"]
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="6_fpxkw"]
+[ext_resource type="Texture2D" uid="uid://djqys18a08smf" path="res://Sprites/arrow.png" id="6_lxv6g"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gfx74"]
 
@@ -17,6 +18,9 @@ ssao_enabled = true
 ssao_radius = 0.16
 ssao_intensity = 4.3
 ssao_light_affect = 1.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_jtmtj"]
+viewport_path = NodePath("AxesViewport")
 
 [node name="Workspace" type="Node3D"]
 script = ExtResource("1_lxv6g")
@@ -56,7 +60,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23683, 0.121636, 0.551206)
 path = "G:\\codingProjects\\z1simulator\\Test\\11b_2.svg"
 
 [node name="Pin" parent="." instance=ExtResource("6_fpxkw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11294, 0.127545, -0.118007)
+transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0.115, 0, -0.115)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.612372, -0.707107, -0.353554, 0.5, -2.2954e-08, 0.866025, -0.612372, -0.707107, 0.353554, 0, 2, 0)
@@ -66,3 +70,49 @@ directional_shadow_mode = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_jtmtj")
+
+[node name="Axes" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+axis = 1
+texture = SubResource("ViewportTexture_jtmtj")
+
+[node name="AxesViewport" type="SubViewport" parent="."]
+transparent_bg = true
+canvas_item_default_texture_filter = 0
+
+[node name="X" type="Line2D" parent="AxesViewport"]
+position = Vector2(256, 256)
+points = PackedVector2Array(0, 0, 256, 0)
+width = 1.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="Y" type="Line2D" parent="AxesViewport"]
+position = Vector2(256, 256)
+points = PackedVector2Array(0, 0, 0, 256)
+width = 1.0
+default_color = Color(0, 1, 0, 1)
+
+[node name="XLabel" type="Label" parent="AxesViewport"]
+modulate = Color(1, 0, 0, 1)
+offset_left = 490.0
+offset_top = 256.0
+offset_right = 530.0
+offset_bottom = 279.0
+text = "X"
+
+[node name="Sprite2D" type="Sprite2D" parent="AxesViewport/XLabel"]
+position = Vector2(14, 0)
+texture = ExtResource("6_lxv6g")
+
+[node name="YLabel" type="Label" parent="AxesViewport"]
+modulate = Color(0, 1, 0, 1)
+offset_left = 256.0
+offset_top = 480.0
+offset_right = 296.0
+offset_bottom = 503.0
+text = "Y"
+
+[node name="Sprite2D" type="Sprite2D" parent="AxesViewport/YLabel"]
+position = Vector2(0, 24)
+rotation = 1.5708
+texture = ExtResource("6_lxv6g")

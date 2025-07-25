@@ -5,9 +5,6 @@ const LAYER = preload("res://Scenes/Parts/Layer.tscn")
 
 var layers = []
 
-func _ready() -> void:
-	addLayer()
-
 func updateBB():
 	pass
 

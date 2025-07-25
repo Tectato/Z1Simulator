@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dc4je5jp2q8lb"]
+
+[ext_resource type="Script" uid="uid://dicoayf2123au" path="res://Scripts/Parts/SheetElements/squareHole.gd" id="1_p2c2m"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_p2c2m"]
+radius = 0.01
+height = 0.02
+
+[node name="SquareHole" type="Node3D"]
+script = ExtResource("1_p2c2m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_p2c2m")

@@ -33,6 +33,8 @@ func _on_file_id_pressed(id: int) -> void:
 		5:
 			importSheetDialog.popup()
 
+func requestSheet():
+	importSheetDialog.popup()
 
 func _on_select_toggled(toggled_on: bool) -> void:
 	if toggled_on:
