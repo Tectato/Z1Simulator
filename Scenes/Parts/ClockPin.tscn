@@ -40,8 +40,15 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("CylinderShape3D_fc7u5")
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.052675, 0.0928753, 0)
+[node name="TravelIndicator" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000763495, 0.00119609, -0.0376631)
 pixel_size = 0.005
+axis = 1
 texture_filter = 0
 texture = ExtResource("3_4euxk")
+
+[node name="ResetTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]

@@ -4,3 +4,7 @@
 
 [node name="Simulator" type="Node"]
 script = ExtResource("1_qmcj1")
+
+[node name="AutoClock" type="Timer" parent="."]
+
+[connection signal="timeout" from="AutoClock" to="." method="_on_auto_clock_timeout"]
