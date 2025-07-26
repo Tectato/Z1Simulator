@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=64 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -34,9 +34,14 @@
 [ext_resource type="Texture2D" uid="uid://rx1h2lhhnpk3" path="res://Sprites/Buttons/Parts/logicPin.png" id="31_y3ns8"]
 [ext_resource type="Texture2D" uid="uid://uxguglkdmj7s" path="res://Sprites/Buttons/Parts/logicPin_active.png" id="32_625ua"]
 [ext_resource type="Texture2D" uid="uid://bfmtr4ye6rroe" path="res://Sprites/Buttons/Parts/logicPin_lit.png" id="33_2ery0"]
+[ext_resource type="Texture2D" uid="uid://o4cmvvgkeyqc" path="res://Sprites/Buttons/Parts/globalPin.png" id="34_2ery0"]
 [ext_resource type="Texture2D" uid="uid://rk7b7u020vb3" path="res://Sprites/Buttons/Parts/clockPin.png" id="34_syg30"]
 [ext_resource type="Texture2D" uid="uid://c75i67tcahpo7" path="res://Sprites/Buttons/Parts/clockPin_active.png" id="35_n4fht"]
+[ext_resource type="Texture2D" uid="uid://c3mj3omovi2ga" path="res://Sprites/Buttons/Parts/globalPin_active.png" id="35_syg30"]
 [ext_resource type="Texture2D" uid="uid://7tivbhc2qew7" path="res://Sprites/Buttons/Parts/clockPin_lit.png" id="36_3icuf"]
+[ext_resource type="Texture2D" uid="uid://bw2kf2yj25kpk" path="res://Sprites/Buttons/Parts/globalPin_lit.png" id="36_n4fht"]
+[ext_resource type="Texture2D" uid="uid://bf40mtgbl3upe" path="res://Sprites/axes.png" id="37_cv1oh"]
+[ext_resource type="Script" uid="uid://c63qi8uboiyjv" path="res://Scripts/Editor/axesGizmoCam.gd" id="38_vtcxi"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_crs40"]
 
@@ -85,6 +90,19 @@ keycode = 4194321
 
 [sub_resource type="Shortcut" id="Shortcut_6cyjk"]
 events = [SubResource("InputEventKey_tfrx0")]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vtcxi"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("37_cv1oh")
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_v7xow"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_cv1oh"]
+viewport_path = NodePath("Camera3D/Interface/AxesGizmoViewport")
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -285,12 +303,14 @@ script = ExtResource("15_df5t7")
 
 [node name="Reset" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
 layout_mode = 2
+tooltip_text = "Reset"
 texture_normal = ExtResource("15_pswvd")
 texture_pressed = ExtResource("16_df5t7")
 texture_hover = ExtResource("17_pux46")
 
 [node name="PrevStep" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
 layout_mode = 2
+tooltip_text = "Previous step"
 shortcut = SubResource("Shortcut_pux46")
 texture_normal = ExtResource("15_jnb0j")
 texture_pressed = ExtResource("16_i66mr")
@@ -298,6 +318,7 @@ texture_hover = ExtResource("17_1k7u0")
 
 [node name="PausePlay" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
 layout_mode = 2
+tooltip_text = "Pause/Play Simulation"
 toggle_mode = true
 shortcut = SubResource("Shortcut_pqyk3")
 texture_normal = ExtResource("18_m0sft")
@@ -306,6 +327,7 @@ texture_hover = ExtResource("20_7v7kd")
 
 [node name="NextStep" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
 layout_mode = 2
+tooltip_text = "Next step"
 shortcut = SubResource("Shortcut_6cyjk")
 texture_normal = ExtResource("21_pswvd")
 texture_pressed = ExtResource("22_df5t7")
@@ -333,10 +355,17 @@ texture_hover = ExtResource("30_vtcxi")
 
 [node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 layout_mode = 2
-tooltip_text = "Place logic pin"
+tooltip_text = "Place logic pin (Local to layer)"
 texture_normal = ExtResource("31_y3ns8")
 texture_pressed = ExtResource("32_625ua")
 texture_hover = ExtResource("33_2ery0")
+
+[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place global logic pin (Across all layers)"
+texture_normal = ExtResource("34_2ery0")
+texture_pressed = ExtResource("35_syg30")
+texture_hover = ExtResource("36_n4fht")
 
 [node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 layout_mode = 2
@@ -344,6 +373,31 @@ tooltip_text = "Place clock pin"
 texture_normal = ExtResource("34_syg30")
 texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
+
+[node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface"]
+own_world_3d = true
+transparent_bg = true
+size = Vector2i(128, 128)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/Interface/AxesGizmoViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_vtcxi")
+mesh = SubResource("QuadMesh_v7xow")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Camera3D/Interface/AxesGizmoViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, -1, 4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_vtcxi")
+mesh = SubResource("QuadMesh_v7xow")
+
+[node name="Camera3D" type="Camera3D" parent="Camera3D/Interface/AxesGizmoViewport" node_paths=PackedStringArray("actualCamera")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, -4.37114e-08)
+projection = 1
+script = ExtResource("38_vtcxi")
+actualCamera = NodePath("../../..")
+
+[node name="AxesGizmo" type="Sprite2D" parent="Camera3D/Interface"]
+position = Vector2(1086, 97)
+texture = SubResource("ViewportTexture_cv1oh")
 
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
 enabled = false
@@ -388,3 +442,6 @@ mesh = SubResource("SphereMesh_brgpd")
 [connection signal="toggled" from="Camera3D/Interface/SimulationControls/PausePlay" to="Camera3D/Interface/SimulationControls" method="_on_pause_play_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/SimulationControls/NextStep" to="Camera3D/Interface/SimulationControls" method="_on_next_step_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/Sheet" to="Camera3D/Interface" method="requestSheet"]
+[connection signal="pressed" from="Camera3D/Interface/PartPlacers/LogicPin" to="." method="addPin"]
+[connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
+[connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]

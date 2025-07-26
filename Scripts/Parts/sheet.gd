@@ -18,6 +18,22 @@ var holes = []
 
 var sortTargetPos : Vector3
 
+func serialize():
+	var relativePath = path.trim_prefix(layer.machine.dir)
+	var output = {
+		"pos_x" : global_position.x,
+		"pos_y" : global_position.y,
+		"pos_z" : global_position.z,
+		"rotation" : rotation.y,
+		"file" : relativePath
+	}
+	return output
+
+func deserialize(source : Dictionary):
+	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
+	rotation = Vector3(0, source["rotation"], 0)
+	loadSVG(source["file"])
+
 func _ready():
 	if path:
 		loadSVG(path)
@@ -38,18 +54,19 @@ func getBounds():
 
 func loadSVG(filepath : String):
 	path = filepath
+	if layer and not path.begins_with(layer.machine.dir):
+		path = layer.machine.dir + "\\" + path
 	var image = ImageTexture.create_from_image(Image.load_from_file(filepath))
 	sprite.set_texture(image)
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	
-	var size = sprite.texture.get_size()/100.0
-	bounds = [-size.x/2,-0.05,-size.y/2,size.x/2,0.05,size.y/2]
-	
 	var rawString = FileAccess.get_file_as_string(path)
 	var elements = rawString.split("\n")
 	for element in elements:
 		parseElement(element)
+	var size = sprite.texture.get_size()/100.0
+	bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
 
 func isValidElement(string : String):
 	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect")
@@ -164,18 +181,45 @@ func addPolygon(segments, isOutline):
 func snap(srcPos):
 	if holes.size() < 1:
 		return srcPos
-	sortTargetPos = srcPos
+	#var srcPos2D = Vector2(srcPos.x,srcPos.z)
+	#var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/8,Workspace.gridSize/8))
+	#global_position = Vector3(snapped.x,srcPos.y,snapped.y)
 	var candidates = []
 	for hole in holes:
-		if hole is LongHole:
-			candidates.append(hole.start.globalPosition)
-			candidates.append(hole.end.globalPosition)
-		elif hole is SquareHole:
-			candidates.append_array(hole.getSnapPositions())
-		else:
-			candidates.append(hole.globalPosition)
-	candidates.sort_custom(sortByDistance)
+		candidates.append(hole.getSnapPosDiff(srcPos))
+	candidates.sort_custom(sortByLength3D)
+	if candidates[0].length() < Workspace.snapDist:
+		global_position = srcPos + candidates[0]
+	else:
+		global_position = srcPos
 	
+	return global_position
+	
+	
+	
+	#sortTargetPos = srcPos
+	#var srcPosRelative = srcPos - global_position
+	#var candidates = []
+	#for hole in holes:
+		#if hole is LongHole:
+			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, hole.start.global_position + srcPosRelative))
+			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, hole.end.global_position + srcPosRelative))
+		##elif hole is SquareHole:
+		##	candidates.append_array(hole.getSnapPositions())
+		#elif hole is LogicHole:
+			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.LogicHole, hole.global_position + srcPosRelative))
+		#else:
+			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, hole.global_position + srcPosRelative))
+	#candidates.sort_custom(sortByLength)
+	#if candidates[0].length() < Workspace.snapDist:
+		#global_position = srcPos * Vector3.UP + (srcPos - Vector3(candidates[0].x,0,candidates[0].y)) * Vector3(1,0,1)
+	#return srcPos #TODO: return snap source pos
+
+func sortByLength2D(a : Vector2, b : Vector2):
+	return a.length_squared() < b.length_squared()
+
+func sortByLength3D(a : Vector3, b : Vector3):
+	return a.length_squared() < b.length_squared()
 
 func sortByDistance(a : Vector3, b : Vector3):
 	return a.distance_squared_to(sortTargetPos) < b.distance_squared_to(sortTargetPos)

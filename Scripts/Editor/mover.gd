@@ -2,6 +2,7 @@ extends RayCast3D
 class_name Mover
 
 @export var selector : Selector
+@onready var camera = selector.camera
 @export var debug1 : Node3D
 @export var debug2 : Node3D
 var candidatePositions = []
@@ -9,7 +10,7 @@ var candidatePositions = []
 func move():
 	cast()
 	var dragDelta = get_collision_point() - selector.mouseDragOrigin
-	selector.selected.global_position = projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative
+	selector.selected.snap(projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative)
 	pass
 
 func cast():
@@ -17,6 +18,8 @@ func cast():
 	rotation = selector.camera.rotation
 	add_exception(selector.selected.collider)
 	var mousePos = get_viewport().get_mouse_position()
+	if camera.orthographic:
+		global_position = camera.project_ray_origin(mousePos)
 	target_position = selector.camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
 	clear_exceptions()

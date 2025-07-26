@@ -42,6 +42,18 @@ func importSheets(paths : PackedStringArray):
 		newSheet = workspace.importSheet(path)
 	selector.place(newSheet)
 
+func addPin():
+	saved = false
+	selector.place(workspace.addPin())
+
+func addGlobalPin():
+	saved = false
+	selector.place(workspace.addGlobalPin())
+
+func addClockPin():
+	saved = false
+	selector.place(workspace.addClockPin())
+
 func fileDropped(files : Array[String]):
 	var path = files[0]
 	if path.ends_with(".svg"):
@@ -58,7 +70,6 @@ func getFileName(path : String):
 	var file = path.trim_prefix(getDir(path)).substr(1)
 	var extensionIndex = file.rfind(".")
 	return file.substr(0,extensionIndex)
-
 
 func _on_load_project_dialog_file_selected(path: String) -> void:
 	if !saved:

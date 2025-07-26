@@ -52,9 +52,24 @@ func _process(delta: float) -> void:
 		if dragging or placing:
 			if selected != null:
 				mover.move()
+	if selected:
+		if Input.is_action_just_pressed("rotate_ccw"):
+			#var bounds = selected.getBounds()
+			#var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
+			#selected.translate(-midPoint)
+			selected.rotate_y(-PI/2)
+			#selected.translate(midPoint)
+			mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
+		elif Input.is_action_just_pressed("rotate_cw"):
+			selected.rotate_y(PI/2)
+			mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
 
 func cast(select = true):
 	var mousePos = get_viewport().get_mouse_position()
+	if camera.orthographic:
+		global_position = camera.project_ray_origin(mousePos)
+	else:
+		position = Vector3.ZERO
 	target_position = camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
 	if select:
@@ -83,6 +98,10 @@ func iterate():
 func setGrabpoint():
 	partDragOrigin = selected.global_position
 	var mousePos = get_viewport().get_mouse_position()
+	if camera.orthographic:
+		global_position = camera.project_ray_origin(mousePos)
+	else:
+		position = Vector3.ZERO
 	target_position = camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
 	mouseDragOrigin = get_collision_point()

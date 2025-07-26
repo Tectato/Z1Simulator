@@ -6,6 +6,7 @@ extends Camera3D
 var mousePos = Vector2(0,0)
 var zoomLevel = 2
 var zoomFactor = 1.1
+var orthographic = false
 
 func _ready() -> void:
 	look_at(focusPoint.global_position)
@@ -16,12 +17,14 @@ func _process(delta: float) -> void:
 	var mouseDelta = (newMousePos - mousePos) * delta
 	mousePos = newMousePos
 	
-	if Input.is_action_just_pressed("scroll_up"):
-		zoomLevel /= zoomFactor
-		updateZoom()
-	if Input.is_action_just_pressed("scroll_down"):
-		zoomLevel *= zoomFactor
-		updateZoom()
+	if not Input.is_action_pressed("nav_orbit_move"):
+		if Input.is_action_just_pressed("scroll_up"):
+			zoomLevel /= zoomFactor
+			updateZoom()
+		if Input.is_action_just_pressed("scroll_down"):
+			zoomLevel *= zoomFactor
+			updateZoom()
+	handleOrthoInputs()
 	
 	if Input.is_action_pressed("nav_orbit"):
 		if Input.is_action_pressed("nav_orbit_move"):
@@ -31,6 +34,9 @@ func _process(delta: float) -> void:
 			global_position += deltaTranslation
 			focusPoint.global_position += deltaTranslation
 		else:
+			if orthographic:
+				orthographic = false
+				projection = Camera3D.PROJECTION_PERSPECTIVE
 			var lookDelta = -mouseDelta * Global.lookSensitivity
 			var posRelative = global_position - focusPoint.global_position
 			var posRelativeFlat = posRelative * Vector3(1,0,1)
@@ -48,3 +54,26 @@ func updateZoom():
 	posRelative = posRelative.normalized() * zoomLevel
 	global_position = focusPoint.global_position + posRelative
 	focusPoint.scale = Vector3(1,1,1) * zoomLevel
+	size = float(zoomLevel)
+
+func handleOrthoInputs():
+	if Input.is_action_just_pressed("nav_switch_ortho"):
+		orthographic = !orthographic
+		if orthographic:
+			rotation_degrees = Vector3(-90,0,0)
+	if Input.is_action_just_pressed("nav_ortho_north"):
+		orthographic = true
+		rotation_degrees = Vector3(-90,0,0)
+	if Input.is_action_just_pressed("nav_ortho_east"):
+		orthographic = true
+		rotation_degrees = Vector3(-90,90,0)
+	if Input.is_action_just_pressed("nav_ortho_south"):
+		orthographic = true
+		rotation_degrees = Vector3(-90,180,0)
+	if Input.is_action_just_pressed("nav_ortho_west"):
+		orthographic = true
+		rotation_degrees = Vector3(-90,-90,0)
+	
+	if orthographic:
+		global_position = global_position * Vector3.UP + focusPoint.global_position * Vector3(1,0,1)
+	projection = Camera3D.PROJECTION_ORTHOGONAL if orthographic else Camera3D.PROJECTION_PERSPECTIVE

@@ -10,10 +10,10 @@ shader = ExtResource("1_83lyt")
 shader_parameter/albedo = ExtResource("2_83lyt")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_frs87"]
-size = Vector2(4, 4)
+size = Vector2(8, 8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ax0fx"]
-size = Vector3(4, 0.1, 4)
+size = Vector3(8, 0.1, 8)
 
 [node name="Baseplate" type="Node3D"]
 

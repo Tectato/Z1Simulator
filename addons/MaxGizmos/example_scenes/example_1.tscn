@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnt7arny01nko"]
+
+[ext_resource type="Script" uid="uid://cbw60m6yiy1g1" path="res://addons/MaxGizmos/scripts/test_1.gd" id="1_wmexy"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ebx5f"]
+size = Vector3(26.605, 1, 33.015)
+
+[node name="Example1" type="Node3D"]
+script = ExtResource("1_wmexy")
+gizmo_position = Vector3(2, 2, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.539667, 0.841878, 0, -0.841878, 0.539667, -6.62631, 9.88457, 10.3875)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 2, 6, 4)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ebx5f")

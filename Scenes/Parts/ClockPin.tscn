@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://crobnroqc51y8"]
+
+[ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
+[ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
+[ext_resource type="Texture2D" uid="uid://prh1bv7qufq3" path="res://Sprites/clockPinMovement.png" id="3_4euxk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcjpo"]
+metallic = 1.0
+roughness = 0.48
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r5mnu"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_4euxk")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vjs7e"]
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.1
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fc7u5"]
+height = 0.1
+radius = 0.02
+
+[node name="ClockPin" type="Node3D" node_paths=PackedStringArray("collider")]
+script = ExtResource("1_pegep")
+collider = NodePath("Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+material_override = SubResource("StandardMaterial3D_rcjpo")
+material_overlay = SubResource("ShaderMaterial_r5mnu")
+mesh = SubResource("CylinderMesh_vjs7e")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("CylinderShape3D_fc7u5")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.052675, 0.0928753, 0)
+pixel_size = 0.005
+texture_filter = 0
+texture = ExtResource("3_4euxk")
