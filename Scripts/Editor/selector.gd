@@ -4,6 +4,7 @@ class_name Selector
 @export var camera : Camera3D
 @export var mover : RayCast3D
 @export var debugLabel : Label
+@export var debugPoint : Node3D
 
 var clickPos : Vector2
 var mouseDragOrigin : Vector3
@@ -53,13 +54,14 @@ func _process(delta: float) -> void:
 			if selected != null:
 				mover.move()
 	if selected:
+		debugPoint.global_position = selected.global_position + mouseRelative
 		if Input.is_action_just_pressed("rotate_ccw"):
-			#var bounds = selected.getBounds()
-			#var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
-			#selected.translate(-midPoint)
-			selected.rotate_y(-PI/2)
-			#selected.translate(midPoint)
+			var bounds = selected.getBounds()
+			var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
+			mouseRelative -= midPoint
 			mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
+			mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
+			selected.rotate_y(-PI/2)
 		elif Input.is_action_just_pressed("rotate_cw"):
 			selected.rotate_y(PI/2)
 			mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)

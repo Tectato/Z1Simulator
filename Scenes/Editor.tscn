@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=65 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -103,6 +103,10 @@ texture_filter = 0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_cv1oh"]
 viewport_path = NodePath("Camera3D/Interface/AxesGizmoViewport")
+
+[sub_resource type="SphereMesh" id="SphereMesh_2ery0"]
+radius = 0.1
+height = 0.2
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -399,7 +403,7 @@ actualCamera = NodePath("../../..")
 position = Vector2(1086, 97)
 texture = SubResource("ViewportTexture_cv1oh")
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "debugPoint")]
 enabled = false
 collision_mask = 3
 collide_with_areas = true
@@ -407,6 +411,12 @@ script = ExtResource("3_trcuy")
 camera = NodePath("..")
 mover = NodePath("../../MoveRay")
 debugLabel = NodePath("../Interface/Label")
+debugPoint = NodePath("../../Debug")
+
+[node name="Debug" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("SphereMesh_2ery0")
+skeleton = NodePath("../Camera3D/SelectionRay")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
