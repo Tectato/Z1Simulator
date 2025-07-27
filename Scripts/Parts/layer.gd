@@ -31,13 +31,14 @@ func deserialize(source : Dictionary):
 		addPart(newPart)
 		newPart.deserialize(sheet)
 	for pin in pins:
-		var newPart = SHEET.instantiate()
+		var newPart = PIN.instantiate()
 		addPart(newPart)
 		newPart.deserialize(pin)
 
 func addPart(newPart):
 	parts.append(newPart)
 	add_child(newPart)
+	newPart.place()
 	newPart.layer = self
 	if newPart is Pin:
 		newPart.scale = Vector3(1,4,1) #TODO determine height

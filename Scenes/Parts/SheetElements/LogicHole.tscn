@@ -6,6 +6,8 @@
 script = ExtResource("1_mseuv")
 
 [node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 0
 monitoring = false
 monitorable = false
 

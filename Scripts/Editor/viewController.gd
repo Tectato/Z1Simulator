@@ -13,10 +13,12 @@ func _ready() -> void:
 	updateZoom()
 
 func _process(delta: float) -> void:
+	var hovered = get_viewport().gui_get_hovered_control()
+	if hovered != $Interface/ClickArea:
+		return
 	var newMousePos = interface.get_global_mouse_position()
 	var mouseDelta = (newMousePos - mousePos) * delta
 	mousePos = newMousePos
-	
 	if not Input.is_action_pressed("nav_orbit_move"):
 		if Input.is_action_just_pressed("scroll_up"):
 			zoomLevel /= zoomFactor

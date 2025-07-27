@@ -24,9 +24,9 @@ var sortTargetPos : Vector3
 func serialize():
 	var relativePath = path.trim_prefix(layer.machine.dir)
 	var output = {
-		"pos_x" : global_position.x,
-		"pos_y" : global_position.y,
-		"pos_z" : global_position.z,
+		"pos_x" : restPos.x,
+		"pos_y" : restPos.y,
+		"pos_z" : restPos.z,
 		"rotation" : rotation.y,
 		"file" : relativePath
 	}
@@ -36,6 +36,7 @@ func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
 	rotation = Vector3(0, source["rotation"], 0)
 	loadSVG(source["file"])
+	place()
 
 func _ready():
 	if path:
@@ -49,14 +50,20 @@ func setSelected(value):
 	super.setSelected(value)
 	sprite.set_instance_shader_parameter("selected", value)
 
-func getBounds():
+func getBounds(): # TODO: build bounds from outline vertices instead of viewBox
 	if bounds.size() > 0:
-		return bounds
+		var A = Vector3(bounds[0],bounds[1],bounds[2]).rotated(Vector3.UP,rotation.y)
+		var B = Vector3(bounds[3],bounds[4],bounds[5]).rotated(Vector3.UP,rotation.y)
+		var min = Vector3(min(A.x,B.x),min(A.y,B.y),min(A.z,B.z))
+		var max = Vector3(max(A.x,B.x),max(A.y,B.y),max(A.z,B.z))
+		return [min.x,min.y,min.z,max.x,max.y,max.z]
 	else:
 		return super.getBounds()
 
 func loadSVG(filepath : String):
 	path = filepath
+	if path.is_absolute_path():
+		path = ProjectSettings.localize_path(path)
 	if layer and not path.begins_with(layer.machine.dir):
 		path = layer.machine.dir + "\\" + path
 	var image = ImageTexture.create_from_image(Image.load_from_file(filepath))
@@ -69,14 +76,29 @@ func loadSVG(filepath : String):
 	for element in elements:
 		parseElement(element)
 	var size = sprite.texture.get_size()/100.0
-	bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
-	midPoint = Vector3(size.x/20, 0, -size.y/20)
-	$Sprite3D.position = -midPoint
-	$Outline.position = -midPoint
-	$CSGPolygon3D.position = -midPoint
+	#bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
+	
+	var min = Vector2(1000,1000)
+	var max = Vector2(-1000,-1000)
+	for point in outline.polygon:
+		var pointMod = point + Vector2(outline.position.x,outline.position.z) + partOffset
+		min = Vector2(min(min.x,pointMod.x),min(min.y,pointMod.y))
+		max = Vector2(max(max.x,pointMod.x),max(max.y,pointMod.y))
+	
+	midPoint = (Vector3(min.x,0,min.y) + Vector3(max.x,0,max.y))/2
+	var offset = Vector3(partOffset.x,0,partOffset.y)
+	#midPoint = Vector3(size.x/20, 0, -size.y/20)
+	$Sprite3D.position = -midPoint + offset
+	$Outline.position = -midPoint + offset
+	$CSGPolygon3D.position = -midPoint + offset
 	for hole in holes:
-		hole.position -= midPoint
+		hole.position -= midPoint - offset
 	#debugPoint.position = midPoint
+	
+
+	#min -= partOffset
+	#max -= partOffset
+	bounds = [min.x,-0.05, min.y, max.x, 0.05, max.y]
 	#_draw_gizmo()
 
 func isValidElement(string : String):
@@ -154,11 +176,13 @@ func parseElement(part : String):
 			var raw = dict["viewBox"].split(" ")
 			var viewBox = Vector4(float(raw[0]),float(raw[1]),float(raw[2]),float(raw[3]))
 			partOffset = Vector2(-viewBox.x, -viewBox.y - viewBox.w) * scaleFactor
+			
 
 func _draw_gizmo() -> void:
 	if gizmo:
 		gizmo.free()
-	gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(bounds[3]-bounds[0], bounds[4]-bounds[1], bounds[5]-bounds[2]), global_position + midPoint)
+	var actualBounds = getBounds()
+	gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(actualBounds[3]-actualBounds[0], actualBounds[4]-actualBounds[1], actualBounds[5]-actualBounds[2]), global_position)
 
 func addHole(prefab, pos):
 	var newHole = prefab.instantiate()
@@ -179,6 +203,7 @@ func addPolygon(segments, isOutline):
 		hole.position = Vector3.ZERO
 		polygon = hole.find_child("Polygon").polygon
 		polygonParent = hole.find_child("Polygon")
+		holes.append(hole)
 	polygon.clear()
 	var prevPoint : Vector2
 	var segmentDir : Vector2
@@ -240,3 +265,7 @@ func sortByLength3D(a : Vector3, b : Vector3):
 
 func sortByDistance(a : Vector3, b : Vector3):
 	return a.distance_squared_to(sortTargetPos) < b.distance_squared_to(sortTargetPos)
+
+func place():
+	super.place()
+	_draw_gizmo()

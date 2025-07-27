@@ -10,13 +10,14 @@ var priorState = 0 # 1 bit per hole/sheet. Check if state before and after match
 
 func serialize():
 	return {
-		"pos_x" : global_position.x,
-		"pos_y" : global_position.y,
-		"pos_z" : global_position.z
+		"pos_x" : restPos.x,
+		"pos_y" : restPos.y,
+		"pos_z" : restPos.z
 	}
 
 func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
+	place()
 
 func getBounds():
 	return [-0.02, 0, -0.02, 0.02, scale.y, 0.02]

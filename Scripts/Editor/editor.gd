@@ -20,16 +20,24 @@ func saveAs(path : String):
 
 func save():
 	saved = true
-	pass
+	var dict = workspace.serialize(savePath)
+	var newFile = FileAccess.open(savePath, FileAccess.WRITE)
+	if newFile:
+		newFile.store_string(JSON.stringify(dict))
+		newFile.close()
+	else:
+		print("Could not write file for project")
 
 func loadProject(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	saved = false
+	workspace.deserialize(path)
 	pass
 
 func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	saved = false
+	workspace.importMachine(path)
 
 func importSheet(path : String):
 	saved = false

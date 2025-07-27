@@ -5,7 +5,6 @@ var occupies = {}
 
 func registerPart(part : Movable):
 	var bounds = part.getBounds()
-	# TODO !!! account for rotation !!!
 	var min = Vector3(bounds[0],bounds[1],bounds[2]) + part.global_position
 	var max = Vector3(bounds[3],bounds[4],bounds[5]) + part.global_position
 	min /= Global.workspace.gridSize

@@ -44,7 +44,6 @@ func projectDown(src : Vector3):
 		#selector.debugLabel.text = str(get_collision_point())
 	var candidates = []
 	var hit = get_collider()
-	selector.debugLabel.text = str(hit)
 	while hit:
 		candidates.append(hit.get_parent())
 		add_exception(hit)

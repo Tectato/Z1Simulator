@@ -4,6 +4,7 @@ class_name Selector
 @export var camera : Camera3D
 @export var mover : RayCast3D
 @export var debugLabel : Label
+@export var clickArea : Control
 
 var clickPos : Vector2
 var mouseDragOrigin : Vector3
@@ -46,6 +47,9 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 			dragging = false
 
 func _process(delta: float) -> void:
+	var hovered = get_viewport().gui_get_hovered_control()
+	if hovered != clickArea:
+		return
 	if selected and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
@@ -62,9 +66,11 @@ func _process(delta: float) -> void:
 			mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
 			mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
 			selected.rotate_y(-PI/2)
+			selected.place()
 		elif Input.is_action_just_pressed("rotate_cw"):
 			selected.rotate_y(PI/2)
 			mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
+			selected.place()
 
 func cast(select = true):
 	var mousePos = get_viewport().get_mouse_position()

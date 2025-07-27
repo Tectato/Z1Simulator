@@ -37,17 +37,39 @@ func createNew():
 	selectedLayer = newMachine.layers[0]
 	return newMachine
 
-func serialize(path):
-	var output = JSON.new()
+func serialize(path : String):
+	Global.unnamedIDs.clear()
+	var machinePaths = []
+	var machinesDir = path.get_file().trim_suffix(".json")
+	var dir = DirAccess.open(path.get_base_dir())
+	dir.make_dir(machinesDir)
 	for machine in machines:
-		pass
+		var dict = machine.serialize(path)
+		var savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
+		var newFile = FileAccess.open(savePath, FileAccess.WRITE)
+		if newFile:
+			newFile.store_string(JSON.stringify(dict))
+			newFile.close()
+			machinePaths.append(savePath)
+		else:
+			print("Could not write file for " + dict["id"])
+			print(str(FileAccess.get_open_error()))
+
+	var output = {
+		"machines" : machinePaths
+	}
 	return output
 
-func deserialize(path):
-	pass
+func deserialize(path): # TODO: wipe current project
+	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
+	for machine in source["machines"]:
+		importMachine(machine)
 
 func importMachine(path):
-	pass
+	var newMachine = MACHINE.instantiate()
+	machines.append(newMachine)
+	add_child(newMachine)
+	newMachine.deserialize(path) # TODO: check whether machine or project
 
 func importSheet(path):
 	setMode(Mode.Edit)

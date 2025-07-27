@@ -34,6 +34,7 @@ func place():
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.machine.gridLibrary.registerPart(self)
+		layer._draw_gizmo()
 
 func _process(delta: float) -> void:
 	position = position.move_toward(targetPos, delta)

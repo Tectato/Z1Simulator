@@ -22,9 +22,9 @@ func clockCycle(clockStep : int, forwards = true):
 func serialize():
 	var rotationY = round(rotation.y / (2/PI))
 	return {
-		"pos_x" : global_position.x,
-		"pos_y" : global_position.y,
-		"pos_z" : global_position.z,
+		"pos_x" : restPos.x,
+		"pos_y" : restPos.y,
+		"pos_z" : restPos.z,
 		"rotation" : rotationY,
 		"forwardStep" : int(forwardStep),
 		"pulsing" : pulsing
@@ -35,6 +35,7 @@ func deserialize(source : Dictionary):
 	rotation = Vector3(0, int(source["rotation"]) * 2/PI, 0)
 	forwardStep = int(source["forwardStep"])
 	pulsing = bool(source["pulsing"])
+	place()
 
 func _on_reset_timer_timeout() -> void:
 	move(Vector2.DOWN * Global.workspace.pinTravel)

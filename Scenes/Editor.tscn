@@ -160,6 +160,7 @@ script = ExtResource("5_brgpd")
 editor = NodePath("../..")
 
 [node name="Label" type="Label" parent="Camera3D/Interface"]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -399,7 +400,7 @@ actualCamera = NodePath("../../..")
 position = Vector2(1086, 97)
 texture = SubResource("ViewportTexture_cv1oh")
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea")]
 enabled = false
 collision_mask = 3
 collide_with_areas = true
@@ -407,6 +408,7 @@ script = ExtResource("3_trcuy")
 camera = NodePath("..")
 mover = NodePath("../../MoveRay")
 debugLabel = NodePath("../Interface/Label")
+clickArea = NodePath("../Interface/ClickArea")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
@@ -422,6 +424,8 @@ mesh = SubResource("SphereMesh_dfuwn")
 visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
+[connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
+[connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
 [connection signal="file_selected" from="Camera3D/Interface/SaveDialog" to="." method="saveAs"]

@@ -8,6 +8,7 @@ const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 @onready var parts = $Parts
 @onready var gridLibrary = $GridLibrary
 
+var id = ""
 var dir = ""
 var layers = []
 var globalPins = []
@@ -34,6 +35,7 @@ func addSheet(sheet):
 func addGlobalPin(newPin):
 	globalPins.append(newPin)
 	newPin.machine = self
+	newPin.global = true
 	parts.add_child(newPin)
 
 func addClockPin(newPin):
@@ -41,20 +43,30 @@ func addClockPin(newPin):
 	newPin.machine = self
 	parts.add_child(newPin)
 
-func serialize():
+func serialize(path):
+	dir = path.get_base_dir()
+	if id == "":
+		if Global.unnamedIDs.has("machine"):
+			id = "UnnamedMachine" + str(Global.unnamedIDs["machine"])
+			Global.unnamedIDs["machine"] = Global.unnamedIDs["machine"]+1
+		else:
+			id = "UnnamedMachine0"
+			Global.unnamedIDs["machine"] = 1
+	
 	var layersOut = []
 	for layer in layers:
 		layersOut.append(layer.serialize())
 	var globalPinsOut = []
-	for globalPin in globalPinsOut:
+	for globalPin in globalPins:
 		globalPinsOut.append(globalPin.serialize())
 	var clockPinsOut = []
-	for clockPin in clockPinsOut:
+	for clockPin in clockPins:
 		clockPinsOut.append(clockPin.serialize())
 	
 	var output = {
+		"id" : id,
 		"layers" : layersOut,
-		"globalPins" : globalPins,
+		"globalPins" : globalPinsOut,
 		"clockPins" : clockPinsOut
 	}
 	return output
@@ -63,6 +75,9 @@ func deserialize(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	dir = path.get_base_dir()
 	
+	id = source["id"]
+	if id.starts_with("UnnamedMachine"):
+		id = ""
 	var layersIn = source["layers"]
 	var globalPinsIn = source["globalPins"]
 	var clockPinsIn = source["clockPins"]
