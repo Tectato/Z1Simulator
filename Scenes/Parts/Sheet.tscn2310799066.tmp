@@ -20,16 +20,15 @@ shader_parameter/albedo = ExtResource("2_k6d36")
 shader_parameter/thickness = 0.02
 
 [sub_resource type="SphereMesh" id="SphereMesh_ptygs"]
-radius = 0.01
-height = 0.02
+radius = 0.1
+height = 0.2
 
 [node name="Sheet" type="Node3D" node_paths=PackedStringArray("debugPoint", "collider")]
 script = ExtResource("3_k6d36")
-debugPoint = NodePath("MeshInstance3D")
+debugPoint = NodePath("Debug")
 collider = NodePath("Outline")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351027, 0, 0.245938)
 material_override = SubResource("ShaderMaterial_k6d36")
 material_overlay = SubResource("ShaderMaterial_ptygs")
 centered = false
@@ -52,5 +51,7 @@ visible = false
 polygon = PackedVector2Array()
 depth = 0.01
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Debug" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("SphereMesh_ptygs")
+skeleton = NodePath("../../Camera3D/SelectionRay")

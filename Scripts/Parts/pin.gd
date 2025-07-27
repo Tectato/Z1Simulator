@@ -29,5 +29,13 @@ func snap(srcPos):
 	var srcPos2D = Vector2(srcPos.x,srcPos.z)
 	var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/8,Workspace.gridSize/8))
 	global_position = Vector3(snapped.x,srcPos.y,snapped.y)
+	restPos = global_position
+	targetPos = position
 	return global_position
 	
+
+func place():
+	super.place()
+	if machine:
+		machine.gridLibrary.unregisterPart(self)
+		machine.gridLibrary.registerPart(self)

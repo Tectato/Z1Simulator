@@ -9,6 +9,9 @@ var stateY = false
 @onready var restStateX = stateX
 @onready var restStateY = stateY
 
+func _ready() -> void:
+	place()
+
 func move(dir : Vector2):
 	#translate(Vector3(dir.x,0,dir.y))
 	var absoluteDir = dir.rotated(-rotation.y)
@@ -22,7 +25,15 @@ func getBounds():
 	return [-0.2,-0.05,-0.2,0.2,0.05,0.2]
 
 func snap(srcPos):
+	global_position = srcPos
 	return srcPos
+
+func place():
+	restPos = global_position
+	targetPos = position
+	if layer:
+		layer.machine.gridLibrary.unregisterPart(self)
+		layer.machine.gridLibrary.registerPart(self)
 
 func _process(delta: float) -> void:
 	position = position.move_toward(targetPos, delta)

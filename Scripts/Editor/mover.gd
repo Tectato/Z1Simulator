@@ -26,7 +26,7 @@ func cast():
 
 func projectDown(src : Vector3):
 	var part = selector.selected
-	if part is Pin:
+	if part is Pin or part is ClockPin:
 		if part.global:
 			return src * Vector3(1,0,1)
 		else:
@@ -44,6 +44,7 @@ func projectDown(src : Vector3):
 		#selector.debugLabel.text = str(get_collision_point())
 	var candidates = []
 	var hit = get_collider()
+	selector.debugLabel.text = str(hit)
 	while hit:
 		candidates.append(hit.get_parent())
 		add_exception(hit)

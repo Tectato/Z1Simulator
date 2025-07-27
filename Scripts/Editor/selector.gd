@@ -4,7 +4,6 @@ class_name Selector
 @export var camera : Camera3D
 @export var mover : RayCast3D
 @export var debugLabel : Label
-@export var debugPoint : Node3D
 
 var clickPos : Vector2
 var mouseDragOrigin : Vector3
@@ -33,20 +32,22 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 		if event.is_action_pressed("mouse_left"):
 			clickPos = get_viewport().get_mouse_position()
 			if placing:
+				selected.place()
 				placing = false
 				deselect()
 			elif selected:
 				setGrabpoint()
-		if event.is_action_released("mouse_left"):
+		if event.is_action_released("mouse_left") and not placing:
 			if dragging:
-				pass
+				if selected:
+					selected.place()
 			else:
 				cast()
 			dragging = false
 
 func _process(delta: float) -> void:
 	if selected and (Input.is_action_pressed("mouse_left") or placing):
-		if !dragging:
+		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if dist > 5:
 				dragging = true
@@ -54,7 +55,6 @@ func _process(delta: float) -> void:
 			if selected != null:
 				mover.move()
 	if selected:
-		debugPoint.global_position = selected.global_position + mouseRelative
 		if Input.is_action_just_pressed("rotate_ccw"):
 			var bounds = selected.getBounds()
 			var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
@@ -115,7 +115,7 @@ func place(part : Movable):
 	select(part.collider)
 	setGrabpoint()
 	var bounds = part.getBounds()
-	mouseRelative = -Vector3((bounds[0]+bounds[3])/2, (bounds[1]+bounds[4])/2, (bounds[2]+bounds[5])/2)
+	mouseRelative = -Vector3((bounds[0]+bounds[3])/2, 0, (bounds[2]+bounds[5])/2)
 	placing = true
 
 func select(target):

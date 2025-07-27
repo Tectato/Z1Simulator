@@ -6,6 +6,7 @@ const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 
 @onready var parts = $Parts
+@onready var gridLibrary = $GridLibrary
 
 var dir = ""
 var layers = []

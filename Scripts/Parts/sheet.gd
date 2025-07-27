@@ -12,9 +12,12 @@ const scaleFactor = 0.001
 @onready var outline = $Outline/Polygon
 @onready var debugPolygon = $CSGPolygon3D
 @export var path : String
+@export var debugPoint : Node3D
 var partOffset : Vector2
+var midPoint : Vector3
 var bounds = []
 var holes = []
+var gizmo
 
 var sortTargetPos : Vector3
 
@@ -40,7 +43,7 @@ func _ready():
 	else:
 		sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 		sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
-	pass
+	super._ready()
 
 func setSelected(value):
 	super.setSelected(value)
@@ -67,6 +70,14 @@ func loadSVG(filepath : String):
 		parseElement(element)
 	var size = sprite.texture.get_size()/100.0
 	bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
+	midPoint = Vector3(size.x/20, 0, -size.y/20)
+	$Sprite3D.position = -midPoint
+	$Outline.position = -midPoint
+	$CSGPolygon3D.position = -midPoint
+	for hole in holes:
+		hole.position -= midPoint
+	#debugPoint.position = midPoint
+	#_draw_gizmo()
 
 func isValidElement(string : String):
 	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect")
@@ -144,6 +155,11 @@ func parseElement(part : String):
 			var viewBox = Vector4(float(raw[0]),float(raw[1]),float(raw[2]),float(raw[3]))
 			partOffset = Vector2(-viewBox.x, -viewBox.y - viewBox.w) * scaleFactor
 
+func _draw_gizmo() -> void:
+	if gizmo:
+		gizmo.free()
+	gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(bounds[3]-bounds[0], bounds[4]-bounds[1], bounds[5]-bounds[2]), global_position + midPoint)
+
 func addHole(prefab, pos):
 	var newHole = prefab.instantiate()
 	add_child(newHole)
@@ -180,7 +196,7 @@ func addPolygon(segments, isOutline):
 #TODO
 func snap(srcPos):
 	if holes.size() < 1:
-		return srcPos
+		return super.snap(srcPos)
 	#var srcPos2D = Vector2(srcPos.x,srcPos.z)
 	#var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/8,Workspace.gridSize/8))
 	#global_position = Vector3(snapped.x,srcPos.y,snapped.y)
@@ -192,7 +208,8 @@ func snap(srcPos):
 		global_position = srcPos + candidates[0]
 	else:
 		global_position = srcPos
-	
+	restPos = global_position
+	targetPos = position
 	return global_position
 	
 	
