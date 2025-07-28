@@ -2,12 +2,16 @@
 
 [ext_resource type="Script" uid="uid://bb2pgtt2n75gh" path="res://Scripts/Parts/SheetElements/pointHole.gd" id="1_1rgk4"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_1rgk4"]
-radius = 0.01
-height = 0.02
+[sub_resource type="CylinderMesh" id="CylinderMesh_1rgk4"]
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.01
+radial_segments = 16
+rings = 0
 
 [node name="PointHole" type="Node3D"]
 script = ExtResource("1_1rgk4")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_1rgk4")
+visible = false
+mesh = SubResource("CylinderMesh_1rgk4")

@@ -2,7 +2,11 @@ extends Selectable
 class_name Movable
 
 @onready var restPos = global_position
-@onready var targetPos = position
+@onready var targetPos = global_position
+
+var interactionCandidates = []
+var interactionState = 0 # 1 bit per hole/sheet. Check if state before and after match, if not, move in direction of differing bit's hole/sheet
+
 # Don't impact simulation, just for visualization later
 var stateX = false
 var stateY = false
@@ -12,14 +16,18 @@ var stateY = false
 func _ready() -> void:
 	place()
 
-func move(dir : Vector2):
+func move(dir : Vector2, chain = []):
+	# TODO: bool whether i've already moved this tick to avoid double move if e.g. moved from two ends at once
+	if chain.has(self):
+		return
 	#translate(Vector3(dir.x,0,dir.y))
-	var absoluteDir = dir.rotated(-rotation.y)
-	targetPos = position + Vector3(absoluteDir.x,0,absoluteDir.y)
-	if abs(absoluteDir.x) > 0:
+	targetPos = global_position + Vector3(dir.x,0,dir.y)
+	if abs(dir.x) > 0:
 		stateX = !stateX
-	if abs(absoluteDir.y) > 0:
+	if abs(dir.y) > 0:
 		stateY = !stateY
+	
+	
 
 func getBounds():
 	return [-0.2,-0.05,-0.2,0.2,0.05,0.2]
@@ -35,6 +43,19 @@ func place():
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.machine.gridLibrary.registerPart(self)
 		layer._draw_gizmo()
+	updateInteractionCandidates()
+
+func updateInteractionCandidates():
+	pass
+
+func updateInteractionState():
+	pass
 
 func _process(delta: float) -> void:
 	position = position.move_toward(targetPos, delta)
+
+func delete():
+	if layer:
+		layer.machine.gridLibrary.unregisterPart(self)
+		layer.removePart(self)
+	queue_free()

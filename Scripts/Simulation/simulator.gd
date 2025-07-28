@@ -14,6 +14,9 @@ func _ready() -> void:
 func registerClockPin(pin):
 	clockPins.append(pin)
 
+func unregisterClockPin(pin):
+	clockPins.erase(pin)
+
 func start():
 	$AutoClock.start()
 

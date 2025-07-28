@@ -50,7 +50,7 @@ func setSelected(value):
 	super.setSelected(value)
 	sprite.set_instance_shader_parameter("selected", value)
 
-func getBounds(): # TODO: build bounds from outline vertices instead of viewBox
+func getBounds():
 	if bounds.size() > 0:
 		var A = Vector3(bounds[0],bounds[1],bounds[2]).rotated(Vector3.UP,rotation.y)
 		var B = Vector3(bounds[3],bounds[4],bounds[5]).rotated(Vector3.UP,rotation.y)
@@ -95,10 +95,8 @@ func loadSVG(filepath : String):
 		hole.position -= midPoint - offset
 	#debugPoint.position = midPoint
 	
-
-	#min -= partOffset
-	#max -= partOffset
-	bounds = [min.x,-0.05, min.y, max.x, 0.05, max.y]
+	var radii = (max-min)/2
+	bounds = [-radii.x,-0.05, -radii.y, radii.x, 0.05, radii.y]
 	#_draw_gizmo()
 
 func isValidElement(string : String):
@@ -138,7 +136,7 @@ func parseElement(part : String):
 		"path":
 			if id.contains("longHole"):
 				var newHole = addHole(LONGHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-				newHole.setRadius(float(dict["r"])/100)
+				newHole.setRadius(float(dict["r"])/1000)
 				newHole.setTravelLength(float(dict["length"])/1000)
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
@@ -157,19 +155,19 @@ func parseElement(part : String):
 				addPolygon(segments, id.contains("outlinePath"))
 		"circle":
 			var newHole = addHole(POINTHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-			newHole.setRadius(float(dict["r"])/100)
+			newHole.setRadius(float(dict["r"])/1000)
 			pass#Global.partHandler.addPointHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10)
 		"rect":
 			if id.contains("rectHole"):
 				var newHole = addHole(LONGHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-				newHole.setRadius(float(dict["width"])/200)
+				newHole.setRadius(float(dict["width"])/2000)
 				newHole.setTravelLength(float(dict["length"])/1000)
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["width"])/20, float(dict["horizontal"]) > 0, float(dict["length"]), true)
 			if id.contains("squareHole"):
 				var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-				newHole.setSideLength(float(dict["edgeLength"])/100)
+				newHole.setSideLength(float(dict["edgeLength"])/1000)
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
 			pass
 		"svg":
@@ -182,7 +180,12 @@ func _draw_gizmo() -> void:
 	if gizmo:
 		gizmo.free()
 	var actualBounds = getBounds()
-	gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(actualBounds[3]-actualBounds[0], actualBounds[4]-actualBounds[1], actualBounds[5]-actualBounds[2]), global_position)
+	#gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(actualBounds[3]-actualBounds[0], actualBounds[4]-actualBounds[1], actualBounds[5]-actualBounds[2]), global_position)
+	var min = Vector3(actualBounds[0],actualBounds[1],actualBounds[2])# + global_position
+	var max = Vector3(actualBounds[3],actualBounds[4],actualBounds[5])# + global_position
+	if gizmo:
+		gizmo.free()
+	gizmo = Gizmo3D.create_box_outline(Color.LIME,max-min,global_position)
 
 func addHole(prefab, pos):
 	var newHole = prefab.instantiate()
@@ -266,6 +269,24 @@ func sortByLength3D(a : Vector3, b : Vector3):
 func sortByDistance(a : Vector3, b : Vector3):
 	return a.distance_squared_to(sortTargetPos) < b.distance_squared_to(sortTargetPos)
 
+func intersects(pos : Vector3):
+	# TODO: pass relative movement line and check whole line instead
+	# Otherwise thin parts like adder's loopback sheets don't get handled properly
+	# TODO: account for rotation
+	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
+	var posRelative = pos * $Outline.global_transform
+	debugPoint.global_position = posRelative
+	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	var withinHole = false
+	for hole in holes:
+		posRelative = pos * hole.global_transform
+		withinHole = withinHole or hole.checkPos(posRelative)
+	return withinOutline and not withinHole
+
 func place():
 	super.place()
-	_draw_gizmo()
+	#_draw_gizmo()
+
+func updateInteractionCandidates():
+	if layer:
+		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)

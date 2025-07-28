@@ -38,10 +38,16 @@ func addGlobalPin(newPin):
 	newPin.global = true
 	parts.add_child(newPin)
 
+func removeGlobalPin(pin):
+	globalPins.erase(pin)
+
 func addClockPin(newPin):
 	clockPins.append(newPin)
 	newPin.machine = self
 	parts.add_child(newPin)
+
+func removeClockPin(pin):
+	clockPins.erase(pin)
 
 func serialize(path):
 	dir = path.get_base_dir()

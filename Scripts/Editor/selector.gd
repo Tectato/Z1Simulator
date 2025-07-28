@@ -59,18 +59,22 @@ func _process(delta: float) -> void:
 			if selected != null:
 				mover.move()
 	if selected:
-		if Input.is_action_just_pressed("rotate_ccw"):
-			var bounds = selected.getBounds()
-			var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
-			mouseRelative -= midPoint
-			mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
-			mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
-			selected.rotate_y(-PI/2)
-			selected.place()
-		elif Input.is_action_just_pressed("rotate_cw"):
-			selected.rotate_y(PI/2)
-			mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
-			selected.place()
+		if selected is ClockPin or selected is Sheet:
+			if Input.is_action_just_pressed("rotate_ccw"):
+				var bounds = selected.getBounds()
+				var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
+				mouseRelative -= midPoint
+				mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
+				mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
+				selected.rotate_y(-PI/2)
+				selected.place()
+			elif Input.is_action_just_pressed("rotate_cw"):
+				selected.rotate_y(PI/2)
+				mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
+				selected.place()
+		if selected is Movable and Input.is_action_just_pressed("delete"):
+			selected.delete()
+			selected = null
 
 func cast(select = true):
 	var mousePos = get_viewport().get_mouse_position()

@@ -5,9 +5,6 @@ var global = false
 
 var machine : Machine
 
-var affectedBy = []
-var priorState = 0 # 1 bit per hole/sheet. Check if state before and after match, if not, move in direction of differing bit's hole/sheet
-
 func serialize():
 	return {
 		"pos_x" : restPos.x,
@@ -33,10 +30,44 @@ func snap(srcPos):
 	restPos = global_position
 	targetPos = position
 	return global_position
-	
 
 func place():
 	super.place()
 	if machine:
 		machine.gridLibrary.unregisterPart(self)
 		machine.gridLibrary.registerPart(self)
+
+func updateInteractionCandidates():
+	if machine:
+		interactionCandidates = machine.gridLibrary.getIntersectionCandidates(self)
+	elif layer:
+		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)
+	updateInteractionState()
+
+func updateInteractionState():
+	var newState = 0
+	for sheet in interactionCandidates:
+		newState = newState << 1
+		newState = newState | int(sheet.intersects(targetPos))
+	interactionState = newState
+
+func delete():
+	super.delete()
+	if machine:
+		machine.gridLibrary.unregisterPart(self)
+		machine.removeGlobalPin(self)
+
+func move(dir : Vector2, chain = []):
+	if chain.has(self):
+		return
+	var oldState = interactionState
+	super.move(dir, chain)
+	chain.append(self)
+	#updateInteractionState()
+	var newState = interactionState
+	for sheet in interactionCandidates:
+		if sheet.intersects(targetPos):
+			sheet.move(dir,chain)
+	#updateInteractionState()
+	pass
+	

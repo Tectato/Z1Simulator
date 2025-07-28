@@ -19,9 +19,10 @@ shader = ExtResource("4_ptygs")
 shader_parameter/albedo = ExtResource("2_k6d36")
 shader_parameter/thickness = 0.02
 
-[sub_resource type="SphereMesh" id="SphereMesh_ptygs"]
-radius = 0.01
-height = 0.02
+[sub_resource type="CylinderMesh" id="CylinderMesh_ptygs"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 1.0
 
 [node name="Sheet" type="Node3D" node_paths=PackedStringArray("debugPoint", "collider")]
 script = ExtResource("3_k6d36")
@@ -53,4 +54,4 @@ polygon = PackedVector2Array()
 depth = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_ptygs")
+mesh = SubResource("CylinderMesh_ptygs")

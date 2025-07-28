@@ -44,6 +44,9 @@ func addPart(newPart):
 		newPart.scale = Vector3(1,4,1) #TODO determine height
 	_draw_gizmo()
 
+func removePart(part):
+	parts.erase(part)
+
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
 	if gizmo:

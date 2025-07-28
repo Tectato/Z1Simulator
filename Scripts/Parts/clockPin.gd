@@ -8,8 +8,8 @@ class_name ClockPin
 func _ready() -> void:
 	Simulator.registerClockPin(self)
 
-func move(dir : Vector2):
-	super.move(dir)
+func move(dir : Vector2, chain = []):
+	super.move(dir.rotated(-rotation.y), chain)
 	$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
 
 func clockCycle(clockStep : int, forwards = true):
@@ -39,3 +39,9 @@ func deserialize(source : Dictionary):
 
 func _on_reset_timer_timeout() -> void:
 	move(Vector2.DOWN * Global.workspace.pinTravel)
+
+func delete():
+	super.delete()
+	Simulator.unregisterClockPin(self)
+	if machine:
+		machine.removeClockPin(self)
