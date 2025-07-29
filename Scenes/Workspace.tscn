@@ -1,16 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://sbi6ilpar4vc"]
+[gd_scene load_steps=6 format=3 uid="uid://sbi6ilpar4vc"]
 
-[ext_resource type="Script" uid="uid://dmrnm764to46c" path="res://Scripts/Parts/movable.gd" id="1_8btax"]
 [ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
 [ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
-[ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_muvhk"]
-[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="6_fpxkw"]
 [ext_resource type="Texture2D" uid="uid://djqys18a08smf" path="res://Sprites/arrow.png" id="6_lxv6g"]
-[ext_resource type="PackedScene" uid="uid://crobnroqc51y8" path="res://Scenes/Parts/ClockPin.tscn" id="7_lxv6g"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_gfx74"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_8btax"]
 
 [sub_resource type="Environment" id="Environment_jtmtj"]
 ambient_light_source = 2
@@ -26,42 +18,7 @@ viewport_path = NodePath("AxesViewport")
 [node name="Workspace" type="Node3D"]
 script = ExtResource("1_lxv6g")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
-mesh = SubResource("BoxMesh_gfx74")
-script = ExtResource("1_8btax")
-
-[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
-shape = SubResource("BoxShape3D_8btax")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.60321, -0.28427, -0.560475)
-mesh = SubResource("BoxMesh_gfx74")
-script = ExtResource("1_8btax")
-
-[node name="Area3D" type="Area3D" parent="MeshInstance3D2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D2/Area3D"]
-shape = SubResource("BoxShape3D_8btax")
-
 [node name="Baseplate" parent="." instance=ExtResource("2_fpxkw")]
-
-[node name="Sheet" parent="." instance=ExtResource("2_muvhk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.157725, 0.163191, 0.270155)
-path = "G:\\codingProjects\\z1simulator\\Test\\AA.svg"
-
-[node name="Sheet3" parent="." instance=ExtResource("2_muvhk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.458015, 0.207477, 0.270155)
-path = "G:\\codingProjects\\z1simulator\\Test\\AA.svg"
-
-[node name="Sheet2" parent="." instance=ExtResource("2_muvhk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23683, 0.121636, 0.551206)
-path = "G:\\codingProjects\\z1simulator\\Test\\11b_2.svg"
-
-[node name="Pin" parent="." instance=ExtResource("6_fpxkw")]
-transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0.115, 0, -0.115)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.612372, -0.707107, -0.353554, 0.5, -2.2954e-08, 0.866025, -0.612372, -0.707107, 0.353554, 0, 2, 0)
@@ -117,36 +74,3 @@ text = "Y"
 position = Vector2(0, 24)
 rotation = 1.5708
 texture = ExtResource("6_lxv6g")
-
-[node name="ClockPin" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.3, 0, -1.1)
-pulsing = true
-
-[node name="ClockPin2" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -0.2, 0, -0.9)
-forwardStep = 1
-pulsing = true
-
-[node name="ClockPin3" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 0, -1)
-forwardStep = 2
-pulsing = true
-
-[node name="ClockPin4" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(-2.18557e-07, 0, 1, 0, 1, 0, -1, 0, -2.18557e-07, -0.1, 0, -1.2)
-forwardStep = 3
-pulsing = true
-
-[node name="ClockPin5" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.299758, 0, -1.1)
-
-[node name="ClockPin6" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 0.399758, 0, -0.9)
-forwardStep = 1
-
-[node name="ClockPin7" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.600401, 0, -1.1)
-
-[node name="ClockPin8" parent="." instance=ExtResource("7_lxv6g")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.399758, 0, -1.20064)
-forwardStep = 1

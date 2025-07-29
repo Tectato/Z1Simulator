@@ -11,10 +11,13 @@ const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
 
-# Select: Select & move Machines - Edit: Edit selected Machine - Manage: Define inputs/outputs, link Machines together
-enum Mode {Select, Edit, Manage}
+# Select: Select & move things - Manage: Define inputs/outputs, link Machines together
+enum Mode {Select, Manage}
 var mode = Mode.Select
 signal modeChanged(newMode)
+enum Resolution {Machine, Layer, Part}
+var resolution = Resolution.Part
+signal resolutionChanged(newRes)
 
 var machines = []
 var selectedMachine : Machine
@@ -28,6 +31,14 @@ func setMode(newMode):
 	mode = newMode
 	modeChanged.emit(mode)
 
+func setResolution(newRes):
+	resolution = newRes
+	resolutionChanged.emit(resolution)
+
+func clear():
+	for machine in machines:
+		machine.delete()
+
 func createNew():
 	var newMachine = MACHINE.instantiate()
 	add_child(newMachine)
@@ -35,6 +46,8 @@ func createNew():
 	selectedMachine = newMachine
 	newMachine.addLayer()
 	selectedLayer = newMachine.layers[0]
+	if Global.editor:
+		Global.editor.updateSceneTree()
 	return newMachine
 
 func serialize(path : String):
@@ -66,35 +79,53 @@ func deserialize(path): # TODO: wipe current project
 		importMachine(machine)
 
 func importMachine(path):
+	setMode(Mode.Select)
+	setResolution(Resolution.Machine)
 	var newMachine = MACHINE.instantiate()
 	machines.append(newMachine)
 	add_child(newMachine)
 	newMachine.deserialize(path) # TODO: check whether machine or project
 
 func importSheet(path):
-	setMode(Mode.Edit)
+	createIfNotExists()
+	setMode(Mode.Select)
+	setResolution(Resolution.Part)
 	var newSheet = SHEET.instantiate()
 	newSheet.call_deferred("loadSVG",path)
 	selectedLayer.addPart(newSheet)
 	return newSheet
 
 func addPin():
-	setMode(Mode.Edit)
+	createIfNotExists()
+	setMode(Mode.Select)
+	setResolution(Resolution.Part)
 	var newPin = PIN.instantiate()
 	selectedLayer.addPart(newPin)
 	return newPin
 
 func addGlobalPin():
-	setMode(Mode.Edit)
+	setResolution(Resolution.Part)
+	setMode(Mode.Select)
 	var newPin = PIN.instantiate()
 	selectedMachine.addGlobalPin(newPin)
 	return newPin
 
 func addClockPin():
-	setMode(Mode.Edit)
+	setMode(Mode.Select)
+	setResolution(Resolution.Part)
 	var newPin = CLOCKPIN.instantiate()
 	selectedMachine.addClockPin(newPin)
 	return newPin
+
+func createIfNotExists():
+	if machines.is_empty():
+		createNew()
+	if !selectedMachine:
+		selectedMachine = machines[0]
+	if selectedMachine.layers.is_empty():
+		selectedMachine.addLayer()
+	if !selectedLayer:
+		selectedLayer = selectedMachine.layers[0]
 
 enum AlignmentType {Pin, LongHole, LogicHole, OutlineSegment}
 

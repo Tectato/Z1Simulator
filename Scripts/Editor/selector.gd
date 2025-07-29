@@ -12,21 +12,21 @@ var mouseRelative : Vector3
 var partDragOrigin : Vector3
 var dragging = false
 var placing = false
-var selected : Selectable
+var selected : Node3D
 var ignoreList = []
 
 func _ready() -> void:
-	Global.workspace.modeChanged.connect(modeChanged)
+	Global.workspace.resolutionChanged.connect(resolutionChanged)
 
-func modeChanged(mode):
+func resolutionChanged(newRes):
 	deselect()
-	match(mode):
-		Workspace.Mode.Select:
-			collision_mask = 0b1000
-		Workspace.Mode.Edit:
-			collision_mask = 0b0011
-		Workspace.Mode.Manage:
-			collision_mask = 0b0010
+	match(newRes):
+		Workspace.Resolution.Machine:
+			collision_mask = 0b10000
+		Workspace.Resolution.Layer:
+			collision_mask = 0b01000
+		Workspace.Resolution.Part:
+			collision_mask = 0b00011
 
 func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -56,23 +56,23 @@ func _process(delta: float) -> void:
 			if dist > 5:
 				dragging = true
 		if dragging or placing:
-			if selected != null:
+			if selected != null and selected is Movable:
 				mover.move()
 	if selected:
 		if selected is ClockPin or selected is Sheet:
 			if Input.is_action_just_pressed("rotate_ccw"):
 				var bounds = selected.getBounds()
-				var midPoint = Vector3((bounds[0]+bounds[3])/2,0,(bounds[2]+bounds[5])/2)
+				var midPoint = (bounds[1]-bounds[0])/2
 				mouseRelative -= midPoint
 				mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
 				mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
-				selected.rotate_y(-PI/2)
+				selected.rotate_y(PI/2)
 				selected.place()
 			elif Input.is_action_just_pressed("rotate_cw"):
-				selected.rotate_y(PI/2)
+				selected.rotate_y(-PI/2)
 				mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
 				selected.place()
-		if selected is Movable and Input.is_action_just_pressed("delete"):
+		if Input.is_action_just_pressed("delete"):
 			selected.delete()
 			selected = null
 
@@ -125,7 +125,8 @@ func place(part : Movable):
 	select(part.collider)
 	setGrabpoint()
 	var bounds = part.getBounds()
-	mouseRelative = -Vector3((bounds[0]+bounds[3])/2, 0, (bounds[2]+bounds[5])/2)
+	var midPoint = (bounds[1]-bounds[0])/2
+	mouseRelative = -midPoint
 	placing = true
 
 func select(target):
@@ -133,10 +134,14 @@ func select(target):
 	if target:
 		ignoreList.append(target)
 		var targetParent = target.get_parent()
-		if targetParent is Selectable:
+		if targetParent is Selectable or targetParent is Layer or targetParent is Machine:
 			targetParent.setSelected(true)
 			selected = targetParent
 			partDragOrigin = selected.global_position
+			if targetParent is Layer:
+				Global.workspace.selectedLayer = targetParent
+			if targetParent is Machine:
+				Global.workspace.selectedMachine = targetParent
 			print(targetParent.name)
 		else:
 			print("Not selectable")

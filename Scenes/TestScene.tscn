@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvtgwlrwutvvr"]
+
+[ext_resource type="PackedScene" uid="uid://crobnroqc51y8" path="res://Scenes/Parts/ClockPin.tscn" id="1_8k7wh"]
+[ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_iufkg"]
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="3_0f5h7"]
+
+[node name="TestScene" type="Node3D"]
+
+[node name="ClockPin" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.3, 0, -1.1)
+pulsing = true
+
+[node name="ClockPin2" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -0.2, 0, -0.9)
+forwardStep = 1
+pulsing = true
+
+[node name="ClockPin3" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 0, -1)
+forwardStep = 2
+pulsing = true
+
+[node name="ClockPin4" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(-2.18557e-07, 0, 1, 0, 1, 0, -1, 0, -2.18557e-07, -0.1, 0, -1.2)
+forwardStep = 3
+pulsing = true
+
+[node name="ClockPin5" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.299758, 0, -1.1)
+
+[node name="ClockPin6" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 0.399758, 0, -0.9)
+forwardStep = 1
+
+[node name="ClockPin7" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.600401, 0, -1.1)
+
+[node name="ClockPin8" parent="." instance=ExtResource("1_8k7wh")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.399758, 0, -1.20064)
+forwardStep = 1
+
+[node name="Sheet" parent="." instance=ExtResource("2_iufkg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.157725, 0.163191, 0.270155)
+path = "G:\\codingProjects\\z1simulator\\Test\\AA.svg"
+
+[node name="Sheet3" parent="." instance=ExtResource("2_iufkg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.458015, 0.207477, 0.270155)
+path = "G:\\codingProjects\\z1simulator\\Test\\AA.svg"
+
+[node name="Sheet2" parent="." instance=ExtResource("2_iufkg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.23683, 0.121636, 0.551206)
+path = "G:\\codingProjects\\z1simulator\\Test\\11b_2.svg"
+
+[node name="Pin" parent="." instance=ExtResource("3_0f5h7")]
+transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0.115, 0, -0.115)

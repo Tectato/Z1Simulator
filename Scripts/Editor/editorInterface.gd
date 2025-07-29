@@ -40,10 +40,6 @@ func _on_select_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		Global.workspace.setMode(Workspace.Mode.Select)
 
-func _on_edit_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		Global.workspace.setMode(Workspace.Mode.Edit)
-
 func _on_manage_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		Global.workspace.setMode(Workspace.Mode.Manage)
@@ -70,3 +66,16 @@ func _on_save_request_custom_action(action: StringName) -> void:
 
 func _on_save_request_canceled() -> void:
 	editor.loadProject()
+
+
+func _on_machine_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		Global.workspace.setResolution(Workspace.Resolution.Machine)
+
+func _on_layer_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		Global.workspace.setResolution(Workspace.Resolution.Layer)
+
+func _on_part_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		Global.workspace.setResolution(Workspace.Resolution.Part)

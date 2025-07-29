@@ -131,4 +131,5 @@ delete={
 3d_physics/layer_1="Sheets"
 3d_physics/layer_2="Pins"
 3d_physics/layer_3="Solid"
-3d_physics/layer_4="Machines"
+3d_physics/layer_4="Layers"
+3d_physics/layer_5="Machines"

@@ -4,10 +4,18 @@ class_name Layer
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 
+@onready var collider = $BoundingBox/CollisionShape3D
+
 var machine : Machine
 var height = 0
 var parts = []
 var gizmo : Gizmo
+
+func setSelected(value):
+	if value:
+		_draw_gizmo()
+	elif gizmo:
+		gizmo.free()
 
 func serialize():
 	var sheets = []
@@ -42,23 +50,50 @@ func addPart(newPart):
 	newPart.layer = self
 	if newPart is Pin:
 		newPart.scale = Vector3(1,4,1) #TODO determine height
-	_draw_gizmo()
+	updateCollider()
 
 func removePart(part):
 	parts.erase(part)
+	updateCollider()
+
+func updateCollider():
+	var bounds = getBounds()
+	var extents = (bounds[1]-bounds[0])
+	collider.shape.size = extents
+	collider.global_position = bounds[0] + extents/2
+	machine.updateCollider()
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
 	if gizmo:
 		gizmo.free()
-	gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(bounds[3]-bounds[0], bounds[4]-bounds[1], bounds[5]-bounds[2]), global_position)
+	var extents = (bounds[1]-bounds[0])
+	gizmo = Gizmo3D.create_box_outline(Color(0.2,1.0,0.0,0.2), extents, bounds[0] + extents/2)
 
 func getBounds():
-	var min = Vector3.ZERO
-	var max = Vector3.ZERO
+	var min = Vector3(1,1,1) * 100000
+	var max = Vector3(1,1,1) * -100000
 	for part in parts:
 		var partBounds = part.getBounds()
-		var pos = part.global_position
-		min = Vector3(min(min.x,partBounds[0]+pos.x),min(min.y,partBounds[1]+pos.y),min(min.z,partBounds[2]+pos.z))
-		max = Vector3(max(max.x,partBounds[3]+pos.x),max(max.y,partBounds[4]+pos.y),max(max.z,partBounds[5]+pos.z))
-	return [min.x,min.y,min.z,max.x,max.y,max.z]
+		var extents = partBounds[1] - partBounds[0]
+		var bMin = partBounds[0] + part.global_position
+		var bMax = partBounds[1] + part.global_position
+		min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
+		max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
+	return [min,max]
+
+
+func place():
+	pass
+
+func snap(srcPos):
+	return srcPos
+
+func delete():
+	for part in parts:
+		part.delete()
+	machine.layers.erase(self)
+	Global.workspace.selectedLayer = null
+	if gizmo:
+		gizmo.free()
+	queue_free()

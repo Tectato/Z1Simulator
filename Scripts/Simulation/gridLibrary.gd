@@ -7,10 +7,12 @@ var occupies = {}
 var gizmoA
 var gizmoB
 
+var toNotify = {}
+
 func registerPart(part : Movable):
 	var bounds = part.getBounds()
-	var min = Vector3(bounds[0],bounds[1],bounds[2]) + part.global_position
-	var max = Vector3(bounds[3],bounds[4],bounds[5]) + part.global_position
+	var min = bounds[0] + part.global_position
+	var max = bounds[1] + part.global_position
 	#if gizmoA:
 		#gizmoA.free()
 		#gizmoB.free()
@@ -25,17 +27,27 @@ func registerPart(part : Movable):
 	for y in range(int(floor(min.z)),int(floor(max.z))+1):
 		for x in range(int(floor(min.x)),int(floor(max.x))+1):
 			registerPartCell(part, Vector2(x,y))
+	
+	#Update Neighbours
+	for existingPart in toNotify.keys():
+		existingPart.updateInteractionCandidates()
+	toNotify.clear()
 
 func registerPartCell(part : Movable, gridPos : Vector2):
 	#print(str(pos) + "->" + str(gridPos))
 	var layer = getLayer(part)
 	var posKey = toPosKey(gridPos)
 	var occupancy = getDict(part is Sheet, layer)
+	var otherOccupancy = getDict(not part is Sheet, layer)
 	
 	if occupancy.has(posKey):
 		occupancy[posKey].append(part)
 	else:
 		occupancy[posKey] = [part]
+	
+	if otherOccupancy.has(posKey):
+		for existingPart in otherOccupancy[posKey]:
+			toNotify[existingPart] = null
 	
 	if occupies.has(part):
 		occupies[part].append(gridPos)

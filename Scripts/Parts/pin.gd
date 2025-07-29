@@ -17,7 +17,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func getBounds():
-	return [-0.02, 0, -0.02, 0.02, scale.y, 0.02]
+	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, scale.y * 0.1, 0.02)]
 
 func snap(srcPos):
 	#var closestDist = Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, global_position)
@@ -30,6 +30,12 @@ func snap(srcPos):
 	restPos = global_position
 	targetPos = position
 	return global_position
+
+func projectDown(ray : RayCast3D):
+	if layer:
+		return global_position * Vector3(1,0,1) + layer.global_position * Vector3(0,1,0)
+	else:
+		return global_position * Vector3(1,0,1)
 
 func place():
 	super.place()
@@ -65,9 +71,12 @@ func move(dir : Vector2, chain = []):
 	chain.append(self)
 	#updateInteractionState()
 	var newState = interactionState
-	for sheet in interactionCandidates:
-		if sheet.intersects(targetPos):
-			sheet.move(dir,chain)
+	checkPropagation((global_position + targetPos)/2, dir, chain)
+	checkPropagation(targetPos, dir, chain)
 	#updateInteractionState()
 	pass
 	
+func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
+	for sheet in interactionCandidates:
+		if sheet.intersects(pos):
+			sheet.move(dir,chain)

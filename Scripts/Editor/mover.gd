@@ -3,6 +3,7 @@ class_name Mover
 
 @export var selector : Selector
 @onready var camera = selector.camera
+@export var downcaster : RayCast3D
 @export var debug1 : Node3D
 @export var debug2 : Node3D
 var candidatePositions = []
@@ -10,7 +11,9 @@ var candidatePositions = []
 func move():
 	cast()
 	var dragDelta = get_collision_point() - selector.mouseDragOrigin
-	selector.selected.snap(projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative)
+	#selector.selected.snap(projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative)
+	selector.selected.global_position = selector.partDragOrigin + dragDelta
+	selector.selected.snap(selector.selected.projectDown(downcaster))
 	pass
 
 func cast():

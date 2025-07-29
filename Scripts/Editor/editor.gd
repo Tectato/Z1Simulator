@@ -4,14 +4,19 @@ class_name Editor
 @onready var interface = $Camera3D/Interface
 @onready var workspace = $Workspace
 @onready var selector = $Camera3D/SelectionRay
+@onready var tree = $Camera3D/Interface/SceneTree
 var tempProjectPath = ""
 var savePath = ""
 var saved = false
 
 func _ready() -> void:
 	get_tree().get_root().files_dropped.connect(fileDropped)
+	Global.editor = self
+	updateSceneTree()
 
 func newProject():
+	workspace.clear()
+	updateSceneTree()
 	pass
 
 func saveAs(path : String):
@@ -29,15 +34,18 @@ func save():
 		print("Could not write file for project")
 
 func loadProject(srcPath = ""):
+	workspace.clear()
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	saved = false
 	workspace.deserialize(path)
+	updateSceneTree()
 	pass
 
 func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	saved = false
 	workspace.importMachine(path)
+	updateSceneTree()
 
 func importSheet(path : String):
 	saved = false
@@ -85,3 +93,6 @@ func _on_load_project_dialog_file_selected(path: String) -> void:
 		interface.saveRequestDialog.popup()
 	else:
 		loadProject(path)
+
+func updateSceneTree():
+	tree.updateSceneTree()

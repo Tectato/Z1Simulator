@@ -54,4 +54,5 @@ polygon = PackedVector2Array()
 depth = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("CylinderMesh_ptygs")

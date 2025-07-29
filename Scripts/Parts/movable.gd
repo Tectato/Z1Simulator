@@ -30,11 +30,14 @@ func move(dir : Vector2, chain = []):
 	
 
 func getBounds():
-	return [-0.2,-0.05,-0.2,0.2,0.05,0.2]
+	return [Vector3(-0.2,-0.05,-0.2),Vector3(0.2,0.05,0.2)]
 
 func snap(srcPos):
 	global_position = srcPos
 	return srcPos
+
+func projectDown(ray : RayCast3D):
+	pass
 
 func place():
 	restPos = global_position
@@ -42,7 +45,7 @@ func place():
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.machine.gridLibrary.registerPart(self)
-		layer._draw_gizmo()
+		layer.updateCollider()
 	updateInteractionCandidates()
 
 func updateInteractionCandidates():

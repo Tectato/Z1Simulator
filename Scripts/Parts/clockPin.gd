@@ -20,7 +20,7 @@ func clockCycle(clockStep : int, forwards = true):
 			$ResetTimer.start()
 
 func serialize():
-	var rotationY = round(rotation.y / (2/PI))
+	var rotationY = int(round(rotation.y / (PI/2)))
 	return {
 		"pos_x" : restPos.x,
 		"pos_y" : restPos.y,
@@ -32,7 +32,7 @@ func serialize():
 
 func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
-	rotation = Vector3(0, int(source["rotation"]) * 2/PI, 0)
+	rotation = Vector3(0, float(source["rotation"]) * PI/2, 0)
 	forwardStep = int(source["forwardStep"])
 	pulsing = bool(source["pulsing"])
 	place()

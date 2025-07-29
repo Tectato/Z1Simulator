@@ -22,7 +22,7 @@ var gizmo
 var sortTargetPos : Vector3
 
 func serialize():
-	var relativePath = path.trim_prefix(layer.machine.dir)
+	var relativePath = ProjectSettings.localize_path(path)
 	var output = {
 		"pos_x" : restPos.x,
 		"pos_y" : restPos.y,
@@ -52,11 +52,11 @@ func setSelected(value):
 
 func getBounds():
 	if bounds.size() > 0:
-		var A = Vector3(bounds[0],bounds[1],bounds[2]).rotated(Vector3.UP,rotation.y)
-		var B = Vector3(bounds[3],bounds[4],bounds[5]).rotated(Vector3.UP,rotation.y)
+		var A = bounds[0].rotated(Vector3.UP,rotation.y)
+		var B = bounds[1].rotated(Vector3.UP,rotation.y)
 		var min = Vector3(min(A.x,B.x),min(A.y,B.y),min(A.z,B.z))
 		var max = Vector3(max(A.x,B.x),max(A.y,B.y),max(A.z,B.z))
-		return [min.x,min.y,min.z,max.x,max.y,max.z]
+		return [min, max]
 	else:
 		return super.getBounds()
 
@@ -64,9 +64,7 @@ func loadSVG(filepath : String):
 	path = filepath
 	if path.is_absolute_path():
 		path = ProjectSettings.localize_path(path)
-	if layer and not path.begins_with(layer.machine.dir):
-		path = layer.machine.dir + "\\" + path
-	var image = ImageTexture.create_from_image(Image.load_from_file(filepath))
+	var image = ImageTexture.create_from_image(Image.load_from_file(path))
 	sprite.set_texture(image)
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
@@ -96,7 +94,7 @@ func loadSVG(filepath : String):
 	#debugPoint.position = midPoint
 	
 	var radii = (max-min)/2
-	bounds = [-radii.x,-0.05, -radii.y, radii.x, 0.05, radii.y]
+	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
 	#_draw_gizmo()
 
 func isValidElement(string : String):
@@ -181,11 +179,9 @@ func _draw_gizmo() -> void:
 		gizmo.free()
 	var actualBounds = getBounds()
 	#gizmo = Gizmo3D.create_box_outline(Color.LIME, Vector3(actualBounds[3]-actualBounds[0], actualBounds[4]-actualBounds[1], actualBounds[5]-actualBounds[2]), global_position)
-	var min = Vector3(actualBounds[0],actualBounds[1],actualBounds[2])# + global_position
-	var max = Vector3(actualBounds[3],actualBounds[4],actualBounds[5])# + global_position
 	if gizmo:
 		gizmo.free()
-	gizmo = Gizmo3D.create_box_outline(Color.LIME,max-min,global_position)
+	gizmo = Gizmo3D.create_box_outline(Color.LIME,actualBounds[1]-actualBounds[0],global_position)
 
 func addHole(prefab, pos):
 	var newHole = prefab.instantiate()
@@ -260,6 +256,30 @@ func snap(srcPos):
 		#global_position = srcPos * Vector3.UP + (srcPos - Vector3(candidates[0].x,0,candidates[0].y)) * Vector3(1,0,1)
 	#return srcPos #TODO: return snap source pos
 
+func projectDown(ray : RayCast3D):
+	ray.add_exception(collider)
+	var height = castPoints(ray) + 0.02
+	#ray.global_position = global_position + Vector3.UP
+	#ray.force_raycast_update()
+	ray.clear_exceptions()
+	#var pos = ray.get_collision_point()
+	return global_position * Vector3(1,0,1) + Vector3.UP * height
+
+# Cast down from every corner and hole center. Not 100% Exact but should work well enough in most cases
+func castPoints(ray : RayCast3D):
+	var highestY = -100
+	for point in outline.polygon:
+		var absolutePoint = (Vector3(point.x,0,point.y) * $Outline.global_transform.affine_inverse())
+		ray.global_position = absolutePoint + Vector3.UP
+		ray.force_raycast_update()
+		highestY = max(highestY, ray.get_collision_point().y)
+	for hole in holes:
+		if not hole is CustomHole:
+			ray.global_position = hole.global_position + Vector3.UP
+			ray.force_raycast_update()
+			highestY = max(highestY, ray.get_collision_point().y)
+	return highestY
+
 func sortByLength2D(a : Vector2, b : Vector2):
 	return a.length_squared() < b.length_squared()
 
@@ -290,3 +310,17 @@ func place():
 func updateInteractionCandidates():
 	if layer:
 		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)
+
+func move(dir : Vector2, chain = []):
+	if chain.has(self):
+		return
+	super.move(dir, chain)
+	chain.append(self)
+	checkPropagation((global_position + targetPos)/2, dir, chain)
+	checkPropagation(targetPos, dir, chain)
+
+func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
+	var diff = pos - global_position
+	for pin in interactionCandidates:
+		if intersects(pin.global_position - diff):
+			pin.move(dir, chain)
