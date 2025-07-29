@@ -1,0 +1,9 @@
+extends Node3D
+
+var camera : Camera3D
+
+func _ready() -> void:
+	camera = get_tree().get_root().get_camera_3d()
+
+func _process(delta: float) -> void:
+	look_at(camera.global_position, Vector3.UP, true)

@@ -14,4 +14,4 @@ func setTravelLength(value):
 
 func checkPos(pos):
 	var posFlat = pos * Vector3(1,0,1)
-	return start.position.distance_to(posFlat) < radius or end.position.distance_to(posFlat) < radius
+	return start.position.distance_to(posFlat) < radius or end.position.distance_to(posFlat) < radius or posFlat.length() < radius

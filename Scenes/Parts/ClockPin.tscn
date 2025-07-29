@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene load_steps=10 format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
 [ext_resource type="Texture2D" uid="uid://prh1bv7qufq3" path="res://Sprites/clockPinMovement.png" id="3_4euxk"]
+[ext_resource type="FontFile" uid="uid://kj26sylm4dpl" path="res://Fonts/m5x7.ttf" id="4_r5mnu"]
+[ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/billboard.gd" id="4_rcjpo"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcjpo"]
 metallic = 1.0
@@ -50,5 +52,11 @@ texture = ExtResource("3_4euxk")
 [node name="ResetTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="StepLabel" type="Label3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.141088, 0)
+text = "1"
+font = ExtResource("4_r5mnu")
+script = ExtResource("4_rcjpo")
 
 [connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]

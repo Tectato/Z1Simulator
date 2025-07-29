@@ -72,6 +72,11 @@ func _process(delta: float) -> void:
 				selected.rotate_y(-PI/2)
 				mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
 				selected.place()
+			if selected is ClockPin:
+				if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
+					selected.setStep(selected.forwardStep+1)
+				if Input.is_action_just_pressed("cycle_clock_pin_step_bckwd"):
+					selected.setStep(selected.forwardStep-1)
 		if Input.is_action_just_pressed("delete"):
 			selected.delete()
 			selected = null

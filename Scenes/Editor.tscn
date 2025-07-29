@@ -157,6 +157,7 @@ collide_with_bodies = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Downcaster"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+visible = false
 mesh = SubResource("CylinderMesh_r768j")
 
 [node name="MoveRay" type="RayCast3D" parent="." node_paths=PackedStringArray("selector", "downcaster", "debug1", "debug2")]
