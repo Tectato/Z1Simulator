@@ -8,6 +8,8 @@ var clockPins = []
 var inputs = []
 var outputs = []
 
+var gizmo : Control
+
 func _ready() -> void:
 	$AutoClock.wait_time = clockSpeed
 
@@ -32,10 +34,14 @@ func next(stopClock = true):
 	currentStep %= 4
 	for pin in clockPins:
 		pin.clockCycle(currentStep)
+	gizmo.setClockStep(currentStep+1)
 
 func prev(stopClock = true):
 	if stopClock: stop()
 	pass
+
+func setClockSpeed(value):
+	$AutoClock.wait_time = 1.0/value
 
 func _on_auto_clock_timeout() -> void:
 	next(false)

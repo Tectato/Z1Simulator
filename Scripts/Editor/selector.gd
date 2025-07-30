@@ -66,17 +66,19 @@ func _process(delta: float) -> void:
 				mouseRelative -= midPoint
 				mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
 				mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
-				selected.rotate_y(PI/2)
+				selected.rotatePart(PI/2)
 				selected.place()
 			elif Input.is_action_just_pressed("rotate_cw"):
-				selected.rotate_y(-PI/2)
 				mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
+				selected.rotatePart(-PI/2)
 				selected.place()
 			if selected is ClockPin:
 				if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
 					selected.setStep(selected.forwardStep+1)
 				if Input.is_action_just_pressed("cycle_clock_pin_step_bckwd"):
 					selected.setStep(selected.forwardStep-1)
+				if Input.is_action_just_pressed("flip"):
+					selected.setPulsing(!selected.pulsing)
 		if Input.is_action_just_pressed("delete"):
 			selected.delete()
 			selected = null

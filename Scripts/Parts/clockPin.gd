@@ -1,33 +1,55 @@
 extends Pin
 class_name ClockPin
 
+const TRAVELINDICATOR = preload("res://Scenes/Parts/ClockPinTravelIndicator.tscn")
+
 @export_range(0,3,1) var forwardStep = 0
 @onready var antiStep = (forwardStep + 2) % 4
 @export var pulsing = false # If false, move forward in step X and back in step X+2. If true, move forward and back in X and don't move in X+2
 var inActivePos = false
+var travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
+var travelIndicator : Node3D
+@onready var tempTravelIndicator = $ClockPinTravelIndicator
 
 func _ready() -> void:
 	Simulator.registerClockPin(self)
+	travelIndicator = TRAVELINDICATOR.instantiate()
+	get_parent().add_child(travelIndicator)
+	travelIndicator.global_position = global_position + Vector3.UP * 0.001
+	travelIndicator.rotation = rotation
+
+func _process(delta: float) -> void:
+	position = position.move_toward(targetPos, delta)
 
 func move(dir : Vector2, chain = []):
 	super.move(dir.rotated(-rotation.y), chain)
-	$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
+	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
 
 func setStep(value):
-	forwardStep = value % 4
-	antiStep = (value+2) % 4
-	$StepLabel.text = str(forwardStep+1)
+	forwardStep = wrap(value, 0, 4)
+	antiStep = wrap(value+2, 0, 4)
+	if pulsing:
+		$StepLabel.text = str(forwardStep+1)
+	else:
+		$StepLabel.text = str(forwardStep+1) + "+" + str(antiStep+1)
+	clockCycle(Simulator.currentStep)
 
 func setPulsing(value):
 	pulsing = value
+	if pulsing:
+		$StepLabel.text = str(forwardStep+1)
+	else:
+		$StepLabel.text = str(forwardStep+1) + "+" + str(antiStep+1)
 
 func clockCycle(clockStep : int, forwards = true):
 	if clockStep == forwardStep or (!pulsing and clockStep == antiStep):
-		if (clockStep == forwardStep and inActivePos) or (clockStep == antiStep and not inActivePos):
-			return # Make sure we dont move back if we havent moved forward yet
-		inActivePos = !inActivePos
-		var direction = Vector2.UP if clockStep == forwardStep else Vector2.DOWN
-		move(direction * Global.workspace.pinTravel)
+		var toActivePos = clockStep == forwardStep
+		inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+		if toActivePos and !inActivePos:
+			move(Vector2(travel.x,travel.z))
+		elif !toActivePos and inActivePos:
+			move(-Vector2(travel.x,travel.z))
 		if pulsing:
 			$ResetTimer.start()
 
@@ -50,7 +72,25 @@ func deserialize(source : Dictionary):
 	place()
 
 func _on_reset_timer_timeout() -> void:
-	move(Vector2.DOWN * Global.workspace.pinTravel)
+	move(-Vector2(travel.x,travel.z))
+
+func place():
+	if tempTravelIndicator:
+		tempTravelIndicator.queue_free()
+	restPos = global_position if !inActivePos else global_position - travel.rotated(Vector3.UP,rotation.y)
+	targetPos = position
+	if layer:
+		layer.machine.gridLibrary.unregisterPart(self)
+		layer.machine.gridLibrary.registerPart(self)
+		layer.updateCollider()
+	updateInteractionCandidates()
+	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
+
+func rotatePart(by):
+	super.rotatePart(by)
+	#travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
+	travelIndicator.rotate_y(by)
+	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
 
 func delete():
 	super.delete()

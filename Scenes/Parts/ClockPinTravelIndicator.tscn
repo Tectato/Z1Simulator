@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1kecxje78rsi"]
+
+[ext_resource type="Texture2D" uid="uid://prh1bv7qufq3" path="res://Sprites/clockPinMovement.png" id="1_vxkr2"]
+
+[node name="ClockPinTravelIndicator" type="Sprite3D"]
+pixel_size = 0.005
+axis = 1
+texture_filter = 0
+texture = ExtResource("1_vxkr2")

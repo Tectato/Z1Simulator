@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=88 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -52,6 +52,8 @@
 [ext_resource type="Texture2D" uid="uid://b3vruo2ckl63" path="res://Sprites/Buttons/SceneTree/hide.png" id="42_3icuf"]
 [ext_resource type="Texture2D" uid="uid://cbgagclwkqade" path="res://Sprites/Buttons/SceneTree/show.png" id="43_1bbve"]
 [ext_resource type="Texture2D" uid="uid://y1aq8vjhau7j" path="res://Sprites/Buttons/SceneTree/hide_lit.png" id="44_8ktkl"]
+[ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
+[ext_resource type="Script" uid="uid://uhy52kfjvhai" path="res://Scripts/Editor/clockGizmo.gd" id="53_hujvp"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -119,6 +121,97 @@ texture_filter = 0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_cv1oh"]
 viewport_path = NodePath("Camera3D/Interface/AxesGizmoViewport")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hujvp"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w82wx"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pbycb"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_egdbq"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mtfo3"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8faq4"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xccxh"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ia0pe"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pu55"]
+atlas = ExtResource("52_85c8q")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jotky"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hujvp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w82wx")
+}],
+"loop": false,
+"name": &"1",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pbycb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_egdbq")
+}],
+"loop": false,
+"name": &"2",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mtfo3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8faq4")
+}],
+"loop": false,
+"name": &"3",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xccxh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ia0pe")
+}],
+"loop": false,
+"name": &"4",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pu55")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -514,6 +607,46 @@ grow_horizontal = 0
 position = Vector2(-65, 63)
 texture = SubResource("ViewportTexture_cv1oh")
 
+[node name="ClockGizmo" type="Control" parent="Camera3D/Interface"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -127.0
+offset_right = -64.0
+offset_bottom = -127.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("53_hujvp")
+
+[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/ClockGizmo"]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_jotky")
+animation = &"1"
+autoplay = "default"
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/ClockGizmo"]
+modulate = Color(0, 0, 0, 0.239216)
+z_index = -1
+layout_mode = 0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/ClockGizmo"]
+layout_mode = 0
+offset_left = -139.0
+offset_top = 29.0
+offset_right = -70.4375
+offset_bottom = 60.0
+text = "1 Hz"
+
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea")]
 enabled = false
 collision_mask = 3
@@ -566,3 +699,4 @@ mesh = SubResource("SphereMesh_brgpd")
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
 [connection signal="toggled" from="Camera3D/Interface/SceneTree/Hide" to="Camera3D/Interface/SceneTree" method="_on_hide_toggled"]
+[connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]

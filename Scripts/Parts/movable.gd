@@ -48,6 +48,9 @@ func place():
 		layer.updateCollider()
 	updateInteractionCandidates()
 
+func rotatePart(by):
+	rotate_y(by)
+
 func updateInteractionCandidates():
 	pass
 
