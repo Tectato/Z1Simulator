@@ -134,7 +134,9 @@ func place(part : Movable):
 	var bounds = part.getBounds()
 	var midPoint = (bounds[1]-bounds[0])/2
 	mouseRelative = -midPoint
+	mouseDragOrigin = partDragOrigin
 	placing = true
+	debugLabel.text = str(mouseRelative)
 
 func select(target):
 	deselect()

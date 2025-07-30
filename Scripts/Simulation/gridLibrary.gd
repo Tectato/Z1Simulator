@@ -59,13 +59,22 @@ func unregisterPart(part : Movable):
 		return
 	var layer = getLayer(part)
 	var occupancy = getDict(part is Sheet, layer)
+	var otherOccupancy = getDict(not part is Sheet, layer)
 	var cells = occupies[part]
 	for cell in cells:
 		var key = toPosKey(cell)
 		occupancy[key].erase(part)
 		if occupancy[key].is_empty():
 			occupancy.erase(key)
+		if otherOccupancy.has(key):
+			for existingPart in otherOccupancy[key]:
+				toNotify[existingPart] = null
+			
 	occupies.erase(part)
+	#Update Neighbours
+	for existingPart in toNotify.keys():
+		existingPart.updateInteractionCandidates()
+	toNotify.clear()
 
 func getIntersectionCandidates(part : Movable):
 	var output = {}

@@ -85,6 +85,10 @@ func serialize(path):
 
 func deserialize(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if FileAccess.get_open_error():
+		print("Error loading file " + path)
+		delete()
+		return
 	dir = path.get_base_dir()
 	if !source.has("id"):
 		print("Invalid machine file")
@@ -116,6 +120,10 @@ func updateCollider():
 	var extents = (bounds[1]-bounds[0])
 	collider.shape.size = extents
 	collider.global_position = bounds[0] + extents/2
+	for pin in globalPins:
+		pin.setHeight(max(extents.y*10,1))
+	for pin in clockPins:
+		pin.setHeight(max(extents.y*10,1))
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
@@ -130,12 +138,13 @@ func getBounds():
 	var things = parts.get_children()
 	things.append_array(layers)
 	for thing in things:
-		var thingBounds = thing.getBounds()
-		var extents = thingBounds[1] - thingBounds[0]
-		var bMin = thingBounds[0] + thing.global_position
-		var bMax = thingBounds[1] + thing.global_position
-		min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
-		max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
+		if thing is Movable or thing is Layer:
+			var thingBounds = thing.getBounds()
+			var extents = thingBounds[1] - thingBounds[0]
+			var bMin = thingBounds[0] + thing.global_position
+			var bMax = thingBounds[1] + thing.global_position
+			min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
+			max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
 	return [min,max]
 
 func place():

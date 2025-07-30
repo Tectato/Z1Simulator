@@ -13,17 +13,16 @@ var travelIndicator : Node3D
 
 func _ready() -> void:
 	Simulator.registerClockPin(self)
-	travelIndicator = TRAVELINDICATOR.instantiate()
-	get_parent().add_child(travelIndicator)
-	travelIndicator.global_position = global_position + Vector3.UP * 0.001
-	travelIndicator.rotation = rotation
 
 func _process(delta: float) -> void:
 	position = position.move_toward(targetPos, delta)
 
 func setHeight(value):
-	super.setHeight(value)
-	$StepLabel.scale = Vector3(1,1/value,1)
+	$MeshInstance3D.scale = Vector3(1,value,1)
+	$MeshInstance3D.position = Vector3(0,value/20,0)
+	collider.scale = Vector3(1,value,1)
+	collider.position = Vector3(0,value/20,0)
+	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
 func move(dir : Vector2, chain = []):
 	super.move(dir.rotated(-rotation.y), chain)
@@ -33,14 +32,14 @@ func move(dir : Vector2, chain = []):
 func setStep(value):
 	forwardStep = wrap(value, 0, 4)
 	antiStep = wrap(value+2, 0, 4)
-	if pulsing:
-		$StepLabel.text = str(forwardStep+1)
-	else:
-		$StepLabel.text = str(forwardStep+1) + "+" + str(antiStep+1)
+	updateLabel()
 	clockCycle(Simulator.currentStep)
 
 func setPulsing(value):
 	pulsing = value
+	updateLabel()
+
+func updateLabel():
 	if pulsing:
 		$StepLabel.text = str(forwardStep+1)
 	else:
@@ -72,7 +71,9 @@ func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
 	rotation = Vector3(0, float(source["rotation"]) * PI/2, 0)
 	forwardStep = int(source["forwardStep"])
+	antiStep = wrap(forwardStep+2, 0, 4)
 	pulsing = bool(source["pulsing"])
+	updateLabel()
 	place()
 
 func _on_reset_timer_timeout() -> void:
@@ -81,23 +82,29 @@ func _on_reset_timer_timeout() -> void:
 func place():
 	if tempTravelIndicator:
 		tempTravelIndicator.queue_free()
+		travelIndicator = TRAVELINDICATOR.instantiate()
+		get_parent().add_child(travelIndicator)
+		travelIndicator.global_position = global_position + Vector3.UP * 0.001
+		travelIndicator.rotation = rotation
 	restPos = global_position if !inActivePos else global_position - travel.rotated(Vector3.UP,rotation.y)
 	targetPos = position
-	if layer:
-		layer.machine.gridLibrary.unregisterPart(self)
-		layer.machine.gridLibrary.registerPart(self)
-		layer.updateCollider()
+	if machine:
+		machine.gridLibrary.unregisterPart(self)
+		machine.gridLibrary.registerPart(self)
 	updateInteractionCandidates()
 	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
 
 func rotatePart(by):
 	super.rotatePart(by)
 	#travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
-	travelIndicator.rotate_y(by)
-	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
+	if travelIndicator:
+		travelIndicator.rotate_y(by)
+		travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
 
 func delete():
 	super.delete()
+	if travelIndicator:
+		travelIndicator.queue_free()
 	Simulator.unregisterClockPin(self)
 	if machine:
 		machine.removeClockPin(self)

@@ -9,6 +9,7 @@ func _ready() -> void:
 	get_tree().get_root().size_changed.connect(updateRestPos)
 	tree.cell_selected.connect(cellSelected)
 	#tree.item_activated.connect(cellActivated)
+	_on_hide_toggled(true)
 
 func updateRestPos():
 	restPos = global_position - Vector2(180,0) if $Hide.button_pressed else global_position
