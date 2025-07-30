@@ -12,14 +12,21 @@ func move():
 	cast()
 	var dragDelta = get_collision_point() - selector.mouseDragOrigin
 	#selector.selected.snap(projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative)
-	selector.selected.global_position = selector.partDragOrigin + dragDelta
-	selector.selected.snap(selector.selected.projectDown(downcaster))
+	for i in range(selector.selected.size()):
+		var part = selector.selected[i]
+		part.global_position = selector.partDragOrigins[i] + dragDelta
+		for otherPart in selector.selected:
+			downcaster.add_exception(otherPart.collider)
+		part.snap(part.projectDown(downcaster))
+	#selector.selected.global_position = selector.partDragOrigin + dragDelta
+	#selector.selected.snap(selector.selected.projectDown(downcaster))
 	pass
 
 func cast():
 	global_position = selector.global_position
 	rotation = selector.camera.rotation
-	add_exception(selector.selected.collider)
+	for part in selector.selected:
+		add_exception(part.collider)
 	var mousePos = get_viewport().get_mouse_position()
 	if camera.orthographic:
 		global_position = camera.project_ray_origin(mousePos)

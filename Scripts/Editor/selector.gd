@@ -8,12 +8,13 @@ class_name Selector
 
 var clickPos : Vector2
 var mouseDragOrigin : Vector3
-var mouseRelative : Vector3
-var partDragOrigin : Vector3
+var mouseRelative = []
+var partDragOrigins = []
 var dragging = false
 var placing = false
-var selected : Node3D
+var selected = []
 var ignoreList = []
+var clipboard = []
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
@@ -33,15 +34,17 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 		if event.is_action_pressed("mouse_left"):
 			clickPos = get_viewport().get_mouse_position()
 			if placing:
-				selected.place()
+				for part in selected:
+					part.place()
 				placing = false
 				deselect()
-			elif selected:
+			elif !selected.is_empty():
 				setGrabpoint()
 		if event.is_action_released("mouse_left") and not placing:
 			if dragging:
 				if selected:
-					selected.place()
+					for part in selected:
+						part.place()
 			else:
 				cast()
 			dragging = false
@@ -50,38 +53,42 @@ func _process(delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
 	if hovered != clickArea:
 		return
-	if selected and (Input.is_action_pressed("mouse_left") or placing):
+	if !selected.is_empty() and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if dist > 5:
 				dragging = true
 		if dragging or placing:
-			if selected != null and selected is Movable:
-				mover.move()
-	if selected:
-		if selected is ClockPin or selected is Sheet:
-			if Input.is_action_just_pressed("rotate_ccw"):
-				var bounds = selected.getBounds()
-				var midPoint = (bounds[1]-bounds[0])/2
-				mouseRelative -= midPoint
-				mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
-				mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
-				selected.rotatePart(PI/2)
-				selected.place()
-			elif Input.is_action_just_pressed("rotate_cw"):
-				mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
-				selected.rotatePart(-PI/2)
-				selected.place()
-			if selected is ClockPin:
-				if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
-					selected.setStep(selected.forwardStep+1)
-				if Input.is_action_just_pressed("cycle_clock_pin_step_bckwd"):
-					selected.setStep(selected.forwardStep-1)
-				if Input.is_action_just_pressed("flip"):
-					selected.setPulsing(!selected.pulsing)
-		if Input.is_action_just_pressed("delete"):
-			selected.delete()
-			selected = null
+			mover.move()
+	if !selected.is_empty():
+		for part in selected:
+			if part is ClockPin or part is Sheet:
+				if Input.is_action_just_pressed("rotate_ccw"):
+					var bounds = part.getBounds()
+					var midPoint = (bounds[1]-bounds[0])/2
+					mouseRelative -= midPoint
+					mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
+					mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
+					part.rotatePart(PI/2)
+					part.place()
+				elif Input.is_action_just_pressed("rotate_cw"):
+					mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
+					part.rotatePart(-PI/2)
+					part.place()
+				if part is ClockPin:
+					if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
+						part.setStep(part.forwardStep+1)
+					if Input.is_action_just_pressed("cycle_clock_pin_step_bckwd"):
+						part.setStep(part.forwardStep-1)
+					if Input.is_action_just_pressed("flip"):
+						part.setPulsing(!part.pulsing)
+			if Input.is_action_just_pressed("delete"):
+				selected.erase(part)
+				part.delete()
+		if Input.is_action_just_pressed("copy"):
+			copy()
+	if Input.is_action_just_pressed("paste"):
+		paste()
 
 func cast(select = true):
 	var mousePos = get_viewport().get_mouse_position()
@@ -92,11 +99,11 @@ func cast(select = true):
 	target_position = camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
 	if select:
-		iterate()
-	if selected:
+		iterate(Input.is_key_pressed(KEY_SHIFT))
+	if !selected.is_empty():
 		setGrabpoint()
 
-func iterate():
+func iterate(shift = false):
 	var target = get_collider()
 	var index = 0
 	while target:
@@ -106,16 +113,18 @@ func iterate():
 			target = get_collider()
 		else:
 			ignoreList.clear()
-			select(target)
+			select(target, shift)
 			return
 	ignoreList.clear()
 	clear_exceptions()
 	force_raycast_update()
 	target = get_collider()
-	select(target)
+	select(target, shift)
 
 func setGrabpoint():
-	partDragOrigin = selected.global_position
+	partDragOrigins.clear()
+	for part in selected:
+		partDragOrigins.push_back(part.global_position)
 	var mousePos = get_viewport().get_mouse_position()
 	if camera.orthographic:
 		global_position = camera.project_ray_origin(mousePos)
@@ -124,8 +133,10 @@ func setGrabpoint():
 	target_position = camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
 	mouseDragOrigin = get_collision_point()
-	mouseRelative = mouseDragOrigin - selected.global_position
-	mouseRelative = Vector3(mouseRelative.x,0,mouseRelative.z)
+	mouseRelative.clear()
+	for part in selected:
+		var relative2D = mouseDragOrigin - part.global_position
+		mouseRelative.push_back(Vector3(relative2D.x,0,relative2D.z))
 	#debugLabel.text = str(mouseRelative) + "\n" + str(selected.global_position)
 
 func place(part : Movable):
@@ -133,20 +144,55 @@ func place(part : Movable):
 	setGrabpoint()
 	var bounds = part.getBounds()
 	var midPoint = (bounds[1]-bounds[0])/2
-	mouseRelative = -midPoint
-	mouseDragOrigin = partDragOrigin
+	mouseRelative = [-midPoint]
+	mouseDragOrigin = partDragOrigins[0]
 	placing = true
 	debugLabel.text = str(mouseRelative)
 
-func select(target):
+func copy():
+	clipboard = selected.duplicate()
+
+func paste():
 	deselect()
+	var min = Vector3(1,1,1)*1000
+	var max = Vector3(1,1,1)*-1000
+	for part in clipboard:
+		var bounds = part.getBounds()
+		var partMin = bounds[0] + part.global_position
+		var partMax = bounds[1] + part.global_position
+		min = Vector3(min(min.x,partMin.x),min(min.y,partMin.y),min(min.z,partMin.z))
+		max = Vector3(max(max.x,partMax.x),max(max.y,partMax.y),max(max.z,partMax.z))
+	
+	
+	for part in clipboard:
+		if part is Sheet:
+			selected.append(Global.workspace.importSheet(part.path))
+		elif part is ClockPin:
+			selected.append(Global.workspace.addClockPin())
+		elif part is Pin:
+			if part.layer:
+				selected.append(Global.workspace.addPin())
+			else:
+				selected.append(Global.workspace.addGlobalPin())
+		var newPart = selected.back()
+		newPart.rotation = part.rotation
+		newPart.setSelected(true)
+		newPart.global_position = part.global_position
+		mouseRelative.push_back(Vector3(0,0,0))#TODO
+		partDragOrigins.push_back(part.global_position)
+	placing = true
+
+
+func select(target, shift = false):
+	if !shift:
+		deselect()
 	if target:
 		ignoreList.append(target)
 		var targetParent = target.get_parent()
 		if targetParent is Selectable or targetParent is Layer or targetParent is Machine:
 			targetParent.setSelected(true)
-			selected = targetParent
-			partDragOrigin = selected.global_position
+			selected.append(targetParent)
+			partDragOrigins.append(targetParent.global_position)
 			if targetParent is Layer:
 				Global.workspace.selectedLayer = targetParent
 			if targetParent is Machine:
@@ -158,6 +204,8 @@ func select(target):
 		print("No Hit")
 
 func deselect():
-	if selected:
-		selected.setSelected(false)
-		selected = null
+	for part in selected:
+		part.setSelected(false)
+	selected.clear()
+	partDragOrigins.clear()
+	mouseRelative.clear()

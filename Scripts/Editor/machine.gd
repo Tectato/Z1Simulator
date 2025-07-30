@@ -155,7 +155,8 @@ func snap(srcPos):
 
 func delete(): #TODO: prompt for confirmation or undo
 	for part in parts.get_children():
-		part.delete()
+		if part is Movable:
+			part.delete()
 	for layer in layers:
 		layer.delete()
 	Global.workspace.machines.erase(self)

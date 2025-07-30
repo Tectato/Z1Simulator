@@ -28,12 +28,14 @@ func _ready() -> void:
 	createNew()
 
 func setMode(newMode):
+	if newMode != mode:
+		modeChanged.emit(newMode)
 	mode = newMode
-	modeChanged.emit(mode)
 
 func setResolution(newRes):
+	if newRes != resolution:
+		resolutionChanged.emit(newRes)
 	resolution = newRes
-	resolutionChanged.emit(resolution)
 
 func clear():
 	for machine in machines:
