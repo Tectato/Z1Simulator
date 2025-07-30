@@ -6,6 +6,7 @@ const PIN = preload("res://Scenes/Parts/Pin.tscn")
 
 @onready var collider = $BoundingBox/CollisionShape3D
 
+var id = ""
 var machine : Machine
 var height = 0
 var parts = []
@@ -29,6 +30,8 @@ func serialize():
 		"sheets" : sheets,
 		"pins" : pins
 	}
+	if id.length() > 0:
+		output["id"] = id
 	return output
 
 func deserialize(source : Dictionary):
@@ -42,6 +45,8 @@ func deserialize(source : Dictionary):
 		var newPart = PIN.instantiate()
 		addPart(newPart)
 		newPart.deserialize(pin)
+	if source.has("id"):
+		id = source["id"]
 
 func addPart(newPart):
 	parts.append(newPart)

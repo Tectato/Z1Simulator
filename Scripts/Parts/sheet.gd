@@ -30,12 +30,16 @@ func serialize():
 		"rotation" : rotation.y,
 		"file" : relativePath
 	}
+	if id.length() > 0:
+		output["id"] = id
 	return output
 
 func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
 	rotation = Vector3(0, source["rotation"], 0)
 	loadSVG(source["file"])
+	if source.has("id"):
+		id = source["id"]
 	place()
 
 func _ready():

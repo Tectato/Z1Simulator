@@ -6,14 +6,19 @@ var global = false
 var machine : Machine
 
 func serialize():
-	return {
+	var output = {
 		"pos_x" : restPos.x,
 		"pos_y" : restPos.y,
 		"pos_z" : restPos.z
 	}
+	if id.length() > 0:
+		output["id"] = id
+	return output
 
 func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
+	if source.has("id"):
+		id = source["id"]
 	place()
 
 func getBounds():

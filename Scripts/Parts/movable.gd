@@ -12,6 +12,7 @@ var stateX = false
 var stateY = false
 @onready var restStateX = stateX
 @onready var restStateY = stateY
+var id = ""
 
 func _ready() -> void:
 	place()

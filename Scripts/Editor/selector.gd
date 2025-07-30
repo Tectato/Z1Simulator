@@ -53,6 +53,7 @@ func _process(delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
 	if hovered != clickArea:
 		return
+	var focusElsewhere = get_viewport().gui_get_focus_owner()
 	if !selected.is_empty() and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
@@ -82,7 +83,7 @@ func _process(delta: float) -> void:
 						part.setStep(part.forwardStep-1)
 					if Input.is_action_just_pressed("flip"):
 						part.setPulsing(!part.pulsing)
-			if Input.is_action_just_pressed("delete"):
+			if !focusElsewhere and Input.is_action_just_pressed("delete"):
 				selected.erase(part)
 				part.delete()
 		if Input.is_action_just_pressed("copy"):

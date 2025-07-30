@@ -58,7 +58,7 @@ func clockCycle(clockStep : int, forwards = true):
 
 func serialize():
 	var rotationY = int(round(rotation.y / (PI/2)))
-	return {
+	var output = {
 		"pos_x" : restPos.x,
 		"pos_y" : restPos.y,
 		"pos_z" : restPos.z,
@@ -66,6 +66,9 @@ func serialize():
 		"forwardStep" : int(forwardStep),
 		"pulsing" : pulsing
 	}
+	if id.length() > 0:
+		output["id"] = id
+	return output
 
 func deserialize(source : Dictionary):
 	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
@@ -73,6 +76,8 @@ func deserialize(source : Dictionary):
 	forwardStep = int(source["forwardStep"])
 	antiStep = wrap(forwardStep+2, 0, 4)
 	pulsing = bool(source["pulsing"])
+	if source.has("id"):
+		id = source["id"]
 	updateLabel()
 	place()
 

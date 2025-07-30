@@ -7,6 +7,7 @@ extends Control
 @onready var importSheetDialog = $ImportSheetDialog
 @onready var importChoiceDialog = $ImportChoice
 @onready var saveRequestDialog = $SaveRequest
+@onready var renamingBox = $RenamingBox
 
 @onready var ModeSelect = $ModeBar/Select
 @onready var ModeEdit = $ModeBar/Edit
@@ -14,6 +15,18 @@ extends Control
 
 func _ready() -> void:
 	saveRequestDialog.add_button("Cancel", true, "Cancel")
+
+func _input(event: InputEvent) -> void:
+	if !event.is_echo():
+		if event.is_action_pressed("rename") and editor.selector.selected.size() == 1:
+			var selected = editor.selector.selected[0]
+			if selected is Movable or selected is Machine or selected is Layer:
+				renamingBox.show()
+				renamingBox.global_position = get_viewport().get_mouse_position()
+				renamingBox.grab_focus()
+				renamingBox.text = selected.id
+		if event.is_action_pressed("mouse_left") and get_viewport().gui_get_focus_owner() and get_viewport().gui_get_hovered_control() == $ClickArea:
+			get_viewport().gui_get_focus_owner().release_focus()
 
 func _on_file_id_pressed(id: int) -> void:
 	match(id):
@@ -79,3 +92,20 @@ func _on_layer_toggled(toggled_on: bool) -> void:
 func _on_part_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		Global.workspace.setResolution(Workspace.Resolution.Part)
+
+
+func _on_renaming_box_text_submitted(new_text: String) -> void:
+	if editor.selector.selected.size() == 1:
+		var selected = editor.selector.selected[0]
+		selected.id = new_text
+		if selected is Machine or selected is Layer:
+			editor.updateSceneTree()
+	renamingBox.position = Vector2(-100,-100)
+	renamingBox.release_focus()
+	renamingBox.hide()
+
+func _on_renaming_box_editing_toggled(toggled_on: bool) -> void:
+	if !toggled_on:
+		renamingBox.position = Vector2(-100,-100)
+		renamingBox.release_focus()
+		renamingBox.hide()
