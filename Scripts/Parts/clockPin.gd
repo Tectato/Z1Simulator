@@ -21,6 +21,10 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	position = position.move_toward(targetPos, delta)
 
+func setHeight(value):
+	super.setHeight(value)
+	$StepLabel.scale = Vector3(1,1/value,1)
+
 func move(dir : Vector2, chain = []):
 	super.move(dir.rotated(-rotation.y), chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2

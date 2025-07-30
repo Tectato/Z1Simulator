@@ -19,6 +19,9 @@ func deserialize(source : Dictionary):
 func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, scale.y * 0.1, 0.02)]
 
+func setHeight(value):
+	scale = Vector3(scale.x,value,scale.z)
+
 func snap(srcPos):
 	#var closestDist = Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, global_position)
 	#if closestDist.length() < Workspace.snapDist:

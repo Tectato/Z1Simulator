@@ -62,6 +62,9 @@ func updateCollider():
 	collider.shape.size = extents
 	collider.global_position = bounds[0] + extents/2
 	machine.updateCollider()
+	for part in parts:
+		if part is Pin:
+			part.setHeight(max(extents.y*10,1))
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
@@ -75,7 +78,8 @@ func getBounds():
 	var max = Vector3(1,1,1) * -100000
 	for part in parts:
 		var partBounds = part.getBounds()
-		var extents = partBounds[1] - partBounds[0]
+		if part is Pin:
+			partBounds[1] = partBounds[1] * Vector3(1,0,1) + Vector3.UP * 0.2
 		var bMin = partBounds[0] + part.global_position
 		var bMax = partBounds[1] + part.global_position
 		min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
