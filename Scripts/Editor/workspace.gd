@@ -40,6 +40,7 @@ func setResolution(newRes):
 func clear():
 	for machine in machines:
 		machine.delete()
+	Simulator.setStep()
 
 func createNew():
 	var newMachine = MACHINE.instantiate()
@@ -106,6 +107,7 @@ func addPin():
 	return newPin
 
 func addGlobalPin():
+	createIfNotExists()
 	setResolution(Resolution.Part)
 	setMode(Mode.Select)
 	var newPin = PIN.instantiate()
@@ -113,6 +115,7 @@ func addGlobalPin():
 	return newPin
 
 func addClockPin():
+	createIfNotExists()
 	setMode(Mode.Select)
 	setResolution(Resolution.Part)
 	var newPin = CLOCKPIN.instantiate()

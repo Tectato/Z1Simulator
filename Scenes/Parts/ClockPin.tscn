@@ -1,10 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene load_steps=16 format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
 [ext_resource type="PackedScene" uid="uid://b1kecxje78rsi" path="res://Scenes/Parts/ClockPinTravelIndicator.tscn" id="3_r5mnu"]
 [ext_resource type="FontFile" uid="uid://kj26sylm4dpl" path="res://Fonts/m5x7.ttf" id="4_r5mnu"]
-[ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/billboard.gd" id="4_rcjpo"]
+[ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="4_rcjpo"]
+[ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="6_vjs7e"]
+[ext_resource type="Script" uid="uid://yk8dkrm1xab" path="res://Scripts/Editor/3DUI/checkbox3D.gd" id="7_fc7u5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcjpo"]
 metallic = 1.0
@@ -19,6 +21,36 @@ shader = ExtResource("2_4euxk")
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vjs7e"]
+size = Vector3(0.14, 0.14, 0.05)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fc7u5"]
+atlas = ExtResource("6_vjs7e")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1a2dp"]
+atlas = ExtResource("6_vjs7e")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vinw1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fc7u5")
+}],
+"loop": false,
+"name": &"false",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1a2dp")
+}],
+"loop": false,
+"name": &"true",
+"speed": 5.0
+}]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_fc7u5"]
 height = 0.1
@@ -46,6 +78,26 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
 text = "1+3"
 font = ExtResource("4_r5mnu")
 script = ExtResource("4_rcjpo")
+
+[node name="InputCheckbox" type="Node3D" parent="StepLabel"]
+visible = false
+script = ExtResource("7_fc7u5")
+
+[node name="Area3D" type="Area3D" parent="StepLabel/InputCheckbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StepLabel/InputCheckbox/Area3D"]
+shape = SubResource("BoxShape3D_vjs7e")
+
+[node name="Sprite" type="AnimatedSprite3D" parent="StepLabel/InputCheckbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_vinw1")
+animation = &"false"
+autoplay = "false"
 
 [node name="Area3D" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)

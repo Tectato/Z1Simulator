@@ -4,7 +4,13 @@ class_name Layer
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 
-@onready var collider = $BoundingBox/CollisionShape3D
+@onready var collider = $BoundingBox
+@onready var bb = $BoundingBox/CollisionShape3D
+@onready var widgets = $Widgets
+@onready var add = $Widgets/Add
+@onready var button_up = $Widgets/MoveUp
+@onready var button_down = $Widgets/MoveDown
+@onready var baseplate = $Baseplate
 
 var id = ""
 var machine : Machine
@@ -13,12 +19,14 @@ var parts = []
 var gizmo : Gizmo
 
 func setSelected(value):
+	widgets.visible = value
 	if value:
 		_draw_gizmo()
 	elif gizmo:
 		gizmo.free()
 
 func serialize():
+	height = machine.getLayerHeight(self)
 	var sheets = []
 	var pins = []
 	for part in parts:
@@ -27,6 +35,7 @@ func serialize():
 		elif part is Pin:
 			pins.append(part.serialize())
 	var output = {
+		"height" : height,
 		"sheets" : sheets,
 		"pins" : pins
 	}
@@ -37,6 +46,7 @@ func serialize():
 func deserialize(source : Dictionary):
 	var sheets = source["sheets"]
 	var pins = source["pins"]
+	height = source["height"]
 	for sheet in sheets:
 		var newPart = SHEET.instantiate()
 		addPart(newPart)
@@ -47,14 +57,13 @@ func deserialize(source : Dictionary):
 		newPart.deserialize(pin)
 	if source.has("id"):
 		id = source["id"]
+	updateCollider()
 
 func addPart(newPart):
 	parts.append(newPart)
 	add_child(newPart)
 	newPart.place()
 	newPart.layer = self
-	if newPart is Pin:
-		newPart.scale = Vector3(1,4,1) #TODO determine height
 	updateCollider()
 
 func removePart(part):
@@ -64,12 +73,26 @@ func removePart(part):
 func updateCollider():
 	var bounds = getBounds()
 	var extents = (bounds[1]-bounds[0])
-	collider.shape.size = extents
-	collider.global_position = bounds[0] + extents/2
-	machine.updateCollider()
+	bb.shape.size = extents
+	bb.global_position = bounds[0] + extents/2
+	widgets.position = bounds[1] + Vector3(0.1,0,0.1)
 	for part in parts:
 		if part is Pin:
 			part.setHeight(max(extents.y*10,1))
+	updateBaseplate(bounds)
+	machine.updateLayerPositions()
+
+func updateBaseplate(bounds):
+	var below = machine.getLayerBelow(self)
+	if below:
+		bounds[0] = bounds[0] - Vector3(0.5,0,0.5)
+		bounds[1] = bounds[1] + Vector3(0.5,0,0.5)
+		var boundsBelow = below.getBounds()
+		var min = Vector3(min(bounds[0].x,boundsBelow[0].x),min(bounds[0].y,boundsBelow[0].y),min(bounds[0].z,boundsBelow[0].z))
+		var max = Vector3(max(bounds[1].x,boundsBelow[1].x),max(bounds[1].y,boundsBelow[1].y),max(bounds[1].z,boundsBelow[1].z))
+		baseplate.setBounds([min,max])
+	else:
+		baseplate.setBounds([Vector3(-1,0,-1)*10,Vector3(1,0,1)*10])
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
@@ -81,6 +104,8 @@ func _draw_gizmo() -> void:
 func getBounds():
 	var min = Vector3(1,1,1) * 100000
 	var max = Vector3(1,1,1) * -100000
+	if parts.is_empty():
+		return [Vector3(-1,global_position.y,-1), Vector3(1,global_position.y+0.1,1)]
 	for part in parts:
 		var partBounds = part.getBounds()
 		if part is Pin:
@@ -101,8 +126,31 @@ func snap(srcPos):
 func delete():
 	for part in parts:
 		part.delete()
-	machine.layers.erase(self)
+	machine.removeLayer(self)
 	Global.workspace.selectedLayer = null
 	if gizmo:
 		gizmo.free()
 	queue_free()
+
+func updateWidgets():
+	height = machine.getLayerHeight(self)
+	var totalLayers = machine.layers.size()
+	add.visible = height == totalLayers-1
+	button_up.visible = height < totalLayers-1
+	button_down.visible = height > 0
+
+func moveUp():
+	machine.moveLayer(self, 1)
+
+func moveDown():
+	machine.moveLayer(self, -1)
+
+func addLayer():
+	machine.addLayer()
+
+func updatePosition():
+	for part in parts:
+		part.updatePositions()
+	updateBaseplate(getBounds())
+	if gizmo:
+		_draw_gizmo()

@@ -41,13 +41,16 @@ func projectDown(ray : RayCast3D):
 	pass
 
 func place():
-	restPos = global_position
-	targetPos = position
+	updatePositions()
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.machine.gridLibrary.registerPart(self)
 		layer.updateCollider()
 	updateInteractionCandidates()
+
+func updatePositions():
+	restPos = global_position
+	targetPos = global_position
 
 func rotatePart(by):
 	rotate_y(by)
@@ -59,7 +62,7 @@ func updateInteractionState():
 	pass
 
 func _process(delta: float) -> void:
-	position = position.move_toward(targetPos, delta)
+	global_position = global_position.move_toward(targetPos, delta)
 
 func delete():
 	if layer:

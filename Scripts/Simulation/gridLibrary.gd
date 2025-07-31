@@ -34,7 +34,6 @@ func registerPart(part : Movable):
 	toNotify.clear()
 
 func registerPartCell(part : Movable, gridPos : Vector2):
-	#print(str(pos) + "->" + str(gridPos))
 	var layer = getLayer(part)
 	var posKey = toPosKey(gridPos)
 	var occupancy = getDict(part is Sheet, layer)
@@ -48,6 +47,14 @@ func registerPartCell(part : Movable, gridPos : Vector2):
 	if otherOccupancy.has(posKey):
 		for existingPart in otherOccupancy[posKey]:
 			toNotify[existingPart] = null
+	if part is Sheet and globalPinOccupancy.has(posKey):
+		for existingPart in globalPinOccupancy[posKey]:
+			toNotify[existingPart] = null
+	elif part is Pin and not part.layer:
+		for dict in sheetOccupancy:
+			if dict.has(posKey):
+				for sheet in dict[posKey]:
+					toNotify[sheet] = null
 	
 	if occupies.has(part):
 		occupies[part].append(gridPos)
@@ -62,19 +69,45 @@ func unregisterPart(part : Movable):
 	var otherOccupancy = getDict(not part is Sheet, layer)
 	var cells = occupies[part]
 	for cell in cells:
-		var key = toPosKey(cell)
-		occupancy[key].erase(part)
-		if occupancy[key].is_empty():
-			occupancy.erase(key)
-		if otherOccupancy.has(key):
-			for existingPart in otherOccupancy[key]:
-				toNotify[existingPart] = null
+		unregisterPartCell(part, cell)
+		#var key = toPosKey(cell)
+		#occupancy[key].erase(part)
+		#if occupancy[key].is_empty():
+			#occupancy.erase(key)
+		#if otherOccupancy.has(key):
+			#for existingPart in otherOccupancy[key]:
+				#toNotify[existingPart] = null
 			
 	occupies.erase(part)
 	#Update Neighbours
 	for existingPart in toNotify.keys():
 		existingPart.updateInteractionCandidates()
 	toNotify.clear()
+
+func unregisterPartCell(part : Movable, cell : Vector2):
+	var layer = getLayer(part)
+	var posKey = toPosKey(cell)
+	var occupancy = getDict(part is Sheet, layer)
+	var otherOccupancy = getDict(not part is Sheet, layer)
+	
+	occupancy[posKey].erase(part)
+	if occupancy[posKey].is_empty():
+		occupancy.erase(posKey)
+	if otherOccupancy.has(posKey):
+		for existingPart in otherOccupancy[posKey]:
+			toNotify[existingPart] = null
+	
+	if otherOccupancy.has(posKey):
+		for existingPart in otherOccupancy[posKey]:
+			toNotify[existingPart] = null
+	if part is Sheet and globalPinOccupancy.has(posKey):
+		for existingPart in globalPinOccupancy[posKey]:
+			toNotify[existingPart] = null
+	elif part is Pin and not part.layer:
+		for dict in sheetOccupancy:
+			if dict.has(posKey):
+				for sheet in dict[posKey]:
+					toNotify[sheet] = null
 
 func getIntersectionCandidates(part : Movable):
 	var output = {}
@@ -93,6 +126,8 @@ func getIntersectionCandidatesAtCell(pos : Vector2, layer : int, querySheets : b
 	if layer >= 0:
 		if occupancy[layer].has(key):
 			output.append_array(occupancy[layer][key])
+		if not querySheets and globalPinOccupancy.has(key):
+			output.append_array(globalPinOccupancy[key])
 	else:
 		for dict in occupancy:
 			if dict.has(key):
@@ -125,3 +160,7 @@ func toGridPos(pos : Vector3):
 
 func toPosKey(gridPos : Vector2):
 	return str(int(gridPos.x)) + "_" + str(int(gridPos.y))
+
+func moveLayer(index, dir):
+	pinOccupancy.insert(index+dir, pinOccupancy.pop_at(index))
+	sheetOccupancy.insert(index+dir, sheetOccupancy.pop_at(index))

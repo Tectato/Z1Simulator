@@ -294,13 +294,12 @@ func sortByDistance(a : Vector3, b : Vector3):
 	return a.distance_squared_to(sortTargetPos) < b.distance_squared_to(sortTargetPos)
 
 func intersects(pos : Vector3):
-	# TODO: pass relative movement line and check whole line instead
-	# Otherwise thin parts like adder's loopback sheets don't get handled properly
-	# TODO: account for rotation
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * $Outline.global_transform
 	debugPoint.global_position = posRelative
 	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	if !withinOutline:
+		return false
 	var withinHole = false
 	for hole in holes:
 		posRelative = pos * hole.global_transform

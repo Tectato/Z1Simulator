@@ -26,7 +26,12 @@ func stop():
 	$AutoClock.stop()
 
 func reset():
+	$AutoClock.stop()
 	pass
+
+func setStep(value = 3):
+	currentStep = value
+	gizmo.setClockStep(currentStep+1)
 
 func next(stopClock = true):
 	if stopClock: stop()

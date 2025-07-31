@@ -23,11 +23,11 @@ func resolutionChanged(newRes):
 	deselect()
 	match(newRes):
 		Workspace.Resolution.Machine:
-			collision_mask = 0b10000
+			collision_mask = 0b110000
 		Workspace.Resolution.Layer:
-			collision_mask = 0b01000
+			collision_mask = 0b101000
 		Workspace.Resolution.Part:
-			collision_mask = 0b00011
+			collision_mask = 0b100011
 
 func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -62,18 +62,20 @@ func _process(delta: float) -> void:
 		if dragging or placing:
 			mover.move()
 	if !selected.is_empty():
+		var i = -1
 		for part in selected:
+			i += 1
 			if part is ClockPin or part is Sheet:
 				if Input.is_action_just_pressed("rotate_ccw"):
 					var bounds = part.getBounds()
 					var midPoint = (bounds[1]-bounds[0])/2
-					mouseRelative -= midPoint
-					mouseRelative = mouseRelative.rotated(Vector3.UP,-PI/2)
-					mouseRelative += midPoint.rotated(Vector3.UP,-PI/2)
+					mouseRelative[i] -= midPoint
+					mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
+					mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
 					part.rotatePart(PI/2)
 					part.place()
 				elif Input.is_action_just_pressed("rotate_cw"):
-					mouseRelative = mouseRelative.rotated(Vector3.UP,PI/2)
+					mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
 					part.rotatePart(-PI/2)
 					part.place()
 				if part is ClockPin:
@@ -83,6 +85,8 @@ func _process(delta: float) -> void:
 						part.setStep(part.forwardStep-1)
 					if Input.is_action_just_pressed("flip"):
 						part.setPulsing(!part.pulsing)
+					if Input.is_action_just_pressed("toggle_input"):
+						part.setInput(!part.input)
 			if !focusElsewhere and Input.is_action_just_pressed("delete"):
 				selected.erase(part)
 				part.delete()
@@ -185,11 +189,16 @@ func paste():
 
 
 func select(target, shift = false):
+	var targetParent
+	if target:
+		targetParent = target.get_parent()
+		if targetParent is Control3D and targetParent.is_visible_in_tree():
+			targetParent.click()
+			return
 	if !shift:
 		deselect()
 	if target:
 		ignoreList.append(target)
-		var targetParent = target.get_parent()
 		if targetParent is Selectable or targetParent is Layer or targetParent is Machine:
 			targetParent.setSelected(true)
 			selected.append(targetParent)

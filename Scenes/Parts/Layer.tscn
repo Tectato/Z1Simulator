@@ -1,11 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://61axf1o1flh2"]
+[gd_scene load_steps=10 format=3 uid="uid://61axf1o1flh2"]
 
 [ext_resource type="Script" uid="uid://0yxip6vgusmd" path="res://Scripts/Parts/layer.gd" id="1_g1kvl"]
+[ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="2_0wuba"]
+[ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_ffeya"]
+[ext_resource type="Texture2D" uid="uid://xfmbeq2gnf3d" path="res://Sprites/Buttons/3DUI/up.png" id="3_htluw"]
+[ext_resource type="Texture2D" uid="uid://chj2cxa6hqhi5" path="res://Sprites/Buttons/3DUI/add.png" id="3_nqt8m"]
+[ext_resource type="Script" uid="uid://cbqsmqfnw3qwv" path="res://Scripts/Editor/3DUI/button3D.gd" id="3_vgsk8"]
+[ext_resource type="Texture2D" uid="uid://dri87gehj3m60" path="res://Sprites/Buttons/3DUI/down.png" id="5_vgsk8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_g1kvl"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ffeya"]
+size = Vector3(0.15, 0.1, 0.05)
+
 [node name="Layer" type="Node3D"]
 script = ExtResource("1_g1kvl")
+
+[node name="Baseplate" parent="." instance=ExtResource("2_ffeya")]
 
 [node name="BoundingBox" type="Area3D" parent="."]
 collision_layer = 8
@@ -13,3 +24,59 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BoundingBox"]
 shape = SubResource("BoxShape3D_g1kvl")
+
+[node name="Widgets" type="Node3D" parent="."]
+visible = false
+script = ExtResource("2_0wuba")
+
+[node name="Add" type="Node3D" parent="Widgets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+script = ExtResource("3_vgsk8")
+
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/Add"]
+texture_filter = 0
+texture = ExtResource("3_nqt8m")
+
+[node name="Area3D" type="Area3D" parent="Widgets/Add"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/Add/Area3D"]
+shape = SubResource("BoxShape3D_ffeya")
+
+[node name="MoveUp" type="Node3D" parent="Widgets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+script = ExtResource("3_vgsk8")
+
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/MoveUp"]
+texture_filter = 0
+texture = ExtResource("3_htluw")
+
+[node name="Area3D" type="Area3D" parent="Widgets/MoveUp"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/MoveUp/Area3D"]
+shape = SubResource("BoxShape3D_ffeya")
+
+[node name="MoveDown" type="Node3D" parent="Widgets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+script = ExtResource("3_vgsk8")
+
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/MoveDown"]
+texture_filter = 0
+texture = ExtResource("5_vgsk8")
+
+[node name="Area3D" type="Area3D" parent="Widgets/MoveDown"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/MoveDown/Area3D"]
+shape = SubResource("BoxShape3D_ffeya")
+
+[connection signal="clicked" from="Widgets/Add" to="." method="addLayer"]
+[connection signal="clicked" from="Widgets/MoveUp" to="." method="moveUp"]
+[connection signal="clicked" from="Widgets/MoveDown" to="." method="moveDown"]

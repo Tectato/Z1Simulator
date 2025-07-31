@@ -6,13 +6,17 @@ const TRAVELINDICATOR = preload("res://Scenes/Parts/ClockPinTravelIndicator.tscn
 @export_range(0,3,1) var forwardStep = 0
 @onready var antiStep = (forwardStep + 2) % 4
 @export var pulsing = false # If false, move forward in step X and back in step X+2. If true, move forward and back in X and don't move in X+2
+@export var input = false
+@export var activateNextCycle = false
 var inActivePos = false
 var travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
 var travelIndicator : Node3D
 @onready var tempTravelIndicator = $ClockPinTravelIndicator
+@onready var inputCheckbox = $StepLabel/InputCheckbox
 
 func _ready() -> void:
 	Simulator.registerClockPin(self)
+	inputCheckbox.toggled.connect(setActivateNextCycle)
 
 func _process(delta: float) -> void:
 	position = position.move_toward(targetPos, delta)
@@ -39,16 +43,28 @@ func setPulsing(value):
 	pulsing = value
 	updateLabel()
 
+func setInput(value):
+	input = value
+	updateLabel()
+
+func setActivateNextCycle(value):
+	activateNextCycle = value
+
 func updateLabel():
 	if pulsing:
 		$StepLabel.text = str(forwardStep+1)
 	else:
 		$StepLabel.text = str(forwardStep+1) + "+" + str(antiStep+1)
+	inputCheckbox.visible = input
 
 func clockCycle(clockStep : int, forwards = true):
+	if input and !activateNextCycle:
+		return
 	if clockStep == forwardStep or (!pulsing and clockStep == antiStep):
 		var toActivePos = clockStep == forwardStep
 		inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+		if (inActivePos and clockStep == antiStep) or pulsing:
+			inputCheckbox.click()
 		if toActivePos and !inActivePos:
 			move(Vector2(travel.x,travel.z))
 		elif !toActivePos and inActivePos:
@@ -64,7 +80,8 @@ func serialize():
 		"pos_z" : restPos.z,
 		"rotation" : rotationY,
 		"forwardStep" : int(forwardStep),
-		"pulsing" : pulsing
+		"pulsing" : pulsing,
+		"input" : input
 	}
 	if id.length() > 0:
 		output["id"] = id
@@ -76,6 +93,7 @@ func deserialize(source : Dictionary):
 	forwardStep = int(source["forwardStep"])
 	antiStep = wrap(forwardStep+2, 0, 4)
 	pulsing = bool(source["pulsing"])
+	input = bool(source["input"])
 	if source.has("id"):
 		id = source["id"]
 	updateLabel()

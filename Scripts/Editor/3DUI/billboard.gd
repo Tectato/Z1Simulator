@@ -6,4 +6,5 @@ func _ready() -> void:
 	camera = get_tree().get_root().get_camera_3d()
 
 func _process(delta: float) -> void:
-	look_at(camera.global_position, camera.transform.basis.y, true)
+	global_rotation = camera.rotation
+	#look_at(camera.global_position, camera.transform.basis.y, true)
