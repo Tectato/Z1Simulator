@@ -18,12 +18,22 @@ var height = 0
 var parts = []
 var gizmo : Gizmo
 
+func _ready() -> void:
+	Global.workspace.resolutionChanged.connect(resolutionChanged)
+
 func setSelected(value):
 	widgets.visible = value
 	if value:
 		_draw_gizmo()
 	elif gizmo:
 		gizmo.free()
+
+func resolutionChanged(newRes):
+	updateBaseplate(getBounds(), newRes == Workspace.Resolution.Part)
+	if newRes == Workspace.Resolution.Part:
+		visible = Global.workspace.selectedLayer == self
+	else:
+		visible = true
 
 func serialize():
 	height = machine.getLayerHeight(self)
@@ -82,11 +92,13 @@ func updateCollider():
 	updateBaseplate(bounds)
 	machine.updateLayerPositions()
 
-func updateBaseplate(bounds):
+func updateBaseplate(bounds, expand = true):
 	var below = machine.getLayerBelow(self)
+	baseplate.visible = below != null
 	if below:
-		bounds[0] = bounds[0] - Vector3(0.5,0,0.5)
-		bounds[1] = bounds[1] + Vector3(0.5,0,0.5)
+		if expand:
+			bounds[0] = bounds[0] - Vector3(0.5,0,0.5)
+			bounds[1] = bounds[1] + Vector3(0.5,0,0.5)
 		var boundsBelow = below.getBounds()
 		var min = Vector3(min(bounds[0].x,boundsBelow[0].x),min(bounds[0].y,boundsBelow[0].y),min(bounds[0].z,boundsBelow[0].z))
 		var max = Vector3(max(bounds[1].x,boundsBelow[1].x),max(bounds[1].y,boundsBelow[1].y),max(bounds[1].z,boundsBelow[1].z))

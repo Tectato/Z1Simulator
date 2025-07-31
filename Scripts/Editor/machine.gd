@@ -60,7 +60,7 @@ func updateLayerPositions():
 		layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * height
 		layer.updateWidgets()
 		layer.updatePosition()
-		height += max(layer.getBounds()[1].y,0.1) + 0.05
+		height = max(layer.getBounds()[1].y,0.1) + 0.05
 	updateCollider()
 
 func addSheet(sheet):
@@ -181,8 +181,8 @@ func getBounds():
 		if thing is Movable or thing is Layer:
 			var thingBounds = thing.getBounds()
 			var extents = thingBounds[1] - thingBounds[0]
-			var bMin = thingBounds[0] + thing.global_position
-			var bMax = thingBounds[1] + thing.global_position
+			var bMin = thingBounds[0]
+			var bMax = thingBounds[1]
 			min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
 			max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
 	return [min,max]

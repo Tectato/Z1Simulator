@@ -9,6 +9,7 @@
 render_priority = 0
 shader = ExtResource("1_83lyt")
 shader_parameter/albedo = ExtResource("2_83lyt")
+shader_parameter/applyTint = false
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_frs87"]
 resource_local_to_scene = true
