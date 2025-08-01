@@ -5,6 +5,7 @@ class_name Selector
 @export var mover : RayCast3D
 @export var debugLabel : Label
 @export var clickArea : Control
+@export var transformGizmo : Node3D
 
 var clickPos : Vector2
 var mouseDragOrigin : Vector3
@@ -15,6 +16,7 @@ var placing = false
 var selected = []
 var ignoreList = []
 var clipboard = []
+var clickedButton : Control3D
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
@@ -40,21 +42,26 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				deselect()
 			elif !selected.is_empty():
 				setGrabpoint()
-		if event.is_action_released("mouse_left") and not placing:
-			if dragging:
-				if selected:
-					for part in selected:
-						part.place()
-			else:
-				cast()
-			dragging = false
+				cast(true, true)
+		if event.is_action_released("mouse_left"):
+			if clickedButton:
+				clickedButton.release()
+				clickedButton = null
+			elif not placing:
+				if dragging:
+					if selected:
+						for part in selected:
+							part.place()
+				else:
+					cast(true, false)
+				dragging = false
 
 func _process(delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
 	if hovered != clickArea:
 		return
 	var focusElsewhere = get_viewport().gui_get_focus_owner()
-	if !selected.is_empty() and (Input.is_action_pressed("mouse_left") or placing):
+	if !selected.is_empty() and !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if dist > 5:
@@ -95,7 +102,10 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("paste"):
 		paste()
 
-func cast(select = true):
+func cast(select = true, checkForUI = false):
+	var mask = collision_mask
+	if checkForUI:
+		collision_mask = 0b100000
 	var mousePos = get_viewport().get_mouse_position()
 	if camera.orthographic:
 		global_position = camera.project_ray_origin(mousePos)
@@ -103,6 +113,17 @@ func cast(select = true):
 		position = Vector3.ZERO
 	target_position = camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
+	collision_mask = mask
+	if checkForUI:
+		if get_collider() and get_collider().get_parent() is Control3D:
+			clickedButton = get_collider().get_parent()
+			clickedButton.click()
+			mouseDragOrigin = get_collision_point()
+			return
+		else:
+			#cast(select, false)
+			return
+	
 	if select:
 		iterate(Input.is_key_pressed(KEY_SHIFT))
 	if !selected.is_empty():
@@ -159,14 +180,14 @@ func copy():
 
 func paste():
 	deselect()
-	var min = Vector3(1,1,1)*1000
-	var max = Vector3(1,1,1)*-1000
-	for part in clipboard:
-		var bounds = part.getBounds()
-		var partMin = bounds[0] + part.global_position
-		var partMax = bounds[1] + part.global_position
-		min = Vector3(min(min.x,partMin.x),min(min.y,partMin.y),min(min.z,partMin.z))
-		max = Vector3(max(max.x,partMax.x),max(max.y,partMax.y),max(max.z,partMax.z))
+	#var min = Vector3(1,1,1)*1000
+	#var max = Vector3(1,1,1)*-1000
+	#for part in clipboard:
+		#var bounds = part.getBounds()
+		#var partMin = bounds[0] + part.global_position
+		#var partMax = bounds[1] + part.global_position
+		#min = Vector3(min(min.x,partMin.x),min(min.y,partMin.y),min(min.z,partMin.z))
+		#max = Vector3(max(max.x,partMax.x),max(max.y,partMax.y),max(max.z,partMax.z))
 	
 	
 	for part in clipboard:
@@ -187,6 +208,16 @@ func paste():
 		partDragOrigins.push_back(part.global_position)
 	placing = true
 
+func getMidPoint(selection):
+	var min = Vector3(1,1,1)*1000
+	var max = Vector3(1,1,1)*-1000
+	for part in selection:
+		var bounds = part.getBounds()
+		var partMin = bounds[0] + part.global_position
+		var partMax = bounds[1] + part.global_position
+		min = Vector3(min(min.x,partMin.x),min(min.y,partMin.y),min(min.z,partMin.z))
+		max = Vector3(max(max.x,partMax.x),max(max.y,partMax.y),max(max.z,partMax.z))
+	return min + (max-min)/2
 
 func select(target, shift = false):
 	var targetParent
@@ -194,6 +225,7 @@ func select(target, shift = false):
 		targetParent = target.get_parent()
 		if targetParent is Control3D and targetParent.is_visible_in_tree():
 			targetParent.click()
+			clickedButton = targetParent
 			return
 	if !shift:
 		deselect()
@@ -207,6 +239,8 @@ func select(target, shift = false):
 				Global.workspace.selectedLayer = targetParent
 			if targetParent is Machine:
 				Global.workspace.selectedMachine = targetParent
+			transformGizmo.show()
+			transformGizmo.global_position = getMidPoint(selected)
 			print(targetParent.name)
 		else:
 			print("Not selectable")
@@ -219,3 +253,4 @@ func deselect():
 	selected.clear()
 	partDragOrigins.clear()
 	mouseRelative.clear()
+	transformGizmo.hide()

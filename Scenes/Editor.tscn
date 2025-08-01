@@ -1,4 +1,4 @@
-[gd_scene load_steps=91 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=112 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -55,6 +55,8 @@
 [ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
 [ext_resource type="Script" uid="uid://uhy52kfjvhai" path="res://Scripts/Editor/clockGizmo.gd" id="53_hujvp"]
 [ext_resource type="Script" uid="uid://batiwcuij3vw7" path="res://Scripts/Editor/popup.gd" id="54_w82wx"]
+[ext_resource type="Script" uid="uid://bn2xlil2nmxpc" path="res://Scripts/Editor/3DUI/transformGizmo.gd" id="56_egdbq"]
+[ext_resource type="Script" uid="uid://y1gdw60ddrne" path="res://Scripts/Editor/3DUI/transformGizmoAxis.gd" id="56_pbycb"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -243,6 +245,117 @@ albedo_color = Color(0, 1, 0, 1)
 material = SubResource("StandardMaterial3D_5v8xv")
 radius = 0.1
 height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w82wx"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_egdbq"]
+material = SubResource("StandardMaterial3D_w82wx")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.5
+radial_segments = 8
+rings = 0
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mtfo3"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_8faq4"]
+material = SubResource("StandardMaterial3D_mtfo3")
+top_radius = 0.0
+bottom_radius = 0.03
+height = 0.1
+radial_segments = 8
+rings = 1
+cap_top = false
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_w82wx"]
+height = 0.15
+radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pbycb"]
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_jotky"]
+material = SubResource("StandardMaterial3D_pbycb")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.5
+radial_segments = 8
+rings = 0
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_egdbq"]
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_12riw"]
+material = SubResource("StandardMaterial3D_egdbq")
+top_radius = 0.0
+bottom_radius = 0.03
+height = 0.1
+radial_segments = 8
+rings = 1
+cap_top = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pu55"]
+shading_mode = 0
+albedo_color = Color(0, 0.54902, 1, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_w82wx"]
+material = SubResource("StandardMaterial3D_2pu55")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.5
+radial_segments = 8
+rings = 0
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pbycb"]
+material = SubResource("StandardMaterial3D_2pu55")
+top_radius = 0.0
+bottom_radius = 0.03
+height = 0.1
+radial_segments = 8
+rings = 1
+cap_top = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8faq4"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_egdbq"]
+material = SubResource("StandardMaterial3D_8faq4")
+size = Vector2(0.1, 0.1)
+orientation = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mtfo3"]
+size = Vector3(0.1, 0.01, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xccxh"]
+shading_mode = 0
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_mtfo3"]
+material = SubResource("StandardMaterial3D_xccxh")
+size = Vector2(0.1, 0.1)
+orientation = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ia0pe"]
+shading_mode = 0
+albedo_color = Color(0, 0.54902, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_8faq4"]
+material = SubResource("StandardMaterial3D_ia0pe")
+size = Vector2(0.1, 0.1)
+orientation = 1
 
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_5v8xv")
@@ -705,7 +818,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea", "transformGizmo")]
 enabled = false
 collision_mask = 35
 collide_with_areas = true
@@ -714,6 +827,7 @@ camera = NodePath("..")
 mover = NodePath("../../MoveRay")
 debugLabel = NodePath("../Interface/Label")
 clickArea = NodePath("../Interface/ClickArea")
+transformGizmo = NodePath("../../TransformGizmo")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
@@ -722,12 +836,166 @@ mesh = SubResource("SphereMesh_0hhuw")
 
 [node name="Debug1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02645, 0)
-visible = false
 mesh = SubResource("SphereMesh_dfuwn")
 
 [node name="Debug2" type="MeshInstance3D" parent="."]
-visible = false
 mesh = SubResource("SphereMesh_brgpd")
+
+[node name="TransformGizmo" type="Node3D" parent="."]
+script = ExtResource("56_egdbq")
+
+[node name="X" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.25, 0, 0)
+script = ExtResource("56_pbycb")
+modifyX = true
+partA = NodePath("Axis")
+partB = NodePath("Cap")
+debugPoint = NodePath("../../Debug2")
+
+[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/X"]
+mesh = SubResource("CylinderMesh_egdbq")
+
+[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/X"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.300186, 0)
+mesh = SubResource("CylinderMesh_8faq4")
+skeleton = NodePath("../..")
+
+[node name="Area3D" type="Area3D" parent="TransformGizmo/X"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/X/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("CylinderShape3D_w82wx")
+
+[node name="Y" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.25)
+script = ExtResource("56_pbycb")
+modifyY = true
+partA = NodePath("Axis")
+partB = NodePath("Cap")
+debugPoint = NodePath("../../Debug2")
+
+[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/Y"]
+mesh = SubResource("CylinderMesh_jotky")
+
+[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/Y"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.300186, 0)
+mesh = SubResource("CylinderMesh_12riw")
+skeleton = NodePath("../..")
+
+[node name="Area3D" type="Area3D" parent="TransformGizmo/Y"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/Y/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("CylinderShape3D_w82wx")
+
+[node name="Z" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+script = ExtResource("56_pbycb")
+modifyZ = true
+partA = NodePath("Axis")
+partB = NodePath("Cap")
+debugPoint = NodePath("../../Debug2")
+
+[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/Z"]
+mesh = SubResource("CylinderMesh_w82wx")
+
+[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/Z"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.300186, 0)
+mesh = SubResource("CylinderMesh_pbycb")
+skeleton = NodePath("../..")
+
+[node name="Area3D" type="Area3D" parent="TransformGizmo/Z"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/Z/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("CylinderShape3D_w82wx")
+
+[node name="NotX" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("56_pbycb")
+modifyY = true
+modifyZ = true
+partA = NodePath("Quad1")
+partB = NodePath("Quad2")
+debugPoint = NodePath("../../Debug2")
+
+[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotX"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
+mesh = SubResource("QuadMesh_egdbq")
+
+[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotX"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.2, 0, 0.2)
+mesh = SubResource("QuadMesh_egdbq")
+
+[node name="Area3D" type="Area3D" parent="TransformGizmo/NotX"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotX/Area3D"]
+shape = SubResource("BoxShape3D_mtfo3")
+
+[node name="NotY" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+transform = Transform3D(-1, -8.74228e-08, 0, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0, 0, 0)
+script = ExtResource("56_pbycb")
+modifyX = true
+modifyZ = true
+partA = NodePath("Quad1")
+partB = NodePath("Quad2")
+debugPoint = NodePath("../../Debug2")
+
+[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotY"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
+mesh = SubResource("QuadMesh_mtfo3")
+
+[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotY"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.2, 0, 0.2)
+mesh = SubResource("QuadMesh_mtfo3")
+
+[node name="Area3D" type="Area3D" parent="TransformGizmo/NotY"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotY/Area3D"]
+shape = SubResource("BoxShape3D_mtfo3")
+
+[node name="NotZ" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+script = ExtResource("56_pbycb")
+modifyX = true
+modifyY = true
+partA = NodePath("Quad1")
+partB = NodePath("Quad2")
+debugPoint = NodePath("../../Debug2")
+
+[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotZ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
+mesh = SubResource("QuadMesh_8faq4")
+
+[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotZ"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.2, 0, 0.2)
+mesh = SubResource("QuadMesh_8faq4")
+
+[node name="Area3D" type="Area3D" parent="TransformGizmo/NotZ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotZ/Area3D"]
+shape = SubResource("BoxShape3D_mtfo3")
 
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
