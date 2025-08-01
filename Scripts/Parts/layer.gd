@@ -29,7 +29,7 @@ func setSelected(value):
 		gizmo.free()
 
 func resolutionChanged(newRes):
-	updateBaseplate(getBounds(), newRes == Workspace.Resolution.Part)
+	updateBaseplate(getBounds())
 	if newRes == Workspace.Resolution.Part:
 		visible = Global.workspace.selectedLayer == self
 	else:
@@ -92,7 +92,8 @@ func updateCollider():
 	updateBaseplate(bounds)
 	machine.updateLayerPositions()
 
-func updateBaseplate(bounds, expand = true):
+func updateBaseplate(bounds):
+	var expand = Global.workspace.resolution == Workspace.Resolution.Part
 	var below = machine.getLayerBelow(self)
 	baseplate.visible = below != null
 	if below:

@@ -11,6 +11,8 @@ var candidatePositions = []
 func move():
 	cast()
 	var dragDelta = get_collision_point() - selector.mouseDragOrigin
+	if selector.selected.size() > 1 or selector.selected[0] is Machine:
+		dragDelta = snapped(dragDelta, Vector3(1,1,1)*Workspace.gridSize/8) * Vector3(1,0,1) + Vector3.UP * dragDelta.y
 	#selector.selected.snap(projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative)
 	for i in range(selector.selected.size()):
 		var part = selector.selected[i]

@@ -8,6 +8,7 @@ extends Control
 @onready var importChoiceDialog = $ImportChoice
 @onready var saveRequestDialog = $SaveRequest
 @onready var renamingBox = $RenamingBox
+@onready var saveError = $SaveError
 
 @onready var ModeSelect = $ModeBar/Select
 @onready var ModeEdit = $ModeBar/Edit
@@ -34,7 +35,10 @@ func _on_file_id_pressed(id: int) -> void:
 			editor.newProject()
 		1:
 			if editor.savePath.length() > 0:
-				editor.save
+				if Simulator.currentStep == 3:
+					editor.save()
+				else:
+					saveError.popup()
 			else:
 				saveDialog.popup()
 		2:
@@ -69,8 +73,11 @@ func _on_import_choice_canceled() -> void:
 
 func _on_save_request_confirmed() -> void:
 	if editor.savePath.length() > 0:
-		editor.save()
-		editor.loadProject()
+		if Simulator.currentStep == 3:
+			editor.save()
+			editor.loadProject()
+		else:
+			saveError.popup()
 	else:
 		saveDialog.popup()
 

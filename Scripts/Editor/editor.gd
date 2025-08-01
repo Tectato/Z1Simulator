@@ -20,8 +20,11 @@ func newProject():
 	pass
 
 func saveAs(path : String):
-	savePath = path
-	save()
+	if Simulator.currentStep == 3:
+		savePath = path
+		save()
+	else:
+		interface.saveError.popup()
 
 func save():
 	saved = true

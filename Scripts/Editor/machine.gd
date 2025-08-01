@@ -7,10 +7,12 @@ const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 
 @onready var parts = $Parts
 @onready var gridLibrary = $GridLibrary
-@onready var collider = $BoundingBox/CollisionShape3D
+@onready var collider = $BoundingBox
+@onready var colliderShape = $BoundingBox/CollisionShape3D
 
 var id = ""
 var dir = ""
+var fullPath = ""
 var layers = []
 var globalPins = []
 var clockPins = []
@@ -119,6 +121,7 @@ func serialize(path):
 	return output
 
 func deserialize(path : String):
+	fullPath = path
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if FileAccess.get_open_error():
 		print("Error loading file " + path)
@@ -158,12 +161,14 @@ func sortByHeight(a : Layer, b : Layer):
 func updateCollider():
 	var bounds = getBounds()
 	var extents = (bounds[1]-bounds[0])
-	collider.shape.size = extents
+	colliderShape.shape.size = extents
 	collider.global_position = bounds[0] + extents/2
 	for pin in globalPins:
 		pin.setHeight(max(extents.y*10,1))
 	for pin in clockPins:
 		pin.setHeight(max(extents.y*10,1))
+	if gizmo:
+		_draw_gizmo()
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
@@ -179,19 +184,33 @@ func getBounds():
 	things.append_array(layers)
 	for thing in things:
 		if thing is Movable or thing is Layer:
+			var offset = Vector3.ZERO
+			if thing is Movable: # Layers output in global positions, parts local
+				offset = thing.global_position
 			var thingBounds = thing.getBounds()
 			var extents = thingBounds[1] - thingBounds[0]
-			var bMin = thingBounds[0]
-			var bMax = thingBounds[1]
+			var bMin = thingBounds[0] + offset
+			var bMax = thingBounds[1] + offset
 			min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
 			max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
 	return [min,max]
 
 func place():
+	updateCollider()
 	pass
 
 func snap(srcPos):
+	global_position = srcPos
+	for layer in layers:
+		layer.updatePosition()
+	for pin in clockPins:
+		pin.updatePositions()
+	for pin in globalPins:
+		pin.updatePositions()
 	return srcPos
+
+func projectDown(ray : RayCast3D):
+	return global_position * Vector3(1,0,1)
 
 func delete(): #TODO: prompt for confirmation or undo
 	for part in parts.get_children():

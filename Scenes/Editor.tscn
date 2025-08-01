@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=91 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -54,6 +54,7 @@
 [ext_resource type="Texture2D" uid="uid://y1aq8vjhau7j" path="res://Sprites/Buttons/SceneTree/hide_lit.png" id="44_8ktkl"]
 [ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
 [ext_resource type="Script" uid="uid://uhy52kfjvhai" path="res://Scripts/Editor/clockGizmo.gd" id="53_hujvp"]
+[ext_resource type="Script" uid="uid://batiwcuij3vw7" path="res://Scripts/Editor/popup.gd" id="54_w82wx"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -671,6 +672,39 @@ offset_bottom = -0.73
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Rename Object"
 
+[node name="SaveError" type="Label" parent="Camera3D/Interface"]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.0
+offset_top = -24.5
+offset_right = 81.0
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Saving only possible in clock step IV"
+autowrap_mode = 2
+script = ExtResource("54_w82wx")
+
+[node name="Timer" type="Timer" parent="Camera3D/Interface/SaveError"]
+wait_time = 3.0
+one_shot = true
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/SaveError"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.564706)
+
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea")]
 enabled = false
 collision_mask = 35
@@ -726,3 +760,4 @@ mesh = SubResource("SphereMesh_brgpd")
 [connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
 [connection signal="text_submitted" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_text_submitted"]
+[connection signal="timeout" from="Camera3D/Interface/SaveError/Timer" to="Camera3D/Interface/SaveError" method="close"]

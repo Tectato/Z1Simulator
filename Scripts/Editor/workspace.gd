@@ -38,8 +38,8 @@ func setResolution(newRes):
 	resolution = newRes
 
 func clear():
-	for machine in machines:
-		machine.delete()
+	while !machines.is_empty():
+		machines[0].delete()
 	Simulator.setStep()
 
 func createNew():
@@ -55,31 +55,43 @@ func createNew():
 
 func serialize(path : String):
 	Global.unnamedIDs.clear()
-	var machinePaths = []
+	var machineEntries = []
 	var machinesDir = path.get_file().trim_suffix(".json")
 	var dir = DirAccess.open(path.get_base_dir())
 	dir.make_dir(machinesDir)
 	for machine in machines:
 		var dict = machine.serialize(path)
-		var savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
-		var newFile = FileAccess.open(savePath, FileAccess.WRITE)
+		var savePath
+		var newFile
+		if machine.fullPath.length() > 0:
+			savePath = machine.fullPath
+			newFile = FileAccess.open(savePath, FileAccess.WRITE)
+		if !newFile: # Try to save at original directory first
+			savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
+			newFile = FileAccess.open(savePath, FileAccess.WRITE)
 		if newFile:
 			newFile.store_string(JSON.stringify(dict))
 			newFile.close()
-			machinePaths.append(savePath)
+			machineEntries.append({
+				"path":savePath,
+				"pos_x":machine.global_position.x,
+				"pos_y":machine.global_position.y,
+				"pos_z":machine.global_position.z
+			})
 		else:
 			print("Could not write file for " + dict["id"])
 			print(str(FileAccess.get_open_error()))
 
 	var output = {
-		"machines" : machinePaths
+		"machines" : machineEntries
 	}
 	return output
 
 func deserialize(path): # TODO: wipe current project
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	for machine in source["machines"]:
-		importMachine(machine)
+		var newMachine = importMachine(machine["path"])
+		newMachine.snap(Vector3(machine["pos_x"], machine["pos_y"], machine["pos_z"]))
 
 func importMachine(path):
 	setMode(Mode.Select)
@@ -88,6 +100,9 @@ func importMachine(path):
 	machines.append(newMachine)
 	add_child(newMachine)
 	newMachine.deserialize(path) # TODO: check whether machine or project
+	Global.workspace.setResolution(Workspace.Resolution.Machine)
+	Global.editor.selector.select(newMachine.collider)
+	return newMachine
 
 func importSheet(path):
 	createIfNotExists()

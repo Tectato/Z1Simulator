@@ -8,7 +8,6 @@ var priorSelected : TreeItem
 func _ready() -> void:
 	get_tree().get_root().size_changed.connect(updateRestPos)
 	tree.cell_selected.connect(cellSelected)
-	#tree.item_activated.connect(cellActivated)
 	_on_hide_toggled(true)
 
 func updateRestPos():
@@ -32,14 +31,11 @@ func updateSceneTree():
 
 func cellSelected():
 	var cell = tree.get_selected()
+	var isMachine = cell.get_parent().get_parent() == null
 	Global.workspace.setMode(Workspace.Mode.Select)
-	Global.workspace.setResolution(Workspace.Resolution.Machine)
-	selector.select(Global.workspace.machines[cell.get_index()].collider.get_parent())
-
-func cellActivated():
-	var selected = tree.get_selected()
-	print(str(selected.get_text(0)))
-	selected.set_editable(0, true)
-	if priorSelected:
-		priorSelected.set_editable(0, false)
-	priorSelected = selected
+	if isMachine:
+		Global.workspace.setResolution(Workspace.Resolution.Machine)
+		selector.select(Global.workspace.machines[cell.get_index()].collider)
+	else:
+		Global.workspace.setResolution(Workspace.Resolution.Layer)
+		selector.select(Global.workspace.machines[cell.get_parent().get_index()].layers[cell.get_index()].collider)

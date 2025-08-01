@@ -11,8 +11,8 @@ var toNotify = {}
 
 func registerPart(part : Movable):
 	var bounds = part.getBounds()
-	var min = bounds[0] + part.global_position
-	var max = bounds[1] + part.global_position
+	var min = bounds[0] + part.position
+	var max = bounds[1] + part.position
 	#if gizmoA:
 		#gizmoA.free()
 		#gizmoB.free()

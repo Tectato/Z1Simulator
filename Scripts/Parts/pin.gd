@@ -7,9 +7,9 @@ var machine : Machine
 
 func serialize():
 	var output = {
-		"pos_x" : restPos.x,
-		"pos_y" : restPos.y,
-		"pos_z" : restPos.z
+		"pos_x" : global_position.x,
+		"pos_y" : global_position.y,
+		"pos_z" : global_position.z
 	}
 	if id.length() > 0:
 		output["id"] = id

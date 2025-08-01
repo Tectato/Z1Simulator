@@ -22,6 +22,7 @@ func move(dir : Vector2, chain = []):
 	if chain.has(self):
 		return
 	#translate(Vector3(dir.x,0,dir.y))
+	var currentPos = global_position
 	targetPos = global_position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
 		stateX = !stateX

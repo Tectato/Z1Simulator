@@ -18,9 +18,6 @@ func _ready() -> void:
 	Simulator.registerClockPin(self)
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 
-func _process(delta: float) -> void:
-	position = position.move_toward(targetPos, delta)
-
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(1,value,1)
 	$MeshInstance3D.position = Vector3(0,value/20,0)
@@ -29,6 +26,8 @@ func setHeight(value):
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
 func move(dir : Vector2, chain = []):
+	if not chain.is_empty():
+		return
 	super.move(dir.rotated(-rotation.y), chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
@@ -74,14 +73,16 @@ func clockCycle(clockStep : int, forwards = true):
 
 func serialize():
 	var rotationY = int(round(rotation.y / (PI/2)))
+	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	var output = {
-		"pos_x" : restPos.x,
-		"pos_y" : restPos.y,
-		"pos_z" : restPos.z,
+		"pos_x" : global_position.x,
+		"pos_y" : global_position.y,
+		"pos_z" : global_position.z,
 		"rotation" : rotationY,
 		"forwardStep" : int(forwardStep),
 		"pulsing" : pulsing,
-		"input" : input
+		"input" : input,
+		"active" : inActivePos
 	}
 	if id.length() > 0:
 		output["id"] = id
@@ -94,6 +95,7 @@ func deserialize(source : Dictionary):
 	antiStep = wrap(forwardStep+2, 0, 4)
 	pulsing = bool(source["pulsing"])
 	input = bool(source["input"])
+	inActivePos = bool(source["active"])
 	if source.has("id"):
 		id = source["id"]
 	updateLabel()
@@ -109,12 +111,15 @@ func place():
 		get_parent().add_child(travelIndicator)
 		travelIndicator.global_position = global_position + Vector3.UP * 0.001
 		travelIndicator.rotation = rotation
-	restPos = global_position if !inActivePos else global_position - travel.rotated(Vector3.UP,rotation.y)
-	targetPos = position
+	updatePositions()
 	if machine:
 		machine.gridLibrary.unregisterPart(self)
 		machine.gridLibrary.registerPart(self)
 	updateInteractionCandidates()
+
+func updatePositions():
+	restPos = global_position if !inActivePos else global_position - travel.rotated(Vector3.UP,rotation.y)
+	targetPos = global_position
 	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
 
 func rotatePart(by):

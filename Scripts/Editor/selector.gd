@@ -59,7 +59,7 @@ func _process(delta: float) -> void:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if dist > 5:
 				dragging = true
-		if dragging or placing:
+		if (dragging or placing) and not selected[0] is Layer:
 			mover.move()
 	if !selected.is_empty():
 		var i = -1
@@ -112,7 +112,7 @@ func iterate(shift = false):
 	var target = get_collider()
 	var index = 0
 	while target:
-		if ignoreList.size() > index and ignoreList[index] == target:
+		if (ignoreList.size() > index and ignoreList[index] == target) or not target.get_parent().is_visible_in_tree():
 			add_exception(target)
 			force_raycast_update()
 			target = get_collider()

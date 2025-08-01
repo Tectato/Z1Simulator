@@ -24,9 +24,9 @@ var sortTargetPos : Vector3
 func serialize():
 	var relativePath = ProjectSettings.localize_path(path)
 	var output = {
-		"pos_x" : restPos.x,
-		"pos_y" : restPos.y,
-		"pos_z" : restPos.z,
+		"pos_x" : global_position.x,
+		"pos_y" : global_position.y,
+		"pos_z" : global_position.z,
 		"rotation" : rotation.y,
 		"file" : relativePath
 	}
@@ -169,7 +169,7 @@ func parseElement(part : String):
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["width"])/20, float(dict["horizontal"]) > 0, float(dict["length"]), true)
 			if id.contains("squareHole"):
 				var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-				newHole.setSideLength(float(dict["edgeLength"])/1000)
+				newHole.setEdgeLength(float(dict["edgeLength"])/1000)
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
 			pass
 		"svg":
