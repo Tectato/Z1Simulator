@@ -1,4 +1,4 @@
-[gd_scene load_steps=112 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=110 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -247,6 +247,8 @@ radius = 0.1
 height = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w82wx"]
+render_priority = 10
+no_depth_test = true
 shading_mode = 0
 albedo_color = Color(1, 0, 0, 1)
 
@@ -260,12 +262,8 @@ rings = 0
 cap_top = false
 cap_bottom = false
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mtfo3"]
-shading_mode = 0
-albedo_color = Color(1, 0, 0, 1)
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_8faq4"]
-material = SubResource("StandardMaterial3D_mtfo3")
+material = SubResource("StandardMaterial3D_w82wx")
 top_radius = 0.0
 bottom_radius = 0.03
 height = 0.1
@@ -278,6 +276,8 @@ height = 0.15
 radius = 0.1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pbycb"]
+render_priority = 10
+no_depth_test = true
 shading_mode = 0
 albedo_color = Color(0, 1, 0, 1)
 
@@ -291,12 +291,8 @@ rings = 0
 cap_top = false
 cap_bottom = false
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_egdbq"]
-shading_mode = 0
-albedo_color = Color(0, 1, 0, 1)
-
 [sub_resource type="CylinderMesh" id="CylinderMesh_12riw"]
-material = SubResource("StandardMaterial3D_egdbq")
+material = SubResource("StandardMaterial3D_pbycb")
 top_radius = 0.0
 bottom_radius = 0.03
 height = 0.1
@@ -305,6 +301,8 @@ rings = 1
 cap_top = false
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pu55"]
+render_priority = 10
+no_depth_test = true
 shading_mode = 0
 albedo_color = Color(0, 0.54902, 1, 1)
 
@@ -328,6 +326,8 @@ rings = 1
 cap_top = false
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8faq4"]
+render_priority = 10
+no_depth_test = true
 shading_mode = 0
 albedo_color = Color(1, 0, 0, 1)
 
@@ -340,6 +340,8 @@ orientation = 1
 size = Vector3(0.1, 0.01, 0.1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xccxh"]
+render_priority = 10
+no_depth_test = true
 shading_mode = 0
 albedo_color = Color(0, 1, 0, 1)
 
@@ -349,6 +351,8 @@ size = Vector2(0.1, 0.1)
 orientation = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ia0pe"]
+render_priority = 10
+no_depth_test = true
 shading_mode = 0
 albedo_color = Color(0, 0.54902, 1, 1)
 
@@ -836,13 +840,17 @@ mesh = SubResource("SphereMesh_0hhuw")
 
 [node name="Debug1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02645, 0)
+visible = false
 mesh = SubResource("SphereMesh_dfuwn")
 
 [node name="Debug2" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
-[node name="TransformGizmo" type="Node3D" parent="."]
+[node name="TransformGizmo" type="Node3D" parent="." node_paths=PackedStringArray("selector")]
+visible = false
 script = ExtResource("56_egdbq")
+selector = NodePath("../Camera3D/SelectionRay")
 
 [node name="X" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.25, 0, 0)

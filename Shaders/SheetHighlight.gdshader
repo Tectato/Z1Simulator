@@ -1,10 +1,10 @@
 shader_type spatial;
-render_mode cull_disabled, depth_prepass_alpha, shadows_disabled, unshaded;
+render_mode cull_disabled, depth_test_disabled, shadows_disabled, unshaded;
 
 uniform sampler2D albedo : source_color, filter_nearest;
 uniform float thickness = 0.02;
 instance uniform bool selected = false;
-const vec4 selectedColor = vec4(1.0,0.3,0.0,1.0);
+const vec4 selectedColor = vec4(1.0,0.3,0.0,1.0) * 0.7;
 
 void vertex() {
 	// Called for every vertex the material is visible on.

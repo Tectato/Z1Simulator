@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://c3b4x4et160ou"]
+[gd_scene load_steps=3 format=3 uid="uid://c3b4x4et160ou"]
 
 [ext_resource type="Script" uid="uid://j7xcwklye4sq" path="res://Scripts/Parts/SheetElements/logicHole.gd" id="1_mseuv"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_mseuv"]
+radius = 0.01
+height = 0.02
 
 [node name="LogicHole" type="Node3D"]
 script = ExtResource("1_mseuv")
@@ -20,3 +24,6 @@ polygon = PackedVector2Array(-0.075, -0.075, -0.075, 0.075, 0.075, 0.075, 0.075,
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 depth = 0.05
 polygon = PackedVector2Array(-0.075, 0.025, -0.075, 0.075, 0.075, 0.075, 0.075, -0.075, 0, -0.075, 0, 0.025)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_mseuv")

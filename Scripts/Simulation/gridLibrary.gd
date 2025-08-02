@@ -42,6 +42,8 @@ func registerPartCell(part : Movable, gridPos : Vector2):
 	if occupancy.has(posKey):
 		occupancy[posKey].append(part)
 	else:
+		if !part:
+			print("WHAT")
 		occupancy[posKey] = [part]
 	
 	if otherOccupancy.has(posKey):
@@ -146,11 +148,15 @@ func getDict(sheet : bool, layer : int):
 	if sheet and layer >= 0:
 		while sheetOccupancy.size() <= layer:
 			sheetOccupancy.append({})
+		if !sheetOccupancy[layer]:
+			sheetOccupancy[layer] = {}
 		return sheetOccupancy[layer]
 	else:
 		if layer >= 0:
 			while pinOccupancy.size() <= layer:
 				pinOccupancy.append({})
+			if !pinOccupancy[layer]:
+				pinOccupancy[layer] = {}
 			return pinOccupancy[layer]
 		else:
 			return globalPinOccupancy

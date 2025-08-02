@@ -139,10 +139,11 @@ func snap(srcPos):
 func delete():
 	for part in parts:
 		part.delete()
-	machine.removeLayer(self)
-	Global.workspace.selectedLayer = null
 	if gizmo:
 		gizmo.free()
+	machine.removeLayer(self)
+	if Global.workspace.selectedLayer == self:
+		Global.workspace.selectedLayer = null
 	queue_free()
 
 func updateWidgets():

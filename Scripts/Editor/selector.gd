@@ -17,6 +17,8 @@ var selected = []
 var ignoreList = []
 var clipboard = []
 var clickedButton : Control3D
+var hoveredButton : Control3D
+var gizmoOn = false
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
@@ -52,15 +54,20 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 					if selected:
 						for part in selected:
 							part.place()
+						updateGizmo()
 				else:
 					cast(true, false)
 				dragging = false
+
+func exists(item):
+	return item != null and weakref(item).get_ref()
 
 func _process(delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
 	if hovered != clickArea:
 		return
 	var focusElsewhere = get_viewport().gui_get_focus_owner()
+	selected = selected.filter(exists)
 	if !selected.is_empty() and !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
@@ -94,13 +101,18 @@ func _process(delta: float) -> void:
 						part.setPulsing(!part.pulsing)
 					if Input.is_action_just_pressed("toggle_input"):
 						part.setInput(!part.input)
-			if !focusElsewhere and Input.is_action_just_pressed("delete"):
-				selected.erase(part)
-				part.delete()
+		if !focusElsewhere and Input.is_action_just_pressed("delete"):
+			transformGizmo.hide()
+			while !selected.is_empty():
+				selected.pop_front().delete()
 		if Input.is_action_just_pressed("copy"):
 			copy()
+		cast(false,true)
 	if Input.is_action_just_pressed("paste"):
 		paste()
+	if Input.is_action_just_pressed("toggle_transform_gizmo"):
+		gizmoOn = !gizmoOn
+		updateGizmo()
 
 func cast(select = true, checkForUI = false):
 	var mask = collision_mask
@@ -115,10 +127,21 @@ func cast(select = true, checkForUI = false):
 	force_raycast_update()
 	collision_mask = mask
 	if checkForUI:
-		if get_collider() and get_collider().get_parent() is Control3D:
-			clickedButton = get_collider().get_parent()
-			clickedButton.click()
-			mouseDragOrigin = get_collision_point()
+		if not get_collider() and hoveredButton:
+			hoveredButton.setHovered(false)
+			hoveredButton = null
+		
+		if get_collider() and get_collider().get_parent() is Control3D and get_collider().get_parent().is_visible_in_tree():
+			if select:
+				clickedButton = get_collider().get_parent()
+				clickedButton.click()
+				mouseDragOrigin = get_collision_point()
+			else:
+				if hoveredButton:
+					hoveredButton.setHovered(false)
+					hoveredButton = null
+				hoveredButton = get_collider().get_parent()
+				hoveredButton.setHovered(true)
 			return
 		else:
 			#cast(select, false)
@@ -239,13 +262,16 @@ func select(target, shift = false):
 				Global.workspace.selectedLayer = targetParent
 			if targetParent is Machine:
 				Global.workspace.selectedMachine = targetParent
-			transformGizmo.show()
-			transformGizmo.global_position = getMidPoint(selected)
-			print(targetParent.name)
+				if !targetParent.layers.is_empty():
+					Global.workspace.selectedLayer = targetParent.layers[0]
+			updateGizmo()
+			#print(targetParent.name)
 		else:
-			print("Not selectable")
+			pass
+			#print("Not selectable")
 	else:
-		print("No Hit")
+		pass
+		#print("No Hit")
 
 func deselect():
 	for part in selected:
@@ -254,3 +280,10 @@ func deselect():
 	partDragOrigins.clear()
 	mouseRelative.clear()
 	transformGizmo.hide()
+
+func updateGizmo():
+	if gizmoOn and !selected.is_empty() and !selected[0] is Layer:
+		transformGizmo.global_position = getMidPoint(selected)
+		transformGizmo.show()
+	else:
+		transformGizmo.hide()

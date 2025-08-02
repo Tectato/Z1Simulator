@@ -34,6 +34,7 @@ func addLayer():
 	updateLayerPositions()
 	if Global.editor:
 		Global.editor.selector.select(newLayer.collider)
+		Global.editor.updateSceneTree()
 	return newLayer
 
 func moveLayer(layer : Layer, dir = 1):
@@ -45,7 +46,11 @@ func moveLayer(layer : Layer, dir = 1):
 
 func removeLayer(layer):
 	layers.erase(layer)
-	updateLayerPositions()
+	if layers.is_empty():
+		call_deferred("addLayer")
+	else:
+		Global.editor.updateSceneTree()
+		updateLayerPositions()
 
 func getLayerHeight(layer):
 	return layers.find(layer)

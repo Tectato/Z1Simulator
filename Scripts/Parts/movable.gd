@@ -63,7 +63,7 @@ func updateInteractionState():
 	pass
 
 func _process(delta: float) -> void:
-	global_position = global_position.move_toward(targetPos, delta)
+	global_position = global_position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * global_position
 
 func delete():
 	if layer:

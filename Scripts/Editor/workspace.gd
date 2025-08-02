@@ -38,6 +38,7 @@ func setResolution(newRes):
 	resolution = newRes
 
 func clear():
+	Global.editor.selector.deselect()
 	while !machines.is_empty():
 		machines[0].delete()
 	Simulator.setStep()
@@ -92,6 +93,9 @@ func deserialize(path): # TODO: wipe current project
 	for machine in source["machines"]:
 		var newMachine = importMachine(machine["path"])
 		newMachine.snap(Vector3(machine["pos_x"], machine["pos_y"], machine["pos_z"]))
+	if !machines.is_empty():
+		selectedMachine = machines.back()
+		selectedLayer = selectedMachine.layers[0]
 
 func importMachine(path):
 	setMode(Mode.Select)

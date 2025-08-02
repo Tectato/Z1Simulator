@@ -92,7 +92,7 @@ func loadSVG(filepath : String):
 	#midPoint = Vector3(size.x/20, 0, -size.y/20)
 	$Sprite3D.position = -midPoint + offset
 	$Outline.position = -midPoint + offset
-	$CSGPolygon3D.position = -midPoint + offset
+	$CSGPolygon3D.position = -midPoint + offset - Vector3.UP * 0.02
 	for hole in holes:
 		hole.position -= midPoint - offset
 	#debugPoint.position = midPoint
@@ -197,11 +197,12 @@ func addHole(prefab, pos):
 func addPolygon(segments, isOutline):
 	var polygonParent : Node3D
 	var polygon : PackedVector2Array
+	var hole
 	if isOutline:
 		polygon = outline.polygon
 		polygonParent = outline
 	else:
-		var hole = CUSTOMHOLE.instantiate()
+		hole = CUSTOMHOLE.instantiate()
 		add_child(hole)
 		hole.position = Vector3.ZERO
 		polygon = hole.find_child("Polygon").polygon
@@ -220,6 +221,8 @@ func addPolygon(segments, isOutline):
 	if isOutline:
 		debugPolygon.polygon = polygon
 	polygonParent.polygon = polygon
+	if not isOutline:
+		hole.debugPolygon.polygon = polygon
 
 #TODO
 func snap(srcPos):
@@ -315,6 +318,14 @@ func updateInteractionCandidates():
 		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)
 
 func move(dir : Vector2, chain = []):
+	if selected:
+		print("=====")
+		for part in chain:
+			if part is Pin:
+				print("Pin")
+			if part is Sheet:
+				print(part.path.get_file())
+		pass
 	if chain.has(self):
 		return
 	super.move(dir, chain)

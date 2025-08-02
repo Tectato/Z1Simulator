@@ -7,7 +7,7 @@ func setEdgeLength(value):
 	edgeLength = value
 
 func checkPos(pos):
-	return pos.x > -edgeLength/2 and pos.x < edgeLength/2 and pos.y > -edgeLength/2 and pos.y < edgeLength/2
+	return pos.x > -edgeLength/2 and pos.x < edgeLength/2 and pos.z > -edgeLength/2 and pos.z < edgeLength/2
 
 func getSnapPositions():
 	var diff = Global.workspace.pinTravel

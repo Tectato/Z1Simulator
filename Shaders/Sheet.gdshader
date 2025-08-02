@@ -5,6 +5,7 @@ uniform sampler2D albedo : source_color, filter_nearest;
 uniform float thickness = 0.02;
 instance uniform bool selected = false;
 varying float textureAspectRatio;
+const bool doParallax = false;
 
 void vertex() {
 	textureAspectRatio = float(textureSize(albedo,0).x)/float(textureSize(albedo,0).y);
@@ -15,21 +16,29 @@ float getHeight(vec4 color){
 }
 
 void fragment() {
-	vec3 viewDir = normalize(vec3(VIEW) * mat3(TANGENT, -BINORMAL, NORMAL));
+	if (doParallax){
+		vec3 viewDir = normalize(vec3(VIEW) * mat3(TANGENT, -BINORMAL, NORMAL));
 
-	vec4 topColor = texture(albedo, UV);
-	float topHeight = getHeight(topColor);
-	vec2 offsetVector = viewDir.xy / viewDir.z;
-	vec2 ratioMult = vec2(1.0/textureAspectRatio,1.0);
-	vec4 offsetColor = texture(albedo, clamp(UV - offsetVector * ratioMult * thickness, vec2(0.0,0.0), vec2(1.0,1.0)));
-	float offsetHeight = getHeight(offsetColor);
-	ALBEDO = topColor.rgb * topHeight + offsetColor.rgb * (1.0-topHeight) * 0.5;
-	ALPHA = min(1.0, topHeight + offsetHeight);
-	DEPTH = FRAGCOORD.z * topHeight + (FRAGCOORD.z - 0.001 / viewDir.z) * (1.0-topHeight) * offsetHeight;
-	if (selected){
-		EMISSION = ALBEDO;
+		vec4 topColor = texture(albedo, UV);
+		float topHeight = getHeight(topColor);
+		vec2 offsetVector = viewDir.xy / viewDir.z;
+		vec2 ratioMult = vec2(1.0/textureAspectRatio,1.0);
+		vec4 offsetColor = texture(albedo, clamp(UV - offsetVector * ratioMult * thickness, vec2(0.0,0.0), vec2(1.0,1.0)));
+		float offsetHeight = getHeight(offsetColor);
+		ALBEDO = topColor.rgb * topHeight + offsetColor.rgb * (1.0-topHeight) * 0.5;
+		ALPHA = min(1.0, topHeight + offsetHeight);
+		DEPTH = FRAGCOORD.z * topHeight + (FRAGCOORD.z - 0.001 / viewDir.z) * (1.0-topHeight) * offsetHeight;
+		if (selected){
+			EMISSION = ALBEDO;
+		} else {
+			EMISSION = vec3(0,0,0);
+		}
 	} else {
-		EMISSION = vec3(0,0,0);
+		vec4 topColor = texture(albedo, UV);
+		float topHeight = getHeight(topColor);
+		
+		ALBEDO = topColor.rgb * topHeight;
+		ALPHA = min(1.0, topHeight);
 	}
 }
 

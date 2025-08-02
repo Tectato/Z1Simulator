@@ -6,3 +6,6 @@ func click():
 
 func release():
 	pass
+
+func setHovered(value):
+	pass
