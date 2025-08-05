@@ -16,6 +16,8 @@ var fullPath = ""
 var layers = []
 var globalPins = []
 var clockPins = []
+var beingDeleted = false
+var colliderUpdateScheduled = false
 
 var gizmo
 
@@ -46,7 +48,7 @@ func moveLayer(layer : Layer, dir = 1):
 
 func removeLayer(layer):
 	layers.erase(layer)
-	if layers.is_empty():
+	if layers.is_empty() and not beingDeleted:
 		call_deferred("addLayer")
 	else:
 		Global.editor.updateSceneTree()
@@ -164,6 +166,13 @@ func sortByHeight(a : Layer, b : Layer):
 	return a.height < b.height
 
 func updateCollider():
+	if !colliderUpdateScheduled:
+		colliderUpdateScheduled = true
+		call_deferred("executeColliderUpdate")
+
+func executeColliderUpdate():
+	#print("Updating Machine collider")
+	colliderUpdateScheduled = false
 	var bounds = getBounds()
 	var extents = (bounds[1]-bounds[0])
 	colliderShape.shape.size = extents
@@ -218,6 +227,7 @@ func projectDown(ray : RayCast3D):
 	return global_position * Vector3(1,0,1)
 
 func delete(): #TODO: prompt for confirmation or undo
+	beingDeleted = true
 	for part in parts.get_children():
 		if part is Movable:
 			part.delete()

@@ -9,13 +9,14 @@ extends Control
 @onready var saveRequestDialog = $SaveRequest
 @onready var renamingBox = $RenamingBox
 @onready var saveError = $SaveError
+@onready var selectedLabel = $SelectedLabel/Label
 
 @onready var ModeSelect = $ModeBar/Select
-@onready var ModeEdit = $ModeBar/Edit
 @onready var ModeManage = $ModeBar/Manage
 
 func _ready() -> void:
 	saveRequestDialog.add_button("Cancel", true, "Cancel")
+	updateSelectedLabel([])
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -116,3 +117,31 @@ func _on_renaming_box_editing_toggled(toggled_on: bool) -> void:
 		renamingBox.position = Vector2(-100,-100)
 		renamingBox.release_focus()
 		renamingBox.hide()
+
+func updateSelectedLabel(parts = []):
+	if parts.is_empty():
+		selectedLabel.hide()
+	else:
+		var part = parts[0]
+		var text = ""
+		text = part.id
+		if part is Layer and part.machine.id.length() > 0:
+			text = part.machine.id + " > " + text
+		if part is Movable:
+			if part.layer:
+				if part.layer.id.length() > 0:
+					text = part.layer.id + " > " + text
+				if part.layer.machine.id.length() > 0:
+					text = part.layer.machine.id + " > " + text
+			elif part is Pin and part.machine and part.machine.id.length() > 0:
+				text = part.machine.id + " > " + text
+		
+		if parts.size() > 1:
+			text += " (+ " + str(parts.size()-1) + ")"
+		selectedLabel.text = text
+		if text.length() > 0:
+			selectedLabel.show()
+
+
+func _on_intermediate_plate_vis_toggled(toggled_on: bool) -> void:
+	editor.workspace.setIntermediatePlateVis(toggled_on)

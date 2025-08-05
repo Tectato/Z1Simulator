@@ -19,6 +19,9 @@ enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
 signal resolutionChanged(newRes)
 
+var intermediatePlateVis = true
+signal intermediatePlateVisChanged(newVis)
+
 var machines = []
 var selectedMachine : Machine
 var selectedLayer : Layer
@@ -36,6 +39,11 @@ func setResolution(newRes):
 	if newRes != resolution:
 		resolutionChanged.emit(newRes)
 	resolution = newRes
+
+func setIntermediatePlateVis(newVis):
+	if newVis != intermediatePlateVis:
+		intermediatePlateVisChanged.emit(newVis)
+	intermediatePlateVis = newVis
 
 func clear():
 	Global.editor.selector.deselect()
@@ -95,7 +103,8 @@ func deserialize(path): # TODO: wipe current project
 		newMachine.snap(Vector3(machine["pos_x"], machine["pos_y"], machine["pos_z"]))
 	if !machines.is_empty():
 		selectedMachine = machines.back()
-		selectedLayer = selectedMachine.layers[0]
+		if !selectedMachine.layers.is_empty():
+			selectedLayer = selectedMachine.layers[0]
 
 func importMachine(path):
 	setMode(Mode.Select)

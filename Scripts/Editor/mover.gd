@@ -9,6 +9,8 @@ class_name Mover
 var candidatePositions = []
 
 func move():
+	if Simulator.running:
+		return
 	cast()
 	var dragDelta = get_collision_point() - selector.mouseDragOrigin
 	if selector.selected.size() > 1 or selector.selected[0] is Machine:

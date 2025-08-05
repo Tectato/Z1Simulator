@@ -20,6 +20,8 @@ var clickedButton : Control3D
 var hoveredButton : Control3D
 var gizmoOn = false
 
+signal newSelection(parts)
+
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
 
@@ -44,7 +46,7 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				deselect()
 			elif !selected.is_empty():
 				setGrabpoint()
-				cast(true, true)
+			cast(true, true)
 		if event.is_action_released("mouse_left"):
 			if clickedButton:
 				clickedButton.release()
@@ -86,11 +88,11 @@ func _process(delta: float) -> void:
 					mouseRelative[i] -= midPoint
 					mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
 					mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
-					part.rotatePart(PI/2)
+					part.rotatePart(-PI/2)
 					part.place()
 				elif Input.is_action_just_pressed("rotate_cw"):
 					mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
-					part.rotatePart(-PI/2)
+					part.rotatePart(PI/2)
 					part.place()
 				if part is ClockPin:
 					if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
@@ -101,12 +103,24 @@ func _process(delta: float) -> void:
 						part.setPulsing(!part.pulsing)
 					if Input.is_action_just_pressed("toggle_input"):
 						part.setInput(!part.input)
+			elif part is Pin:
+				if Input.is_action_just_pressed("toggle_output"):
+					part.setOutput(!part.output)
+				if Input.is_action_just_pressed("flip"):
+					part.flipOutput()
 		if !focusElsewhere and Input.is_action_just_pressed("delete"):
 			transformGizmo.hide()
 			while !selected.is_empty():
 				selected.pop_front().delete()
 		if Input.is_action_just_pressed("copy"):
 			copy()
+		if Input.is_action_just_pressed("clear_link"):
+			for part in selected:
+				if part is Movable:
+					part.clearRelations()
+		elif Input.is_action_just_pressed("link"):
+			if selected.size() == 2 and selected[0] is Movable and selected[1] is Movable:
+				selected[0].addRelation(Relation.Type.Link, selected[1])
 		cast(false,true)
 	if Input.is_action_just_pressed("paste"):
 		paste()
@@ -253,7 +267,8 @@ func select(target, shift = false):
 	if !shift:
 		deselect()
 	if target:
-		ignoreList.append(target)
+		if not (targetParent is Control3D):
+			ignoreList.append(target)
 		if targetParent is Selectable or targetParent is Layer or targetParent is Machine:
 			targetParent.setSelected(true)
 			selected.append(targetParent)
@@ -265,6 +280,7 @@ func select(target, shift = false):
 				if !targetParent.layers.is_empty():
 					Global.workspace.selectedLayer = targetParent.layers[0]
 			updateGizmo()
+			newSelection.emit(selected)
 			#print(targetParent.name)
 		else:
 			pass
@@ -280,6 +296,7 @@ func deselect():
 	partDragOrigins.clear()
 	mouseRelative.clear()
 	transformGizmo.hide()
+	newSelection.emit([])
 
 func updateGizmo():
 	if gizmoOn and !selected.is_empty() and !selected[0] is Layer:

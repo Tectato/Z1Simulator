@@ -113,14 +113,15 @@ func place():
 		travelIndicator.rotation = rotation
 	updatePositions()
 	if machine:
-		machine.gridLibrary.unregisterPart(self)
-		machine.gridLibrary.registerPart(self)
+		machine.gridLibrary.requestUpdate(self)
 	updateInteractionCandidates()
 
 func updatePositions():
 	restPos = global_position if !inActivePos else global_position - travel.rotated(Vector3.UP,rotation.y)
 	targetPos = global_position
 	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
+	for relation in relations:
+		relation.updatePos()
 
 func rotatePart(by):
 	super.rotatePart(by)

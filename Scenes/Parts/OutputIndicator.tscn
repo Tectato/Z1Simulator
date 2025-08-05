@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://rmakeuwcgr1g"]
+
+[ext_resource type="Script" uid="uid://bvxt18whwp0rm" path="res://Scripts/Editor/3DUI/outputCheckbox.gd" id="1_jc0ww"]
+[ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="2_p5nrf"]
+[ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="3_ml58t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fc7u5"]
+atlas = ExtResource("2_p5nrf")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1a2dp"]
+atlas = ExtResource("2_p5nrf")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n0si8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fc7u5")
+}],
+"loop": false,
+"name": &"false",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1a2dp")
+}],
+"loop": false,
+"name": &"true",
+"speed": 5.0
+}]
+
+[node name="OutputIndicator" type="Node3D"]
+script = ExtResource("1_jc0ww")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_n0si8")
+animation = &"false"
+script = ExtResource("3_ml58t")

@@ -10,4 +10,5 @@ height = 0.02
 script = ExtResource("1_p2c2m")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_p2c2m")

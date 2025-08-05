@@ -17,6 +17,8 @@ var machine : Machine
 var height = 0
 var parts = []
 var gizmo : Gizmo
+var bounds = []
+var colliderUpdateScheduled = false
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
@@ -81,7 +83,14 @@ func removePart(part):
 	updateCollider()
 
 func updateCollider():
-	var bounds = getBounds()
+	if !colliderUpdateScheduled:
+		colliderUpdateScheduled = true
+		call_deferred("executeColliderUpdate")
+
+func executeColliderUpdate():
+	#print("Updating Layer collider")
+	colliderUpdateScheduled = false
+	var bounds = updateBounds()
 	var extents = (bounds[1]-bounds[0])
 	bb.shape.size = extents
 	bb.global_position = bounds[0] + extents/2
@@ -95,11 +104,12 @@ func updateCollider():
 func updateBaseplate(bounds):
 	var expand = Global.workspace.resolution == Workspace.Resolution.Part
 	var below = machine.getLayerBelow(self)
-	baseplate.visible = below != null
+	var newBounds = [bounds[0], bounds[1]]
+	baseplate.visible = below != null and (Global.workspace.intermediatePlateVis or Global.workspace.selectedLayer == self)
 	if below:
 		if expand:
-			bounds[0] = bounds[0] - Vector3(0.5,0,0.5)
-			bounds[1] = bounds[1] + Vector3(0.5,0,0.5)
+			newBounds[0] = bounds[0] - Vector3(0.5,0,0.5)
+			newBounds[1] = bounds[1] + Vector3(0.5,0,0.5)
 		var boundsBelow = below.getBounds()
 		var min = Vector3(min(bounds[0].x,boundsBelow[0].x),min(bounds[0].y,boundsBelow[0].y),min(bounds[0].z,boundsBelow[0].z))
 		var max = Vector3(max(bounds[1].x,boundsBelow[1].x),max(bounds[1].y,boundsBelow[1].y),max(bounds[1].z,boundsBelow[1].z))
@@ -115,6 +125,11 @@ func _draw_gizmo() -> void:
 	gizmo = Gizmo3D.create_box_outline(Color(0.2,1.0,0.0,0.2), extents, bounds[0] + extents/2)
 
 func getBounds():
+	if bounds.is_empty():
+		return updateBounds()
+	return bounds
+
+func updateBounds():
 	var min = Vector3(1,1,1) * 100000
 	var max = Vector3(1,1,1) * -100000
 	if parts.is_empty():
@@ -127,7 +142,8 @@ func getBounds():
 		var bMax = partBounds[1] + part.global_position
 		min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
 		max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
-	return [min,max]
+	bounds = [min,max]
+	return bounds
 
 
 func place():
@@ -165,6 +181,6 @@ func addLayer():
 func updatePosition():
 	for part in parts:
 		part.updatePositions()
-	updateBaseplate(getBounds())
+	updateBaseplate(updateBounds())
 	if gizmo:
 		_draw_gizmo()

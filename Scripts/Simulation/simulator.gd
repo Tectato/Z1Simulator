@@ -3,6 +3,7 @@ extends Node
 enum Direction {XP, YP, XN, YN}
 
 var currentStep = 3
+var running = false
 var clockSpeed = 0.5 #In seconds
 var clockPins = []
 var inputs = []
@@ -21,12 +22,15 @@ func unregisterClockPin(pin):
 
 func start():
 	$AutoClock.start()
+	running = true
 
 func stop():
 	$AutoClock.stop()
+	running = false
 
 func reset():
 	$AutoClock.stop()
+	running = false
 	pass
 
 func setStep(value = 3):

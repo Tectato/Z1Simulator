@@ -18,12 +18,15 @@ monitorable = false
 [node name="PolygonOpenLeft" type="CollisionPolygon3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 depth = 0.05
+disabled = true
 polygon = PackedVector2Array(-0.075, -0.075, -0.075, 0.075, 0.075, 0.075, 0.075, 0.025, 0, 0.025, 0, -0.075)
 
 [node name="PolygonOpenRight" type="CollisionPolygon3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 depth = 0.05
+disabled = true
 polygon = PackedVector2Array(-0.075, 0.025, -0.075, 0.075, 0.075, 0.075, 0.075, -0.075, 0, -0.075, 0, 0.025)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_mseuv")

@@ -7,9 +7,27 @@ var occupies = {}
 var gizmoA
 var gizmoB
 
+var toUpdate = {}
 var toNotify = {}
 
-func registerPart(part : Movable):
+func requestUpdate(part : Movable):
+	if toUpdate.is_empty():
+		call_deferred("executeUpdate")
+	toUpdate[part] = null
+
+func executeUpdate():
+	toNotify.clear()
+	#print("Updating " + str(toUpdate.keys().size()) + " parts")
+	for part in toUpdate.keys():
+		unregisterPart(part, false)
+		registerPart(part, false)
+	for part in toUpdate.keys():
+		part.updateInteractionCandidates()
+	for existingPart in toNotify.keys():
+		existingPart.updateInteractionCandidates()
+	toUpdate.clear()
+
+func registerPart(part : Movable, notifyNeighbors = true):
 	var bounds = part.getBounds()
 	var min = bounds[0] + part.position
 	var max = bounds[1] + part.position
@@ -28,10 +46,11 @@ func registerPart(part : Movable):
 		for x in range(int(floor(min.x)),int(floor(max.x))+1):
 			registerPartCell(part, Vector2(x,y))
 	
-	#Update Neighbours
-	for existingPart in toNotify.keys():
-		existingPart.updateInteractionCandidates()
-	toNotify.clear()
+	if notifyNeighbors:
+		#Update Neighbours
+		for existingPart in toNotify.keys():
+			existingPart.updateInteractionCandidates()
+		toNotify.clear()
 
 func registerPartCell(part : Movable, gridPos : Vector2):
 	var layer = getLayer(part)
@@ -63,7 +82,7 @@ func registerPartCell(part : Movable, gridPos : Vector2):
 	else:
 		occupies[part] = [gridPos]
 
-func unregisterPart(part : Movable):
+func unregisterPart(part : Movable, notifyNeighbors = true):
 	if !occupies.has(part):
 		return
 	var layer = getLayer(part)
@@ -81,10 +100,12 @@ func unregisterPart(part : Movable):
 				#toNotify[existingPart] = null
 			
 	occupies.erase(part)
-	#Update Neighbours
-	for existingPart in toNotify.keys():
-		existingPart.updateInteractionCandidates()
-	toNotify.clear()
+	
+	if notifyNeighbors:
+		#Update Neighbours
+		for existingPart in toNotify.keys():
+			existingPart.updateInteractionCandidates()
+		toNotify.clear()
 
 func unregisterPartCell(part : Movable, cell : Vector2):
 	var layer = getLayer(part)
@@ -92,12 +113,10 @@ func unregisterPartCell(part : Movable, cell : Vector2):
 	var occupancy = getDict(part is Sheet, layer)
 	var otherOccupancy = getDict(not part is Sheet, layer)
 	
-	occupancy[posKey].erase(part)
-	if occupancy[posKey].is_empty():
-		occupancy.erase(posKey)
-	if otherOccupancy.has(posKey):
-		for existingPart in otherOccupancy[posKey]:
-			toNotify[existingPart] = null
+	if occupancy.has(posKey):
+		occupancy[posKey].erase(part)
+		if occupancy[posKey].is_empty():
+			occupancy.erase(posKey)
 	
 	if otherOccupancy.has(posKey):
 		for existingPart in otherOccupancy[posKey]:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene load_steps=17 format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="4_rcjpo"]
 [ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="6_vjs7e"]
 [ext_resource type="Script" uid="uid://yk8dkrm1xab" path="res://Scripts/Editor/3DUI/checkbox3D.gd" id="7_fc7u5"]
+[ext_resource type="Texture2D" uid="uid://bahslyylbuyku" path="res://Sprites/checkboxLock.png" id="8_1a2dp"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcjpo"]
 metallic = 1.0
@@ -98,6 +99,12 @@ texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_vinw1")
 animation = &"false"
 autoplay = "false"
+
+[node name="Lock" type="Sprite3D" parent="StepLabel/InputCheckbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0.007)
+visible = false
+texture_filter = 0
+texture = ExtResource("8_1a2dp")
 
 [node name="Area3D" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)

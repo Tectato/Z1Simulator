@@ -32,6 +32,11 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
+	if !relations.is_empty() and false: #TODO: give stuff uuid's to serialize those in relations
+		var relationsOut = []
+		for relation in relations:
+			relationsOut.append(relation.serialize())
+		output["relations"] = relationsOut
 	return output
 
 func deserialize(source : Dictionary):
@@ -40,6 +45,16 @@ func deserialize(source : Dictionary):
 	loadSVG(source["file"])
 	if source.has("id"):
 		id = source["id"]
+	else:
+		id = path.get_file().trim_suffix(".svg")
+	if source.has("relations"):
+		for dict in source["relations"]:
+			match(dict["type"]):
+				"link":
+					var other = dict["A"]
+					if other == self:
+						other = dict["B"]
+					addRelation(Relation.Type.Link, other)
 	place()
 
 func _ready():
@@ -68,7 +83,15 @@ func loadSVG(filepath : String):
 	path = filepath
 	if path.is_absolute_path():
 		path = ProjectSettings.localize_path(path)
-	var image = ImageTexture.create_from_image(Image.load_from_file(path))
+	var cached = SheetLibrary.query(path)
+	var image
+	if cached:
+		SheetLibrary.registerUser(path)
+		image = cached[0]
+		outline.polygon = cached[1]
+		debugPolygon.polygon = cached[1]
+	else:
+		image = ImageTexture.create_from_image(Image.load_from_file(path))
 	sprite.set_texture(image)
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
@@ -77,6 +100,8 @@ func loadSVG(filepath : String):
 	var elements = rawString.split("\n")
 	for element in elements:
 		parseElement(element)
+	if not cached:
+		SheetLibrary.registerSprite(path, image, outline.polygon)
 	var size = sprite.texture.get_size()/100.0
 	#bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
 	
@@ -199,6 +224,8 @@ func addPolygon(segments, isOutline):
 	var polygon : PackedVector2Array
 	var hole
 	if isOutline:
+		if outline.polygon.size() > 3:
+			return
 		polygon = outline.polygon
 		polygonParent = outline
 	else:
@@ -318,14 +345,14 @@ func updateInteractionCandidates():
 		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)
 
 func move(dir : Vector2, chain = []):
-	if selected:
-		print("=====")
-		for part in chain:
-			if part is Pin:
-				print("Pin")
-			if part is Sheet:
-				print(part.path.get_file())
-		pass
+	#if selected:
+		#print("=====")
+		#for part in chain:
+			#if part is Pin:
+				#print("Pin")
+			#if part is Sheet:
+				#print(part.path.get_file())
+		#pass
 	if chain.has(self):
 		return
 	super.move(dir, chain)
@@ -338,3 +365,7 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 	for pin in interactionCandidates:
 		if intersects(pin.global_position - diff):
 			pin.move(dir, chain)
+
+func delete():
+	SheetLibrary.unregisterUser(path)
+	super.delete()

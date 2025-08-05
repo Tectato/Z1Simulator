@@ -12,6 +12,7 @@ var saved = false
 func _ready() -> void:
 	get_tree().get_root().files_dropped.connect(fileDropped)
 	Global.editor = self
+	selector.newSelection.connect(interface.updateSelectedLabel)
 	updateSceneTree()
 
 func newProject():

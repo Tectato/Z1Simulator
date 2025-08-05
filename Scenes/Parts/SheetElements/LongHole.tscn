@@ -13,11 +13,13 @@ script = ExtResource("1_7vhs4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Start"]
+visible = false
 mesh = SubResource("SphereMesh_7vhs4")
 
 [node name="End" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="End"]
+visible = false
 mesh = SubResource("SphereMesh_7vhs4")
 skeleton = NodePath("../../Start")
