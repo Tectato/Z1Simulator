@@ -1,4 +1,4 @@
-[gd_scene load_steps=114 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=115 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -61,6 +61,7 @@
 [ext_resource type="Script" uid="uid://y1gdw60ddrne" path="res://Scripts/Editor/3DUI/transformGizmoAxis.gd" id="56_pbycb"]
 [ext_resource type="Texture2D" uid="uid://cu710gbkj5unr" path="res://Sprites/Buttons/Visibility/intermediatePlate_active.png" id="57_ia0pe"]
 [ext_resource type="Texture2D" uid="uid://c52v632ftoffo" path="res://Sprites/Buttons/Visibility/intermediatePlate_lit.png" id="58_2pu55"]
+[ext_resource type="Script" uid="uid://ljua2r6qerv" path="res://Scripts/Editor/fileHandler.gd" id="62_2pu55"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -439,20 +440,31 @@ offset_bottom = 40.0
 
 [node name="File" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
 size = Vector2i(121, 143)
-item_count = 5
+item_count = 7
 item_0/text = "New Project"
 item_0/id = 0
 item_1/text = "Save"
 item_1/id = 1
 item_2/text = "Save as..."
 item_2/id = 2
-item_3/text = "Load Project"
-item_3/id = 3
-item_4/text = "Import Machine"
-item_4/id = 4
+item_3/text = "Export selected Machine"
+item_3/id = 6
+item_4/text = "Load Project"
+item_4/id = 3
+item_5/text = "Add empty machine"
+item_5/id = 5
+item_6/text = "Import Machine"
+item_6/id = 4
 
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
 title = "Save Project"
+initial_position = 1
+access = 2
+filters = PackedStringArray("*.json;Project File;project.json")
+
+[node name="MachineExportDialog" type="FileDialog" parent="Camera3D/Interface"]
+auto_translate_mode = 1
+title = "EXport Machine"
 initial_position = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
@@ -1066,11 +1078,15 @@ monitoring = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotZ/Area3D"]
 shape = SubResource("BoxShape3D_mtfo3")
 
+[node name="FileHandler" type="Node" parent="."]
+script = ExtResource("62_2pu55")
+
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
 [connection signal="file_selected" from="Camera3D/Interface/SaveDialog" to="." method="saveAs"]
+[connection signal="file_selected" from="Camera3D/Interface/MachineExportDialog" to="." method="_on_machine_export_dialog_file_selected"]
 [connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="_on_load_project_dialog_file_selected"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportProjectInstaceDialog" to="." method="importProjectInstace"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]

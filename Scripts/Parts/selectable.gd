@@ -16,3 +16,14 @@ func serialize():
 
 func deserialize(source : Dictionary):
 	pass
+
+func getMachine():
+	if layer:
+		return layer.machine
+	return null
+
+func canModify():
+	var machine = getMachine()
+	if machine:
+		return !machine.importedInstance
+	return true

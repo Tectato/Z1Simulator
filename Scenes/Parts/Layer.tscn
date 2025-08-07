@@ -21,6 +21,7 @@ resource_local_to_scene = true
 size = Vector2(8, 8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_g1kvl"]
+resource_local_to_scene = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ffeya"]
 size = Vector3(0.15, 0.1, 0.05)

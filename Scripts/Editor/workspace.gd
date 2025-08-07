@@ -65,54 +65,69 @@ func createNew():
 func serialize(path : String):
 	Global.unnamedIDs.clear()
 	var machineEntries = []
-	var machinesDir = path.get_file().trim_suffix(".json")
-	var dir = DirAccess.open(path.get_base_dir())
-	dir.make_dir(machinesDir)
-	for machine in machines:
-		var dict = machine.serialize(path)
-		var savePath
-		var newFile
-		if machine.fullPath.length() > 0:
-			savePath = machine.fullPath
-			newFile = FileAccess.open(savePath, FileAccess.WRITE)
-		if !newFile: # Try to save at original directory first
-			savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
-			newFile = FileAccess.open(savePath, FileAccess.WRITE)
-		if newFile:
-			newFile.store_string(JSON.stringify(dict))
-			newFile.close()
-			machineEntries.append({
-				"path":savePath,
-				"pos_x":machine.global_position.x,
-				"pos_y":machine.global_position.y,
-				"pos_z":machine.global_position.z
-			})
-		else:
-			print("Could not write file for " + dict["id"])
-			print(str(FileAccess.get_open_error()))
+	if machines.size() > 1:
+		var machinesDir = path.get_file().trim_suffix(".json") + "_machines"
+		var dir = DirAccess.open(path.get_base_dir())
+		dir.make_dir(machinesDir)
+		for machine in machines:
+			var dict = machine.serialize(path)
+			var savePath
+			var newFile
+			if machine.fullPath.length() > 0:
+				savePath = machine.fullPath
+				newFile = FileAccess.open(savePath, FileAccess.WRITE)
+			if !newFile: # Try to save at original directory first
+				savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
+				newFile = FileAccess.open(savePath, FileAccess.WRITE)
+			if newFile:
+				newFile.store_string(JSON.stringify(dict))
+				newFile.close()
+				machineEntries.append({
+					"path":PathHandler.toRelativePath(savePath),
+					"pos_x":machine.global_position.x,
+					"pos_z":machine.global_position.z
+				})
+			else:
+				print("Could not write file for " + dict["id"])
+				print(str(FileAccess.get_open_error()))
+	elif !machines.is_empty():
+		machineEntries = machines[0].serialize(path)
 
 	var output = {
 		"machines" : machineEntries
 	}
 	return output
 
-func deserialize(path): # TODO: wipe current project
+func deserialize(path):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
-	for machine in source["machines"]:
-		var newMachine = importMachine(machine["path"])
-		newMachine.snap(Vector3(machine["pos_x"], machine["pos_y"], machine["pos_z"]))
+	if source["machines"] is Array:
+		for machine in source["machines"]:
+			var newMachine
+			if machine.has("pos_x"):
+				newMachine = importMachine(machine["path"])
+				newMachine.snap(Vector3(machine["pos_x"], 0, machine["pos_z"]))
+	else:
+		var newMachine = importMachine(source["machines"])
+		newMachine.snap(Vector3.ZERO)
 	if !machines.is_empty():
 		selectedMachine = machines.back()
 		if !selectedMachine.layers.is_empty():
 			selectedLayer = selectedMachine.layers[0]
 
-func importMachine(path):
+func exportMachine(path):
+	pass
+
+func importMachine(src, instance = false):
 	setMode(Mode.Select)
 	setResolution(Resolution.Machine)
 	var newMachine = MACHINE.instantiate()
 	machines.append(newMachine)
 	add_child(newMachine)
-	newMachine.deserialize(path) # TODO: check whether machine or project
+	newMachine.importedInstance = instance
+	if src is String:
+		newMachine.deserialize(src) # TODO: check whether machine or project
+	else:
+		newMachine.deserializeFromDict(src)
 	Global.workspace.setResolution(Workspace.Resolution.Machine)
 	Global.editor.selector.select(newMachine.collider)
 	return newMachine

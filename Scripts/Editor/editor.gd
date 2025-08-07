@@ -29,6 +29,7 @@ func saveAs(path : String):
 
 func save():
 	saved = true
+	PathHandler.setProjectDir(savePath)
 	var dict = workspace.serialize(savePath)
 	var newFile = FileAccess.open(savePath, FileAccess.WRITE)
 	if newFile:
@@ -40,6 +41,7 @@ func save():
 func loadProject(srcPath = ""):
 	workspace.clear()
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
+	PathHandler.setProjectDir(path)
 	saved = false
 	workspace.deserialize(path)
 	updateSceneTree()
@@ -52,6 +54,9 @@ func importProjectInstace(srcPath = ""):
 	updateSceneTree()
 
 func importSheet(path : String):
+	#print(path)
+	#print(PathHandler.toRelativePath(path))
+	#print(PathHandler.toAbsolutePath(PathHandler.toRelativePath(path)))
 	saved = false
 	selector.place(workspace.importSheet(path))
 
@@ -73,6 +78,9 @@ func addGlobalPin():
 func addClockPin():
 	saved = false
 	selector.place(workspace.addClockPin())
+
+func addMachine():
+	workspace.createNew()
 
 func fileDropped(files : Array[String]):
 	var path = files[0]
@@ -100,3 +108,6 @@ func _on_load_project_dialog_file_selected(path: String) -> void:
 
 func updateSceneTree():
 	tree.updateSceneTree()
+
+func _on_machine_export_dialog_file_selected(path: String) -> void:
+	workspace.exportMachine(path)

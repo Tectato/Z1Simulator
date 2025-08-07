@@ -9,8 +9,10 @@ const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 @onready var gridLibrary = $GridLibrary
 @onready var collider = $BoundingBox
 @onready var colliderShape = $BoundingBox/CollisionShape3D
+@onready var uuidManager = $UUIDManager
 
 var id = ""
+var uuid = -1
 var dir = ""
 var fullPath = ""
 var layers = []
@@ -18,6 +20,7 @@ var globalPins = []
 var clockPins = []
 var beingDeleted = false
 var colliderUpdateScheduled = false
+var importedInstance = false # If true, cannot be modified
 
 var gizmo
 
@@ -138,7 +141,9 @@ func deserialize(path : String):
 	if !source.has("id"):
 		print("Invalid machine file")
 		return
-	
+	deserializeFromDict(source)
+
+func deserializeFromDict(source):
 	id = source["id"]
 	if id.begins_with("UnnamedMachine"):
 		id = ""
@@ -162,6 +167,9 @@ func deserialize(path : String):
 	for part in gridLibrary.occupies.keys():
 		part.updateInteractionCandidates()
 
+func setInstanceState(value):
+	pass
+
 func sortByHeight(a : Layer, b : Layer):
 	return a.height < b.height
 
@@ -176,7 +184,7 @@ func executeColliderUpdate():
 	var bounds = getBounds()
 	var extents = (bounds[1]-bounds[0])
 	colliderShape.shape.size = extents
-	collider.global_position = bounds[0] + extents/2
+	collider.position = bounds[0] + extents/2
 	for pin in globalPins:
 		pin.setHeight(max(extents.y*10,1))
 	for pin in clockPins:
@@ -189,7 +197,7 @@ func _draw_gizmo() -> void:
 	if gizmo:
 		gizmo.free()
 	var extents = (bounds[1]-bounds[0])
-	gizmo = Gizmo3D.create_box_outline(Color(1.0,0.8,0.0,0.2), extents, bounds[0] + extents/2 + Vector3.UP * 5 * global_position.y)
+	gizmo = Gizmo3D.create_box_outline(Color(1.0,0.8,0.0,0.2), extents, global_position + bounds[0] + extents/2 + Vector3.UP * 5 * global_position.y)
 
 func getBounds():
 	var min = Vector3(1,1,1) * 100000
@@ -198,9 +206,7 @@ func getBounds():
 	things.append_array(layers)
 	for thing in things:
 		if thing is Movable or thing is Layer:
-			var offset = Vector3.ZERO
-			if thing is Movable: # Layers output in global positions, parts local
-				offset = thing.global_position
+			var offset = thing.position
 			var thingBounds = thing.getBounds()
 			var extents = thingBounds[1] - thingBounds[0]
 			var bMin = thingBounds[0] + offset
@@ -239,3 +245,9 @@ func delete(): #TODO: prompt for confirmation or undo
 	if gizmo:
 		gizmo.free()
 	queue_free()
+
+func getMachine():
+	return self
+
+func canModify():
+	return true

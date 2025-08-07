@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://sbi6ilpar4vc"]
+[gd_scene load_steps=7 format=3 uid="uid://sbi6ilpar4vc"]
 
 [ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
 [ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
+[ext_resource type="PackedScene" uid="uid://b6256ek8c667t" path="res://Scenes/UUIDManager.tscn" id="4_me6lg"]
 [ext_resource type="Texture2D" uid="uid://djqys18a08smf" path="res://Sprites/arrow.png" id="6_lxv6g"]
 
 [sub_resource type="Environment" id="Environment_jtmtj"]
@@ -74,3 +75,5 @@ text = "Y"
 position = Vector2(0, 24)
 rotation = 1.5708
 texture = ExtResource("6_lxv6g")
+
+[node name="UUIDManager" parent="." instance=ExtResource("4_me6lg")]

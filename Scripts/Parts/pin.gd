@@ -12,35 +12,35 @@ var machine : Machine
 
 func serialize():
 	var output = {
-		"pos_x" : global_position.x,
-		"pos_y" : global_position.y,
-		"pos_z" : global_position.z
+		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
+		"pos_z" : ("%0.4f" % position.z).rstrip("0")
 	}
 	if id.length() > 0:
 		output["id"] = id
 	if self.output:
-		output["output"] = true
+		output["output"] = outputState
 	if !relations.is_empty() and false: #TODO: give stuff uuid's to serialize those in relations
-		var relationsOut = []
+		var relationsOut = [] #TODO: account for machine uuid for inter-machine links
 		for relation in relations:
 			relationsOut.append(relation.serialize())
 		output["relations"] = relationsOut
 	return output
 
 func deserialize(source : Dictionary):
-	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
+	position = Vector3(float(source["pos_x"]), 0, float(source["pos_z"]))
 	if source.has("id"):
 		id = source["id"]
 	if source.has("output"):
-		setOutput(true)
+		setOutput(source["output"])
 	if source.has("relations"):
+		uuid = source["uuid"]
 		for dict in source["relations"]:
+			var otherUUID = dict["A"]
+			if otherUUID == uuid:
+				otherUUID = dict["B"]
 			match(dict["type"]):
 				"link":
-					var other = dict["A"]
-					if other == self:
-						other = dict["B"]
-					addRelation(Relation.Type.Link, other)
+					call_deferred("addRelationByUUID", Relation.Type.Link, otherUUID)
 	place()
 
 func getBounds():
@@ -145,3 +145,9 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 	for sheet in interactionCandidates:
 		if sheet.intersects(pos):
 			sheet.move(dir,chain)
+
+func getMachine():
+	if global:
+		return machine
+	else:
+		return super.getMachine()

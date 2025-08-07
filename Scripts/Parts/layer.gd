@@ -93,7 +93,7 @@ func executeColliderUpdate():
 	var bounds = updateBounds()
 	var extents = (bounds[1]-bounds[0])
 	bb.shape.size = extents
-	bb.global_position = bounds[0] + extents/2
+	bb.position = bounds[0] + extents/2
 	widgets.position = bounds[1] + Vector3(0.1,0,0.1)
 	for part in parts:
 		if part is Pin:
@@ -122,7 +122,7 @@ func _draw_gizmo() -> void:
 	if gizmo:
 		gizmo.free()
 	var extents = (bounds[1]-bounds[0])
-	gizmo = Gizmo3D.create_box_outline(Color(0.2,1.0,0.0,0.2), extents, bounds[0] + extents/2)
+	gizmo = Gizmo3D.create_box_outline(Color(0.2,1.0,0.0,0.2), extents, global_position + bounds[0] + extents/2)
 
 func getBounds():
 	if bounds.is_empty():
@@ -138,8 +138,8 @@ func updateBounds():
 		var partBounds = part.getBounds()
 		if part is Pin:
 			partBounds[1] = partBounds[1] * Vector3(1,0,1) + Vector3.UP * 0.2
-		var bMin = partBounds[0] + part.global_position
-		var bMax = partBounds[1] + part.global_position
+		var bMin = partBounds[0] + part.position
+		var bMax = partBounds[1] + part.position
 		min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
 		max = Vector3(max(max.x,bMax.x),max(max.y,bMax.y),max(max.z,bMax.z))
 	bounds = [min,max]

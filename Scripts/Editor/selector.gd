@@ -75,13 +75,13 @@ func _process(delta: float) -> void:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if dist > 5:
 				dragging = true
-		if (dragging or placing) and not selected[0] is Layer:
+		if (dragging or placing) and not selected[0] is Layer and canModify():
 			mover.move()
 	if !selected.is_empty():
 		var i = -1
 		for part in selected:
 			i += 1
-			if part is ClockPin or part is Sheet:
+			if (part is ClockPin or part is Sheet) and part.canModify():
 				if Input.is_action_just_pressed("rotate_ccw"):
 					var bounds = part.getBounds()
 					var midPoint = (bounds[1]-bounds[0])/2
@@ -103,12 +103,12 @@ func _process(delta: float) -> void:
 						part.setPulsing(!part.pulsing)
 					if Input.is_action_just_pressed("toggle_input"):
 						part.setInput(!part.input)
-			elif part is Pin:
+			elif part is Pin and part.canModify():
 				if Input.is_action_just_pressed("toggle_output"):
 					part.setOutput(!part.output)
 				if Input.is_action_just_pressed("flip"):
 					part.flipOutput()
-		if !focusElsewhere and Input.is_action_just_pressed("delete"):
+		if !focusElsewhere and Input.is_action_just_pressed("delete") and canModify():
 			transformGizmo.hide()
 			while !selected.is_empty():
 				selected.pop_front().delete()
@@ -127,6 +127,12 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("toggle_transform_gizmo"):
 		gizmoOn = !gizmoOn
 		updateGizmo()
+
+func canModify():
+	var out = true
+	for part in selected:
+		out &= part.canModify()
+	return out
 
 func cast(select = true, checkForUI = false):
 	var mask = collision_mask
@@ -299,7 +305,7 @@ func deselect():
 	newSelection.emit([])
 
 func updateGizmo():
-	if gizmoOn and !selected.is_empty() and !selected[0] is Layer:
+	if gizmoOn and !selected.is_empty() and selected[0] is Movable and canModify():
 		transformGizmo.global_position = getMidPoint(selected)
 		transformGizmo.show()
 	else:

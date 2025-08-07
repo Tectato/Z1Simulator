@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bid8yuc1ufp1d"]
+[gd_scene load_steps=5 format=3 uid="uid://bid8yuc1ufp1d"]
 
 [ext_resource type="Script" uid="uid://baw1bypo5hmfp" path="res://Scripts/Editor/machine.gd" id="1_ovuu0"]
 [ext_resource type="Script" uid="uid://iqoy760513a" path="res://Scripts/Simulation/gridLibrary.gd" id="2_7iaox"]
+[ext_resource type="PackedScene" uid="uid://b6256ek8c667t" path="res://Scenes/UUIDManager.tscn" id="3_cewcs"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ovuu0"]
 
@@ -21,3 +22,5 @@ shape = SubResource("BoxShape3D_ovuu0")
 
 [node name="GridLibrary" type="Node" parent="."]
 script = ExtResource("2_7iaox")
+
+[node name="UUIDManager" parent="." instance=ExtResource("3_cewcs")]

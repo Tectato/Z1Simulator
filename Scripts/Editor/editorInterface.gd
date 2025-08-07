@@ -7,6 +7,7 @@ extends Control
 @onready var importSheetDialog = $ImportSheetDialog
 @onready var importChoiceDialog = $ImportChoice
 @onready var saveRequestDialog = $SaveRequest
+@onready var exportMachineDialog = $MachineExportDialog
 @onready var renamingBox = $RenamingBox
 @onready var saveError = $SaveError
 @onready var selectedLabel = $SelectedLabel/Label
@@ -49,7 +50,10 @@ func _on_file_id_pressed(id: int) -> void:
 		4:
 			importProjectDialog.popup()
 		5:
-			importSheetDialog.popup()
+			#importSheetDialog.popup()
+			editor.addMachine()
+		6:
+			exportMachineDialog.popup()
 
 func requestSheet():
 	importSheetDialog.popup()

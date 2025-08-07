@@ -26,7 +26,7 @@ func setHeight(value):
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
 func move(dir : Vector2, chain = []):
-	if not chain.is_empty():
+	if (not chain.is_empty()) and relations.is_empty():
 		return
 	super.move(dir.rotated(-rotation.y), chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
@@ -57,6 +57,7 @@ func updateLabel():
 	inputCheckbox.visible = input
 
 func clockCycle(clockStep : int, forwards = true):
+	if !relations.is_empty(): return
 	if input and !activateNextCycle:
 		return
 	if clockStep == forwardStep or (!pulsing and clockStep == antiStep):
@@ -75,9 +76,8 @@ func serialize():
 	var rotationY = int(round(rotation.y / (PI/2)))
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	var output = {
-		"pos_x" : global_position.x,
-		"pos_y" : global_position.y,
-		"pos_z" : global_position.z,
+		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
+		"pos_z" : ("%0.4f" % position.z).rstrip("0"),
 		"rotation" : rotationY,
 		"forwardStep" : int(forwardStep),
 		"pulsing" : pulsing,
@@ -89,13 +89,13 @@ func serialize():
 	return output
 
 func deserialize(source : Dictionary):
-	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
+	position = Vector3(float(source["pos_x"]), 0, float(source["pos_z"]))
 	rotation = Vector3(0, float(source["rotation"]) * PI/2, 0)
 	forwardStep = int(source["forwardStep"])
 	antiStep = wrap(forwardStep+2, 0, 4)
 	pulsing = bool(source["pulsing"])
 	input = bool(source["input"])
-	inActivePos = bool(source["active"])
+	inActivePos = bool(source["active"] if source.has("active") else false)
 	if source.has("id"):
 		id = source["id"]
 	updateLabel()
@@ -137,3 +137,19 @@ func delete():
 	Simulator.unregisterClockPin(self)
 	if machine:
 		machine.removeClockPin(self)
+
+func addRelation(type : Relation.Type, other : Selectable):
+	super.addRelation(type, other)
+	inputCheckbox.setLocked(true)
+
+func appendRelation(relation : Relation):
+	super.appendRelation(relation)
+	inputCheckbox.setLocked(true)
+
+func removeRelation(relation : Relation):
+	super.removeRelation(relation)
+	inputCheckbox.setLocked(!relations.is_empty())
+
+func clearRelations():
+	super.clearRelations()
+	inputCheckbox.setLocked(false)

@@ -22,11 +22,11 @@ var gizmo
 var sortTargetPos : Vector3
 
 func serialize():
-	var relativePath = ProjectSettings.localize_path(path)
+	var relativePath = PathHandler.toRelativePath(path)
 	var output = {
-		"pos_x" : global_position.x,
-		"pos_y" : global_position.y,
-		"pos_z" : global_position.z,
+		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
+		"pos_y" : max(1,floori(position.y / 0.045)),
+		"pos_z" : ("%0.4f" % position.z).rstrip("0"),
 		"rotation" : rotation.y,
 		"file" : relativePath
 	}
@@ -40,9 +40,14 @@ func serialize():
 	return output
 
 func deserialize(source : Dictionary):
-	global_position = Vector3(source["pos_x"], source["pos_y"], source["pos_z"])
+	var height = source["pos_y"]
+	if abs(height - floor(height)) > 0:
+		height = height - layer.global_position.y
+	else:
+		height = height * 0.045
+	position = Vector3(float(source["pos_x"]), height, float(source["pos_z"]))
 	rotation = Vector3(0, source["rotation"], 0)
-	loadSVG(source["file"])
+	loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	if source.has("id"):
 		id = source["id"]
 	else:
@@ -306,11 +311,17 @@ func castPoints(ray : RayCast3D):
 		var absolutePoint = (Vector3(point.x,0,point.y) * $Outline.global_transform.affine_inverse())
 		ray.global_position = absolutePoint + Vector3.UP
 		ray.force_raycast_update()
+		while ray.get_collider() and !ray.get_collider().is_visible_in_tree():
+			ray.add_exception(ray.get_collider())
+			ray.force_raycast_update()
 		highestY = max(highestY, ray.get_collision_point().y)
 	for hole in holes:
 		if not hole is CustomHole:
 			ray.global_position = hole.global_position + Vector3.UP
 			ray.force_raycast_update()
+			while ray.get_collider() and !ray.get_collider().is_visible_in_tree():
+				ray.add_exception(ray.get_collider())
+				ray.force_raycast_update()
 			highestY = max(highestY, ray.get_collision_point().y)
 	return highestY
 

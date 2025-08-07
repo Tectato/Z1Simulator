@@ -16,6 +16,7 @@ var stateY = false
 @onready var restStateX = stateX
 @onready var restStateY = stateY
 var id = ""
+var uuid = -1
 
 func _ready() -> void:
 	place()
@@ -47,6 +48,13 @@ func addRelation(type : Relation.Type, other : Selectable):
 	newRelation.B = other
 	relations.append(newRelation)
 	newRelation.init()
+
+func addRelationByUUID(type : Relation.Type, otherID : int):
+	var other = getMachine().uuidManager.getPart(otherID)
+	if other:
+		addRelation(type, other)
+	else:
+		print("Failed to add relation")
 
 func appendRelation(relation : Relation):
 	if not relations.has(relation):

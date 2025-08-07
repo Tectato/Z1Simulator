@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://do1lxlkrngred"]
+
+[ext_resource type="Script" uid="uid://sixkct5qrm1c" path="res://Scripts/pathHandler.gd" id="1_lbo5l"]
+
+[node name="PathHandler" type="Node"]
+script = ExtResource("1_lbo5l")
