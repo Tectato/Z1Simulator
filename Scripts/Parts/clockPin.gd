@@ -57,7 +57,7 @@ func updateLabel():
 	inputCheckbox.visible = input
 
 func clockCycle(clockStep : int, forwards = true):
-	if !relations.is_empty(): return
+	if input and !relations.is_empty(): return
 	if input and !activateNextCycle:
 		return
 	if clockStep == forwardStep or (!pulsing and clockStep == antiStep):
@@ -73,6 +73,7 @@ func clockCycle(clockStep : int, forwards = true):
 			$ResetTimer.start()
 
 func serialize():
+	grabUUID()
 	var rotationY = int(round(rotation.y / (PI/2)))
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	var output = {
@@ -86,6 +87,16 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
+	if !relations.is_empty():
+		output["uuid"] = uuid
+		for relation in relations:
+			if relation.isInterMachineRelation():
+				var serialized = relation.serialize()
+				serialized["AParent"] = relation.AParent.uuid
+				serialized["BParent"] = relation.BParent.uuid
+				Global.workspace.interMachineRelations[serialized] = null
+			else:
+				getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -98,6 +109,9 @@ func deserialize(source : Dictionary):
 	inActivePos = bool(source["active"] if source.has("active") else false)
 	if source.has("id"):
 		id = source["id"]
+	if source.has("uuid"):
+		uuid = int(source["uuid"])
+		getMachine().uuidManager.registerID(self, uuid)
 	updateLabel()
 	place()
 

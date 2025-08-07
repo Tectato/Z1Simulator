@@ -73,9 +73,9 @@ func deserialize(source : Dictionary):
 
 func addPart(newPart):
 	parts.append(newPart)
+	newPart.layer = self
 	add_child(newPart)
 	newPart.place()
-	newPart.layer = self
 	updateCollider()
 
 func removePart(part):
@@ -184,3 +184,6 @@ func updatePosition():
 	updateBaseplate(updateBounds())
 	if gizmo:
 		_draw_gizmo()
+
+func isEmpty():
+	return parts.is_empty()

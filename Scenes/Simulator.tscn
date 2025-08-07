@@ -7,4 +7,8 @@ script = ExtResource("1_qmcj1")
 
 [node name="AutoClock" type="Timer" parent="."]
 
+[node name="Cooldown" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
 [connection signal="timeout" from="AutoClock" to="." method="_on_auto_clock_timeout"]

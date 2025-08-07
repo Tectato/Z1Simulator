@@ -49,8 +49,9 @@ func loadProject(srcPath = ""):
 
 func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
+	PathHandler.setProjectDir(path)
 	saved = false
-	workspace.importMachine(path)
+	workspace.importMachines(FileHandler.extractMachines(path))
 	updateSceneTree()
 
 func importSheet(path : String):
@@ -100,7 +101,7 @@ func getFileName(path : String):
 	return file.substr(0,extensionIndex)
 
 func _on_load_project_dialog_file_selected(path: String) -> void:
-	if !saved:
+	if !saved and !isEmpty():
 		tempProjectPath = path
 		interface.saveRequestDialog.popup()
 	else:
@@ -111,3 +112,9 @@ func updateSceneTree():
 
 func _on_machine_export_dialog_file_selected(path: String) -> void:
 	workspace.exportMachine(path)
+
+func isEmpty():
+	var empty = true
+	for machine in workspace.machines:
+		empty = empty and machine.isEmpty()
+	return empty

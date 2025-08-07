@@ -11,6 +11,7 @@ var indicator : Node3D
 var machine : Machine
 
 func serialize():
+	grabUUID()
 	var output = {
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
 		"pos_z" : ("%0.4f" % position.z).rstrip("0")
@@ -19,11 +20,16 @@ func serialize():
 		output["id"] = id
 	if self.output:
 		output["output"] = outputState
-	if !relations.is_empty() and false: #TODO: give stuff uuid's to serialize those in relations
-		var relationsOut = [] #TODO: account for machine uuid for inter-machine links
+	if !relations.is_empty():
+		output["uuid"] = uuid
 		for relation in relations:
-			relationsOut.append(relation.serialize())
-		output["relations"] = relationsOut
+			if relation.isInterMachineRelation():
+				var serialized = relation.serialize()
+				serialized["AParent"] = relation.AParent.uuid
+				serialized["BParent"] = relation.BParent.uuid
+				Global.workspace.interMachineRelations[serialized] = null
+			else:
+				getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -32,15 +38,18 @@ func deserialize(source : Dictionary):
 		id = source["id"]
 	if source.has("output"):
 		setOutput(source["output"])
-	if source.has("relations"):
-		uuid = source["uuid"]
-		for dict in source["relations"]:
-			var otherUUID = dict["A"]
-			if otherUUID == uuid:
-				otherUUID = dict["B"]
-			match(dict["type"]):
-				"link":
-					call_deferred("addRelationByUUID", Relation.Type.Link, otherUUID)
+	if source.has("uuid"):
+		uuid = int(source["uuid"])
+		getMachine().uuidManager.registerID(self, uuid)
+	#if source.has("relations"):
+		#uuid = source["uuid"]
+		#for dict in source["relations"]:
+			#var otherUUID = dict["A"]
+			#if otherUUID == uuid:
+				#otherUUID = dict["B"]
+			#match(dict["type"]):
+				#"link":
+					#call_deferred("addRelationByUUID", Relation.Type.Link, otherUUID)
 	place()
 
 func getBounds():
@@ -147,7 +156,7 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 			sheet.move(dir,chain)
 
 func getMachine():
-	if global:
+	if layer == null and machine != null:
 		return machine
 	else:
 		return super.getMachine()

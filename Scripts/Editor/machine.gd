@@ -18,11 +18,16 @@ var fullPath = ""
 var layers = []
 var globalPins = []
 var clockPins = []
+var relations = {}
 var beingDeleted = false
 var colliderUpdateScheduled = false
 var importedInstance = false # If true, cannot be modified
 
 var gizmo
+
+func _ready() -> void:
+	if uuid < 0:
+		Global.workspace.uuidManager.request(self)
 
 func setSelected(value):
 	if value:
@@ -102,8 +107,10 @@ func addClockPin(newPin):
 func removeClockPin(pin):
 	clockPins.erase(pin)
 
-func serialize(path):
-	dir = path.get_base_dir()
+func serialize(path = null):
+	relations.clear()
+	if path:
+		dir = path.get_base_dir()
 	if id == "":
 		if Global.unnamedIDs.has("machine"):
 			id = "UnnamedMachine" + str(Global.unnamedIDs["machine"])
@@ -126,12 +133,15 @@ func serialize(path):
 		"id" : id,
 		"layers" : layersOut,
 		"globalPins" : globalPinsOut,
-		"clockPins" : clockPinsOut
+		"clockPins" : clockPinsOut,
+		"uuid" : uuid
 	}
+	if !relations.is_empty():
+		output["relations"] = relations.keys()
 	return output
 
 func deserialize(path : String):
-	fullPath = path
+	fullPath = PathHandler.toAbsolutePath(path)
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if FileAccess.get_open_error():
 		print("Error loading file " + path)
@@ -166,8 +176,22 @@ func deserializeFromDict(source):
 	
 	for part in gridLibrary.occupies.keys():
 		part.updateInteractionCandidates()
+	
+	if source.has("relations"):
+		uuid = source["uuid"]
+		Global.workspace.uuidManager.registerID(self, uuid)
+		for relation in source["relations"]:
+			var A = uuidManager.getPart(int(relation["A"]))
+			match relation.type:
+				"link":
+					A.addRelation(Relation.Type.Link, uuidManager.getPart(int(relation["B"])))
+	elif source.has("uuid"):
+		uuid = source["uuid"]
+		Global.workspace.uuidManager.registerID(self, uuid)
+	else:
+		Global.workspace.uuidManager.request(self)
 
-func setInstanceState(value):
+func makeLocal():
 	pass
 
 func sortByHeight(a : Layer, b : Layer):
@@ -251,3 +275,9 @@ func getMachine():
 
 func canModify():
 	return true
+
+func isEmpty():
+	var empty = parts.get_children().is_empty()
+	for layer in layers:
+		empty = empty and layer.isEmpty()
+	return empty

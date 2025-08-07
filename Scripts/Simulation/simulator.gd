@@ -38,12 +38,15 @@ func setStep(value = 3):
 	gizmo.setClockStep(currentStep+1)
 
 func next(stopClock = true):
+	if !$Cooldown.is_stopped():
+		return
 	if stopClock: stop()
 	currentStep += 1
 	currentStep %= 4
 	for pin in clockPins:
 		pin.clockCycle(currentStep)
 	gizmo.setClockStep(currentStep+1)
+	$Cooldown.start()
 
 func prev(stopClock = true):
 	if stopClock: stop()

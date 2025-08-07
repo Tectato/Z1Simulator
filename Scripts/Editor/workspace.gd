@@ -11,6 +11,8 @@ const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
 
+@onready var uuidManager = $UUIDManager
+
 # Select: Select & move things - Manage: Define inputs/outputs, link Machines together
 enum Mode {Select, Manage}
 var mode = Mode.Select
@@ -23,6 +25,7 @@ var intermediatePlateVis = true
 signal intermediatePlateVisChanged(newVis)
 
 var machines = []
+var interMachineRelations = {}
 var selectedMachine : Machine
 var selectedLayer : Layer
 
@@ -46,6 +49,7 @@ func setIntermediatePlateVis(newVis):
 	intermediatePlateVis = newVis
 
 func clear():
+	uuidManager.clear()
 	Global.editor.selector.deselect()
 	while !machines.is_empty():
 		machines[0].delete()
@@ -64,62 +68,89 @@ func createNew():
 
 func serialize(path : String):
 	Global.unnamedIDs.clear()
-	var machineEntries = []
-	if machines.size() > 1:
-		var machinesDir = path.get_file().trim_suffix(".json") + "_machines"
-		var dir = DirAccess.open(path.get_base_dir())
-		dir.make_dir(machinesDir)
-		for machine in machines:
-			var dict = machine.serialize(path)
-			var savePath
-			var newFile
-			if machine.fullPath.length() > 0:
-				savePath = machine.fullPath
-				newFile = FileAccess.open(savePath, FileAccess.WRITE)
-			if !newFile: # Try to save at original directory first
-				savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
-				newFile = FileAccess.open(savePath, FileAccess.WRITE)
-			if newFile:
-				newFile.store_string(JSON.stringify(dict))
-				newFile.close()
-				machineEntries.append({
-					"path":PathHandler.toRelativePath(savePath),
-					"pos_x":machine.global_position.x,
-					"pos_z":machine.global_position.z
-				})
-			else:
-				print("Could not write file for " + dict["id"])
-				print(str(FileAccess.get_open_error()))
-	elif !machines.is_empty():
-		machineEntries = machines[0].serialize(path)
+	interMachineRelations.clear()
+	var machineEntries = FileHandler.compile(machines)
+	#if machines.size() > 1:
+		#var machinesDir = path.get_file().trim_suffix(".json") + "_machines"
+		#var dir = DirAccess.open(path.get_base_dir())
+		#dir.make_dir(machinesDir)
+		#for machine in machines:
+			#var dict = machine.serialize(path)
+			#var savePath
+			#var newFile
+			#if machine.fullPath.length() > 0:
+				#savePath = machine.fullPath
+				#newFile = FileAccess.open(savePath, FileAccess.WRITE)
+			#if !newFile: # Try to save at original directory first
+				#savePath = path.get_base_dir() + "/" + machinesDir + "/" + dict["id"] + ".json"
+				#newFile = FileAccess.open(savePath, FileAccess.WRITE)
+			#if newFile:
+				#newFile.store_string(JSON.stringify(dict))
+				#newFile.close()
+				#machineEntries.append({
+					#"path":PathHandler.toRelativePath(savePath),
+					#"pos_x":machine.global_position.x,
+					#"pos_z":machine.global_position.z
+				#})
+			#else:
+				#print("Could not write file for " + dict["id"])
+				#print(str(FileAccess.get_open_error()))
+	#elif !machines.is_empty():
+		#machineEntries = machines[0].serialize(path)
 
 	var output = {
 		"machines" : machineEntries
 	}
+	if !interMachineRelations.is_empty():
+		output["relations"] = interMachineRelations.keys()
 	return output
 
 func deserialize(path):
-	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
-	if source["machines"] is Array:
-		for machine in source["machines"]:
-			var newMachine
-			if machine.has("pos_x"):
-				newMachine = importMachine(machine["path"])
-				newMachine.snap(Vector3(machine["pos_x"], 0, machine["pos_z"]))
-	else:
-		var newMachine = importMachine(source["machines"])
-		newMachine.snap(Vector3.ZERO)
+	#var source = JSON.parse_string(FileAccess.get_file_as_string(path))
+	#if source["machines"] is Array:
+		#for machine in source["machines"]:
+			#var newMachine
+			#if machine.has("pos_x"):
+				#newMachine = importMachine(machine["path"])
+				#newMachine.snap(Vector3(machine["pos_x"], 0, machine["pos_z"]))
+	#else:
+		#var newMachine = importMachine(source["machines"])
+		#newMachine.snap(Vector3.ZERO)
+	var machinesDict = FileHandler.extractMachines(path)
+	var relations = []
+	for entry in machinesDict:
+		if entry is Array: # Relations entry
+			relations.append_array(entry)
+			continue
+		var newMachine = importMachine(entry["machine"], entry["instance"])
+		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+		if entry["instance"]:
+			newMachine.fullPath = PathHandler.toAbsolutePath(entry["path"])
 	if !machines.is_empty():
+		setMode(Mode.Select)
+		setResolution(Resolution.Machine)
 		selectedMachine = machines.back()
+		Global.editor.selector.select(selectedMachine.collider)
 		if !selectedMachine.layers.is_empty():
 			selectedLayer = selectedMachine.layers[0]
+	for relation in relations:
+		var AParent = uuidManager.getPart(int(relation["AParent"]))
+		var A = AParent.uuidManager.getPart(int(relation["A"]))
+		var BParent = uuidManager.getPart(int(relation["BParent"]))
+		var B = BParent.uuidManager.getPart(int(relation["B"]))
+		match relation.type:
+			"link":
+				A.addRelation(Relation.Type.Link, B)
 
 func exportMachine(path):
 	pass
 
+func importMachines(src):
+	for entry in src:
+		var newMachine = importMachine(entry["machine"], true)
+		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+
 func importMachine(src, instance = false):
-	setMode(Mode.Select)
-	setResolution(Resolution.Machine)
 	var newMachine = MACHINE.instantiate()
 	machines.append(newMachine)
 	add_child(newMachine)
@@ -128,8 +159,6 @@ func importMachine(src, instance = false):
 		newMachine.deserialize(src) # TODO: check whether machine or project
 	else:
 		newMachine.deserializeFromDict(src)
-	Global.workspace.setResolution(Workspace.Resolution.Machine)
-	Global.editor.selector.select(newMachine.collider)
 	return newMachine
 
 func importSheet(path):

@@ -4,12 +4,16 @@ class_name Relation
 enum Type {Link}
 
 var A : Movable
+var AParent : Machine
 var B : Movable
+var BParent : Machine
 var inEffect = false
 
 func init():
 	A.appendRelation(self)
 	B.appendRelation(self)
+	AParent = A.getMachine()
+	BParent = B.getMachine()
 	updatePos()
 	pass
 
@@ -25,11 +29,15 @@ func updatePos():
 func serialize():
 	return {
 		"type" : "Unset",
-		"A" : A,
-		"B" : B
+		"A" : A.uuid,
+		"B" : B.uuid
 	}
 
 func deserialize(source):
+	print("This should not be called")
 	A = source["A"]
 	B = source["B"]
 	init()
+
+func isInterMachineRelation():
+	return AParent != BParent

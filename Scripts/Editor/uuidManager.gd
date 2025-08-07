@@ -11,8 +11,9 @@ func request(part):
 	parts[currentIndex] = part
 
 func registerID(part, id : int):
-	if parts.has(id):
-		print("Error registering part: UUID already exists")
+	if parts.has(id) and parts[id] != null:
+		if parts[id] != part:
+			print("Error registering part: UUID already exists")
 	else:
 		parts[id] = part
 
@@ -22,3 +23,7 @@ func getPart(id : int):
 	else:
 		print("Tried to get part through nonexistant UUID")
 		return null
+
+func clear():
+	parts.clear()
+	currentIndex = 0

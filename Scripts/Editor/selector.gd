@@ -131,7 +131,7 @@ func _process(delta: float) -> void:
 func canModify():
 	var out = true
 	for part in selected:
-		out &= part.canModify()
+		out = out and part.canModify()
 	return out
 
 func cast(select = true, checkForUI = false):

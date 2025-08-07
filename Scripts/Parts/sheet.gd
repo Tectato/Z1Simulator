@@ -22,6 +22,7 @@ var gizmo
 var sortTargetPos : Vector3
 
 func serialize():
+	grabUUID()
 	var relativePath = PathHandler.toRelativePath(path)
 	var output = {
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
@@ -32,11 +33,13 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
-	if !relations.is_empty() and false: #TODO: give stuff uuid's to serialize those in relations
-		var relationsOut = []
+	if !relations.is_empty():
+		output["uuid"] = uuid
 		for relation in relations:
-			relationsOut.append(relation.serialize())
-		output["relations"] = relationsOut
+			if relation.isInterMachineRelation():
+				Global.workspace.interMachineRelations[relation.serialize()] = null
+			else:
+				getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -52,14 +55,17 @@ func deserialize(source : Dictionary):
 		id = source["id"]
 	else:
 		id = path.get_file().trim_suffix(".svg")
-	if source.has("relations"):
-		for dict in source["relations"]:
-			match(dict["type"]):
-				"link":
-					var other = dict["A"]
-					if other == self:
-						other = dict["B"]
-					addRelation(Relation.Type.Link, other)
+	if source.has("uuid"):
+		uuid = int(source["uuid"])
+		getMachine().uuidManager.registerID(self, uuid)
+	#if source.has("relations"):
+		#for dict in source["relations"]:
+			#match(dict["type"]):
+				#"link":
+					#var other = dict["A"]
+					#if other == self:
+						#other = dict["B"]
+					#addRelation(Relation.Type.Link, other)
 	place()
 
 func _ready():

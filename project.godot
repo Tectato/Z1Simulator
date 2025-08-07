@@ -22,6 +22,7 @@ Simulator="*res://Scenes/Simulator.tscn"
 Gizmo3D="*res://addons/MaxGizmos/./Classes/gizmo_3d.gd"
 SheetLibrary="*res://Scenes/SheetLibrary.tscn"
 PathHandler="*res://Scenes/PathHandler.tscn"
+FileHandler="*res://Scenes/FileHandler.tscn"
 
 [editor]
 

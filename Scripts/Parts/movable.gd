@@ -21,6 +21,10 @@ var uuid = -1
 func _ready() -> void:
 	place()
 
+func grabUUID():
+	if uuid < 0:
+		getMachine().uuidManager.request(self)
+
 func move(dir : Vector2, chain = []):
 	# TODO: bool whether i've already moved this tick to avoid double move if e.g. moved from two ends at once
 	if chain.has(self):
@@ -37,6 +41,7 @@ func move(dir : Vector2, chain = []):
 		relation.applyMove(self, dir, chain)
 	
 func addRelation(type : Relation.Type, other : Selectable):
+	grabUUID()
 	if hasRelation(self, other):
 		return
 	var newRelation
@@ -49,14 +54,17 @@ func addRelation(type : Relation.Type, other : Selectable):
 	relations.append(newRelation)
 	newRelation.init()
 
-func addRelationByUUID(type : Relation.Type, otherID : int):
-	var other = getMachine().uuidManager.getPart(otherID)
+func addRelationByUUID(type : Relation.Type, otherMachineID : int, otherID : int):
+	grabUUID()
+	var otherMachine = Global.workspace.uuidManager.getPart(otherMachineID)
+	var other = otherMachine.uuidManager.getPart(otherID)
 	if other:
 		addRelation(type, other)
 	else:
 		print("Failed to add relation")
 
 func appendRelation(relation : Relation):
+	grabUUID()
 	if not relations.has(relation):
 		relations.append(relation)
 
