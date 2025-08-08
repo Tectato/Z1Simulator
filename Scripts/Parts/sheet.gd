@@ -13,6 +13,7 @@ const scaleFactor = 0.001
 @onready var debugPolygon = $CSGPolygon3D
 @export var path : String
 @export var debugPoint : Node3D
+var pinCandidates = {}
 var partOffset : Vector2
 var midPoint : Vector3
 var bounds = []
@@ -33,13 +34,13 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
+	output["uuid"] = uuid
 	if !relations.is_empty():
-		output["uuid"] = uuid
 		for relation in relations:
-			if relation.isInterMachineRelation():
-				Global.workspace.interMachineRelations[relation.serialize()] = null
-			else:
-				getMachine().relations[relation.serialize()] = null
+			#if relation.isInterMachineRelation():
+				#Global.workspace.interMachineRelations[relation.serialize()] = null
+			#else:
+			getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -94,8 +95,8 @@ func loadSVG(filepath : String):
 	path = filepath
 	if id.length() == 0:
 		id = path.get_file().trim_suffix(".svg") 
-	if path.is_absolute_path():
-		path = ProjectSettings.localize_path(path)
+	#if path.is_absolute_path():
+		#path = ProjectSettings.localize_path(path)
 	var cached = SheetLibrary.query(path)
 	var image
 	if cached:
@@ -346,7 +347,8 @@ func intersects(pos : Vector3):
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * $Outline.global_transform
 	debugPoint.global_position = posRelative
-	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	#var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	var withinOutline = intersectsOutline(pos)
 	if !withinOutline:
 		return false
 	var withinHole = false
@@ -355,13 +357,41 @@ func intersects(pos : Vector3):
 		withinHole = withinHole or hole.checkPos(posRelative)
 	return withinOutline and not withinHole
 
+func intersectsOutline(pos : Vector3):
+	#var posRelative = outline.to_local(pos)
+	var posRelative = pos * $Outline.global_transform
+	var intersects = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	return intersects
+
+func getIntersector(pos : Vector3):
+	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
+	var posRelative = pos * $Outline.global_transform
+	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	if !withinOutline:
+		return null
+	for hole in holes:
+		posRelative = pos * hole.global_transform
+		if hole.checkPos(posRelative):
+			return hole
+	return null
+	
+
 func place():
 	super.place()
 	#_draw_gizmo()
 
 func updateInteractionCandidates():
 	if layer:
-		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)
+		var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
+		pinCandidates.clear()
+		for pin in inRange:
+			var hole = getIntersector(pin.global_position)
+			var key = hole if hole != null else self
+			
+			if pinCandidates.has(key):
+				pinCandidates[key].append(pin)
+			else:
+				pinCandidates[key] = [pin]
 
 func move(dir : Vector2, chain = []):
 	#if selected:
@@ -381,9 +411,19 @@ func move(dir : Vector2, chain = []):
 
 func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 	var diff = pos - global_position
-	for pin in interactionCandidates:
-		if intersects(pin.global_position - diff):
-			pin.move(dir, chain)
+	#for pin in interactionCandidates:
+		#if intersects(pin.global_position - diff):
+			#pin.move(dir, chain)
+	for part in pinCandidates.keys():
+		var pins = pinCandidates[part]
+		if part is Sheet:
+			for pin in pins:
+				if intersectsOutline(pin.global_position - diff):
+					pin.move(dir, chain)
+		else:
+			for pin in pins:
+				if !part.checkPos(part.to_local(pin.global_position - diff)):
+					pin.move(dir, chain)
 
 func delete():
 	SheetLibrary.unregisterUser(path)

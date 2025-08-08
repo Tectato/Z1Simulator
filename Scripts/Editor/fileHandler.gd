@@ -13,6 +13,8 @@ func extractMachines(path : String):
 					newMachine["pos_z"] = machine["pos_z"]
 					newMachine["instance"] = true
 					newMachine["path"] = machine["path"]
+					if machine.has("uuid"):
+						newMachine["uuid"] = machine["uuid"]
 					out.append(newMachine)
 				else:
 					machine["instance"] = false
@@ -32,6 +34,8 @@ func loadMachineFile(path : String):
 		print("Error loading file " + path)
 		return
 	if !source.has("id"):
+		if source.has("machines"):
+			return source["machines"][0]["machine"] #TODO: Recursive project loading
 		print("Invalid machine file")
 		return
 	return source
@@ -43,12 +47,14 @@ func compile(machines : Array):
 			out.append({
 				"path":PathHandler.toRelativePath(entry.fullPath),
 				"pos_x":entry.global_position.x,
-				"pos_z":entry.global_position.z
+				"pos_z":entry.global_position.z,
+				"uuid":entry.uuid
 			})
 		else:
 			out.append({
 				"machine":entry.serialize(),
 				"pos_x":entry.global_position.x,
-				"pos_z":entry.global_position.z
+				"pos_z":entry.global_position.z,
+				"uuid":entry.uuid
 			})
 	return out

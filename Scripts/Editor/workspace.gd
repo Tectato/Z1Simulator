@@ -54,6 +54,7 @@ func clear():
 	while !machines.is_empty():
 		machines[0].delete()
 	Simulator.setStep()
+	interMachineRelations.clear()
 
 func createNew():
 	var newMachine = MACHINE.instantiate()
@@ -66,9 +67,11 @@ func createNew():
 		Global.editor.updateSceneTree()
 	return newMachine
 
+func exists(object):
+	return object != null
+
 func serialize(path : String):
 	Global.unnamedIDs.clear()
-	interMachineRelations.clear()
 	var machineEntries = FileHandler.compile(machines)
 	#if machines.size() > 1:
 		#var machinesDir = path.get_file().trim_suffix(".json") + "_machines"
@@ -102,7 +105,12 @@ func serialize(path : String):
 		"machines" : machineEntries
 	}
 	if !interMachineRelations.is_empty():
-		output["relations"] = interMachineRelations.keys()
+		var list = interMachineRelations.keys()
+		list.filter(exists)
+		var outList = []
+		for relation in list:
+			outList.append(relation.serialize())
+		output["relations"] = outList
 	return output
 
 func deserialize(path):
@@ -117,15 +125,22 @@ func deserialize(path):
 		#var newMachine = importMachine(source["machines"])
 		#newMachine.snap(Vector3.ZERO)
 	var machinesDict = FileHandler.extractMachines(path)
+	var projectDirTemp = PathHandler.projectDir + "a.json"
 	var relations = []
 	for entry in machinesDict:
 		if entry is Array: # Relations entry
 			relations.append_array(entry)
 			continue
-		var newMachine = importMachine(entry["machine"], entry["instance"])
-		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+		var machinePath = ""
 		if entry["instance"]:
-			newMachine.fullPath = PathHandler.toAbsolutePath(entry["path"])
+			machinePath = PathHandler.toAbsolutePath(entry["path"])
+			PathHandler.setProjectDir(machinePath)
+		var newMachine = importMachine(entry["machine"], entry["instance"], machinePath)
+		if entry.has("uuid"):
+			newMachine.uuid = int(entry["uuid"])
+			uuidManager.registerID(newMachine, newMachine.uuid)
+		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+		PathHandler.setProjectDir(projectDirTemp)
 	if !machines.is_empty():
 		setMode(Mode.Select)
 		setResolution(Resolution.Machine)
@@ -150,11 +165,12 @@ func importMachines(src):
 		var newMachine = importMachine(entry["machine"], true)
 		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
 
-func importMachine(src, instance = false):
+func importMachine(src, instance = false, path = ""):
 	var newMachine = MACHINE.instantiate()
 	machines.append(newMachine)
 	add_child(newMachine)
 	newMachine.importedInstance = instance
+	newMachine.fullPath = path
 	if src is String:
 		newMachine.deserialize(src) # TODO: check whether machine or project
 	else:

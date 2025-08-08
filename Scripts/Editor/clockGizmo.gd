@@ -13,6 +13,7 @@ func setClockStep(value):
 func _on_frequency_input_editing_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		input.text = input.text.trim_suffix(" Hz")
+		input.select_all()
 	else:
 		var value = float(input.text)
 		if input.text.is_valid_float() and value <= 4 and value > 0:

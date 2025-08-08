@@ -20,16 +20,16 @@ func serialize():
 		output["id"] = id
 	if self.output:
 		output["output"] = outputState
+	output["uuid"] = uuid
 	if !relations.is_empty():
-		output["uuid"] = uuid
-		for relation in relations:
-			if relation.isInterMachineRelation():
-				var serialized = relation.serialize()
-				serialized["AParent"] = relation.AParent.uuid
-				serialized["BParent"] = relation.BParent.uuid
-				Global.workspace.interMachineRelations[serialized] = null
-			else:
-				getMachine().relations[relation.serialize()] = null
+		for relation in relations: #TODO: If machine is instance, this doesnt get serialized
+			#if relation.isInterMachineRelation():
+				#var serialized = relation.serialize()
+				#serialized["AParent"] = relation.AParent.uuid
+				#serialized["BParent"] = relation.BParent.uuid
+				#Global.workspace.interMachineRelations[serialized] = null
+			#else:
+			getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -112,18 +112,19 @@ func place():
 		machine.gridLibrary.requestUpdate(self)
 
 func updateInteractionCandidates():
+	var inRange = []
 	if machine:
-		interactionCandidates = machine.gridLibrary.getIntersectionCandidates(self)
+		inRange = machine.gridLibrary.getIntersectionCandidates(self)
 	elif layer:
-		interactionCandidates = layer.machine.gridLibrary.getIntersectionCandidates(self)
-	updateInteractionState()
-
-func updateInteractionState():
-	var newState = 0
-	for sheet in interactionCandidates:
-		newState = newState << 1
-		newState = newState | int(sheet.intersects(targetPos))
-	interactionState = newState
+		inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
+	
+	interactionCandidates.clear()
+	for sheet in inRange:
+		var hole = sheet.getIntersector(global_position)
+		if hole == null:
+			interactionCandidates.append(sheet)
+		else:
+			interactionCandidates.append(hole)
 
 func delete():
 	super.delete()
@@ -142,22 +143,27 @@ func move(dir : Vector2, chain = []):
 		pass
 	if chain.has(self):
 		return
-	var oldState = interactionState
 	super.move(dir, chain)
 	chain.append(self)
-	#updateInteractionState()
-	var newState = interactionState
 	if output:
 		flipOutput()
 	checkPropagation((global_position + targetPos)/2, dir, chain)
 	checkPropagation(targetPos, dir, chain)
-	#updateInteractionState()
 	pass
 	
 func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
-	for sheet in interactionCandidates:
-		if sheet.intersects(pos):
-			sheet.move(dir,chain)
+	for part in interactionCandidates:
+		#if sheet.intersects(pos):
+			#sheet.move(dir,chain)
+		if part is Sheet:
+			if part.intersectsOutline(pos):
+				part.move(dir,chain)
+		else:
+			var sheet = part.get_parent()
+			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
+			var posRelative = part.to_local(pos)#pos * sheet.outline.global_transform
+			if !part.checkPos(posRelative):
+				sheet.move(dir,chain)
 
 func getMachine():
 	if layer == null and machine != null:

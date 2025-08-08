@@ -272,6 +272,8 @@ func select(target, shift = false):
 			return
 	if !shift:
 		deselect()
+	if targetParent in selected:
+		return
 	if target:
 		if not (targetParent is Control3D):
 			ignoreList.append(target)

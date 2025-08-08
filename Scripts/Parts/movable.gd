@@ -7,7 +7,6 @@ const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 @onready var targetPos = global_position
 
 var interactionCandidates = []
-var interactionState = 0 # 1 bit per hole/sheet. Check if state before and after match, if not, move in direction of differing bit's hole/sheet
 var relations = []
 
 # Don't impact simulation, just for visualization later
@@ -111,9 +110,6 @@ func rotatePart(by):
 	rotate_y(by)
 
 func updateInteractionCandidates():
-	pass
-
-func updateInteractionState():
 	pass
 
 func _process(delta: float) -> void:

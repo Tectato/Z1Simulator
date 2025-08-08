@@ -87,16 +87,16 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
+	output["uuid"] = uuid
 	if !relations.is_empty():
-		output["uuid"] = uuid
 		for relation in relations:
-			if relation.isInterMachineRelation():
-				var serialized = relation.serialize()
-				serialized["AParent"] = relation.AParent.uuid
-				serialized["BParent"] = relation.BParent.uuid
-				Global.workspace.interMachineRelations[serialized] = null
-			else:
-				getMachine().relations[relation.serialize()] = null
+			#if relation.isInterMachineRelation():
+				#var serialized = relation.serialize()
+				#serialized["AParent"] = relation.AParent.uuid
+				#serialized["BParent"] = relation.BParent.uuid
+				#Global.workspace.interMachineRelations[serialized] = null
+			#else:
+			getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):

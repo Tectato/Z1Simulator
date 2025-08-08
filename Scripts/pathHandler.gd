@@ -26,13 +26,13 @@ func toRelativePath(path : String):
 				outputArr.append(absoluteArray[i])
 		return arrayToPath(outputArr)
 
-func toAbsolutePath(path : String):
+func toAbsolutePath(path : String, srcDir = ""):
 	if path.is_absolute_path():
 		return path
 	var file = path.get_file()
 	var pathArr = toDirArray(path.get_base_dir())
 	var outPath = []
-	outPath.append_array(projectArray.duplicate())
+	outPath.append_array(projectArray.duplicate() if srcDir.length() == 0 else toDirArray(srcDir))
 	for part in pathArr:
 		if part == "..":
 			outPath.pop_back()

@@ -72,12 +72,12 @@ func getLayerBelow(layer):
 	return null
 
 func updateLayerPositions():
-	var height = 0
+	var height = 0.0
 	for layer in layers:
 		layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * height
 		layer.updateWidgets()
 		layer.updatePosition()
-		height = max(layer.getBounds()[1].y,0.1) + 0.05
+		height = height + max(layer.getBounds()[1].y,0.1) + 0.05
 	updateCollider()
 
 func addSheet(sheet):
@@ -133,8 +133,8 @@ func serialize(path = null):
 		"id" : id,
 		"layers" : layersOut,
 		"globalPins" : globalPinsOut,
-		"clockPins" : clockPinsOut,
-		"uuid" : uuid
+		"clockPins" : clockPinsOut#,
+		#"uuid" : uuid
 	}
 	if !relations.is_empty():
 		output["relations"] = relations.keys()
@@ -178,18 +178,18 @@ func deserializeFromDict(source):
 		part.updateInteractionCandidates()
 	
 	if source.has("relations"):
-		uuid = source["uuid"]
-		Global.workspace.uuidManager.registerID(self, uuid)
+		#uuid = source["uuid"]
+		#Global.workspace.uuidManager.registerID(self, uuid)
 		for relation in source["relations"]:
 			var A = uuidManager.getPart(int(relation["A"]))
 			match relation.type:
 				"link":
 					A.addRelation(Relation.Type.Link, uuidManager.getPart(int(relation["B"])))
-	elif source.has("uuid"):
-		uuid = source["uuid"]
-		Global.workspace.uuidManager.registerID(self, uuid)
-	else:
-		Global.workspace.uuidManager.request(self, true)
+	#elif source.has("uuid"):
+		#uuid = source["uuid"]
+		#Global.workspace.uuidManager.registerID(self, uuid)
+	#else:
+		#Global.workspace.uuidManager.request(self, true)
 
 func makeLocal():
 	pass

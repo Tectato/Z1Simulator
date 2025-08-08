@@ -14,6 +14,8 @@ func init():
 	B.appendRelation(self)
 	AParent = A.getMachine()
 	BParent = B.getMachine()
+	if isInterMachineRelation():
+		Global.workspace.interMachineRelations[self] = null
 	updatePos()
 	pass
 
@@ -27,11 +29,15 @@ func updatePos():
 	pass
 
 func serialize():
-	return {
+	var out = {
 		"type" : "Unset",
 		"A" : A.uuid,
 		"B" : B.uuid
 	}
+	if isInterMachineRelation():
+		out["AParent"] = AParent.uuid
+		out["BParent"] = BParent.uuid
+	return out
 
 func deserialize(source):
 	print("This should not be called")
