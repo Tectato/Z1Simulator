@@ -37,7 +37,9 @@ func deserialize(source : Dictionary):
 	if source.has("id"):
 		id = source["id"]
 	if source.has("output"):
-		setOutput(source["output"])
+		setOutput(true)
+		outputState = source["output"]
+		indicator.setValue(outputState)
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
@@ -60,6 +62,8 @@ func setHeight(value):
 	$MeshInstance3D.position = Vector3.UP * 0.1 * value / 2
 	$Area3D.scale = Vector3(scale.x,value,scale.z)
 	$Area3D.position = Vector3.UP * 0.1 * value / 2
+	if output:
+		indicator.position = Vector3.UP * (value * 0.1 + 0.05)
 
 func setOutput(value):
 	if value == output:

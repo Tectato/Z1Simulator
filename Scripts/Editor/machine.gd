@@ -27,7 +27,7 @@ var gizmo
 
 func _ready() -> void:
 	if uuid < 0:
-		Global.workspace.uuidManager.request(self)
+		Global.workspace.uuidManager.request(self, true)
 
 func setSelected(value):
 	if value:
@@ -189,7 +189,7 @@ func deserializeFromDict(source):
 		uuid = source["uuid"]
 		Global.workspace.uuidManager.registerID(self, uuid)
 	else:
-		Global.workspace.uuidManager.request(self)
+		Global.workspace.uuidManager.request(self, true)
 
 func makeLocal():
 	pass

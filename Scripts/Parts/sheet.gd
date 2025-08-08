@@ -92,6 +92,8 @@ func getBounds():
 
 func loadSVG(filepath : String):
 	path = filepath
+	if id.length() == 0:
+		id = path.get_file().trim_suffix(".svg") 
 	if path.is_absolute_path():
 		path = ProjectSettings.localize_path(path)
 	var cached = SheetLibrary.query(path)
