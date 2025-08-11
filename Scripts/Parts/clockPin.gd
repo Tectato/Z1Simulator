@@ -25,10 +25,10 @@ func setHeight(value):
 	collider.position = Vector3(0,value/20,0)
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
-func move(dir : Vector2, chain = []):
+func move(dir : Vector2, initiator : Movable, chain = []):
 	if (not chain.is_empty()) and relations.is_empty():
 		return
-	super.move(dir.rotated(-rotation.y), chain)
+	super.move(dir.rotated(-rotation.y), null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
 
@@ -66,9 +66,9 @@ func clockCycle(clockStep : int, forwards = true):
 		if (inActivePos and clockStep == antiStep) or pulsing:
 			inputCheckbox.click()
 		if toActivePos and !inActivePos:
-			move(Vector2(travel.x,travel.z))
+			move(Vector2(travel.x,travel.z), null)
 		elif !toActivePos and inActivePos:
-			move(-Vector2(travel.x,travel.z))
+			move(-Vector2(travel.x,travel.z), null)
 		if pulsing:
 			$ResetTimer.start()
 
@@ -116,7 +116,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _on_reset_timer_timeout() -> void:
-	move(-Vector2(travel.x,travel.z))
+	move(-Vector2(travel.x,travel.z), null)
 
 func place():
 	if tempTravelIndicator:

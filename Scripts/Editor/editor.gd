@@ -80,6 +80,10 @@ func addClockPin():
 	saved = false
 	selector.place(workspace.addClockPin())
 
+func addStaticPin():
+	saved = false
+	selector.place(workspace.addStaticPin())
+
 func addMachine():
 	workspace.createNew()
 

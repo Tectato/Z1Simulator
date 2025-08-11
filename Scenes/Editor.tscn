@@ -1,4 +1,4 @@
-[gd_scene load_steps=114 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=117 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -52,6 +52,9 @@
 [ext_resource type="Texture2D" uid="uid://b3vruo2ckl63" path="res://Sprites/Buttons/SceneTree/hide.png" id="42_3icuf"]
 [ext_resource type="Texture2D" uid="uid://cbgagclwkqade" path="res://Sprites/Buttons/SceneTree/show.png" id="43_1bbve"]
 [ext_resource type="Texture2D" uid="uid://y1aq8vjhau7j" path="res://Sprites/Buttons/SceneTree/hide_lit.png" id="44_8ktkl"]
+[ext_resource type="Texture2D" uid="uid://dtk2p0tybx1m7" path="res://Sprites/Buttons/Parts/staticPin.png" id="46_86asr"]
+[ext_resource type="Texture2D" uid="uid://bligl5dbocjqe" path="res://Sprites/Buttons/Parts/staticPin_active.png" id="47_12riw"]
+[ext_resource type="Texture2D" uid="uid://bphpq6htm6nbr" path="res://Sprites/Buttons/Parts/staticPin_lit.png" id="48_2gkkl"]
 [ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
 [ext_resource type="Script" uid="uid://uhy52kfjvhai" path="res://Scripts/Editor/clockGizmo.gd" id="53_hujvp"]
 [ext_resource type="Script" uid="uid://batiwcuij3vw7" path="res://Scripts/Editor/popup.gd" id="54_w82wx"]
@@ -639,9 +642,8 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -20.0
-offset_right = 40.0
-offset_bottom = 20.0
+offset_top = -164.0
+offset_right = 32.0
 grow_vertical = 2
 scale = Vector2(2, 2)
 theme_override_constants/separation = 1
@@ -673,6 +675,13 @@ tooltip_text = "Place clock pin"
 texture_normal = ExtResource("34_syg30")
 texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
+
+[node name="StaticPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place clock pin"
+texture_normal = ExtResource("46_86asr")
+texture_pressed = ExtResource("47_12riw")
+texture_hover = ExtResource("48_2gkkl")
 
 [node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface"]
 own_world_3d = true
@@ -1105,6 +1114,7 @@ shape = SubResource("BoxShape3D_mtfo3")
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/LogicPin" to="." method="addPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
+[connection signal="pressed" from="Camera3D/Interface/PartPlacers/StaticPin" to="." method="addStaticPin"]
 [connection signal="toggled" from="Camera3D/Interface/SceneTree/Hide" to="Camera3D/Interface/SceneTree" method="_on_hide_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]

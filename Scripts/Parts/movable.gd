@@ -8,6 +8,7 @@ const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 
 var interactionCandidates = []
 var relations = []
+var fixed = false
 
 # Don't impact simulation, just for visualization later
 var stateX = false
@@ -24,7 +25,10 @@ func grabUUID():
 	if uuid < 0:
 		getMachine().uuidManager.request(self)
 
-func move(dir : Vector2, chain = []):
+func move(dir : Vector2, initiator : Movable, chain = []):
+	if fixed:
+		print(initiator.id + " attempted to move static part " + id)
+		return
 	# TODO: bool whether i've already moved this tick to avoid double move if e.g. moved from two ends at once
 	if chain.has(self):
 		return

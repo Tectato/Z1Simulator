@@ -14,6 +14,8 @@ const scaleFactor = 0.001
 @export var path : String
 @export var debugPoint : Node3D
 var pinCandidates = {}
+var pointConstraints = {}
+var linearConstraints = {} # TODO
 var partOffset : Vector2
 var midPoint : Vector3
 var bounds = []
@@ -393,7 +395,7 @@ func updateInteractionCandidates():
 			else:
 				pinCandidates[key] = [pin]
 
-func move(dir : Vector2, chain = []):
+func move(dir : Vector2, initiator : Movable, chain = []):
 	#if selected:
 		#print("=====")
 		#for part in chain:
@@ -404,7 +406,7 @@ func move(dir : Vector2, chain = []):
 		#pass
 	if chain.has(self):
 		return
-	super.move(dir, chain)
+	super.move(dir, initiator, chain)
 	chain.append(self)
 	checkPropagation((global_position + targetPos)/2, dir, chain)
 	checkPropagation(targetPos, dir, chain)
@@ -419,11 +421,11 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 		if part is Sheet:
 			for pin in pins:
 				if intersectsOutline(pin.global_position - diff):
-					pin.move(dir, chain)
+					pin.move(dir, self, chain)
 		else:
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - diff)):
-					pin.move(dir, chain)
+					pin.move(dir, self, chain)
 
 func delete():
 	SheetLibrary.unregisterUser(path)

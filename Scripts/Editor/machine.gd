@@ -17,6 +17,7 @@ var dir = ""
 var fullPath = ""
 var layers = []
 var globalPins = []
+var staticPins = []
 var clockPins = []
 var relations = {}
 var beingDeleted = false
@@ -87,14 +88,20 @@ func addSheet(sheet):
 func addGlobalPin(newPin):
 	var bounds = getBounds()
 	var extents = (bounds[1]-bounds[0])
-	globalPins.append(newPin)
+	if newPin.fixed:
+		staticPins.append(newPin)
+	else:
+		globalPins.append(newPin)
 	newPin.machine = self
 	newPin.global = true
 	parts.add_child(newPin)
 	newPin.setHeight(max(extents.y*10,1))
 
 func removeGlobalPin(pin):
-	globalPins.erase(pin)
+	if pin.fixed:
+		staticPins.erase(pin)
+	else:
+		globalPins.erase(pin)
 
 func addClockPin(newPin):
 	var bounds = getBounds()
@@ -125,6 +132,9 @@ func serialize(path = null):
 	var globalPinsOut = []
 	for globalPin in globalPins:
 		globalPinsOut.append(globalPin.serialize())
+	var staticPinsOut = []
+	for staticPin in staticPins:
+		staticPinsOut.append(staticPin.serialize())
 	var clockPinsOut = []
 	for clockPin in clockPins:
 		clockPinsOut.append(clockPin.serialize())
@@ -133,6 +143,7 @@ func serialize(path = null):
 		"id" : id,
 		"layers" : layersOut,
 		"globalPins" : globalPinsOut,
+		"staticPins" : staticPinsOut,
 		"clockPins" : clockPinsOut#,
 		#"uuid" : uuid
 	}
@@ -159,12 +170,18 @@ func deserializeFromDict(source):
 		id = ""
 	var layersIn = source["layers"]
 	var globalPinsIn = source["globalPins"]
+	var staticPinsIn = source["staticPins"] if source.has("staticPins") else []
 	var clockPinsIn = source["clockPins"]
 	for layer in layersIn:
 		var newLayer = addLayer()
 		newLayer.deserialize(layer)
 	for pin in globalPinsIn:
 		var newPin = PIN.instantiate()
+		addGlobalPin(newPin)
+		newPin.deserialize(pin)
+	for pin in staticPinsIn:
+		var newPin = PIN.instantiate()
+		newPin.fixed = true
 		addGlobalPin(newPin)
 		newPin.deserialize(pin)
 	for pin in clockPinsIn:

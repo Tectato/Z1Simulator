@@ -6,9 +6,9 @@ func applyMove(initiator : Selectable, dir : Vector2, chain = []):
 		return
 	inEffect = true
 	if A == initiator:
-		B.move(dir, chain)
+		B.move(dir, initiator, chain)
 	elif B == initiator:
-		A.move(dir, chain)
+		A.move(dir, initiator, chain)
 	inEffect = false
 
 func delete():

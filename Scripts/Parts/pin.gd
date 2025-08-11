@@ -132,7 +132,7 @@ func delete():
 		machine.gridLibrary.unregisterPart(self)
 		machine.removeGlobalPin(self)
 
-func move(dir : Vector2, chain = []):
+func move(dir : Vector2, initiator : Movable, chain = []):
 	if selected:
 		print("=====")
 		for part in chain:
@@ -143,7 +143,7 @@ func move(dir : Vector2, chain = []):
 		pass
 	if chain.has(self):
 		return
-	super.move(dir, chain)
+	super.move(dir, initiator, chain)
 	chain.append(self)
 	if output:
 		flipOutput()
@@ -157,13 +157,13 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 			#sheet.move(dir,chain)
 		if part is Sheet:
 			if part.intersectsOutline(pos):
-				part.move(dir,chain)
+				part.move(dir, self,chain)
 		else:
 			var sheet = part.get_parent()
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(pos)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
-				sheet.move(dir,chain)
+				sheet.move(dir, self,chain)
 
 func getMachine():
 	if layer == null and machine != null:
