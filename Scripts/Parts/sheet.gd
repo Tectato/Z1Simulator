@@ -117,11 +117,11 @@ func updateConstraints():
 					if fixedPoints > 1:
 						setFixed(true)
 						return
-		if hole is LongHole:
-			for pin in pinCandidates[hole]:
-				var newRelation = addRelation(Relation.Type.LinearConstraint, pin)
-				if newRelation:
-					newRelation.dir = hole.getDir()
+		#if hole is LongHole:
+			#for pin in pinCandidates[hole]:
+				#var newRelation = addRelation(Relation.Type.LinearConstraint, pin)
+				#if newRelation:
+					#newRelation.dir = hole.getGlobalDir()
 	setFixed(false)
 	for relation in relations:
 		if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
@@ -417,7 +417,7 @@ func getIntersector(pos : Vector3):
 
 func place():
 	super.place()
-	call_deferred("updateFixedState")
+	call_deferred("updateConstraints")
 	#_draw_gizmo()
 
 func updateInteractionCandidates():
@@ -446,7 +446,7 @@ func updateInteractionCandidates():
 			setFixed(false)
 		updateConstraints()
 
-func move(dir : Vector2, initiator : Movable, chain = []):
+func move(dir : Vector2, initiator, chain = []):
 	#if selected:
 		#print("=====")
 		#for part in chain:

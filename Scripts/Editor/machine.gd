@@ -59,6 +59,7 @@ func moveLayer(layer : Layer, dir = 1):
 
 func removeLayer(layer):
 	layers.erase(layer)
+	gridLibrary.call_deferred("checkValidity")
 	if layers.is_empty() and not beingDeleted:
 		call_deferred("addLayer")
 	else:

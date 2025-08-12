@@ -8,6 +8,7 @@ const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 
 var interactionCandidates = []
 var relations = []
+var constraints = []
 var fixed = false
 
 # Don't impact simulation, just for visualization later
@@ -25,7 +26,7 @@ func grabUUID():
 	if uuid < 0:
 		getMachine().uuidManager.request(self)
 
-func move(dir : Vector2, initiator : Movable, chain = []):
+func move(dir : Vector2, initiator, chain = []):
 	if fixed:
 		print(initiator.id + " attempted to move static part " + id)
 		return
@@ -41,7 +42,7 @@ func move(dir : Vector2, initiator : Movable, chain = []):
 		stateY = !stateY
 	
 	for relation in relations:
-		relation.applyMove(self, dir, chain)
+		relation.applyMove(dir, self, chain)
 	
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()
@@ -51,18 +52,21 @@ func addRelation(type : Relation.Type, other : Selectable):
 	match type:
 		Relation.Type.Link:
 			newRelation = LINK.instantiate()
+		Relation.Type.LinearConstraint:
+			newRelation = LinearConstraint.new()
 	add_child(newRelation)
 	newRelation.A = self
 	newRelation.B = other
 	relations.append(newRelation)
 	newRelation.init()
+	return newRelation
 
 func addRelationByUUID(type : Relation.Type, otherMachineID : int, otherID : int):
 	grabUUID()
 	var otherMachine = Global.workspace.uuidManager.getPart(otherMachineID)
 	var other = otherMachine.uuidManager.getPart(otherID)
 	if other:
-		addRelation(type, other)
+		return addRelation(type, other)
 	else:
 		print("Failed to add relation")
 
@@ -117,11 +121,15 @@ func updateInteractionCandidates():
 	pass
 
 func _process(delta: float) -> void:
-	global_position = global_position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * global_position
+	if !fixed:
+		global_position = global_position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * global_position
 
 func delete():
 	clearRelations()
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.removePart(self)
-	queue_free()
+	#call_deferred("queue_free")
+
+func setFixed(value, propagate = true):
+	fixed = value

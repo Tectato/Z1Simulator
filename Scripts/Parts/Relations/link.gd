@@ -1,21 +1,15 @@
 extends Relation
 class_name Link
 
-func prepareMove(dir : Vector2, initiator : Selectable, chain = []):
+func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return
 	inEffect = true
 	if A == initiator:
-		B.prepareMove(dir, initiator, chain)
+		B.move(dir, self, chain)
 	elif B == initiator:
-		A.prepareMove(dir, initiator, chain)
+		A.move(dir, self, chain)
 	inEffect = false
-
-func applyMove(dir : Vector2, initiator : Selectable, chain = []):
-	if A == initiator:
-		B.move(dir, initiator, chain)
-	elif B == initiator:
-		A.move(dir, initiator, chain)
 
 func delete():
 	A.removeRelation(self)

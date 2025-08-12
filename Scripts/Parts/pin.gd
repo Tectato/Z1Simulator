@@ -11,7 +11,6 @@ var output = false
 var outputState = false
 var flippingOutput = false
 var indicator : Node3D
-var machine : Machine
 
 func serialize():
 	grabUUID()
@@ -156,7 +155,7 @@ func delete():
 		machine.gridLibrary.unregisterPart(self)
 		machine.removeGlobalPin(self)
 
-func move(dir : Vector2, initiator : Movable, chain = []):
+func move(dir : Vector2, initiator, chain = []):
 	if selected:
 		print("=====")
 		for part in chain:

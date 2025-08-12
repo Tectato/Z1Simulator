@@ -25,8 +25,8 @@ func setHeight(value):
 	collider.position = Vector3(0,value/20,0)
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
-func move(dir : Vector2, initiator : Movable, chain = []):
-	if (not chain.is_empty()) and relations.is_empty():
+func move(dir : Vector2, initiator, chain = []):
+	if (not chain.is_empty()) and inputCheckbox.isLocked():
 		return
 	super.move(dir.rotated(-rotation.y), null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
@@ -57,13 +57,13 @@ func updateLabel():
 	inputCheckbox.visible = input
 
 func clockCycle(clockStep : int, forwards = true):
-	if input and !relations.is_empty(): return
+	if input and inputCheckbox.isLocked(): return
 	if input and !activateNextCycle:
 		return
 	if clockStep == forwardStep or (!pulsing and clockStep == antiStep):
 		var toActivePos = clockStep == forwardStep
 		inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
-		if (inActivePos and clockStep == antiStep) or pulsing:
+		if input and ((inActivePos and clockStep == antiStep) or pulsing):
 			inputCheckbox.click()
 		if toActivePos and !inActivePos:
 			move(Vector2(travel.x,travel.z), null)
@@ -154,15 +154,21 @@ func delete():
 
 func addRelation(type : Relation.Type, other : Selectable):
 	super.addRelation(type, other)
-	inputCheckbox.setLocked(true)
+	if type == Relation.Type.Link:
+		inputCheckbox.setLocked(true)
 
 func appendRelation(relation : Relation):
 	super.appendRelation(relation)
-	inputCheckbox.setLocked(true)
+	if relation is Link:
+		inputCheckbox.setLocked(true)
 
 func removeRelation(relation : Relation):
 	super.removeRelation(relation)
-	inputCheckbox.setLocked(!relations.is_empty())
+	for entry in relations:
+		if entry is Link:
+			inputCheckbox.setLocked(true)
+			return
+	inputCheckbox.setLocked(false)
 
 func clearRelations():
 	super.clearRelations()

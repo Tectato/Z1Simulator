@@ -13,7 +13,11 @@ func setTravelLength(value):
 	end.position = Vector3(value/2,0,0)
 
 func getDir():
-	var dir3 = end.position.normalized()
+	var dir3 = end.position.normalized().rotated(Vector3.UP, rotation.y)
+	return Vector2(abs(dir3.x),abs(dir3.y))
+
+func getGlobalDir():
+	var dir3 = (end.global_position - global_position).normalized()
 	return Vector2(abs(dir3.x),abs(dir3.y))
 
 func checkPos(pos):

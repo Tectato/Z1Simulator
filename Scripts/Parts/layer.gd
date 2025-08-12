@@ -187,3 +187,8 @@ func updatePosition():
 
 func isEmpty():
 	return parts.is_empty()
+
+func canModify():
+	if machine:
+		return !machine.importedInstance
+	return true

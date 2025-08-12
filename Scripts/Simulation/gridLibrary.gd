@@ -17,7 +17,7 @@ func requestUpdate(part : Movable):
 
 func executeUpdate():
 	toNotify.clear()
-	#print("Updating " + str(toUpdate.keys().size()) + " parts")
+	print("Updating " + str(toUpdate.keys().size()) + " parts")
 	for part in toUpdate.keys():
 		unregisterPart(part, false)
 		registerPart(part, false)
@@ -83,6 +83,7 @@ func registerPartCell(part : Movable, gridPos : Vector2):
 		occupies[part] = [gridPos]
 
 func unregisterPart(part : Movable, notifyNeighbors = true):
+	#print("Removing " + (part.id if part is Sheet else "Pin"))
 	if !occupies.has(part):
 		return
 	var layer = getLayer(part)
@@ -106,6 +107,8 @@ func unregisterPart(part : Movable, notifyNeighbors = true):
 		for existingPart in toNotify.keys():
 			existingPart.updateInteractionCandidates()
 		toNotify.clear()
+	
+	#checkValidity()
 
 func unregisterPartCell(part : Movable, cell : Vector2):
 	var layer = getLayer(part)
@@ -131,6 +134,7 @@ func unregisterPartCell(part : Movable, cell : Vector2):
 					toNotify[sheet] = null
 
 func getIntersectionCandidates(part : Movable):
+	checkValidity()
 	var output = {}
 	if occupies.has(part):
 		for cell in occupies[part]:
@@ -189,3 +193,8 @@ func toPosKey(gridPos : Vector2):
 func moveLayer(index, dir):
 	pinOccupancy.insert(index+dir, pinOccupancy.pop_at(index))
 	sheetOccupancy.insert(index+dir, sheetOccupancy.pop_at(index))
+
+func checkValidity():
+	for thing in occupies.keys():
+		if thing == null:
+			print("Invalid now")
