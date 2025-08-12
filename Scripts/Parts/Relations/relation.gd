@@ -20,11 +20,8 @@ func init():
 	updatePos()
 	pass
 
-func prepareMove(direction : Vector2, initiator : Selectable, chain = []):
-	return true
-
 func applyMove(dir : Vector2, initiator : Selectable, chain = []):
-	pass
+	return true
 
 func delete():
 	A.removeRelation(self)

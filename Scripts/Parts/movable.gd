@@ -4,6 +4,7 @@ class_name Movable
 const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 
 @onready var restPos = global_position
+@onready var preMovePos = global_position
 @onready var targetPos = global_position
 
 var interactionCandidates = []
@@ -28,22 +29,29 @@ func grabUUID():
 
 func move(dir : Vector2, initiator, chain = []):
 	if fixed:
-		print(initiator.id + " attempted to move static part " + id)
-		return
+		#print(initiator.id + " attempted to move static part " + id)
+		return false
 	# TODO: bool whether i've already moved this tick to avoid double move if e.g. moved from two ends at once
 	if chain.has(self):
-		return
+		return true
 	#translate(Vector3(dir.x,0,dir.y))
-	var currentPos = global_position
+	preMovePos = global_position
 	targetPos = global_position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
 		stateX = !stateX
 	if abs(dir.y) > 0:
 		stateY = !stateY
 	
+	var canMove = true
 	for relation in relations:
-		relation.applyMove(dir, self, chain)
-	
+		canMove = canMove and relation.applyMove(dir, self, chain)
+	return true
+
+func abortMove():
+	targetPos = preMovePos
+	if selected:
+		print("A")
+
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()
 	if hasRelation(self, other):
@@ -110,6 +118,7 @@ func place():
 
 func updatePositions():
 	restPos = global_position
+	preMovePos = global_position
 	targetPos = global_position
 	for relation in relations:
 		relation.updatePos()

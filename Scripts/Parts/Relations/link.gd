@@ -5,11 +5,13 @@ func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return
 	inEffect = true
+	var canMove = true
 	if A == initiator:
-		B.move(dir, self, chain)
+		canMove = B.move(dir, self, chain)
 	elif B == initiator:
-		A.move(dir, self, chain)
+		canMove = A.move(dir, self, chain)
 	inEffect = false
+	return canMove
 
 func delete():
 	A.removeRelation(self)

@@ -15,9 +15,11 @@ const scaleFactor = 0.001
 @export var debugPoint : Node3D
 var pinCandidates = {}
 var pointConstraints = {}
+var pivot : Pin
 var restRot  = 0.0
 var targetRot = 0.0
 var forces = {}
+var movedPins = {}
 var linearConstraints = {} # TODO
 var partOffset : Vector2
 var midPoint : Vector3
@@ -88,7 +90,7 @@ func _ready():
 func _process(delta: float) -> void:
 	super._process(delta)
 	if !fixed and !pointConstraints.is_empty():
-		rotation = rotation.move_toward(Vector3.UP * targetRot, delta)
+		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * 2)
 
 func setSelected(value):
 	super.setSelected(value)
@@ -456,14 +458,22 @@ func move(dir : Vector2, initiator, chain = []):
 				#print(part.path.get_file())
 		#pass
 	if chain.has(self):
-		return
-	super.move(dir, initiator, chain)
+		return true
+	var out = super.move(dir, initiator, chain)
+	if !out: return false
 	chain.append(self)
-	checkPropagation((global_position + targetPos)/2, dir, chain)
-	checkPropagation(targetPos, dir, chain)
+	var check1 = checkPropagation((global_position + targetPos)/2, dir, chain)
+	var check2 = checkPropagation(targetPos, dir, chain)
+	if !(check1 and check2) and initiator != self:
+		abortMove()
+		forces[initiator] = [dir, chain]
+		call_deferred("tryTurn")
+	return true
 
 func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 	var diff = pos - global_position
+	var canMove = true
+	var moved = []
 	#for pin in interactionCandidates:
 		#if intersects(pin.global_position - diff):
 			#pin.move(dir, chain)
@@ -472,11 +482,56 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 		if part is Sheet:
 			for pin in pins:
 				if intersectsOutline(pin.global_position - diff):
-					pin.move(dir, self, chain)
+					canMove = canMove and pin.move(dir, self, chain)
+					moved.append(pin)
+					if !canMove:
+						pivot = pin
+						break
 		else:
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - diff)):
-					pin.move(dir, self, chain)
+					canMove = canMove and pin.move(dir, self, chain)
+					moved.append(pin)
+					if !canMove:
+						pivot = pin
+						break
+		
+		if !canMove:
+			for movedPart in moved:
+				movedPart.abortMove()
+			return false
+	
+	for movedPart in moved:
+		movedPins[movedPart] = null
+	return true
+
+func tryTurn():
+	if forces.is_empty():
+		return
+	var initiator = forces.keys()[0]
+	var force = forces[initiator]
+	if forces.size() > 1:
+		move(force[0], self, force[1])
+		pass
+	else:
+		turn(force[0], initiator, force[1])
+	forces.clear()
+
+func turn(dir : Vector2, initiator, chain = []):
+	var posDiff = global_position - pivot.global_position
+	var initPosARelative = Space.toVec2(initiator.global_position - pivot.global_position)
+	var ALinearized = Vector2(
+		1 * sign(initPosARelative.x) if abs(initPosARelative.x) > abs(initPosARelative.y) else 0,
+		1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
+	var initPosBRelative = initPosARelative + dir
+	#initPosARelative = initPosARelative.normalized()
+	#initPosBRelative = initPosBRelative.normalized()
+	var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
+	print(str(angleDiff))
+	targetRot += angleDiff
+	targetPos = pivot.global_position + posDiff.rotated(Vector3.UP, angleDiff)
+	initiator.move(dir, self, [self])
+	pass
 
 func delete():
 	SheetLibrary.unregisterUser(path)

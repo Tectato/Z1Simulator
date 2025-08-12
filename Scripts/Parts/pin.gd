@@ -165,28 +165,43 @@ func move(dir : Vector2, initiator, chain = []):
 				print(part.path.get_file())
 		pass
 	if chain.has(self):
-		return
-	super.move(dir, initiator, chain)
+		return true
+	var out = super.move(dir, initiator, chain)
+	if !out: return false
 	chain.append(self)
 	if output:
 		flipOutput()
-	checkPropagation((global_position + targetPos)/2, dir, chain)
-	checkPropagation(targetPos, dir, chain)
-	pass
+	var check1 = checkPropagation((global_position + targetPos)/2, dir, chain)
+	if !check1: return false
+	var check2 = checkPropagation(targetPos, dir, chain)
+	return check2
 	
 func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
+	var canMove = true
+	var moved = []
+	#if selected:
+		#print("A")
 	for part in interactionCandidates:
 		#if sheet.intersects(pos):
 			#sheet.move(dir,chain)
 		if part is Sheet:
 			if part.intersectsOutline(pos):
-				part.move(dir, self,chain)
+				moved.append(part)
+				canMove = canMove and part.move(dir, self,chain)
 		else:
 			var sheet = part.get_parent()
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(pos)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
-				sheet.move(dir, self,chain)
+				moved.append(sheet)
+				canMove = canMove and sheet.move(dir, self,chain)
+		
+		if !canMove:
+			for movedPart in moved:
+				movedPart.abortMove()
+			return false
+	return true
+		
 
 func getMachine():
 	if layer == null and machine != null:

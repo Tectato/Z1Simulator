@@ -27,9 +27,10 @@ func setHeight(value):
 
 func move(dir : Vector2, initiator, chain = []):
 	if (not chain.is_empty()) and !inputCheckbox.isLocked():
-		return
+		return true
 	super.move(dir.rotated(-rotation.y), null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+	return true
 	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
 
 func setStep(value):
