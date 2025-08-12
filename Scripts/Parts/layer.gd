@@ -153,8 +153,8 @@ func snap(srcPos):
 	return srcPos
 
 func delete():
-	for part in parts:
-		part.delete()
+	while !parts.is_empty():
+		parts.back().delete()
 	if gizmo:
 		gizmo.free()
 	machine.removeLayer(self)

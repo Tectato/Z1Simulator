@@ -129,7 +129,9 @@ func delete():
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.removePart(self)
-	#call_deferred("queue_free")
+	else:
+		print("Failed to unregister part; layer is gone")
+	call_deferred("queue_free")
 
 func setFixed(value, propagate = true):
 	fixed = value

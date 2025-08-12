@@ -194,6 +194,10 @@ func moveLayer(index, dir):
 	pinOccupancy.insert(index+dir, pinOccupancy.pop_at(index))
 	sheetOccupancy.insert(index+dir, sheetOccupancy.pop_at(index))
 
+func removeLayer(index):
+	pinOccupancy.remove_at(index)
+	sheetOccupancy.remove_at(index)
+
 func checkValidity():
 	for thing in occupies.keys():
 		if thing == null:

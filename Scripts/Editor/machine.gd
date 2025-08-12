@@ -58,8 +58,9 @@ func moveLayer(layer : Layer, dir = 1):
 	updateLayerPositions()
 
 func removeLayer(layer):
+	var index = layers.find(layer)
 	layers.erase(layer)
-	gridLibrary.call_deferred("checkValidity")
+	gridLibrary.removeLayer(index)
 	if layers.is_empty() and not beingDeleted:
 		call_deferred("addLayer")
 	else:

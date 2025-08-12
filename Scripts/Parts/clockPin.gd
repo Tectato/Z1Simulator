@@ -9,7 +9,7 @@ const TRAVELINDICATOR = preload("res://Scenes/Parts/ClockPinTravelIndicator.tscn
 @export var input = false
 @export var activateNextCycle = false
 var inActivePos = false
-var travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
+var travel = Vector3(0,0,1) * Global.workspace.pinTravel #.rotated(Vector3.UP,-rotation.y)
 var travelIndicator : Node3D
 @onready var tempTravelIndicator = $ClockPinTravelIndicator
 @onready var inputCheckbox = $StepLabel/InputCheckbox
@@ -26,7 +26,7 @@ func setHeight(value):
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
 func move(dir : Vector2, initiator, chain = []):
-	if (not chain.is_empty()) and inputCheckbox.isLocked():
+	if (not chain.is_empty()) and !inputCheckbox.isLocked():
 		return
 	super.move(dir.rotated(-rotation.y), null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
