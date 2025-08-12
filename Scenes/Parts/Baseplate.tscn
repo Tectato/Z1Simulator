@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://b3mp481i5xfq"]
+[gd_scene load_steps=7 format=3 uid="uid://b3mp481i5xfq"]
 
 [ext_resource type="Script" uid="uid://b3soq26vwpgto" path="res://Scripts/Editor/baseplate.gd" id="1_3p2xn"]
 [ext_resource type="Shader" uid="uid://b6laiy3d8ygyk" path="res://Shaders/Baseplate.gdshader" id="1_83lyt"]
 [ext_resource type="Texture2D" uid="uid://u4svysosanbt" path="res://Sprites/staticPinGrid.png" id="2_83lyt"]
-[ext_resource type="PackedScene" uid="uid://bthy0n8a2w4j" path="res://Scenes/Parts/StaticPin.tscn" id="3_ax0fx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3p2xn"]
 render_priority = 0
@@ -32,18 +31,3 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.005, 0)
 shape = SubResource("BoxShape3D_ax0fx")
-
-[node name="StaticPin" parent="." instance=ExtResource("3_ax0fx")]
-visible = false
-
-[node name="StaticPin2" parent="." instance=ExtResource("3_ax0fx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
-visible = false
-
-[node name="StaticPin3" parent="." instance=ExtResource("3_ax0fx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
-visible = false
-
-[node name="StaticPin4" parent="." instance=ExtResource("3_ax0fx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0.3)
-visible = false

@@ -4,6 +4,7 @@ render_mode cull_disabled, depth_prepass_alpha;
 uniform sampler2D albedo : source_color, filter_nearest;
 uniform float thickness = 0.02;
 instance uniform bool selected = false;
+instance uniform bool fixed = false;
 varying float textureAspectRatio;
 const bool doParallax = false;
 
@@ -25,7 +26,7 @@ void fragment() {
 		vec2 ratioMult = vec2(1.0/textureAspectRatio,1.0);
 		vec4 offsetColor = texture(albedo, clamp(UV - offsetVector * ratioMult * thickness, vec2(0.0,0.0), vec2(1.0,1.0)));
 		float offsetHeight = getHeight(offsetColor);
-		ALBEDO = topColor.rgb * topHeight + offsetColor.rgb * (1.0-topHeight) * 0.5;
+		ALBEDO = (topColor.rgb * topHeight + offsetColor.rgb * (1.0-topHeight) * 0.5) * (fixed ? 0.5 : 1.0);
 		ALPHA = min(1.0, topHeight + offsetHeight);
 		DEPTH = FRAGCOORD.z * topHeight + (FRAGCOORD.z - 0.001 / viewDir.z) * (1.0-topHeight) * offsetHeight;
 		if (selected){
@@ -36,8 +37,8 @@ void fragment() {
 	} else {
 		vec4 topColor = texture(albedo, UV);
 		float topHeight = getHeight(topColor);
-		
-		ALBEDO = topColor.rgb * topHeight;
+
+		ALBEDO = (topColor.rgb * topHeight) * (fixed ? 0.5 : 1.0);
 		ALPHA = min(1.0, topHeight);
 	}
 }

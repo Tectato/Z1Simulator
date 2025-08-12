@@ -2,6 +2,7 @@ extends Node3D
 class_name Selectable
 
 var selected = false
+var machine : Machine
 var layer : Layer
 @export var collider : CollisionObject3D
 @onready var mesh = $MeshInstance3D
@@ -20,7 +21,7 @@ func deserialize(source : Dictionary):
 func getMachine():
 	if layer:
 		return layer.machine
-	return null
+	return machine
 
 func canModify():
 	var machine = getMachine()

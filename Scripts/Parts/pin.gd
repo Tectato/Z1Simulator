@@ -3,6 +3,9 @@ class_name Pin
 
 const INDICATOR = preload("res://Scenes/Parts/OutputIndicator.tscn")
 
+@export var normalMaterial : Material
+@export var staticMaterial : Material
+
 var global = false
 var output = false
 var outputState = false
@@ -20,6 +23,8 @@ func serialize():
 		output["id"] = id
 	if self.output:
 		output["output"] = outputState
+	elif fixed:
+		output["static"] = fixed
 	output["uuid"] = uuid
 	if !relations.is_empty():
 		for relation in relations: #TODO: If machine is instance, this doesnt get serialized
@@ -40,6 +45,8 @@ func deserialize(source : Dictionary):
 		setOutput(true)
 		outputState = source["output"]
 		indicator.setValue(outputState)
+	if source.has("static"):
+		call_deferred("setFixed",true)
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
@@ -57,6 +64,14 @@ func deserialize(source : Dictionary):
 func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.1, 0.02)]
 
+func setFixed(value, propagate = true):
+	super.setFixed(value, propagate)
+	$MeshInstance3D.material_override = staticMaterial if value else normalMaterial
+	if propagate:
+		for thing in interactionCandidates:
+			if thing is PointHole and !thing.get_parent().fixed:
+				thing.get_parent().call_deferred("updateFixedState")
+
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(scale.x,value,scale.z)
 	$MeshInstance3D.position = Vector3.UP * 0.1 * value / 2
@@ -66,7 +81,7 @@ func setHeight(value):
 		indicator.position = Vector3.UP * (value * 0.1 + 0.05)
 
 func setOutput(value):
-	if value == output:
+	if fixed or value == output:
 		return
 	else:
 		output = value
@@ -79,9 +94,11 @@ func setOutput(value):
 			indicator = null
 
 func flipOutput():
-	if !flippingOutput:
+	if output and !flippingOutput:
 		flippingOutput = true
 		call_deferred("executeFlip")
+	elif !output: # Hacky but works
+		setFixed(!fixed)
 
 func executeFlip():
 	flippingOutput = false
@@ -125,6 +142,13 @@ func updateInteractionCandidates():
 			interactionCandidates.append(sheet)
 		else:
 			interactionCandidates.append(hole)
+	updateConstraints()
+
+func updateConstraints():
+	for thing in interactionCandidates:
+		if thing is PointHole and thing.get_parent().fixed:
+			setFixed(true)
+			return
 
 func delete():
 	super.delete()

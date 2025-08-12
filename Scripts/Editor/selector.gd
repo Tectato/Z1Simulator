@@ -103,6 +103,9 @@ func _process(delta: float) -> void:
 						part.setPulsing(!part.pulsing)
 					if Input.is_action_just_pressed("toggle_input"):
 						part.setInput(!part.input)
+				if part is Sheet:
+					if Input.is_action_just_pressed("flip"):
+						part.setFixed(!part.fixed)
 			elif part is Pin and part.canModify():
 				if Input.is_action_just_pressed("toggle_output"):
 					part.setOutput(!part.output)
@@ -246,6 +249,7 @@ func paste():
 		var newPart = selected.back()
 		newPart.rotation = part.rotation
 		newPart.setSelected(true)
+		newPart.setFixed(part.fixed)
 		newPart.global_position = part.global_position
 		mouseRelative.push_back(Vector3(0,0,0))#TODO
 		partDragOrigins.push_back(part.global_position)

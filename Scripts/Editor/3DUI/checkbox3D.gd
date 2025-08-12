@@ -15,3 +15,6 @@ func click():
 
 func setLocked(value):
 	$Lock.visible = value
+
+func isLocked():
+	return $Lock.visible

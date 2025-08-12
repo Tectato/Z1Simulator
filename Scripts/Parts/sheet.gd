@@ -15,6 +15,9 @@ const scaleFactor = 0.001
 @export var debugPoint : Node3D
 var pinCandidates = {}
 var pointConstraints = {}
+var restRot  = 0.0
+var targetRot = 0.0
+var forces = {}
 var linearConstraints = {} # TODO
 var partOffset : Vector2
 var midPoint : Vector3
@@ -42,7 +45,8 @@ func serialize():
 			#if relation.isInterMachineRelation():
 				#Global.workspace.interMachineRelations[relation.serialize()] = null
 			#else:
-			getMachine().relations[relation.serialize()] = null
+			if relation is Link:
+				getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -53,6 +57,8 @@ func deserialize(source : Dictionary):
 		height = height * 0.045
 	position = Vector3(float(source["pos_x"]), height, float(source["pos_z"]))
 	rotation = Vector3(0, source["rotation"], 0)
+	restRot = source["rotation"]
+	targetRot = restRot
 	loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	if source.has("id"):
 		id = source["id"]
@@ -79,9 +85,60 @@ func _ready():
 		sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	super._ready()
 
+func _process(delta: float) -> void:
+	super._process(delta)
+	if !fixed and !pointConstraints.is_empty():
+		rotation = rotation.move_toward(Vector3.UP * targetRot, delta)
+
 func setSelected(value):
 	super.setSelected(value)
 	sprite.set_instance_shader_parameter("selected", value)
+
+func setFixed(value, propagate = true):
+	super.setFixed(value)
+	sprite.set_instance_shader_parameter("fixed", value)
+	if propagate:
+		for hole in pinCandidates:
+			for pin in pinCandidates[hole]:
+				pin.updateConstraints()
+
+func updateConstraints():
+	var setToFixed = false
+	var fixedPoints = 0
+	var currentPins = {}
+	for hole in pinCandidates:
+		if hole is Hole:
+			for pin in pinCandidates[hole]:
+				currentPins[pin] = null
+		if hole is PointHole and !setToFixed:
+			for pin in pinCandidates[hole]:
+				if pin.fixed:
+					fixedPoints += 1
+					if fixedPoints > 1:
+						setFixed(true)
+						return
+		if hole is LongHole:
+			for pin in pinCandidates[hole]:
+				var newRelation = addRelation(Relation.Type.LinearConstraint, pin)
+				if newRelation:
+					newRelation.dir = hole.getDir()
+	setFixed(false)
+	for relation in relations:
+		if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
+			relation.call_deferred("delete")
+	#var canMoveXP = checkMove(Vector2(1,0) * Global.workspace.pinTravel,self)
+	#var canMoveXN = checkMove(Vector2(-1,0) * Global.workspace.pinTravel,self)
+	#var canMoveYP = checkMove(Vector2(0,1) * Global.workspace.pinTravel,self)
+	#var canMoveYN = checkMove(Vector2(0,-1) * Global.workspace.pinTravel,self)
+	#if !canMoveXP and !canMoveXN:
+		#var newRelation = addRelation(Relation.Type.LinearConstraint, getMachine().frame)
+		#if newRelation:
+			#newRelation.dir = Vector2(1,0)
+	#if !canMoveYP and !canMoveYN:
+		#var newRelation = addRelation(Relation.Type.LinearConstraint, getMachine().frame)
+		#if newRelation:
+			#newRelation.dir = Vector2(0,1)
+	
 
 func getBounds():
 	if bounds.size() > 0:
@@ -217,7 +274,7 @@ func parseElement(part : String):
 			var raw = dict["viewBox"].split(" ")
 			var viewBox = Vector4(float(raw[0]),float(raw[1]),float(raw[2]),float(raw[3]))
 			partOffset = Vector2(-viewBox.x, -viewBox.y - viewBox.w) * scaleFactor
-			
+
 
 func _draw_gizmo() -> void:
 	if gizmo:
@@ -285,26 +342,6 @@ func snap(srcPos):
 	restPos = global_position
 	targetPos = position
 	return global_position
-	
-	
-	
-	#sortTargetPos = srcPos
-	#var srcPosRelative = srcPos - global_position
-	#var candidates = []
-	#for hole in holes:
-		#if hole is LongHole:
-			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, hole.start.global_position + srcPosRelative))
-			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, hole.end.global_position + srcPosRelative))
-		##elif hole is SquareHole:
-		##	candidates.append_array(hole.getSnapPositions())
-		#elif hole is LogicHole:
-			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.LogicHole, hole.global_position + srcPosRelative))
-		#else:
-			#candidates.append(Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, hole.global_position + srcPosRelative))
-	#candidates.sort_custom(sortByLength)
-	#if candidates[0].length() < Workspace.snapDist:
-		#global_position = srcPos * Vector3.UP + (srcPos - Vector3(candidates[0].x,0,candidates[0].y)) * Vector3(1,0,1)
-	#return srcPos #TODO: return snap source pos
 
 func projectDown(ray : RayCast3D):
 	ray.add_exception(collider)
@@ -380,20 +417,34 @@ func getIntersector(pos : Vector3):
 
 func place():
 	super.place()
+	call_deferred("updateFixedState")
 	#_draw_gizmo()
 
 func updateInteractionCandidates():
 	if layer:
 		var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
 		pinCandidates.clear()
+		pointConstraints.clear()
 		for pin in inRange:
 			var hole = getIntersector(pin.global_position)
 			var key = hole if hole != null else self
-			
 			if pinCandidates.has(key):
 				pinCandidates[key].append(pin)
 			else:
 				pinCandidates[key] = [pin]
+			if hole is PointHole:
+				pointConstraints[pin] = null
+			# TODO: case for LongHoles
+		var numFixedPins = 0
+		for pin in pointConstraints:
+			if pin.fixed:
+				numFixedPins += 1
+				if numFixedPins >= 2:
+					setFixed(true)
+					return
+		if numFixedPins < 2:
+			setFixed(false)
+		updateConstraints()
 
 func move(dir : Vector2, initiator : Movable, chain = []):
 	#if selected:

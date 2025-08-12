@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://yk8dkrm1xab" path="res://Scripts/Editor/3DUI/checkbox3D.gd" id="7_fc7u5"]
 [ext_resource type="Texture2D" uid="uid://bahslyylbuyku" path="res://Sprites/checkboxLock.png" id="8_1a2dp"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcjpo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1a2dp"]
 metallic = 1.0
 roughness = 0.48
 
@@ -63,7 +63,7 @@ collider = NodePath("Area3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
-material_override = SubResource("StandardMaterial3D_rcjpo")
+material_override = SubResource("StandardMaterial3D_1a2dp")
 material_overlay = SubResource("ShaderMaterial_r5mnu")
 mesh = SubResource("CylinderMesh_vjs7e")
 

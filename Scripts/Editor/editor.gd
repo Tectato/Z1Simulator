@@ -8,6 +8,7 @@ class_name Editor
 var tempProjectPath = ""
 var savePath = ""
 var saved = false
+var previousAction : Callable
 
 func _ready() -> void:
 	get_tree().get_root().files_dropped.connect(fileDropped)
@@ -15,9 +16,19 @@ func _ready() -> void:
 	selector.newSelection.connect(interface.updateSelectedLabel)
 	updateSceneTree()
 
+func _input(event: InputEvent) -> void:
+	if !event.is_echo():
+		if event.is_action_pressed("repeat") and previousAction != null and !selector.placing:
+			previousAction.call()
+
+func doNothing():
+	pass
+
 func newProject():
 	workspace.clear()
 	updateSceneTree()
+	savePath = ""
+	previousAction = doNothing
 	pass
 
 func saveAs(path : String):
@@ -43,8 +54,10 @@ func loadProject(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	PathHandler.setProjectDir(path)
 	saved = false
+	savePath = ""
 	workspace.deserialize(path)
 	updateSceneTree()
+	previousAction = doNothing
 	pass
 
 func importProjectInstace(srcPath = ""):
@@ -53,6 +66,7 @@ func importProjectInstace(srcPath = ""):
 	saved = false
 	workspace.importMachines(FileHandler.extractMachines(path))
 	updateSceneTree()
+	previousAction = doNothing
 
 func importSheet(path : String):
 	#print(path)
@@ -60,6 +74,7 @@ func importSheet(path : String):
 	#print(PathHandler.toAbsolutePath(PathHandler.toRelativePath(path)))
 	saved = false
 	selector.place(workspace.importSheet(path))
+	previousAction = doNothing
 
 func importSheets(paths : PackedStringArray):
 	saved = false
@@ -67,25 +82,26 @@ func importSheets(paths : PackedStringArray):
 	for path in paths:
 		newSheet = workspace.importSheet(path)
 	selector.place(newSheet)
+	previousAction = doNothing
 
 func addPin():
 	saved = false
 	selector.place(workspace.addPin())
+	previousAction = addPin
 
 func addGlobalPin():
 	saved = false
 	selector.place(workspace.addGlobalPin())
+	previousAction = addGlobalPin
 
 func addClockPin():
 	saved = false
 	selector.place(workspace.addClockPin())
-
-func addStaticPin():
-	saved = false
-	selector.place(workspace.addStaticPin())
+	previousAction = addClockPin
 
 func addMachine():
 	workspace.createNew()
+	previousAction = doNothing
 
 func fileDropped(files : Array[String]):
 	var path = files[0]

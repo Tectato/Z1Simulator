@@ -12,6 +12,10 @@ func setTravelLength(value):
 	start.position = Vector3(-value/2,0,0)
 	end.position = Vector3(value/2,0,0)
 
+func getDir():
+	var dir3 = end.position.normalized()
+	return Vector2(abs(dir3.x),abs(dir3.y))
+
 func checkPos(pos):
 	var posFlat = pos * Vector3(1,0,1)
 	return start.position.distance_to(posFlat) < radius or end.position.distance_to(posFlat) < radius or posFlat.length() < radius

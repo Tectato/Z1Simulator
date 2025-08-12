@@ -4,7 +4,6 @@ class_name Workspace
 const MACHINE = preload("res://Scenes/Machine.tscn")
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
-const STATICPIN = preload("res://Scenes/Parts/StaticPin.tscn")
 const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 
 const pinTravel = 0.08
@@ -195,12 +194,11 @@ func addPin():
 	selectedLayer.addPart(newPin)
 	return newPin
 
-func addGlobalPin(fixed = false):
+func addGlobalPin():
 	createIfNotExists()
 	setResolution(Resolution.Part)
 	setMode(Mode.Select)
-	var newPin = STATICPIN.instantiate() if fixed else PIN.instantiate()
-	newPin.fixed = fixed
+	var newPin = PIN.instantiate()
 	selectedMachine.addGlobalPin(newPin)
 	return newPin
 
@@ -211,9 +209,6 @@ func addClockPin():
 	var newPin = CLOCKPIN.instantiate()
 	selectedMachine.addClockPin(newPin)
 	return newPin
-
-func addStaticPin():
-	return addGlobalPin(true)
 
 func createIfNotExists():
 	if machines.is_empty():

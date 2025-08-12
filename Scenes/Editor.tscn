@@ -677,6 +677,7 @@ texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
 
 [node name="StaticPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
+visible = false
 layout_mode = 2
 tooltip_text = "Place clock pin"
 texture_normal = ExtResource("46_86asr")
@@ -1114,7 +1115,6 @@ shape = SubResource("BoxShape3D_mtfo3")
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/LogicPin" to="." method="addPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
-[connection signal="pressed" from="Camera3D/Interface/PartPlacers/StaticPin" to="." method="addStaticPin"]
 [connection signal="toggled" from="Camera3D/Interface/SceneTree/Hide" to="Camera3D/Interface/SceneTree" method="_on_hide_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
