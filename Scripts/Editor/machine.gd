@@ -11,6 +11,7 @@ const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 @onready var colliderShape = $BoundingBox/CollisionShape3D
 @onready var uuidManager = $UUIDManager
 @onready var frame = $Frame
+@onready var clock = $Clock
 
 var id = ""
 var uuid = -1
@@ -138,8 +139,8 @@ func serialize(path = null):
 		"id" : id,
 		"layers" : layersOut,
 		"globalPins" : globalPinsOut,
-		"clockPins" : clockPinsOut#,
-		#"uuid" : uuid
+		"clockPins" : clockPinsOut,
+		"currentClockStep" : clock.getCurrentStep()
 	}
 	if !relations.is_empty():
 		output["relations"] = relations.keys()
@@ -195,6 +196,12 @@ func deserializeFromDict(source):
 		#Global.workspace.uuidManager.registerID(self, uuid)
 	#else:
 		#Global.workspace.uuidManager.request(self, true)
+	var savedStep = 3
+	if source.has("currentStep"):
+		savedStep = source["currentStep"]
+	var stepDiff = savedStep - Simulator.currentStep
+	stepDiff = wrapi(stepDiff, 0, 3)
+	clock.offset = stepDiff
 
 func makeLocal():
 	pass
@@ -271,6 +278,7 @@ func delete(): #TODO: prompt for confirmation or undo
 	Global.workspace.machines.erase(self)
 	Global.workspace.selectedMachine = null
 	Global.editor.updateSceneTree()
+	clock.delete()
 	if gizmo:
 		gizmo.free()
 	queue_free()
@@ -286,3 +294,21 @@ func isEmpty():
 	for layer in layers:
 		empty = empty and layer.isEmpty()
 	return empty
+
+func rotatePart(angle):
+	rotate_y(angle)
+	snap(global_position)
+
+func toGlobalDir(dir):
+	if dir is Vector3:
+		return dir.rotated(Vector3.UP, rotation.y)
+	elif dir is Vector2:
+		return dir.rotated(-rotation.y)
+	return null
+
+func toLocalDir(dir):
+	if dir is Vector3:
+		return dir.rotated(Vector3.UP, -rotation.y)
+	elif dir is Vector2:
+		return dir.rotated(rotation.y)
+	return null

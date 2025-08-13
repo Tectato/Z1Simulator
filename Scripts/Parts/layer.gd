@@ -192,3 +192,6 @@ func canModify():
 	if machine:
 		return !machine.importedInstance
 	return true
+
+func rotatePart(angle):
+	return

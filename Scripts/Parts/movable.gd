@@ -3,9 +3,9 @@ class_name Movable
 
 const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 
-@onready var restPos = global_position
-@onready var preMovePos = global_position
-@onready var targetPos = global_position
+@onready var restPos = position
+@onready var preMovePos = position
+@onready var targetPos = position
 
 var interactionCandidates = []
 var relations = []
@@ -35,8 +35,8 @@ func move(dir : Vector2, initiator, chain = []):
 	if chain.has(self):
 		return true
 	#translate(Vector3(dir.x,0,dir.y))
-	preMovePos = global_position
-	targetPos = global_position + Vector3(dir.x,0,dir.y)
+	preMovePos = position
+	targetPos = position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
 		stateX = !stateX
 	if abs(dir.y) > 0:
@@ -114,12 +114,12 @@ func place():
 	if layer:
 		layer.machine.gridLibrary.requestUpdate(self)
 		layer.updateCollider()
-	updateInteractionCandidates()
+	call_deferred("updateInteractionCandidates")
 
 func updatePositions():
-	restPos = global_position
-	preMovePos = global_position
-	targetPos = global_position
+	restPos = position
+	preMovePos = position
+	targetPos = position
 	for relation in relations:
 		relation.updatePos()
 
@@ -131,15 +131,15 @@ func updateInteractionCandidates():
 
 func _process(delta: float) -> void:
 	if !fixed:
-		global_position = global_position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * global_position
+		position = position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * position
 
 func delete():
 	clearRelations()
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.removePart(self)
-	else:
-		print("Failed to unregister part; layer is gone")
+	#else:
+		#print("Failed to unregister part; layer is gone")
 	call_deferred("queue_free")
 
 func setFixed(value, propagate = true):

@@ -15,9 +15,14 @@ func extractMachines(path : String):
 					newMachine["path"] = machine["path"]
 					if machine.has("uuid"):
 						newMachine["uuid"] = machine["uuid"]
+					if machine.has("rotation"):
+						newMachine["rotation"] = machine["rotation"]
+					if machine.has("currentStepOverride"):
+						newMachine["currentStepOverride"] = machine["currentStepOverride"]
 					out.append(newMachine)
 				else:
 					machine["instance"] = false
+					machine["path"] = path
 					out.append(machine)
 		else:
 			out.append({"machine":source["machines"],"pos_x":0.0,"pos_z":0.0, "instance" : false})
@@ -43,11 +48,17 @@ func loadMachineFile(path : String):
 func compile(machines : Array):
 	var out = []
 	for entry in machines:
+		var rotation = entry.rotation.y
+		rotation = rotation/(PI/2)
+		rotation += 4
+		rotation = int(rotation)%4
 		if entry.importedInstance:
 			out.append({
 				"path":PathHandler.toRelativePath(entry.fullPath),
 				"pos_x":entry.global_position.x,
 				"pos_z":entry.global_position.z,
+				"rotation":rotation,
+				"currentStepOverride":entry.clock.getCurrentStep(),
 				"uuid":entry.uuid
 			})
 		else:
@@ -55,6 +66,8 @@ func compile(machines : Array):
 				"machine":entry.serialize(),
 				"pos_x":entry.global_position.x,
 				"pos_z":entry.global_position.z,
+				"rotation":rotation,
+				"currentStepOverride":entry.clock.getCurrentStep(),
 				"uuid":entry.uuid
 			})
 	return out

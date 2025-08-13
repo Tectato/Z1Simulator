@@ -7,9 +7,9 @@ func applyMove(dir : Vector2, initiator, chain = []):
 	inEffect = true
 	var canMove = true
 	if A == initiator:
-		canMove = B.move(dir, self, chain)
+		canMove = B.move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
 	elif B == initiator:
-		canMove = A.move(dir, self, chain)
+		canMove = A.move(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
 	inEffect = false
 	return canMove
 

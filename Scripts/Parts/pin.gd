@@ -45,7 +45,8 @@ func deserialize(source : Dictionary):
 		outputState = source["output"]
 		indicator.setValue(outputState)
 	if source.has("static"):
-		call_deferred("setFixed",true)
+		setFixed(true, false)
+		#call_deferred("setFixed",true)
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
@@ -171,13 +172,14 @@ func move(dir : Vector2, initiator, chain = []):
 	chain.append(self)
 	if output:
 		flipOutput()
-	var check1 = checkPropagation((global_position + targetPos)/2, dir, chain)
+	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
 	if !check1: return false
-	var check2 = checkPropagation(targetPos, dir, chain)
+	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	return check2
 	
-func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
+func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
+	var globalOffset = getMachine().toGlobalDir(offset)
 	var moved = []
 	#if selected:
 		#print("A")
@@ -185,13 +187,13 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 		#if sheet.intersects(pos):
 			#sheet.move(dir,chain)
 		if part is Sheet:
-			if part.intersectsOutline(pos):
+			if part.intersectsOutline(global_position+globalOffset):
 				moved.append(part)
 				canMove = canMove and part.move(dir, self,chain)
 		else:
 			var sheet = part.get_parent()
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
-			var posRelative = part.to_local(pos)#pos * sheet.outline.global_transform
+			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
 				moved.append(sheet)
 				canMove = canMove and sheet.move(dir, self,chain)

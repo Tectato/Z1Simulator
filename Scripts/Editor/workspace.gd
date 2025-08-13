@@ -53,7 +53,7 @@ func clear():
 	Global.editor.selector.deselect()
 	while !machines.is_empty():
 		machines[0].delete()
-	Simulator.setStep()
+	#Simulator.setStep()
 	interMachineRelations.clear()
 
 func createNew():
@@ -140,6 +140,10 @@ func deserialize(path):
 			newMachine.uuid = int(entry["uuid"])
 			uuidManager.registerID(newMachine, newMachine.uuid)
 		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+		if entry.has("rotation"):
+			newMachine.rotatePart(entry["rotation"]*(PI/2))
+		if entry.has("currentStepOverride"):
+			pass
 		PathHandler.setProjectDir(projectDirTemp)
 	if !machines.is_empty():
 		setMode(Mode.Select)
@@ -163,7 +167,13 @@ func exportMachine(path):
 func importMachines(src):
 	for entry in src:
 		var newMachine = importMachine(entry["machine"], true)
+		if newMachine.fullPath.length() < 1:
+			newMachine.fullPath = entry["path"]
 		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+		if entry.has("rotation"):
+			newMachine.rotatePart(entry["rotation"]*(PI/2))
+		if entry.has("currentStepOverride"):
+			pass
 
 func importMachine(src, instance = false, path = ""):
 	var newMachine = MACHINE.instantiate()

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bid8yuc1ufp1d"]
+[gd_scene load_steps=7 format=3 uid="uid://bid8yuc1ufp1d"]
 
 [ext_resource type="Script" uid="uid://baw1bypo5hmfp" path="res://Scripts/Editor/machine.gd" id="1_ovuu0"]
 [ext_resource type="Script" uid="uid://iqoy760513a" path="res://Scripts/Simulation/gridLibrary.gd" id="2_7iaox"]
 [ext_resource type="PackedScene" uid="uid://b6256ek8c667t" path="res://Scenes/UUIDManager.tscn" id="3_cewcs"]
 [ext_resource type="Script" uid="uid://dmrnm764to46c" path="res://Scripts/Parts/movable.gd" id="4_y8amu"]
+[ext_resource type="Script" uid="uid://dwv6evo7u0jcc" path="res://Scripts/Simulation/clockInstance.gd" id="5_w7ikp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ovuu0"]
 
@@ -28,3 +29,9 @@ script = ExtResource("2_7iaox")
 
 [node name="Frame" type="Node3D" parent="."]
 script = ExtResource("4_y8amu")
+
+[node name="Clock" type="Node" parent="."]
+script = ExtResource("5_w7ikp")
+
+[node name="Timer" type="Timer" parent="Clock"]
+wait_time = 0.2

@@ -5,6 +5,9 @@ class_name LongHole
 @onready var end = $End
 var radius = 0.04
 var bounds = []
+@export var debugMesh : Node3D
+@export var debugBoundsA : Node3D
+@export var debugBoundsB : Node3D
 
 func setRadius(value):
 	radius = value
@@ -12,7 +15,7 @@ func setRadius(value):
 func setTravelLength(value):
 	start.position = Vector3(-value/2,0,0)
 	end.position = Vector3(value/2,0,0)
-	bounds = [Vector2(-(value+radius),-radius), Vector2(value+radius, radius)]
+	bounds = [Vector2(-(value/2+radius),-radius), Vector2(value/2+radius, radius)]
 
 func getDir():
 	var dir3 = end.position.normalized().rotated(Vector3.UP, rotation.y)
@@ -23,6 +26,9 @@ func getGlobalDir():
 	return Vector2(abs(dir3.x),abs(dir3.y))
 
 func checkPos(pos):
+	debugMesh.position = pos
+	debugBoundsA.position = Space.toVec3(bounds[0])
+	debugBoundsB.position = Space.toVec3(bounds[1])
 	#var posFlat = pos * Vector3(1,0,1)
 	#return start.position.distance_to(posFlat) < radius or end.position.distance_to(posFlat) < radius or posFlat.length() < radius
 	var pos2D = Vector2(pos.x, pos.z)

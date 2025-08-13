@@ -15,7 +15,7 @@ var travelIndicator : Node3D
 @onready var inputCheckbox = $StepLabel/InputCheckbox
 
 func _ready() -> void:
-	Simulator.registerClockPin(self)
+	machine.clock.registerClockPin(self)
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 
 func setHeight(value):
@@ -37,7 +37,7 @@ func setStep(value):
 	forwardStep = wrap(value, 0, 4)
 	antiStep = wrap(value+2, 0, 4)
 	updateLabel()
-	clockCycle(Simulator.currentStep)
+	clockCycle(getMachine().clock.getCurrentStep())
 
 func setPulsing(value):
 	pulsing = value
@@ -124,7 +124,7 @@ func place():
 		tempTravelIndicator.queue_free()
 		travelIndicator = TRAVELINDICATOR.instantiate()
 		get_parent().add_child(travelIndicator)
-		travelIndicator.global_position = global_position + Vector3.UP * 0.001
+		travelIndicator.position = position + Vector3.UP * 0.001
 		travelIndicator.rotation = rotation
 	updatePositions()
 	if machine:
@@ -132,9 +132,9 @@ func place():
 	updateInteractionCandidates()
 
 func updatePositions():
-	restPos = global_position if !inActivePos else global_position - travel.rotated(Vector3.UP,rotation.y)
-	targetPos = global_position
-	travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
+	restPos = position if !inActivePos else position - travel.rotated(Vector3.UP,rotation.y)
+	targetPos = position
+	travelIndicator.position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
 	for relation in relations:
 		relation.updatePos()
 
@@ -143,14 +143,14 @@ func rotatePart(by):
 	#travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
 	if travelIndicator:
 		travelIndicator.rotate_y(by)
-		travelIndicator.global_position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
+		travelIndicator.position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
 
 func delete():
 	super.delete()
 	if travelIndicator:
 		travelIndicator.queue_free()
-	Simulator.unregisterClockPin(self)
 	if machine:
+		machine.clock.unregisterClockPin(self)
 		machine.removeClockPin(self)
 
 func addRelation(type : Relation.Type, other : Selectable):

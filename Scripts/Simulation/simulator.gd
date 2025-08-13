@@ -5,7 +5,7 @@ enum Direction {XP, YP, XN, YN}
 var currentStep = 3
 var running = false
 var clockSpeed = 0.5 #In seconds
-var clockPins = []
+var clockInstances = []
 var inputs = []
 var outputs = []
 
@@ -14,11 +14,11 @@ var gizmo : Control
 func _ready() -> void:
 	$AutoClock.wait_time = clockSpeed
 
-func registerClockPin(pin):
-	clockPins.append(pin)
+func registerClockInstance(instance):
+	clockInstances.append(instance)
 
-func unregisterClockPin(pin):
-	clockPins.erase(pin)
+func unregisterClockInstance(instance):
+	clockInstances.erase(instance)
 
 func start():
 	$AutoClock.start()
@@ -43,8 +43,8 @@ func next(stopClock = true):
 	if stopClock: stop()
 	currentStep += 1
 	currentStep %= 4
-	for pin in clockPins:
-		pin.clockCycle(currentStep)
+	for instance in clockInstances:
+		instance.clockCycle(currentStep)
 	gizmo.setClockStep(currentStep+1)
 	$Cooldown.start()
 

@@ -18,6 +18,7 @@ var pointConstraints = {}
 var pivot : Pin
 var restRot  = 0.0
 var targetRot = 0.0
+var rotSpeed = 2.0
 var forces = {}
 var movedPins = {}
 var linearConstraints = {} # TODO
@@ -42,6 +43,8 @@ func serialize():
 	if id.length() > 0:
 		output["id"] = id
 	output["uuid"] = uuid
+	if fixed:
+		output["static"] = true
 	if !relations.is_empty():
 		for relation in relations:
 			#if relation.isInterMachineRelation():
@@ -66,6 +69,8 @@ func deserialize(source : Dictionary):
 		id = source["id"]
 	else:
 		id = path.get_file().trim_suffix(".svg")
+	if source.has("static"):
+		setFixed(true, false)
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
@@ -90,7 +95,7 @@ func _ready():
 func _process(delta: float) -> void:
 	super._process(delta)
 	if !fixed and !pointConstraints.is_empty():
-		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * 2)
+		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed)
 
 func setSelected(value):
 	super.setSelected(value)
@@ -462,17 +467,17 @@ func move(dir : Vector2, initiator, chain = []):
 	var out = super.move(dir, initiator, chain)
 	if !out: return false
 	chain.append(self)
-	var check1 = checkPropagation((global_position + targetPos)/2, dir, chain)
-	var check2 = checkPropagation(targetPos, dir, chain)
+	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
+	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	if !(check1 and check2) and initiator != self:
 		abortMove()
 		forces[initiator] = [dir, chain]
 		call_deferred("tryTurn")
 	return true
 
-func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
-	var diff = pos - global_position
+func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
+	var globalOffset = getMachine().toGlobalDir(offset)
 	var moved = []
 	#for pin in interactionCandidates:
 		#if intersects(pin.global_position - diff):
@@ -481,7 +486,7 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 		var pins = pinCandidates[part]
 		if part is Sheet:
 			for pin in pins:
-				if intersectsOutline(pin.global_position - diff):
+				if intersectsOutline(pin.global_position - globalOffset):
 					canMove = canMove and pin.move(dir, self, chain)
 					moved.append(pin)
 					if !canMove:
@@ -489,7 +494,7 @@ func checkPropagation(pos : Vector3, dir : Vector2, chain = []):
 						break
 		else:
 			for pin in pins:
-				if !part.checkPos(part.to_local(pin.global_position - diff)):
+				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					canMove = canMove and pin.move(dir, self, chain)
 					moved.append(pin)
 					if !canMove:
@@ -518,8 +523,8 @@ func tryTurn():
 	forces.clear()
 
 func turn(dir : Vector2, initiator, chain = []):
-	var posDiff = global_position - pivot.global_position
-	var initPosARelative = Space.toVec2(initiator.global_position - pivot.global_position)
+	var posDiff = position - pivot.position
+	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
 	var ALinearized = Vector2(
 		1 * sign(initPosARelative.x) if abs(initPosARelative.x) > abs(initPosARelative.y) else 0,
 		1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
@@ -527,12 +532,17 @@ func turn(dir : Vector2, initiator, chain = []):
 	#initPosARelative = initPosARelative.normalized()
 	#initPosBRelative = initPosBRelative.normalized()
 	var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
-	print(str(angleDiff))
+	rotSpeed = 1.0/abs(angleDiff)
+	#print(str(angleDiff))
 	targetRot += angleDiff
-	targetPos = pivot.global_position + posDiff.rotated(Vector3.UP, angleDiff)
+	targetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
 	initiator.move(dir, self, [self])
 	pass
 
 func delete():
 	SheetLibrary.unregisterUser(path)
 	super.delete()
+
+func rotatePart(by):
+	super.rotatePart(by)
+	targetRot = rotation.y

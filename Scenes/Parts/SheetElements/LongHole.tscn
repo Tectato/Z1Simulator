@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://by83vnhw218sk"]
+[gd_scene load_steps=8 format=3 uid="uid://by83vnhw218sk"]
 
 [ext_resource type="Script" uid="uid://dohbt3xgt4hm4" path="res://Scripts/Parts/SheetElements/longHole.gd" id="1_7vhs4"]
 
@@ -6,8 +6,32 @@
 radius = 0.01
 height = 0.02
 
-[node name="LongHole" type="Node3D"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_7vhs4"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7vhs4"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_q8qxb"]
+material = SubResource("StandardMaterial3D_7vhs4")
+radius = 0.01
+height = 0.02
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nrdih"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0t7g4"]
+material = SubResource("StandardMaterial3D_nrdih")
+radius = 0.01
+height = 0.02
+
+[node name="LongHole" type="Node3D" node_paths=PackedStringArray("debugMesh", "debugBoundsA", "debugBoundsB")]
 script = ExtResource("1_7vhs4")
+debugMesh = NodePath("MeshInstance3D")
+debugBoundsA = NodePath("DebugBall1")
+debugBoundsB = NodePath("DebugBall2")
 
 [node name="Start" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, 0)
@@ -22,4 +46,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="End"]
 visible = false
 mesh = SubResource("SphereMesh_7vhs4")
+skeleton = NodePath("../../Start")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CylinderMesh_7vhs4")
+
+[node name="DebugBall1" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("SphereMesh_q8qxb")
+skeleton = NodePath("../../Start")
+
+[node name="DebugBall2" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("SphereMesh_0t7g4")
 skeleton = NodePath("../../Start")

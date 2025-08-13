@@ -81,19 +81,22 @@ func _process(delta: float) -> void:
 		var i = -1
 		for part in selected:
 			i += 1
+			if Input.is_action_just_pressed("rotate_ccw"):
+				var bounds = part.getBounds()
+				var midPoint = (bounds[1]-bounds[0])/2
+				#mouseRelative[i] -= midPoint
+				#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
+				#mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
+				part.rotatePart(-PI/2)
+				part.place()
+			elif Input.is_action_just_pressed("rotate_cw"):
+				#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
+				part.rotatePart(PI/2)
+				part.place()
+			if part is Machine:
+				if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
+					part.clock.increaseOffset()
 			if (part is ClockPin or part is Sheet) and part.canModify():
-				if Input.is_action_just_pressed("rotate_ccw"):
-					var bounds = part.getBounds()
-					var midPoint = (bounds[1]-bounds[0])/2
-					mouseRelative[i] -= midPoint
-					mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
-					mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
-					part.rotatePart(-PI/2)
-					part.place()
-				elif Input.is_action_just_pressed("rotate_cw"):
-					mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
-					part.rotatePart(PI/2)
-					part.place()
 				if part is ClockPin:
 					if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
 						part.setStep(part.forwardStep+1)
