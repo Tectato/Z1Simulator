@@ -173,8 +173,12 @@ func move(dir : Vector2, initiator, chain = []):
 	if output:
 		flipOutput()
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
-	if !check1: return false
+	if !check1:
+		abortMove()
+		return false
 	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+	if !check2:
+		abortMove()
 	return check2
 	
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):

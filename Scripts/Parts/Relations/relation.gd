@@ -1,7 +1,7 @@
 extends Node3D
 class_name Relation
 
-enum Type {Link, LinearConstraint}
+enum Type {Link, Spring, LinearConstraint}
 
 var A : Movable
 var AParent : Machine

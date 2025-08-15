@@ -2,6 +2,7 @@ extends Selectable
 class_name Movable
 
 const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
+const SPRING = preload("res://Scenes/Parts/Relations/Spring.tscn")
 
 @onready var restPos = position
 @onready var preMovePos = position
@@ -50,7 +51,7 @@ func move(dir : Vector2, initiator, chain = []):
 func abortMove():
 	targetPos = preMovePos
 	if selected:
-		print("A")
+		print("Move aborted")
 
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()
@@ -60,6 +61,8 @@ func addRelation(type : Relation.Type, other : Selectable):
 	match type:
 		Relation.Type.Link:
 			newRelation = LINK.instantiate()
+		Relation.Type.Spring:
+			newRelation = SPRING.instantiate()
 		Relation.Type.LinearConstraint:
 			newRelation = LinearConstraint.new()
 	add_child(newRelation)

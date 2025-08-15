@@ -131,7 +131,10 @@ func _process(delta: float) -> void:
 					part.clearRelations()
 		elif Input.is_action_just_pressed("link"):
 			if selected.size() == 2 and selected[0] is Movable and selected[1] is Movable:
-				selected[0].addRelation(Relation.Type.Link, selected[1])
+				if Input.is_key_pressed(KEY_CTRL):
+					selected[0].addRelation(Relation.Type.Spring, selected[1])
+				else:
+					selected[0].addRelation(Relation.Type.Link, selected[1])
 		cast(false,true)
 	if Input.is_action_just_pressed("paste"):
 		paste()
