@@ -17,7 +17,7 @@ func requestUpdate(part : Movable):
 
 func executeUpdate():
 	toNotify.clear()
-	print("Updating " + str(toUpdate.keys().size()) + " parts")
+	#print("Updating " + str(toUpdate.keys().size()) + " parts")
 	for part in toUpdate.keys():
 		unregisterPart(part, false)
 		registerPart(part, false)

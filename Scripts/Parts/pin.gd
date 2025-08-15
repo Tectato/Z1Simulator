@@ -33,7 +33,8 @@ func serialize():
 				#serialized["BParent"] = relation.BParent.uuid
 				#Global.workspace.interMachineRelations[serialized] = null
 			#else:
-			getMachine().relations[relation.serialize()] = null
+			if !relation.isInterMachineRelation() and not relation is LinearConstraint:
+				getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):

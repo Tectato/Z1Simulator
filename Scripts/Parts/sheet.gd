@@ -35,7 +35,7 @@ func serialize():
 	var relativePath = PathHandler.toRelativePath(path)
 	var output = {
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
-		"pos_y" : max(1,floori(position.y / 0.045)),
+		"pos_y" : int(max(1,roundf(position.y / 0.045))),
 		"pos_z" : ("%0.4f" % position.z).rstrip("0"),
 		"rotation" : rotation.y,
 		"file" : relativePath
@@ -50,7 +50,7 @@ func serialize():
 			#if relation.isInterMachineRelation():
 				#Global.workspace.interMachineRelations[relation.serialize()] = null
 			#else:
-			if relation is Link:
+			if !relation.isInterMachineRelation() and not relation is LinearConstraint:
 				getMachine().relations[relation.serialize()] = null
 	return output
 
@@ -346,6 +346,7 @@ func snap(srcPos):
 		global_position = srcPos + candidates[0]
 	else:
 		global_position = srcPos
+	position = position * Vector3(1,0,1) + snappedf(position.y, 0.045) * Vector3.UP
 	restPos = global_position
 	targetPos = position
 	return global_position
@@ -442,6 +443,8 @@ func updateInteractionCandidates():
 			if hole is PointHole:
 				pointConstraints[pin] = null
 			# TODO: case for LongHoles
+		if pointConstraints.size() > 0:
+			targetRot = rotation.y
 		var numFixedPins = 0
 		for pin in pointConstraints:
 			if pin.fixed:
