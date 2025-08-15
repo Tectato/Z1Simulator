@@ -160,6 +160,8 @@ func deserialize(path):
 		match relation.type:
 			"link":
 				A.addRelation(Relation.Type.Link, B)
+			"spring":
+				A.addRelation(Relation.Type.Spring, B)
 
 func exportMachine(path):
 	pass

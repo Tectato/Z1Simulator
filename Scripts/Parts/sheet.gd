@@ -471,6 +471,8 @@ func move(dir : Vector2, initiator, chain = []):
 	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	if !(check1 and check2) and initiator != self:
 		abortMove()
+		if pointConstraints.is_empty():
+			return false
 		forces[initiator] = [dir, chain]
 		call_deferred("tryTurn")
 	return true
@@ -488,7 +490,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			for pin in pins:
 				if intersectsOutline(pin.global_position - globalOffset):
 					canMove = canMove and pin.move(dir, self, chain)
-					moved.append(pin)
+					if not pin is ClockPin:
+						moved.append(pin)
 					if !canMove:
 						pivot = pin
 						break
@@ -496,7 +499,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					canMove = canMove and pin.move(dir, self, chain)
-					moved.append(pin)
+					if not pin is ClockPin:
+						moved.append(pin)
 					if !canMove:
 						pivot = pin
 						break
@@ -515,7 +519,7 @@ func tryTurn():
 		return
 	var initiator = forces.keys()[0]
 	var force = forces[initiator]
-	if forces.size() > 1:
+	if forces.size() > 1 or pointConstraints.is_empty():
 		move(force[0], self, force[1])
 		pass
 	else:
