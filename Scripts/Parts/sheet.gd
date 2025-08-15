@@ -40,7 +40,7 @@ func serialize():
 		"rotation" : rotation.y,
 		"file" : relativePath
 	}
-	if id.length() > 0:
+	if id.length() > 0 and id != relativePath.get_file().trim_suffix(".svg"):
 		output["id"] = id
 	output["uuid"] = uuid
 	if fixed:
@@ -543,6 +543,24 @@ func delete():
 	SheetLibrary.unregisterUser(path)
 	super.delete()
 
+func hasPivot():
+	return pointConstraints.size() == 1
+
+func getPivot():
+	if hasPivot():
+		return pointConstraints.keys()[0]
+	else:
+		return null
+
 func rotatePart(by):
 	super.rotatePart(by)
+	updateRotation()
+
+func updateRotation():
 	targetRot = rotation.y
+
+func snapRotation():
+	#if pointConstraints.size() == 2:
+		#var diff = Space.toVec2(pointConstraints.keys()[0].global_position).angle_to_point(Space.toVec2(pointConstraints.keys()[1].global_position))
+		#rotatePart(-diff)
+	updateRotation()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=117 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=118 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -253,6 +253,11 @@ material = SubResource("StandardMaterial3D_5v8xv")
 radius = 0.1
 height = 0.2
 
+[sub_resource type="SphereMesh" id="SphereMesh_86asr"]
+material = SubResource("StandardMaterial3D_5v8xv")
+radius = 0.05
+height = 0.1
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w82wx"]
 render_priority = 10
 no_depth_test = true
@@ -386,7 +391,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 visible = false
 mesh = SubResource("CylinderMesh_r768j")
 
-[node name="MoveRay" type="RayCast3D" parent="." node_paths=PackedStringArray("selector", "downcaster", "debug1", "debug2")]
+[node name="MoveRay" type="RayCast3D" parent="." node_paths=PackedStringArray("selector", "downcaster", "debug1", "debug2", "debug3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 enabled = false
 exclude_parent = false
@@ -397,6 +402,7 @@ selector = NodePath("../Camera3D/SelectionRay")
 downcaster = NodePath("../Downcaster")
 debug1 = NodePath("../Debug1")
 debug2 = NodePath("../Debug2")
+debug3 = NodePath("../Debug3")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint", "debugLabel")]
 transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.499999, -0.707107, -0.353553, 0.612372, 2, 2, 2)
@@ -928,6 +934,10 @@ mesh = SubResource("SphereMesh_dfuwn")
 [node name="Debug2" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("SphereMesh_brgpd")
+
+[node name="Debug3" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("SphereMesh_86asr")
 
 [node name="TransformGizmo" type="Node3D" parent="." node_paths=PackedStringArray("selector")]
 visible = false

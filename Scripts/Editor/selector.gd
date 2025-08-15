@@ -60,6 +60,9 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				else:
 					cast(true, false)
 				dragging = false
+		if event.is_action_released("mouse_right"):
+			if selected.size() == 1 and selected[0] is Sheet:
+				mover.finishRot()
 
 func exists(item):
 	return item != null and weakref(item).get_ref()
@@ -78,6 +81,8 @@ func _process(delta: float) -> void:
 		if (dragging or placing) and not selected[0] is Layer and canModify():
 			mover.move()
 	if !selected.is_empty():
+		if selected.size() == 1 and selected[0] is Sheet and selected[0].hasPivot() and Input.is_action_pressed("mouse_right"):
+			mover.spin()
 		var i = -1
 		for part in selected:
 			i += 1
@@ -213,6 +218,17 @@ func setGrabpoint():
 		var relative2D = mouseDragOrigin - part.global_position
 		mouseRelative.push_back(Vector3(relative2D.x,0,relative2D.z))
 	#debugLabel.text = str(mouseRelative) + "\n" + str(selected.global_position)
+
+func setSpinGrabpoint():
+	var sheet = selected[0]
+	if !sheet.hasPivot():
+		return
+	var plane = Plane(Vector3.UP, sheet.global_position.y)
+	var mousePos = get_viewport().get_mouse_position()
+	var point = plane.intersects_ray(camera.project_ray_origin(mousePos), camera.project_ray_normal(mousePos))
+	if point:
+		mouseDragOrigin = point
+		mover.initRot(sheet)
 
 func place(part : Movable):
 	select(part.collider)

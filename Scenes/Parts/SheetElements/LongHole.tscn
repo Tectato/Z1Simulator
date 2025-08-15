@@ -55,9 +55,7 @@ mesh = SubResource("CylinderMesh_7vhs4")
 [node name="DebugBall1" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("SphereMesh_q8qxb")
-skeleton = NodePath("../../Start")
 
 [node name="DebugBall2" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("SphereMesh_0t7g4")
-skeleton = NodePath("../../Start")

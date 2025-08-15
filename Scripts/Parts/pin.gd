@@ -62,7 +62,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func getBounds():
-	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.1, 0.02)]
+	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
 
 func setFixed(value, propagate = true):
 	super.setFixed(value, propagate)

@@ -6,7 +6,11 @@ class_name Mover
 @export var downcaster : RayCast3D
 @export var debug1 : Node3D
 @export var debug2 : Node3D
+@export var debug3 : Node3D
 var candidatePositions = []
+var startAngle = -10.0
+var startGrabposAngle = 0.0
+var startPosRelative = Vector3.ZERO
 
 func move():
 	if Simulator.running:
@@ -25,6 +29,34 @@ func move():
 	#selector.selected.global_position = selector.partDragOrigin + dragDelta
 	#selector.selected.snap(selector.selected.projectDown(downcaster))
 	pass
+
+func initRot(sheet : Sheet):
+	startAngle = sheet.rotation.y
+	startGrabposAngle = Space.toVec2(sheet.getPivot().global_position).angle_to_point(Space.toVec2(selector.mouseDragOrigin))
+	startPosRelative = sheet.global_position - sheet.getPivot().global_position
+
+func spin():
+	if startAngle < -6:
+		selector.setSpinGrabpoint()
+	var sheet = selector.selected[0]
+	var plane = Plane(Vector3.UP, sheet.global_position.y)
+	var mousePos = get_viewport().get_mouse_position()
+	var point = plane.intersects_ray(camera.project_ray_origin(mousePos), camera.project_ray_normal(mousePos))
+	#debug3.global_position = point
+	if !point:
+		return
+	var pivot = sheet.getPivot()
+	var currentAngle = Space.toVec2(pivot.global_position).angle_to_point(Space.toVec2(point))
+	var diff = currentAngle - startGrabposAngle
+	sheet.rotation.y = startAngle - diff
+	sheet.global_position = pivot.global_position + startPosRelative.rotated(Vector3.UP, -diff)
+
+func finishRot():
+	var sheet = selector.selected[0]
+	sheet.updatePositions()
+	sheet.place()
+	sheet.snapRotation()
+	startAngle = -10
 
 func cast():
 	global_position = selector.global_position
