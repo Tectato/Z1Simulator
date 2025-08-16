@@ -13,7 +13,6 @@ func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return true
 	inEffect = true
-	# TODO: don't move unless dragged by initiator
 	var currentDist = A.global_position.distance_to(B.global_position)
 	if A == initiator:
 		var globalDir = AParent.toGlobalDir(dir)
@@ -46,3 +45,6 @@ func serialize():
 	var out = super.serialize()
 	out["type"] = "spring"
 	return out
+
+func isBlocking():
+	return false

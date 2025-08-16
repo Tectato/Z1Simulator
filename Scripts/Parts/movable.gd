@@ -35,6 +35,9 @@ func move(dir : Vector2, initiator, chain = []):
 	# TODO: bool whether i've already moved this tick to avoid double move if e.g. moved from two ends at once
 	if chain.has(self):
 		return true
+	if selected:
+		print("A")
+	
 	#translate(Vector3(dir.x,0,dir.y))
 	preMovePos = position
 	targetPos = position + Vector3(dir.x,0,dir.y)
@@ -45,11 +48,22 @@ func move(dir : Vector2, initiator, chain = []):
 	
 	var canMove = true
 	for relation in relations:
-		canMove = canMove and relation.applyMove(dir, self, chain)
-	return true
+		if relation.isBlocking():
+			canMove = canMove and relation.applyMove(dir, self, chain)
+	call_deferred("propagateNonblockingRelations", dir, chain)
+	return canMove
+
+func propagateNonblockingRelations(dir : Vector2, chain = []):
+	if targetPos.distance_squared_to(preMovePos) < 0.001:
+		return
+	for relation in relations:
+		if !relation.isBlocking():
+			relation.applyMove(dir, self, chain)
 
 func abortMove():
 	targetPos = preMovePos
+	#for relation in relations:
+		#relation.abortMove(self)
 	if selected:
 		print("Move aborted")
 

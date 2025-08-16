@@ -8,6 +8,7 @@ var AParent : Machine
 var B : Movable
 var BParent : Machine
 var inEffect = false
+var aborting = false
 var toMove = []
 
 func init():
@@ -22,6 +23,15 @@ func init():
 
 func applyMove(dir : Vector2, initiator : Selectable, chain = []):
 	return true
+
+func abortMove(initiator):
+	if aborting: return
+	aborting = true
+	if initiator == A:
+		B.abortMove()
+	else:
+		A.abortMove()
+	aborting = false
 
 func delete():
 	A.removeRelation(self)
@@ -50,3 +60,6 @@ func deserialize(source):
 
 func isInterMachineRelation():
 	return AParent != BParent
+
+func isBlocking():
+	return true

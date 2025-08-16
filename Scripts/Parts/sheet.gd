@@ -457,8 +457,8 @@ func updateInteractionCandidates():
 		updateConstraints()
 
 func move(dir : Vector2, initiator, chain = []):
-	#if selected:
-		#print("=====")
+	if selected:
+		print("=====")
 		#for part in chain:
 			#if part is Pin:
 				#print("Pin")
@@ -471,10 +471,12 @@ func move(dir : Vector2, initiator, chain = []):
 	if !out: return false
 	chain.append(self)
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
-	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+	var check2 = true
+	if check1:
+		check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	if !(check1 and check2) and initiator != self:
 		abortMove()
-		if pointConstraints.is_empty():
+		if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			return false
 		forces[initiator] = [dir, chain]
 		call_deferred("tryTurn")
@@ -502,6 +504,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					canMove = canMove and pin.move(dir, self, chain)
+					if selected and pin is ClockPin:
+						print("ClockPin")
 					if not pin is ClockPin:
 						moved.append(pin)
 					if !canMove:
@@ -525,11 +529,14 @@ func tryTurn():
 	if forces.size() > 1 or pointConstraints.is_empty():
 		move(force[0], self, force[1])
 		pass
-	else:
+	elif pointConstraints.size() < 3:
 		turn(force[0], initiator, force[1])
 	forces.clear()
 
 func turn(dir : Vector2, initiator, chain = []):
+	if self in chain:
+		print("Circular turn sequence at " + id)
+		return
 	var posDiff = position - pivot.position
 	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
 	var ALinearized = Vector2(

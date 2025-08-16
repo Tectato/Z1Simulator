@@ -160,11 +160,11 @@ func delete():
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
 		print("=====")
-		for part in chain:
-			if part is Pin:
-				print("Pin")
-			if part is Sheet:
-				print(part.path.get_file())
+		#for part in chain:
+			#if part is Pin:
+				#print("Pin")
+			#if part is Sheet:
+				#print(part.path.get_file())
 		pass
 	if chain.has(self):
 		return true

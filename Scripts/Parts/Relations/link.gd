@@ -3,7 +3,7 @@ class_name Link
 
 func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
-		return
+		return true
 	inEffect = true
 	var canMove = true
 	if A == initiator:

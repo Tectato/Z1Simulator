@@ -26,8 +26,11 @@ func setHeight(value):
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
 func move(dir : Vector2, initiator, chain = []):
-	if (not chain.is_empty()) and !inputCheckbox.isLocked():
-		return true
+	if not chain.is_empty():
+		if wouldMove(machine.clock.getCurrentStep()):
+			return true
+		if !inputCheckbox.isLocked():
+			return false
 	super.move(dir.rotated(-rotation.y), null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	return true
@@ -59,9 +62,8 @@ func updateLabel():
 
 func clockCycle(clockStep : int, forwards = true):
 	if input and inputCheckbox.isLocked(): return
-	if input and !activateNextCycle:
-		return
-	if clockStep == forwardStep or (!pulsing and clockStep == antiStep):
+	if input and !activateNextCycle: return false
+	if wouldMove(clockStep):
 		var toActivePos = clockStep == forwardStep
 		inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 		if input and ((inActivePos and clockStep == antiStep) or pulsing):
@@ -72,6 +74,9 @@ func clockCycle(clockStep : int, forwards = true):
 			move(-Vector2(travel.x,travel.z), null)
 		if pulsing:
 			$ResetTimer.start()
+
+func wouldMove(clockStep):
+	return clockStep == forwardStep or (!pulsing and clockStep == antiStep)
 
 func serialize():
 	grabUUID()
