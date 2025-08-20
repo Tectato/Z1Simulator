@@ -57,7 +57,8 @@ func _on_file_id_pressed(id: int) -> void:
 		6:
 			exportMachineDialog.popup()
 		7:
-			editor.loadProject(editor.currentlyLoadedPath)
+			if editor.currentlyLoadedPath.length() > 0:
+				editor.loadProject(editor.currentlyLoadedPath)
 
 func requestSheet():
 	importSheetDialog.popup()

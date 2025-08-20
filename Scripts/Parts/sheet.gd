@@ -15,13 +15,14 @@ const scaleFactor = 0.001
 @export var debugPoint : Node3D
 var pinCandidates = {}
 var pointConstraints = {}
+var linearConstraints = {}
 var pivot : Pin
 var restRot  = 0.0
 var targetRot = 0.0
 var rotSpeed = 2.0
 var forces = {}
 var movedPins = {}
-var linearConstraints = {} # TODO
+#var linearConstraints = {} # TODO
 var partOffset : Vector2
 var midPoint : Vector3
 var bounds = []
@@ -267,7 +268,9 @@ func parseElement(part : String):
 		"rect":
 			if id.contains("rectHole"):
 				var newHole = addHole(LONGHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-				newHole.setRadius(float(dict["width"])/2000)
+				var idParts = id.split("_")
+				var radius = float(idParts[2].trim_suffix("mm"))/2000
+				newHole.setRadius(radius)
 				newHole.setTravelLength(float(dict["length"])/1000)
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
@@ -433,6 +436,7 @@ func updateInteractionCandidates():
 		var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
 		pinCandidates.clear()
 		pointConstraints.clear()
+		linearConstraints.clear()
 		for pin in inRange:
 			var hole = getIntersector(pin.global_position)
 			var key = hole if hole != null else self
@@ -442,6 +446,8 @@ func updateInteractionCandidates():
 				pinCandidates[key] = [pin]
 			if hole is PointHole:
 				pointConstraints[pin] = null
+			if hole is LongHole and pin.fixed:
+				linearConstraints[pin] = null
 			# TODO: case for LongHoles
 		if pointConstraints.size() > 0:
 			targetRot = rotation.y
@@ -471,17 +477,17 @@ func move(dir : Vector2, initiator, chain = []):
 	if !out: return false
 	chain.append(self)
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
-	var check2 = 1
-	if check1:
+	var check2 = 0
+	if check1 > 0:
 		check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	if (check1 > 1 or check2 > 1) and initiator != self:
 		#abortMove()
 		if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			return false
 		forces[initiator] = [dir, chain]
-		return false
+		return true
 		#call_deferred("tryTurn")
-	return true
+	return check1 > 0 and check2 > 0
 
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
@@ -496,21 +502,25 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		if part is Sheet:
 			for pin in pins:
 				if intersectsOutline(pin.global_position - globalOffset):
-					canMove = canMove and pin.move(dir, self, chain)
-					if canMove and not pin is ClockPin:
+					var couldMove = pin.move(dir, self, chain)
+					canMove = canMove and couldMove
+					if selected and pin is ClockPin:
+						print("ClockPin")
+					if couldMove and not pin is ClockPin:
 						moved.append(pin)
-					if !canMove:
+					if !couldMove:
 						pivot = pin
 						cantMove += 1
 		else:
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
-					canMove = canMove and pin.move(dir, self, chain)
+					var couldMove = pin.move(dir, self, chain)
+					canMove = canMove and couldMove
 					if selected and pin is ClockPin:
 						print("ClockPin")
-					if canMove and not pin is ClockPin:
+					if couldMove and not pin is ClockPin:
 						moved.append(pin)
-					if !canMove:
+					if !couldMove:
 						pivot = pin
 						cantMove += 1
 		
@@ -520,8 +530,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		if cantMove > 1:
 			abortMove()
 			return 0
-		call_deferred("tryTurn")
-		return 2
+		return tryTurn()
 	
 	for movedPart in moved:
 		movedPins[movedPart] = null
@@ -529,20 +538,24 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 
 func tryTurn():
 	if forces.is_empty():
-		return
+		return 0
 	var initiator = forces.keys()[0]
 	var force = forces[initiator]
 	#if forces.size() > 1 or pointConstraints.is_empty():
 		#move(force[0], self, force[1])
 		#pass
-	if pointConstraints.size() < 3:
-		turn(force[0], initiator, force[1])
+	if pointConstraints.size() + linearConstraints.size() < 3:
+		call_deferred("turn", force[0], initiator, force[1])
+		forces.clear()
+		return 2
 	forces.clear()
+	return 0
 
 func turn(dir : Vector2, initiator, chain = []):
 	if chain.count(self) > 1:
 		print("Circular turn sequence at " + id)
 		return
+	Simulator.spawnIndicator(self, EventIndicator.Type.Turn)
 	var posDiff = position - pivot.position
 	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
 	var ALinearized = Vector2(

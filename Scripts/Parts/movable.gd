@@ -12,6 +12,7 @@ var interactionCandidates = []
 var relations = []
 var constraints = []
 var fixed = false
+var inMotion = false
 
 # Don't impact simulation, just for visualization later
 var stateX = false
@@ -39,6 +40,7 @@ func move(dir : Vector2, initiator, chain = []):
 		print("A")
 	
 	#translate(Vector3(dir.x,0,dir.y))
+	inMotion = true
 	preMovePos = position
 	targetPos = position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
@@ -61,7 +63,11 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 			relation.applyMove(dir, self, chain)
 
 func abortMove():
+	if Global.editor.selector.selected.is_empty():
+		Global.editor.selector.select(collider)
+	inMotion = false
 	targetPos = preMovePos
+	Simulator.spawnIndicator(self, EventIndicator.Type.Blocked)
 	#for relation in relations:
 		#relation.abortMove(self)
 	if selected:
@@ -147,8 +153,9 @@ func updateInteractionCandidates():
 	pass
 
 func _process(delta: float) -> void:
-	if !fixed:
+	if !fixed and inMotion:
 		position = position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * position
+		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
 
 func delete():
 	clearRelations()

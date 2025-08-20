@@ -2,6 +2,8 @@ extends Node
 
 func extractMachines(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if !source:
+		print("Unable to open JSON File: " + str(FileAccess.get_open_error()))
 	if source.has("machines"):
 		var out = []
 		if source["machines"] is Array:

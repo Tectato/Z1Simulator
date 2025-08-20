@@ -1,5 +1,6 @@
 extends Node
 
+const EVENTINDICATOR = preload("res://Scenes/Visualisation/EventIndicator.tscn")
 enum Direction {XP, YP, XN, YN}
 
 var currentStep = 3
@@ -57,3 +58,9 @@ func setClockSpeed(value):
 
 func _on_auto_clock_timeout() -> void:
 	next(false)
+
+func spawnIndicator(origin : Node3D, type : EventIndicator.Type):
+	var indicator = EVENTINDICATOR.instantiate()
+	add_child(indicator)
+	indicator.global_position = origin.global_position
+	indicator.setType(type)

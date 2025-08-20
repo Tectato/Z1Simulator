@@ -27,7 +27,9 @@ func setHeight(value):
 
 func move(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():
-		if wouldMove(machine.clock.getCurrentStep()) and (!input or inputCheckbox.checked):
+		if wouldMove(machine.clock.getCurrentStep()) and (!input or inputCheckbox.checked or inMotion):
+			return true
+		if self in chain:
 			return true
 		if !inputCheckbox.isLocked():
 			return false

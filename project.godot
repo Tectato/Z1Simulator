@@ -197,3 +197,8 @@ repeat={
 3d_physics/layer_4="Layers"
 3d_physics/layer_5="Machines"
 3d_physics/layer_6="3DUI"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
