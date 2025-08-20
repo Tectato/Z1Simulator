@@ -46,7 +46,9 @@ func _on_file_id_pressed(id: int) -> void:
 		2:
 			saveDialog.popup()
 		3:
+			loadProjectDialog.set_filters(["*.json;Project File;project.json"])
 			loadProjectDialog.popup()
+			loadProjectDialog.set_filters(["*.json;Project File;project.json"])
 		4:
 			importProjectDialog.popup()
 		5:
@@ -54,6 +56,8 @@ func _on_file_id_pressed(id: int) -> void:
 			editor.addMachine()
 		6:
 			exportMachineDialog.popup()
+		7:
+			editor.loadProject(editor.currentlyLoadedPath)
 
 func requestSheet():
 	importSheetDialog.popup()

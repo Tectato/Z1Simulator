@@ -1,0 +1,9 @@
+[gd_resource type="Environment" format=3 uid="uid://dr6irue526biy"]
+
+[resource]
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ssao_enabled = true
+ssao_radius = 0.16
+ssao_intensity = 4.3
+ssao_light_affect = 1.0

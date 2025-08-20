@@ -471,21 +471,23 @@ func move(dir : Vector2, initiator, chain = []):
 	if !out: return false
 	chain.append(self)
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
-	var check2 = true
+	var check2 = 1
 	if check1:
 		check2 = checkPropagation(Space.toVec3(dir), dir, chain)
-	if !(check1 and check2) and initiator != self:
-		abortMove()
+	if (check1 > 1 or check2 > 1) and initiator != self:
+		#abortMove()
 		if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			return false
 		forces[initiator] = [dir, chain]
-		call_deferred("tryTurn")
+		return false
+		#call_deferred("tryTurn")
 	return true
 
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
 	var moved = []
+	var cantMove = 0
 	#for pin in interactionCandidates:
 		#if intersects(pin.global_position - diff):
 			#pin.move(dir, chain)
@@ -495,46 +497,50 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			for pin in pins:
 				if intersectsOutline(pin.global_position - globalOffset):
 					canMove = canMove and pin.move(dir, self, chain)
-					if not pin is ClockPin:
+					if canMove and not pin is ClockPin:
 						moved.append(pin)
 					if !canMove:
 						pivot = pin
-						break
+						cantMove += 1
 		else:
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					canMove = canMove and pin.move(dir, self, chain)
 					if selected and pin is ClockPin:
 						print("ClockPin")
-					if not pin is ClockPin:
+					if canMove and not pin is ClockPin:
 						moved.append(pin)
 					if !canMove:
 						pivot = pin
-						break
+						cantMove += 1
 		
-		if !canMove:
-			for movedPart in moved:
-				movedPart.abortMove()
-			return false
+	if cantMove > 0:
+		for movedPart in moved:
+			movedPart.abortMove()
+		if cantMove > 1:
+			abortMove()
+			return 0
+		call_deferred("tryTurn")
+		return 2
 	
 	for movedPart in moved:
 		movedPins[movedPart] = null
-	return true
+	return 1
 
 func tryTurn():
 	if forces.is_empty():
 		return
 	var initiator = forces.keys()[0]
 	var force = forces[initiator]
-	if forces.size() > 1 or pointConstraints.is_empty():
-		move(force[0], self, force[1])
-		pass
-	elif pointConstraints.size() < 3:
+	#if forces.size() > 1 or pointConstraints.is_empty():
+		#move(force[0], self, force[1])
+		#pass
+	if pointConstraints.size() < 3:
 		turn(force[0], initiator, force[1])
 	forces.clear()
 
 func turn(dir : Vector2, initiator, chain = []):
-	if self in chain:
+	if chain.count(self) > 1:
 		print("Circular turn sequence at " + id)
 		return
 	var posDiff = position - pivot.position
@@ -550,7 +556,8 @@ func turn(dir : Vector2, initiator, chain = []):
 	#print(str(angleDiff))
 	targetRot += angleDiff
 	targetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
-	initiator.move(dir, self, [self])
+	chain.erase(initiator)
+	initiator.move(dir, self, chain)
 	pass
 
 func delete():

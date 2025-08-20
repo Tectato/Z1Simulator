@@ -6,6 +6,7 @@ class_name Editor
 @onready var selector = $Camera3D/SelectionRay
 @onready var tree = $Camera3D/Interface/SceneTree
 var tempProjectPath = ""
+var currentlyLoadedPath = ""
 var savePath = ""
 var saved = false
 var previousAction : Callable
@@ -52,6 +53,7 @@ func save():
 func loadProject(srcPath = ""):
 	workspace.clear()
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
+	currentlyLoadedPath = path
 	PathHandler.setProjectDir(path)
 	saved = false
 	savePath = ""
