@@ -159,8 +159,6 @@ func delete():
 		machine.removeGlobalPin(self)
 
 func move(dir : Vector2, initiator, chain = []):
-	if inMotion or chain.has(self):
-		return MoveState.AlreadyMoving
 	if selected:
 		print("=====")
 		#for part in chain:
@@ -169,6 +167,8 @@ func move(dir : Vector2, initiator, chain = []):
 			#if part is Sheet:
 				#print(part.path.get_file())
 		pass
+	if inMotion or chain.has(self):
+		return MoveState.AlreadyMoving
 	var out = super.move(dir, initiator, chain)
 	if out == MoveState.Blocked: return MoveState.Blocked
 	chain.append(self)
@@ -193,7 +193,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			#sheet.move(dir,chain)
 		if part is Sheet:
 			if part.intersectsOutline(global_position+globalOffset):
-				var partMoved = part.move(dir, self,chain)
+				var partMoved = part.move(dir, self,chain.duplicate())
 				if partMoved == MoveState.Moved:
 					moved.append(part)
 				canMove = canMove and partMoved > 0
@@ -202,7 +202,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
-				var partMoved = sheet.move(dir, self,chain)
+				var partMoved = sheet.move(dir, self,chain.duplicate())
 				if partMoved == MoveState.Moved:
 					moved.append(sheet)
 				canMove = canMove and partMoved > 0

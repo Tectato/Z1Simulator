@@ -506,7 +506,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		if part is Sheet:
 			for pin in pins:
 				if intersectsOutline(pin.global_position - globalOffset):
-					var pinMoved = pin.move(dir, self, chain)
+					var pinMoved = pin.move(dir, self, chain.duplicate())
 					canMove = canMove and pinMoved > 0
 					if selected and pin is ClockPin:
 						print("ClockPin")
@@ -518,7 +518,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		else:
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
-					var pinMoved = pin.move(dir, self, chain)
+					var pinMoved = pin.move(dir, self, chain.duplicate())
 					canMove = canMove and pinMoved > 0
 					if selected and pin is ClockPin:
 						print("ClockPin")
