@@ -3,15 +3,15 @@ class_name Link
 
 func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
-		return true
+		return Movable.MoveState.AlreadyMoving
 	inEffect = true
-	var canMove = true
+	var moved = Movable.MoveState.Moved
 	if A == initiator:
-		canMove = B.move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
+		moved = B.move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
 	elif B == initiator:
-		canMove = A.move(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
+		moved = A.move(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
 	inEffect = false
-	return canMove
+	return moved
 
 func delete():
 	A.removeRelation(self)

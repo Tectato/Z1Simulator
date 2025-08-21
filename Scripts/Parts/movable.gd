@@ -8,11 +8,15 @@ const SPRING = preload("res://Scenes/Parts/Relations/Spring.tscn")
 @onready var preMovePos = position
 @onready var targetPos = position
 
+enum MoveState { Blocked, Moved, AlreadyMoving }
+
 var interactionCandidates = []
 var relations = []
 var constraints = []
 var fixed = false
 var inMotion = false
+var movedBy = null
+var moved = []
 
 # Don't impact simulation, just for visualization later
 var stateX = false
@@ -32,15 +36,17 @@ func grabUUID():
 func move(dir : Vector2, initiator, chain = []):
 	if fixed:
 		#print(initiator.id + " attempted to move static part " + id)
-		return false
-	# TODO: bool whether i've already moved this tick to avoid double move if e.g. moved from two ends at once
-	if chain.has(self):
-		return true
+		return MoveState.Blocked
+	if inMotion or chain.has(self):
+		return MoveState.AlreadyMoving
 	if selected:
 		print("A")
 	
+	moved.clear()
+	
 	#translate(Vector3(dir.x,0,dir.y))
 	inMotion = true
+	movedBy = initiator
 	preMovePos = position
 	targetPos = position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
@@ -50,10 +56,17 @@ func move(dir : Vector2, initiator, chain = []):
 	
 	var canMove = true
 	for relation in relations:
+		if relation == movedBy:
+			continue
+		var relationMoved = relation.applyMove(dir, self, chain)
 		if relation.isBlocking():
-			canMove = canMove and relation.applyMove(dir, self, chain)
-	call_deferred("propagateNonblockingRelations", dir, chain)
-	return canMove
+			canMove = canMove and relationMoved != MoveState.Blocked
+		if relationMoved == MoveState.Moved:
+			moved.append(relation)
+	#call_deferred("propagateNonblockingRelations", dir, chain)
+	if !canMove:
+		abortMove(chain)
+	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):
 	if targetPos.distance_squared_to(preMovePos) < 0.001:
@@ -62,16 +75,26 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 		if !relation.isBlocking():
 			relation.applyMove(dir, self, chain)
 
-func abortMove():
-	if Global.editor.selector.selected.is_empty():
-		Global.editor.selector.select(collider)
+func abortMove(chain = []):
+	#if Global.editor.selector.selected.is_empty():
+		#Global.editor.selector.select(collider)
+	if !inMotion:
+		return
+	if selected:
+		print("Move aborted")
+	chain.erase(self)
 	inMotion = false
 	targetPos = preMovePos
 	Simulator.spawnIndicator(self, EventIndicator.Type.Blocked)
 	#for relation in relations:
-		#relation.abortMove(self)
-	if selected:
-		print("Move aborted")
+		#if not relation == movedBy: #relation.isBlocking():
+			#relation.abortMove(self)
+	for part in moved:
+		if part is Movable:
+			part.abortMove()
+		elif part is Relation:
+			part.abortMove(self)
+	moved.clear()
 
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()
@@ -168,3 +191,8 @@ func delete():
 
 func setFixed(value, propagate = true):
 	fixed = value
+
+func sortByFixed(A, B):
+	var PartA = A if A is Movable else A.get_parent()
+	#var PartB = B if B is Movable else B.get_parent()
+	return PartA.fixed

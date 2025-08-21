@@ -27,15 +27,17 @@ func setHeight(value):
 
 func move(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():
+		if inMotion:
+			return MoveState.AlreadyMoving
 		if wouldMove(machine.clock.getCurrentStep()) and (!input or inputCheckbox.checked or inMotion):
-			return true
+			return MoveState.AlreadyMoving
 		if self in chain:
-			return true
+			return MoveState.AlreadyMoving
 		if !inputCheckbox.isLocked():
-			return false
+			return MoveState.Blocked
 	super.move(dir.rotated(-rotation.y), null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
-	return true
+	return MoveState.Moved
 	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
 
 func setStep(value):

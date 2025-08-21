@@ -22,7 +22,7 @@ func init():
 	pass
 
 func applyMove(dir : Vector2, initiator : Selectable, chain = []):
-	return true
+	return Movable.MoveState.Moved
 
 func abortMove(initiator):
 	if aborting: return

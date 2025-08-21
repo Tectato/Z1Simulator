@@ -11,7 +11,7 @@ func init():
 
 func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
-		return true
+		return Movable.MoveState.AlreadyMoving
 	inEffect = true
 	var currentDist = A.global_position.distance_to(B.global_position)
 	if A == initiator:
@@ -27,7 +27,7 @@ func applyMove(dir : Vector2, initiator, chain = []):
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
 			A.move(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
 	inEffect = false
-	return true
+	return Movable.MoveState.Moved
 
 func updatePos():
 	global_position = A.global_position

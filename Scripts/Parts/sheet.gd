@@ -94,7 +94,11 @@ func _ready():
 	super._ready()
 
 func _process(delta: float) -> void:
-	super._process(delta)
+	if !fixed and inMotion:
+		position = position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * position
+		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
+		if !inMotion:
+			forces.clear()
 	if !fixed and !pointConstraints.is_empty():
 		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed)
 
@@ -432,37 +436,40 @@ func place():
 	#_draw_gizmo()
 
 func updateInteractionCandidates():
-	if layer:
-		var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
-		pinCandidates.clear()
-		pointConstraints.clear()
-		linearConstraints.clear()
-		for pin in inRange:
-			var hole = getIntersector(pin.global_position)
-			var key = hole if hole != null else self
-			if pinCandidates.has(key):
-				pinCandidates[key].append(pin)
-			else:
-				pinCandidates[key] = [pin]
-			if hole is PointHole:
-				pointConstraints[pin] = null
-			if hole is LongHole and pin.fixed:
-				linearConstraints[pin] = null
-			# TODO: case for LongHoles
-		if pointConstraints.size() > 0:
-			targetRot = rotation.y
-		var numFixedPins = 0
-		for pin in pointConstraints:
-			if pin.fixed:
-				numFixedPins += 1
-				if numFixedPins >= 2:
-					setFixed(true)
-					return
-		if numFixedPins < 2:
-			setFixed(false)
-		updateConstraints()
+	if !layer: return
+	var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
+	pinCandidates.clear()
+	pointConstraints.clear()
+	linearConstraints.clear()
+	for pin in inRange:
+		var hole = getIntersector(pin.global_position)
+		var key = hole if hole != null else self
+		if pinCandidates.has(key):
+			pinCandidates[key].append(pin)
+		else:
+			pinCandidates[key] = [pin]
+		if hole is PointHole:
+			pointConstraints[pin] = null
+		if hole is LongHole and pin.fixed:
+			linearConstraints[pin] = null
+		# TODO: case for LongHoles
+	if pointConstraints.size() > 0:
+		targetRot = rotation.y
+	var numFixedPins = 0
+	for pin in pointConstraints:
+		if pin.fixed:
+			numFixedPins += 1
+			if numFixedPins >= 2:
+				setFixed(true)
+				return
+	if numFixedPins < 2:
+		setFixed(false)
+	interactionCandidates.sort_custom(sortByFixed)
+	updateConstraints()
 
 func move(dir : Vector2, initiator, chain = []):
+	if inMotion or chain.has(self):
+		return MoveState.AlreadyMoving
 	if selected:
 		print("=====")
 		#for part in chain:
@@ -471,11 +478,10 @@ func move(dir : Vector2, initiator, chain = []):
 			#if part is Sheet:
 				#print(part.path.get_file())
 		#pass
-	if chain.has(self):
-		return true
 	var out = super.move(dir, initiator, chain)
-	if !out: return false
+	if out == MoveState.Blocked: return MoveState.Blocked
 	chain.append(self)
+	forces[initiator] = [dir, chain]
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
 	var check2 = 0
 	if check1 > 0:
@@ -483,16 +489,14 @@ func move(dir : Vector2, initiator, chain = []):
 	if (check1 > 1 or check2 > 1) and initiator != self:
 		#abortMove()
 		if pointConstraints.is_empty() or pointConstraints.size() > 2:
-			return false
-		forces[initiator] = [dir, chain]
-		return true
+			return MoveState.Blocked
+		return MoveState.Moved
 		#call_deferred("tryTurn")
-	return check1 > 0 and check2 > 0
+	return MoveState.Moved if check1 > 0 and check2 > 0 else MoveState.Blocked
 
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
-	var moved = []
 	var cantMove = 0
 	#for pin in interactionCandidates:
 		#if intersects(pin.global_position - diff):
@@ -502,33 +506,31 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		if part is Sheet:
 			for pin in pins:
 				if intersectsOutline(pin.global_position - globalOffset):
-					var couldMove = pin.move(dir, self, chain)
-					canMove = canMove and couldMove
+					var pinMoved = pin.move(dir, self, chain)
+					canMove = canMove and pinMoved > 0
 					if selected and pin is ClockPin:
 						print("ClockPin")
-					if couldMove and not pin is ClockPin:
+					if pinMoved == MoveState.Moved and not pin is ClockPin:
 						moved.append(pin)
-					if !couldMove:
+					if pinMoved == MoveState.Blocked:
 						pivot = pin
 						cantMove += 1
 		else:
 			for pin in pins:
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
-					var couldMove = pin.move(dir, self, chain)
-					canMove = canMove and couldMove
+					var pinMoved = pin.move(dir, self, chain)
+					canMove = canMove and pinMoved > 0
 					if selected and pin is ClockPin:
 						print("ClockPin")
-					if couldMove and not pin is ClockPin:
+					if pinMoved == MoveState.Moved and not pin is ClockPin:
 						moved.append(pin)
-					if !couldMove:
+					if pinMoved == MoveState.Blocked:
 						pivot = pin
 						cantMove += 1
 		
 	if cantMove > 0:
-		for movedPart in moved:
-			movedPart.abortMove()
-		if cantMove > 1:
-			abortMove()
+		abortMove(chain)
+		if cantMove > 1 or !shouldTurn():
 			return 0
 		return tryTurn()
 	
@@ -536,15 +538,28 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		movedPins[movedPart] = null
 	return 1
 
+func shouldTurn():
+	if forces.is_empty():
+		return false
+	var initiator = forces.keys()[0]
+	var force = forces[initiator]
+	var pivotToInit = (pivot.position - initiator.position).normalized()
+	var impulse = Space.toVec3(force[0]).normalized()
+	var angle = abs(impulse.dot(pivotToInit))
+	return angle < 0.5
+
 func tryTurn():
 	if forces.is_empty():
 		return 0
 	var initiator = forces.keys()[0]
 	var force = forces[initiator]
+	var pivotToInit = (pivot.position - initiator.position).normalized()
+		
 	#if forces.size() > 1 or pointConstraints.is_empty():
 		#move(force[0], self, force[1])
 		#pass
 	if pointConstraints.size() + linearConstraints.size() < 3:
+		inMotion = true
 		call_deferred("turn", force[0], initiator, force[1])
 		forces.clear()
 		return 2
@@ -552,10 +567,12 @@ func tryTurn():
 	return 0
 
 func turn(dir : Vector2, initiator, chain = []):
+	if !inMotion:
+		return # Rotation was aborted
 	if chain.count(self) > 1:
 		print("Circular turn sequence at " + id)
 		return
-	Simulator.spawnIndicator(self, EventIndicator.Type.Turn)
+	Simulator.spawnIndicator(pivot, EventIndicator.Type.Turn)
 	var posDiff = position - pivot.position
 	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
 	var ALinearized = Vector2(
@@ -570,8 +587,16 @@ func turn(dir : Vector2, initiator, chain = []):
 	targetRot += angleDiff
 	targetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
 	chain.erase(initiator)
-	initiator.move(dir, self, chain)
+	if initiator.move(dir, self, chain) == MoveState.Moved:
+		moved.append(initiator)
+	inMotion = true
 	pass
+
+func abortMove(chain = []):
+	if !inMotion:
+		return
+	super.abortMove(chain)
+	targetRot = rotation.y
 
 func delete():
 	SheetLibrary.unregisterUser(path)

@@ -143,6 +143,7 @@ func updateInteractionCandidates():
 			interactionCandidates.append(sheet)
 		else:
 			interactionCandidates.append(hole)
+	interactionCandidates.sort_custom(sortByFixed)
 	updateConstraints()
 
 func updateConstraints():
@@ -158,6 +159,8 @@ func delete():
 		machine.removeGlobalPin(self)
 
 func move(dir : Vector2, initiator, chain = []):
+	if inMotion or chain.has(self):
+		return MoveState.AlreadyMoving
 	if selected:
 		print("=====")
 		#for part in chain:
@@ -166,26 +169,23 @@ func move(dir : Vector2, initiator, chain = []):
 			#if part is Sheet:
 				#print(part.path.get_file())
 		pass
-	if chain.has(self):
-		return true
 	var out = super.move(dir, initiator, chain)
-	if !out: return false
+	if out == MoveState.Blocked: return MoveState.Blocked
 	chain.append(self)
 	if output:
 		flipOutput()
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
 	if !check1:
-		abortMove()
-		return false
+		abortMove(chain)
+		return MoveState.Blocked
 	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	if !check2:
-		abortMove()
-	return check2
+		abortMove(chain)
+	return MoveState.Moved if check2 else MoveState.Blocked
 	
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
-	var moved = []
 	#if selected:
 		#print("A")
 	for part in interactionCandidates:
@@ -193,19 +193,22 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			#sheet.move(dir,chain)
 		if part is Sheet:
 			if part.intersectsOutline(global_position+globalOffset):
-				moved.append(part)
-				canMove = canMove and part.move(dir, self,chain)
+				var partMoved = part.move(dir, self,chain)
+				if partMoved == MoveState.Moved:
+					moved.append(part)
+				canMove = canMove and partMoved > 0
 		else:
 			var sheet = part.get_parent()
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
-				moved.append(sheet)
-				canMove = canMove and sheet.move(dir, self,chain)
+				var partMoved = sheet.move(dir, self,chain)
+				if partMoved == MoveState.Moved:
+					moved.append(sheet)
+				canMove = canMove and partMoved > 0
 		
 		if !canMove:
-			for movedPart in moved:
-				movedPart.abortMove()
+			abortMove(chain)
 			return false
 	return true
 		
