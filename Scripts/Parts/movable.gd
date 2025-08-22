@@ -15,7 +15,7 @@ var relations = []
 var constraints = []
 var fixed = false
 var blockedCycle = -1
-var setToMove = false
+var setToMove = -1
 var inMotion = false
 var movedBy = {}
 var toMove = {}
@@ -39,8 +39,11 @@ func grabUUID():
 func canMove(dir : Vector2, initiator, chain = []):
 	if fixed or blockedCycle == Simulator.totalStep:
 		return MoveState.Blocked
+	if setToMove >= 0 and setToMove != Simulator.totalStep:
+		# Was set to move but move never executed (can happen if intended to move by spring)
+		movedBy.clear()
 	movedBy[initiator] = null
-	if setToMove or chain.has(self):
+	if setToMove == Simulator.totalStep or chain.has(self):
 		return MoveState.AlreadyMoving
 	
 	chain.append(self)
@@ -59,15 +62,15 @@ func canMove(dir : Vector2, initiator, chain = []):
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):
-	setToMove = false
+	if !setToMove == Simulator.totalStep:
+		return MoveState.AlreadyMoving
+	setToMove = -1
 	if fixed or blockedCycle == Simulator.totalStep:
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
 	movedBy[initiator] = null
 	if inMotion or chain.has(self):
 		return MoveState.AlreadyMoving
-	if selected:
-		print("")
 	
 	moved.clear()
 	chain.append(self)
@@ -82,6 +85,8 @@ func move(dir : Vector2, initiator, chain = []):
 		stateY = !stateY
 	
 	var canMove = true
+	if selected:
+		print("")
 	for part in toMove:
 		if movedBy.has(part):
 			continue
@@ -101,6 +106,7 @@ func move(dir : Vector2, initiator, chain = []):
 	toMove.clear()
 	if !canMove:
 		abortMove(self, chain)
+	movedBy.clear()
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):
@@ -111,6 +117,7 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 			relation.applyMove(dir, self, chain)
 
 func abortMove(initiator, chain = []):
+	setToMove = -1
 	#if Global.editor.selector.selected.is_empty():
 		#Global.editor.selector.select(collider)
 	if selected:

@@ -25,14 +25,33 @@ func setHeight(value):
 	collider.position = Vector3(0,value/20,0)
 	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
 
-func move(dir : Vector2, initiator, chain = []):
+func canMove(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():
 		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep())
 		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) > 0.5:
 			return MoveState.Blocked
 		if inMotion:
 			return MoveState.AlreadyMoving
-		if wouldMove(machine.clock.getCurrentStep()) and (!input or inputCheckbox.checked or inMotion or (input and pulsing and inActivePos)):
+		var wouldMove = wouldMove(machine.clock.getCurrentStep())
+		var willMove = (!input or inputCheckbox.checked or setToMove == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
+		if wouldMove and willMove:
+			return MoveState.AlreadyMoving
+		if self in chain:
+			return MoveState.AlreadyMoving
+		if !inputCheckbox.isLocked():
+			return MoveState.Blocked
+	return super.canMove(dir, initiator, chain)
+
+func move(dir : Vector2, initiator, chain = []):
+	if not chain.is_empty(): #TODO: check what can be removed here
+		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep())
+		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) > 0.5:
+			return MoveState.Blocked
+		if inMotion:
+			return MoveState.AlreadyMoving
+		var wouldMove = wouldMove(machine.clock.getCurrentStep())
+		var willMove = (!input or inputCheckbox.checked or setToMove == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
+		if wouldMove and willMove:
 			return MoveState.AlreadyMoving
 		if self in chain:
 			return MoveState.AlreadyMoving
@@ -99,7 +118,7 @@ func getMoveDir(clockStep):
 	return Vector2(0,0)
 
 func updateInActivePos():
-	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+	inActivePos = position.distance_to(restPos) > Global.workspace.pinTravel/2
 
 func serialize():
 	grabUUID()

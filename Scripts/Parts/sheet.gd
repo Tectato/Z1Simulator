@@ -491,10 +491,11 @@ func canMove(dir : Vector2, initiator, chain = []):
 		if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			blockedCycle = Simulator.totalStep
 			return MoveState.Blocked
-		setToMove = true
+		setToMove = Simulator.totalStep
 		return MoveState.Moved
-	setToMove = check1 > 0 and check2 > 0 and canMove
-	return MoveState.Moved if setToMove else MoveState.Blocked
+	if (check1 > 0 and check2 > 0 and canMove):
+		setToMove = Simulator.totalStep
+	return MoveState.Moved if (check1 > 0 and check2 > 0 and canMove) else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:

@@ -176,7 +176,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if check2:
 		for sheet in toMove:
 			canMove = canMove and sheet.canMove(dir, self, chain)
-	setToMove = canMove
+	if canMove:
+		setToMove = Simulator.totalStep
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):

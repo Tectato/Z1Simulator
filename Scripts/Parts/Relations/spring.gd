@@ -9,7 +9,7 @@ func init():
 	super.init()
 	initialDist = A.global_position.distance_to(B.global_position)
 
-func applyMove(dir : Vector2, initiator, chain = []):
+func canMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return Movable.MoveState.AlreadyMoving
 	inEffect = true
@@ -19,13 +19,24 @@ func applyMove(dir : Vector2, initiator, chain = []):
 		var toInit = A.global_position - B.global_position
 		if Space.toVec3(globalDir).dot(toInit) > 0 and currentDist+epsilon >= initialDist \
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
-			B.move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
+			B.canMove(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
 	elif B == initiator:
 		var globalDir = BParent.toGlobalDir(dir)
 		var toInit = B.global_position - A.global_position
 		if Space.toVec3(globalDir).dot(toInit) > 0 and currentDist+epsilon >= initialDist \
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
-			A.move(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
+			A.canMove(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
+	inEffect = false
+	return Movable.MoveState.Moved
+
+func applyMove(dir : Vector2, initiator, chain = []):
+	if inEffect:
+		return Movable.MoveState.AlreadyMoving
+	inEffect = true
+	if A == initiator:
+		B.move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
+	elif B == initiator:
+		A.move(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
 	inEffect = false
 	return Movable.MoveState.Moved
 
@@ -39,7 +50,8 @@ func updateMesh():
 	#$Mesh.global_position = (A.global_position + B.global_position) / 2
 
 func _process(delta: float) -> void:
-	updateMesh()
+	if A.inMotion or B.inMotion:
+		updateMesh()
 
 func serialize():
 	var out = super.serialize()
