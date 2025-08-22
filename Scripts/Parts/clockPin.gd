@@ -27,9 +27,12 @@ func setHeight(value):
 
 func move(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():
+		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep()) * (-1 if inActivePos else 1)
+		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) < 0.5:
+			return MoveState.Blocked
 		if inMotion:
 			return MoveState.AlreadyMoving
-		if wouldMove(machine.clock.getCurrentStep()) and (!input or inputCheckbox.checked or inMotion):
+		if wouldMove(machine.clock.getCurrentStep()) and (!input or inputCheckbox.checked or inMotion or (input and pulsing and inActivePos)):
 			return MoveState.AlreadyMoving
 		if self in chain:
 			return MoveState.AlreadyMoving
@@ -68,19 +71,32 @@ func clockCycle(clockStep : int, forwards = true):
 	if input and inputCheckbox.isLocked(): return
 	if input and !activateNextCycle: return false
 	if wouldMove(clockStep):
-		var toActivePos = clockStep == forwardStep
-		inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+		move(getMoveDir(clockStep), null)
 		if input and ((inActivePos and clockStep == antiStep) or pulsing):
 			inputCheckbox.click()
-		if toActivePos and !inActivePos:
-			move(Vector2(travel.x,travel.z), null)
-		elif !toActivePos and inActivePos:
-			move(-Vector2(travel.x,travel.z), null)
 		if pulsing:
 			$ResetTimer.start()
 
 func wouldMove(clockStep):
 	return clockStep == forwardStep or (!pulsing and clockStep == antiStep)
+
+func getMoveDir(clockStep):
+	updateInActivePos()
+	var toActivePos = clockStep == forwardStep
+	if input and clockStep == forwardStep:
+		if inActivePos:
+			return Space.toVec2(-travel)
+		else:
+			return Space.toVec2(travel)
+	if toActivePos and !inActivePos:
+		return Space.toVec2(travel)
+	elif !toActivePos and inActivePos:
+		return Space.toVec2(-travel)
+	#print("Invalid getMoveDir call")
+	return Vector2(0,0)
+
+func updateInActivePos():
+	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 
 func serialize():
 	grabUUID()
@@ -126,6 +142,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _on_reset_timer_timeout() -> void:
+	updateInActivePos()
 	move(-Vector2(travel.x,travel.z), null)
 
 func place():

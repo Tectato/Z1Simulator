@@ -99,6 +99,8 @@ func _process(delta: float) -> void:
 		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
 		if !inMotion:
 			forces.clear()
+			movedBy.clear()
+			#blockedThisCycle = -1
 	if !fixed and !pointConstraints.is_empty():
 		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed)
 
@@ -468,8 +470,6 @@ func updateInteractionCandidates():
 	updateConstraints()
 
 func move(dir : Vector2, initiator, chain = []):
-	if inMotion or chain.has(self):
-		return MoveState.AlreadyMoving
 	if selected:
 		print("=====")
 		#for part in chain:
@@ -479,7 +479,9 @@ func move(dir : Vector2, initiator, chain = []):
 				#print(part.path.get_file())
 		#pass
 	var out = super.move(dir, initiator, chain)
-	if out == MoveState.Blocked: return MoveState.Blocked
+	if out != MoveState.Moved: return out
+	if selected:
+		print("=====")
 	chain.append(self)
 	forces[initiator] = [dir, chain]
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
@@ -505,6 +507,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		var pins = pinCandidates[part]
 		if part is Sheet:
 			for pin in pins:
+				if movedBy.has(pin):
+					continue
 				if intersectsOutline(pin.global_position - globalOffset):
 					var pinMoved = pin.move(dir, self, chain.duplicate())
 					canMove = canMove and pinMoved > 0
@@ -517,6 +521,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 						cantMove += 1
 		else:
 			for pin in pins:
+				if movedBy.has(pin):
+					continue
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					var pinMoved = pin.move(dir, self, chain.duplicate())
 					canMove = canMove and pinMoved > 0
@@ -529,8 +535,9 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 						cantMove += 1
 		
 	if cantMove > 0:
-		abortMove(chain)
+		abortMove(self, chain)
 		if cantMove > 1 or !shouldTurn():
+			blockedCycle = Simulator.totalStep
 			return 0
 		return tryTurn()
 	
@@ -592,10 +599,10 @@ func turn(dir : Vector2, initiator, chain = []):
 	inMotion = true
 	pass
 
-func abortMove(chain = []):
+func abortMove(initiator, chain = []):
 	if !inMotion:
 		return
-	super.abortMove(chain)
+	super.abortMove(initiator, chain)
 	targetRot = rotation.y
 
 func delete():

@@ -167,20 +167,20 @@ func move(dir : Vector2, initiator, chain = []):
 			#if part is Sheet:
 				#print(part.path.get_file())
 		pass
-	if inMotion or chain.has(self):
-		return MoveState.AlreadyMoving
 	var out = super.move(dir, initiator, chain)
-	if out == MoveState.Blocked: return MoveState.Blocked
+	if out != MoveState.Moved: return out
 	chain.append(self)
 	if output:
 		flipOutput()
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
 	if !check1:
-		abortMove(chain)
+		blockedCycle = Simulator.totalStep
+		abortMove(initiator, chain)
 		return MoveState.Blocked
 	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
 	if !check2:
-		abortMove(chain)
+		blockedCycle = Simulator.totalStep
+		abortMove(initiator, chain)
 	return MoveState.Moved if check2 else MoveState.Blocked
 	
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
@@ -192,6 +192,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		#if sheet.intersects(pos):
 			#sheet.move(dir,chain)
 		if part is Sheet:
+			if movedBy.has(part):
+				continue
 			if part.intersectsOutline(global_position+globalOffset):
 				var partMoved = part.move(dir, self,chain.duplicate())
 				if partMoved == MoveState.Moved:
@@ -199,6 +201,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 				canMove = canMove and partMoved > 0
 		else:
 			var sheet = part.get_parent()
+			if movedBy.has(sheet):
+				continue
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
@@ -208,7 +212,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 				canMove = canMove and partMoved > 0
 		
 		if !canMove:
-			abortMove(chain)
+			abortMove(self, chain)
 			return false
 	return true
 		

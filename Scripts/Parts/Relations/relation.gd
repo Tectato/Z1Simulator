@@ -24,13 +24,13 @@ func init():
 func applyMove(dir : Vector2, initiator : Selectable, chain = []):
 	return Movable.MoveState.Moved
 
-func abortMove(initiator):
+func abortMove(initiator, chain = []):
 	if aborting: return
 	aborting = true
 	if initiator == A:
-		B.abortMove()
+		B.abortMove(self)
 	else:
-		A.abortMove()
+		A.abortMove(self)
 	aborting = false
 
 func delete():

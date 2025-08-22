@@ -4,6 +4,7 @@ const EVENTINDICATOR = preload("res://Scenes/Visualisation/EventIndicator.tscn")
 enum Direction {XP, YP, XN, YN}
 
 var currentStep = 3
+var totalStep = 3
 var running = false
 var clockSpeed = 0.5 #In seconds
 var clockInstances = []
@@ -44,6 +45,7 @@ func next(stopClock = true):
 	if stopClock: stop()
 	currentStep += 1
 	currentStep %= 4
+	totalStep += 1
 	for instance in clockInstances:
 		instance.clockCycle(currentStep)
 	gizmo.setClockStep(currentStep+1)

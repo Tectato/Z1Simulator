@@ -14,8 +14,9 @@ var interactionCandidates = []
 var relations = []
 var constraints = []
 var fixed = false
+var blockedCycle = -1
 var inMotion = false
-var movedBy = null
+var movedBy = {}
 var moved = []
 
 # Don't impact simulation, just for visualization later
@@ -34,9 +35,10 @@ func grabUUID():
 		getMachine().uuidManager.request(self)
 
 func move(dir : Vector2, initiator, chain = []):
-	if fixed:
+	if fixed or blockedCycle == Simulator.totalStep:
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
+	movedBy[initiator] = null
 	if inMotion or chain.has(self):
 		return MoveState.AlreadyMoving
 	if selected:
@@ -46,7 +48,6 @@ func move(dir : Vector2, initiator, chain = []):
 	
 	#translate(Vector3(dir.x,0,dir.y))
 	inMotion = true
-	movedBy = initiator
 	preMovePos = position
 	targetPos = position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
@@ -56,7 +57,7 @@ func move(dir : Vector2, initiator, chain = []):
 	
 	var canMove = true
 	for relation in relations:
-		if relation == movedBy:
+		if movedBy.has(relation):
 			continue
 		var relationMoved = relation.applyMove(dir, self, chain)
 		if relation.isBlocking():
@@ -65,7 +66,7 @@ func move(dir : Vector2, initiator, chain = []):
 			moved.append(relation)
 	#call_deferred("propagateNonblockingRelations", dir, chain)
 	if !canMove:
-		abortMove(chain)
+		abortMove(self, chain)
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):
@@ -75,14 +76,22 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 		if !relation.isBlocking():
 			relation.applyMove(dir, self, chain)
 
-func abortMove(chain = []):
+func abortMove(initiator, chain = []):
 	#if Global.editor.selector.selected.is_empty():
 		#Global.editor.selector.select(collider)
+	if selected:
+		print("")
 	if !inMotion:
+		return
+	chain.erase(self)
+	if initiator == self:
+		movedBy.clear()
+	else:
+		movedBy.erase(initiator)
+	if not movedBy.is_empty() and initiator != self:
 		return
 	if selected:
 		print("Move aborted")
-	chain.erase(self)
 	inMotion = false
 	targetPos = preMovePos
 	Simulator.spawnIndicator(self, EventIndicator.Type.Blocked)
@@ -91,9 +100,9 @@ func abortMove(chain = []):
 			#relation.abortMove(self)
 	for part in moved:
 		if part is Movable:
-			part.abortMove()
+			part.abortMove(self, chain)
 		elif part is Relation:
-			part.abortMove(self)
+			part.abortMove(self, chain)
 	moved.clear()
 
 func addRelation(type : Relation.Type, other : Selectable):
@@ -179,6 +188,9 @@ func _process(delta: float) -> void:
 	if !fixed and inMotion:
 		position = position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * position
 		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
+		if !inMotion:
+			movedBy.clear()
+			#blockedCycle = -1
 
 func delete():
 	clearRelations()
