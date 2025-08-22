@@ -15,8 +15,10 @@ var relations = []
 var constraints = []
 var fixed = false
 var blockedCycle = -1
+var setToMove = false
 var inMotion = false
 var movedBy = {}
+var toMove = {}
 var moved = []
 
 # Don't impact simulation, just for visualization later
@@ -34,7 +36,30 @@ func grabUUID():
 	if uuid < 0:
 		getMachine().uuidManager.request(self)
 
+func canMove(dir : Vector2, initiator, chain = []):
+	if fixed or blockedCycle == Simulator.totalStep:
+		return MoveState.Blocked
+	movedBy[initiator] = null
+	if setToMove or chain.has(self):
+		return MoveState.AlreadyMoving
+	
+	chain.append(self)
+	toMove.clear()
+	var canMove = true
+	for relation in relations:
+		if movedBy.has(relation):
+			continue
+		var relationMoved = relation.canMove(dir, self, chain)
+		if relation.isBlocking():
+			canMove = canMove and relationMoved != MoveState.Blocked
+		if relationMoved == MoveState.Moved:
+			moved.append(relation)
+	if !canMove:
+		abortMove(self, chain)
+	return MoveState.Moved if canMove else MoveState.Blocked
+
 func move(dir : Vector2, initiator, chain = []):
+	setToMove = false
 	if fixed or blockedCycle == Simulator.totalStep:
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
@@ -42,9 +67,10 @@ func move(dir : Vector2, initiator, chain = []):
 	if inMotion or chain.has(self):
 		return MoveState.AlreadyMoving
 	if selected:
-		print("A")
+		print("")
 	
 	moved.clear()
+	chain.append(self)
 	
 	#translate(Vector3(dir.x,0,dir.y))
 	inMotion = true
@@ -56,6 +82,12 @@ func move(dir : Vector2, initiator, chain = []):
 		stateY = !stateY
 	
 	var canMove = true
+	for part in toMove:
+		if movedBy.has(part):
+			continue
+		canMove = canMove and part.move(dir, self, chain) != MoveState.Blocked
+		if canMove:
+			moved.append(part)
 	for relation in relations:
 		if movedBy.has(relation):
 			continue
@@ -65,6 +97,8 @@ func move(dir : Vector2, initiator, chain = []):
 		if relationMoved == MoveState.Moved:
 			moved.append(relation)
 	#call_deferred("propagateNonblockingRelations", dir, chain)
+	
+	toMove.clear()
 	if !canMove:
 		abortMove(self, chain)
 	return MoveState.Moved if canMove else MoveState.Blocked
@@ -190,6 +224,7 @@ func _process(delta: float) -> void:
 		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
 		if !inMotion:
 			movedBy.clear()
+			moved.clear()
 			#blockedCycle = -1
 
 func delete():

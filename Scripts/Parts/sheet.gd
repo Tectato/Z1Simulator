@@ -17,6 +17,7 @@ var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
 var pivot : Pin
+var turnInstead = false
 var restRot  = 0.0
 var targetRot = 0.0
 var rotSpeed = 2.0
@@ -469,6 +470,32 @@ func updateInteractionCandidates():
 	interactionCandidates.sort_custom(sortByFixed)
 	updateConstraints()
 
+func canMove(dir : Vector2, initiator, chain = []):
+	if selected:
+		print("")
+	var out = super.canMove(dir, initiator, chain)
+	if out != MoveState.Moved: return out
+	turnInstead = false
+	forces[initiator] = [dir, chain]
+	
+	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
+	var check2 = 0
+	if check1 > 0:
+		check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+	var canMove = check2 > 0
+	if check2 > 0:
+		for pin in toMove:
+			canMove = canMove and pin.canMove(dir, self, chain)
+			if !canMove: break
+	if (check1 > 1 or check2 > 1) and canMove:
+		if pointConstraints.is_empty() or pointConstraints.size() > 2:
+			blockedCycle = Simulator.totalStep
+			return MoveState.Blocked
+		setToMove = true
+		return MoveState.Moved
+	setToMove = check1 > 0 and check2 > 0 and canMove
+	return MoveState.Moved if setToMove else MoveState.Blocked
+
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
 		print("=====")
@@ -482,24 +509,27 @@ func move(dir : Vector2, initiator, chain = []):
 	if out != MoveState.Moved: return out
 	if selected:
 		print("=====")
-	chain.append(self)
-	forces[initiator] = [dir, chain]
-	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
-	var check2 = 0
-	if check1 > 0:
-		check2 = checkPropagation(Space.toVec3(dir), dir, chain)
-	if (check1 > 1 or check2 > 1) and initiator != self:
-		#abortMove()
-		if pointConstraints.is_empty() or pointConstraints.size() > 2:
-			return MoveState.Blocked
-		return MoveState.Moved
-		#call_deferred("tryTurn")
-	return MoveState.Moved if check1 > 0 and check2 > 0 else MoveState.Blocked
+	#chain.append(self)
+	#forces[initiator] = [dir, chain]
+	#var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
+	#var check2 = 0
+	#if check1 > 0:
+		#check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+	#if (check1 > 1 or check2 > 1) and initiator != self:
+		##abortMove()
+		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
+			#return MoveState.Blocked
+		#return MoveState.Moved
+		##call_deferred("tryTurn")
+	#return MoveState.Moved if check1 > 0 and check2 > 0 else MoveState.Blocked
+	return MoveState.Moved
 
+# Returns: 0 if can't move, 1 if can move, 2 if we will turn instead
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
 	var cantMove = 0
+	var moveCandidates = []
 	#for pin in interactionCandidates:
 		#if intersects(pin.global_position - diff):
 			#pin.move(dir, chain)
@@ -510,39 +540,52 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 				if movedBy.has(pin):
 					continue
 				if intersectsOutline(pin.global_position - globalOffset):
-					var pinMoved = pin.move(dir, self, chain.duplicate())
-					canMove = canMove and pinMoved > 0
-					if selected and pin is ClockPin:
-						print("ClockPin")
-					if pinMoved == MoveState.Moved and not pin is ClockPin:
-						moved.append(pin)
-					if pinMoved == MoveState.Blocked:
-						pivot = pin
-						cantMove += 1
+					moveCandidates.append(pin)
+					#var pinMoved = pin.move(dir, self, chain.duplicate())
+					#canMove = canMove and pinMoved > 0
+					#if selected and pin is ClockPin:
+						#print("ClockPin")
+					#if pinMoved == MoveState.Moved and not pin is ClockPin:
+						#moved.append(pin)
+					#if pinMoved == MoveState.Blocked:
+						#pivot = pin
+						#cantMove += 1
 		else:
 			for pin in pins:
 				if movedBy.has(pin):
 					continue
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
-					var pinMoved = pin.move(dir, self, chain.duplicate())
-					canMove = canMove and pinMoved > 0
-					if selected and pin is ClockPin:
-						print("ClockPin")
-					if pinMoved == MoveState.Moved and not pin is ClockPin:
-						moved.append(pin)
-					if pinMoved == MoveState.Blocked:
-						pivot = pin
-						cantMove += 1
-		
+					moveCandidates.append(pin)
+					#var pinMoved = pin.move(dir, self, chain.duplicate())
+					#canMove = canMove and pinMoved > 0
+					#if selected and pin is ClockPin:
+						#print("ClockPin")
+					#if pinMoved == MoveState.Moved and not pin is ClockPin:
+						#moved.append(pin)
+					#if pinMoved == MoveState.Blocked:
+						#pivot = pin
+						#cantMove += 1
+	
+	# Check if any immediate candidates are fixed to terminate search early
+	for pin in moveCandidates:
+		if pin.fixed:
+			pivot = pin
+			cantMove += 1
+			if cantMove > 1:
+				return 0
+		else:
+			toMove[pin] = pin
+	
 	if cantMove > 0:
-		abortMove(self, chain)
+		#abortMove(self, chain)
 		if cantMove > 1 or !shouldTurn():
 			blockedCycle = Simulator.totalStep
 			return 0
-		return tryTurn()
+		turnInstead = true
+		return 2#tryTurn()
 	
-	for movedPart in moved:
-		movedPins[movedPart] = null
+	#for movedPart in moved:
+		#movedPins[movedPart] = null
 	return 1
 
 func shouldTurn():

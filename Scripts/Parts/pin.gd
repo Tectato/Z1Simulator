@@ -158,9 +158,30 @@ func delete():
 		machine.gridLibrary.unregisterPart(self)
 		machine.removeGlobalPin(self)
 
+func canMove(dir : Vector2, initiator, chain = []):
+	if selected:
+		print("")
+	var out = super.canMove(dir, initiator, chain)
+	if out != MoveState.Moved: return out
+	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
+	if !check1:
+		blockedCycle = Simulator.totalStep
+		#abortMove(initiator, chain)
+		return MoveState.Blocked
+	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+	if !check2:
+		blockedCycle = Simulator.totalStep
+		#abortMove(initiator, chain)
+	var canMove = check2
+	if check2:
+		for sheet in toMove:
+			canMove = canMove and sheet.canMove(dir, self, chain)
+	setToMove = canMove
+	return MoveState.Moved if canMove else MoveState.Blocked
+
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
-		print("=====")
+		print("")
 		#for part in chain:
 			#if part is Pin:
 				#print("Pin")
@@ -169,23 +190,15 @@ func move(dir : Vector2, initiator, chain = []):
 		pass
 	var out = super.move(dir, initiator, chain)
 	if out != MoveState.Moved: return out
-	chain.append(self)
+	#chain.append(self)
 	if output:
 		flipOutput()
-	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
-	if !check1:
-		blockedCycle = Simulator.totalStep
-		abortMove(initiator, chain)
-		return MoveState.Blocked
-	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
-	if !check2:
-		blockedCycle = Simulator.totalStep
-		abortMove(initiator, chain)
-	return MoveState.Moved if check2 else MoveState.Blocked
+	return MoveState.Moved
 	
 func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
+	var moveCandidates = []
 	#if selected:
 		#print("A")
 	for part in interactionCandidates:
@@ -195,10 +208,11 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			if movedBy.has(part):
 				continue
 			if part.intersectsOutline(global_position+globalOffset):
-				var partMoved = part.move(dir, self,chain.duplicate())
-				if partMoved == MoveState.Moved:
-					moved.append(part)
-				canMove = canMove and partMoved > 0
+				moveCandidates.append(part)
+				#var partMoved = part.move(dir, self,chain.duplicate())
+				#if partMoved == MoveState.Moved:
+					#moved.append(part)
+				#canMove = canMove and partMoved > 0
 		else:
 			var sheet = part.get_parent()
 			if movedBy.has(sheet):
@@ -206,16 +220,24 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
-				var partMoved = sheet.move(dir, self,chain.duplicate())
-				if partMoved == MoveState.Moved:
-					moved.append(sheet)
-				canMove = canMove and partMoved > 0
+				moveCandidates.append(sheet)
+				#var partMoved = sheet.move(dir, self,chain.duplicate())
+				#if partMoved == MoveState.Moved:
+					#moved.append(sheet)
+				#canMove = canMove and partMoved > 0
 		
 		if !canMove:
-			abortMove(self, chain)
+			#abortMove(self, chain)
 			return false
+	
+	# Check if any immediate candidates are fixed to terminate search early
+	for part in moveCandidates:
+		if part.fixed:
+			return 0
+		else:
+			toMove[part] = part
 	return true
-		
+
 
 func getMachine():
 	if layer == null and machine != null:

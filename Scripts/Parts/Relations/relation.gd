@@ -21,6 +21,9 @@ func init():
 	updatePos()
 	pass
 
+func canMove(dir : Vector2, initiator, chain = []):
+	return Movable.MoveState.Moved
+
 func applyMove(dir : Vector2, initiator : Selectable, chain = []):
 	return Movable.MoveState.Moved
 

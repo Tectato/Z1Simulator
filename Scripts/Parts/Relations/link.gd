@@ -1,6 +1,18 @@
 extends Relation
 class_name Link
 
+func canMove(dir : Vector2, initiator, chain = []):
+	if inEffect:
+		return Movable.MoveState.AlreadyMoving
+	inEffect = true
+	var canMove = Movable.MoveState.Moved
+	if A == initiator:
+		canMove = B.canMove(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
+	elif B == initiator:
+		canMove = A.canMove(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain)
+	inEffect = false
+	return canMove
+
 func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return Movable.MoveState.AlreadyMoving

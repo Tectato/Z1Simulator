@@ -27,8 +27,8 @@ func setHeight(value):
 
 func move(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():
-		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep()) * (-1 if inActivePos else 1)
-		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) < 0.5:
+		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep())
+		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) > 0.5:
 			return MoveState.Blocked
 		if inMotion:
 			return MoveState.AlreadyMoving
@@ -38,7 +38,7 @@ func move(dir : Vector2, initiator, chain = []):
 			return MoveState.AlreadyMoving
 		if !inputCheckbox.isLocked():
 			return MoveState.Blocked
-	super.move(dir.rotated(-rotation.y), null, chain)
+	super.move(dir, null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	return MoveState.Moved
 	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
@@ -71,9 +71,12 @@ func clockCycle(clockStep : int, forwards = true):
 	if input and inputCheckbox.isLocked(): return
 	if input and !activateNextCycle: return false
 	if wouldMove(clockStep):
-		move(getMoveDir(clockStep), null)
 		if input and ((inActivePos and clockStep == antiStep) or pulsing):
 			inputCheckbox.click()
+		var dir = getMoveDir(clockStep)
+		canMove(dir, null)
+		call_deferred("move", dir, null)
+		#move(dir, null)
 		if pulsing:
 			$ResetTimer.start()
 
@@ -85,13 +88,13 @@ func getMoveDir(clockStep):
 	var toActivePos = clockStep == forwardStep
 	if input and clockStep == forwardStep:
 		if inActivePos:
-			return Space.toVec2(-travel)
+			return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
 		else:
-			return Space.toVec2(travel)
+			return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
 	if toActivePos and !inActivePos:
-		return Space.toVec2(travel)
+		return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
 	elif !toActivePos and inActivePos:
-		return Space.toVec2(-travel)
+		return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
 	#print("Invalid getMoveDir call")
 	return Vector2(0,0)
 
@@ -143,7 +146,10 @@ func deserialize(source : Dictionary):
 
 func _on_reset_timer_timeout() -> void:
 	updateInActivePos()
-	move(-Vector2(travel.x,travel.z), null)
+	var dir = getMoveDir(machine.clock.getCurrentStep())
+	canMove(dir, null)
+	call_deferred("move", dir, null)
+	#move(dir, null)
 
 func place():
 	if tempTravelIndicator:
