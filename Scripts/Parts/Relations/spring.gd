@@ -36,7 +36,7 @@ func applyMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return Movable.MoveState.AlreadyMoving
 	inEffect = true
-	if toMove[initiator]:
+	if toMove.has(initiator) and toMove[initiator]:
 		toMove[initiator].move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)
 	#if A == initiator:
 		#B.move(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain)

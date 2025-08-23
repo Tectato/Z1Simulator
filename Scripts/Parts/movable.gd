@@ -39,13 +39,15 @@ func grabUUID():
 func canMove(dir : Vector2, initiator, chain = []):
 	if fixed or blockedCycle == Simulator.totalStep:
 		return MoveState.Blocked
+	if chain.has(self):
+		return MoveState.AlreadyMoving
 	if setToMove != Simulator.totalStep:
 		# Was set to move but move never executed (can happen if intended to move by spring)
 		movedBy.clear()
 		toMove.clear()
 	movedBy[initiator] = initiator
 	#if setToMove == Simulator.totalStep or chain.has(self):
-	if chain.has(self):
+	if toMove.has(dirToInt(dir)):
 		return MoveState.AlreadyMoving
 	
 	chain.append(self)
@@ -88,8 +90,9 @@ func move(dir : Vector2, initiator, chain = []):
 	var canMove = true
 	if selected:
 		print("")
-	if toMove.has(initiator):
-		for part in toMove[initiator]:
+	var dirID = dirToInt(dir)
+	if toMove.has(dirID):
+		for part in toMove[dirID]:
 			if part == initiator:
 				continue
 			canMove = canMove and part.move(dir, self, chain) != MoveState.Blocked
@@ -108,7 +111,7 @@ func move(dir : Vector2, initiator, chain = []):
 			moved.append(relation)
 	#call_deferred("propagateNonblockingRelations", dir, chain)
 	
-	toMove.clear()
+	toMove.erase(dirID)
 	if !canMove:
 		abortMove(self, chain)
 	movedBy.clear()
@@ -255,3 +258,17 @@ func sortByFixed(A, B):
 	var PartA = A if A is Movable else A.get_parent()
 	#var PartB = B if B is Movable else B.get_parent()
 	return PartA.fixed
+
+func dirToInt(dir : Vector2):
+	if abs(dir.x) > 0.1:
+		return 1 if dir.x > 0 else 2
+	else:
+		return 0 if dir.y < 0 else 3
+
+func intToDir(id : int):
+	match(id):
+		0: return Vector2(0,-1)
+		1: return Vector2(1,0)
+		2: return Vector2(0,1)
+		3: return Vector2(-1,0)
+	return Vector2(0,0)

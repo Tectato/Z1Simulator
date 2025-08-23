@@ -175,8 +175,12 @@ func canMove(dir : Vector2, initiator, chain = []):
 	var canMove = check2
 	if selected:
 		print("")
-	if check2 and toMove.has(initiator):
-		for sheet in toMove[initiator]:
+	var dirID = dirToInt(dir)
+	if check2 and toMove.has(dirID):
+		for sheet in toMove[dirID]:
+			if sheet == initiator:
+				# By this point the initiator should be finalized
+				continue
 			canMove = canMove and sheet.canMove(dir, self, chain.duplicate())
 			if !canMove:
 				break
@@ -213,6 +217,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 			#sheet.move(dir,chain)
 		if part is Sheet:
 			if part == initiator:
+				moveCandidates[part] = part
 				continue
 			if part.intersectsOutline(global_position+globalOffset):
 				moveCandidates[part] = part
@@ -223,6 +228,9 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		else:
 			var sheet = part.get_parent()
 			if sheet == initiator:
+				# We skip further canMoves in the same dir, but must consider different initiators
+				# Also we know this part can move as it initiated the movement to begin with
+				moveCandidates[sheet] = sheet
 				continue
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
@@ -241,10 +249,12 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	for part in moveCandidates:
 		if part.fixed:
 			return 0
-	if toMove.has(initiator):
-		toMove[initiator].merge(moveCandidates)
+	
+	var dirID = dirToInt(dir)
+	if toMove.has(dirID):
+		toMove[dirID].merge(moveCandidates)
 	else:
-		toMove[initiator] = moveCandidates
+		toMove[dirID] = moveCandidates
 	return true
 
 

@@ -471,10 +471,10 @@ func updateInteractionCandidates():
 	updateConstraints()
 
 func canMove(dir : Vector2, initiator, chain = []):
-	if selected:
-		print("")
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
+	if selected:
+		print("")
 	turnInstead = false
 	forces[initiator] = [dir, chain]
 	
@@ -483,8 +483,13 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if check1 > 0:
 		check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	var cantMove = 0
-	if check2 > 0 and toMove.has(initiator):
-		for pin in toMove[initiator]:
+	var dirID = dirToInt(dir)
+	if selected:
+		print("")
+	if check2 > 0 and toMove.has(dirID):
+		for pin in toMove[dirID]:
+			if pin == initiator:
+				continue
 			var pinMovable = pin.canMove(dir, self, chain.duplicate())
 			if !pinMovable:
 				pivot = pin
@@ -503,7 +508,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		setToMove = Simulator.totalStep
 	else:
 		movedBy.clear()
-	return MoveState.Moved if (check1 > 0 and check2 > 0 and canMove) else MoveState.Blocked
+	return MoveState.Moved if (check1 > 0 and check2 > 0 and cantMove < 2) else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
@@ -554,6 +559,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		if part is Sheet:
 			for pin in pins:
 				if pin == initiator:
+					moveCandidates[pin] = pin
 					continue
 				if intersectsOutline(pin.global_position - globalOffset):
 					moveCandidates[pin] = pin
@@ -569,6 +575,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		else:
 			for pin in pins:
 				if pin == initiator:
+					moveCandidates[pin] = pin
 					continue
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					moveCandidates[pin] = pin
@@ -589,10 +596,11 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 			cantMove += 1
 			if cantMove > 1:
 				return 0
-	if toMove.has(initiator):
-		toMove[initiator].merge(moveCandidates)
+	var dirID = dirToInt(dir)
+	if toMove.has(dirID):
+		toMove[dirID].merge(moveCandidates)
 	else:
-		toMove[initiator] = moveCandidates
+		toMove[dirID] = moveCandidates
 	
 	if cantMove > 0:
 		#abortMove(self, chain)
