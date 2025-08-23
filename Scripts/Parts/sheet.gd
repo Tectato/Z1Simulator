@@ -478,14 +478,14 @@ func canMove(dir : Vector2, initiator, chain = []):
 	turnInstead = false
 	forces[initiator] = [dir, chain]
 	
-	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
+	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
 	var check2 = 0
 	if check1 > 0:
-		check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+		check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	var canMove = check2 > 0
-	if check2 > 0:
-		for pin in toMove:
-			canMove = canMove and pin.canMove(dir, self, chain)
+	if check2 > 0 and toMove.has(initiator):
+		for pin in toMove[initiator]:
+			canMove = canMove and pin.canMove(dir, self, chain.duplicate())
 			if !canMove: break
 	if (check1 > 1 or check2 > 1) and canMove:
 		if pointConstraints.is_empty() or pointConstraints.size() > 2:
@@ -495,6 +495,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 		return MoveState.Moved
 	if (check1 > 0 and check2 > 0 and canMove):
 		setToMove = Simulator.totalStep
+	else:
+		movedBy.clear()
 	return MoveState.Moved if (check1 > 0 and check2 > 0 and canMove) else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):
@@ -526,11 +528,11 @@ func move(dir : Vector2, initiator, chain = []):
 	return MoveState.Moved
 
 # Returns: 0 if can't move, 1 if can move, 2 if we will turn instead
-func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
+func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
 	var cantMove = 0
-	var moveCandidates = []
+	var moveCandidates = {}
 	#for pin in interactionCandidates:
 		#if intersects(pin.global_position - diff):
 			#pin.move(dir, chain)
@@ -538,10 +540,10 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 		var pins = pinCandidates[part]
 		if part is Sheet:
 			for pin in pins:
-				if movedBy.has(pin):
+				if pin == initiator:
 					continue
 				if intersectsOutline(pin.global_position - globalOffset):
-					moveCandidates.append(pin)
+					moveCandidates[pin] = pin
 					#var pinMoved = pin.move(dir, self, chain.duplicate())
 					#canMove = canMove and pinMoved > 0
 					#if selected and pin is ClockPin:
@@ -553,10 +555,10 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 						#cantMove += 1
 		else:
 			for pin in pins:
-				if movedBy.has(pin):
+				if pin == initiator:
 					continue
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
-					moveCandidates.append(pin)
+					moveCandidates[pin] = pin
 					#var pinMoved = pin.move(dir, self, chain.duplicate())
 					#canMove = canMove and pinMoved > 0
 					#if selected and pin is ClockPin:
@@ -574,8 +576,10 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 			cantMove += 1
 			if cantMove > 1:
 				return 0
-		else:
-			toMove[pin] = pin
+	if toMove.has(initiator):
+		toMove[initiator].merge(moveCandidates)
+	else:
+		toMove[initiator] = moveCandidates
 	
 	if cantMove > 0:
 		#abortMove(self, chain)

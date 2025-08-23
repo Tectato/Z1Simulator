@@ -39,20 +39,21 @@ func grabUUID():
 func canMove(dir : Vector2, initiator, chain = []):
 	if fixed or blockedCycle == Simulator.totalStep:
 		return MoveState.Blocked
-	if setToMove >= 0 and setToMove != Simulator.totalStep:
+	if setToMove != Simulator.totalStep:
 		# Was set to move but move never executed (can happen if intended to move by spring)
 		movedBy.clear()
-	movedBy[initiator] = null
-	if setToMove == Simulator.totalStep or chain.has(self):
+		toMove.clear()
+	movedBy[initiator] = initiator
+	#if setToMove == Simulator.totalStep or chain.has(self):
+	if chain.has(self):
 		return MoveState.AlreadyMoving
 	
 	chain.append(self)
-	toMove.clear()
 	var canMove = true
 	for relation in relations:
-		if movedBy.has(relation):
+		if relation == initiator:
 			continue
-		var relationMoved = relation.canMove(dir, self, chain)
+		var relationMoved = relation.canMove(dir, self, chain.duplicate())
 		if relation.isBlocking():
 			canMove = canMove and relationMoved != MoveState.Blocked
 		if relationMoved == MoveState.Moved:
@@ -68,7 +69,7 @@ func move(dir : Vector2, initiator, chain = []):
 	if fixed or blockedCycle == Simulator.totalStep:
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
-	movedBy[initiator] = null
+	movedBy[initiator] = initiator
 	if inMotion or chain.has(self):
 		return MoveState.AlreadyMoving
 	
@@ -87,14 +88,14 @@ func move(dir : Vector2, initiator, chain = []):
 	var canMove = true
 	if selected:
 		print("")
-	for part in toMove:
-		if movedBy.has(part):
+	for part in toMove[initiator]:
+		if part == initiator:
 			continue
 		canMove = canMove and part.move(dir, self, chain) != MoveState.Blocked
 		if canMove:
 			moved.append(part)
 	for relation in relations:
-		if movedBy.has(relation):
+		if relation == initiator:
 			continue
 		var relationMoved = relation.applyMove(dir, self, chain)
 		if relation.isBlocking():

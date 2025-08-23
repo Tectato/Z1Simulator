@@ -163,21 +163,27 @@ func canMove(dir : Vector2, initiator, chain = []):
 		print("")
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
-	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
+	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
 	if !check1:
 		blockedCycle = Simulator.totalStep
 		#abortMove(initiator, chain)
 		return MoveState.Blocked
-	var check2 = checkPropagation(Space.toVec3(dir), dir, chain)
+	var check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	if !check2:
 		blockedCycle = Simulator.totalStep
 		#abortMove(initiator, chain)
 	var canMove = check2
-	if check2:
-		for sheet in toMove:
-			canMove = canMove and sheet.canMove(dir, self, chain)
+	if selected:
+		print("")
+	if check2 and toMove.has(initiator):
+		for sheet in toMove[initiator]:
+			canMove = canMove and sheet.canMove(dir, self, chain.duplicate())
+			if !canMove:
+				break
 	if canMove:
 		setToMove = Simulator.totalStep
+	else:
+		movedBy.clear()
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):
@@ -196,32 +202,32 @@ func move(dir : Vector2, initiator, chain = []):
 		flipOutput()
 	return MoveState.Moved
 	
-func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
+func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
-	var moveCandidates = []
+	var moveCandidates = {}
 	#if selected:
 		#print("A")
 	for part in interactionCandidates:
 		#if sheet.intersects(pos):
 			#sheet.move(dir,chain)
 		if part is Sheet:
-			if movedBy.has(part):
+			if part == initiator:
 				continue
 			if part.intersectsOutline(global_position+globalOffset):
-				moveCandidates.append(part)
+				moveCandidates[part] = part
 				#var partMoved = part.move(dir, self,chain.duplicate())
 				#if partMoved == MoveState.Moved:
 					#moved.append(part)
 				#canMove = canMove and partMoved > 0
 		else:
 			var sheet = part.get_parent()
-			if movedBy.has(sheet):
+			if sheet == initiator:
 				continue
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
 			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
 			if !part.checkPos(posRelative):
-				moveCandidates.append(sheet)
+				moveCandidates[sheet] = sheet
 				#var partMoved = sheet.move(dir, self,chain.duplicate())
 				#if partMoved == MoveState.Moved:
 					#moved.append(sheet)
@@ -235,8 +241,10 @@ func checkPropagation(offset : Vector3, dir : Vector2, chain = []):
 	for part in moveCandidates:
 		if part.fixed:
 			return 0
-		else:
-			toMove[part] = part
+	if toMove.has(initiator):
+		toMove[initiator].merge(moveCandidates)
+	else:
+		toMove[initiator] = moveCandidates
 	return true
 
 
