@@ -482,18 +482,24 @@ func canMove(dir : Vector2, initiator, chain = []):
 	var check2 = 0
 	if check1 > 0:
 		check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
-	var canMove = check2 > 0
+	var cantMove = 0
 	if check2 > 0 and toMove.has(initiator):
 		for pin in toMove[initiator]:
-			canMove = canMove and pin.canMove(dir, self, chain.duplicate())
-			if !canMove: break
-	if (check1 > 1 or check2 > 1) and canMove:
+			var pinMovable = pin.canMove(dir, self, chain.duplicate())
+			if !pinMovable:
+				pivot = pin
+				cantMove += 1
+				if cantMove > 1:
+					break
+	if cantMove == 1:
+		turnInstead = true
+	if (check1 > 1 or check2 > 1 or cantMove == 1):
 		if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			blockedCycle = Simulator.totalStep
 			return MoveState.Blocked
 		setToMove = Simulator.totalStep
 		return MoveState.Moved
-	if (check1 > 0 and check2 > 0 and canMove):
+	if (check1 > 0 and check2 > 0 and cantMove < 2):
 		setToMove = Simulator.totalStep
 	else:
 		movedBy.clear()
@@ -508,6 +514,13 @@ func move(dir : Vector2, initiator, chain = []):
 			#if part is Sheet:
 				#print(part.path.get_file())
 		#pass
+	if turnInstead:
+		chain.append(self)
+		forces[initiator] = [dir, chain]
+		if !shouldTurn():
+			return MoveState.Blocked
+		return MoveState.Moved if tryTurn() else MoveState.Blocked
+		
 	var out = super.move(dir, initiator, chain)
 	if out != MoveState.Moved: return out
 	if selected:
@@ -605,7 +618,7 @@ func shouldTurn():
 
 func tryTurn():
 	if forces.is_empty():
-		return 0
+		return false
 	var initiator = forces.keys()[0]
 	var force = forces[initiator]
 	var pivotToInit = (pivot.position - initiator.position).normalized()
@@ -617,9 +630,9 @@ func tryTurn():
 		inMotion = true
 		call_deferred("turn", force[0], initiator, force[1])
 		forces.clear()
-		return 2
+		return true
 	forces.clear()
-	return 0
+	return false
 
 func turn(dir : Vector2, initiator, chain = []):
 	if !inMotion:
