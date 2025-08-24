@@ -20,6 +20,8 @@ shader = ExtResource("2_ax1co")
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.1
+radial_segments = 12
+rings = 0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ax1co"]
 height = 0.1

@@ -22,6 +22,8 @@ shader = ExtResource("2_4euxk")
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.1
+radial_segments = 12
+rings = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vjs7e"]
 size = Vector3(0.14, 0.14, 0.05)
@@ -115,3 +117,4 @@ collision_mask = 0
 shape = SubResource("CylinderShape3D_fc7u5")
 
 [connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]
+[connection signal="toggled" from="StepLabel/InputCheckbox" to="." method="inputCheckboxToggled"]

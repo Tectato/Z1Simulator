@@ -157,7 +157,7 @@ func abortMove(initiator, chain = []):
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()
 	if hasRelation(self, other):
-		return
+		return null
 	var newRelation
 	match type:
 		Relation.Type.Link:
@@ -166,6 +166,9 @@ func addRelation(type : Relation.Type, other : Selectable):
 			newRelation = SPRING.instantiate()
 		Relation.Type.LinearConstraint:
 			newRelation = LinearConstraint.new()
+		Relation.Type.InputLink:
+			return
+			#newRelation = INPUTLINK.instantiate()
 	add_child(newRelation)
 	newRelation.A = self
 	newRelation.B = other

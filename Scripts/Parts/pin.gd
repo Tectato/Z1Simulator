@@ -96,7 +96,7 @@ func setOutput(value):
 
 func flipOutput():
 	if output and !flippingOutput:
-		flippingOutput = true
+		#flippingOutput = true
 		call_deferred("executeFlip")
 	elif !output: # Hacky but works
 		setFixed(!fixed)
@@ -257,6 +257,10 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		toMove[dirID] = moveCandidates
 	return true
 
+func abortMove(initiator, chain = []):
+	super.abortMove(initiator, chain)
+	if output:
+		flipOutput()
 
 func getMachine():
 	if layer == null and machine != null:

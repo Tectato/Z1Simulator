@@ -2,6 +2,7 @@ extends Pin
 class_name ClockPin
 
 const TRAVELINDICATOR = preload("res://Scenes/Parts/ClockPinTravelIndicator.tscn")
+const INPUTLINK = preload("res://Scenes/Parts/Relations/InputLink.tscn")
 
 @export_range(0,3,1) var forwardStep = 0
 @onready var antiStep = (forwardStep + 2) % 4
@@ -91,7 +92,8 @@ func clockCycle(clockStep : int, forwards = true):
 	if input and !activateNextCycle: return false
 	if wouldMove(clockStep):
 		if input and ((inActivePos and clockStep == antiStep) or pulsing):
-			inputCheckbox.click()
+			inputCheckbox.setValue(!inputCheckbox.checked)
+			setActivateNextCycle(false)
 		var dir = getMoveDir(clockStep)
 		canMove(dir, null)
 		call_deferred("move", dir, null)
@@ -205,9 +207,19 @@ func delete():
 		machine.removeClockPin(self)
 
 func addRelation(type : Relation.Type, other : Selectable):
-	super.addRelation(type, other)
-	if type == Relation.Type.Link:
-		inputCheckbox.setLocked(true)
+	if type != Relation.Type.InputLink:
+		if type == Relation.Type.Link:
+			inputCheckbox.setLocked(true)
+		return super.addRelation(type, other)
+	if hasRelation(self, other):
+		return null
+	var newRelation = INPUTLINK.instantiate()
+	add_child(newRelation)
+	newRelation.A = self
+	newRelation.B = other
+	relations.append(newRelation)
+	newRelation.init()
+	return newRelation
 
 func appendRelation(relation : Relation):
 	super.appendRelation(relation)
@@ -225,3 +237,8 @@ func removeRelation(relation : Relation):
 func clearRelations():
 	super.clearRelations()
 	inputCheckbox.setLocked(false)
+
+func inputCheckboxToggled(value):
+	for relation in relations:
+		if relation is InputLink:
+			relation.toggle(self, value)

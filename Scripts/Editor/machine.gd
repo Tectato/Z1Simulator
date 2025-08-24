@@ -193,6 +193,8 @@ func deserializeFromDict(source):
 					A.addRelation(Relation.Type.Link, uuidManager.getPart(int(relation["B"])))
 				"spring":
 					A.addRelation(Relation.Type.Spring, uuidManager.getPart(int(relation["B"])))
+				"inputLink":
+					A.addRelation(Relation.Type.InputLink, uuidManager.getPart(int(relation["B"])))
 	#elif source.has("uuid"):
 		#uuid = source["uuid"]
 		#Global.workspace.uuidManager.registerID(self, uuid)
