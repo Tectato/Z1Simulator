@@ -10,6 +10,7 @@ var BParent : Machine
 var inEffect = false
 var aborting = false
 var toMove = {}
+var setToMove = -1
 
 func init():
 	A.appendRelation(self)

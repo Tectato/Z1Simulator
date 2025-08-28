@@ -278,6 +278,18 @@ func paste():
 		newPart.global_position = part.global_position
 		mouseRelative.push_back(Vector3(0,0,0))#TODO
 		partDragOrigins.push_back(part.global_position)
+		
+		
+		if newPart is Sheet:
+			pass
+		elif newPart is ClockPin:
+			newPart.forwardStep = part.forwardStep
+			newPart.antiStep = part.antiStep
+			newPart.pulsing = part.pulsing
+			newPart.setInput(part.input)
+			newPart.inputCheckbox.setValue(part.inputCheckbox.checked)
+		elif newPart is Pin:
+			pass
 	placing = true
 
 func getMidPoint(selection):

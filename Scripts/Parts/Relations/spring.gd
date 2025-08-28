@@ -12,6 +12,8 @@ func init():
 func canMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
 		return Movable.MoveState.AlreadyMoving
+	if setToMove != Simulator.totalStep:
+		toMove.clear()
 	inEffect = true
 	var currentDist = A.global_position.distance_to(B.global_position)
 	toMove[initiator] = null
@@ -22,6 +24,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
 			if B.canMove(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain):
 				toMove[initiator] = B
+				setToMove = Simulator.totalStep
 	elif B == initiator:
 		var globalDir = BParent.toGlobalDir(dir)
 		var toInit = B.global_position - A.global_position
@@ -29,11 +32,12 @@ func canMove(dir : Vector2, initiator, chain = []):
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
 			if A.canMove(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain):
 				toMove[initiator] = A
+				setToMove = Simulator.totalStep
 	inEffect = false
 	return Movable.MoveState.Moved
 
 func applyMove(dir : Vector2, initiator, chain = []):
-	if inEffect:
+	if inEffect or !setToMove == Simulator.totalStep:
 		return Movable.MoveState.AlreadyMoving
 	inEffect = true
 	if toMove.has(initiator) and toMove[initiator]:
