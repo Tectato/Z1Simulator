@@ -20,6 +20,8 @@ var pivot : Pin
 var turnInstead = false
 var restRot  = 0.0
 var targetRot = 0.0
+var potentialTargetRot = 0.0 # Set in canTurn, but not committed as targetRot until we actually move
+var potentialTargetPos = Vector3.ZERO
 var rotSpeed = 2.0
 var forces = {}
 var movedPins = {}
@@ -499,10 +501,10 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if cantMove == 1:
 		turnInstead = true
 	if (check1 > 1 or check2 > 1 or cantMove == 1):
-		if pointConstraints.is_empty() or pointConstraints.size() > 2:
-			blockedCycle = Simulator.totalStep
-			return MoveState.Blocked
-		if !shouldTurn():
+		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
+			#blockedCycle = Simulator.totalStep
+			#return MoveState.Blocked
+		if !(shouldTurn() and canTurn(dir, initiator, chain)):
 			return MoveState.Blocked
 		setToMove = Simulator.totalStep
 		return MoveState.Moved
@@ -626,6 +628,50 @@ func shouldTurn():
 	var angle = abs(impulse.dot(pivotToInit))
 	return angle < 0.5
 
+func canTurn(dir : Vector2, initiator, chain = []):
+	var posDiff = position - pivot.position
+	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
+	var ALinearized = Vector2(
+		1 * sign(initPosARelative.x) if abs(initPosARelative.x) > abs(initPosARelative.y) else 0,
+		1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
+	var initPosBRelative = initPosARelative + dir
+	var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
+	rotSpeed = 1.0/abs(angleDiff)
+	potentialTargetRot = targetRot + angleDiff
+	potentialTargetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
+	
+	toMove.clear()
+	var canTurn = true
+	var pivotToInit = initPosARelative
+	var moveCandidates = {}
+	for part in pinCandidates.keys():
+		var pins = pinCandidates[part]
+		if part is Hole:
+			for pin in pins:
+				if pin == initiator:
+					var dirID = dirToInt(dir)
+					if toMove.has(dirID):
+						toMove[dirID][pin] = pin
+					else:
+						toMove[dirID] = {pin:pin}
+					continue
+				if pin == pivot:
+					continue
+				var pivotToPin = Space.toVec2(pin.position - pivot.position)
+				# Potential TODO: factor in distance diff for larger or smaller output movement
+				var pinAngleDiff = pivotToInit.angle_to(pivotToPin)
+				var rotatedDir = dir.rotated(snappedf(pinAngleDiff, PI/2))
+				if !part.checkPos(part.to_local(pin.global_position - Space.toVec3(rotatedDir))):
+					canTurn = canTurn and pin.canMove(rotatedDir, self, chain)
+					if !canTurn: break
+					else:
+						var dirID = dirToInt(rotatedDir)
+						if toMove.has(dirID):
+							toMove[dirID][pin] = pin
+						else:
+							toMove[dirID] = {pin:pin}
+	return canTurn
+
 func tryTurn():
 	if forces.is_empty():
 		return false
@@ -636,13 +682,13 @@ func tryTurn():
 	#if forces.size() > 1 or pointConstraints.is_empty():
 		#move(force[0], self, force[1])
 		#pass
-	if pointConstraints.size() + linearConstraints.size() < 3:
-		inMotion = true
-		call_deferred("turn", force[0], initiator, force[1])
-		forces.clear()
-		return true
+	#if pointConstraints.size() + linearConstraints.size() < 3:
+	inMotion = true
+	call_deferred("turn", force[0], initiator, force[1])
 	forces.clear()
-	return false
+	return true
+	#forces.clear()
+	#return false
 
 func turn(dir : Vector2, initiator, chain = []):
 	if !inMotion:
@@ -651,22 +697,14 @@ func turn(dir : Vector2, initiator, chain = []):
 		print("Circular turn sequence at " + id)
 		return
 	Simulator.spawnIndicator(pivot, EventIndicator.Type.Turn)
-	var posDiff = position - pivot.position
-	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
-	var ALinearized = Vector2(
-		1 * sign(initPosARelative.x) if abs(initPosARelative.x) > abs(initPosARelative.y) else 0,
-		1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
-	var initPosBRelative = initPosARelative + dir
-	#initPosARelative = initPosARelative.normalized()
-	#initPosBRelative = initPosBRelative.normalized()
-	var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
-	rotSpeed = 1.0/abs(angleDiff)
-	#print(str(angleDiff))
-	targetRot += angleDiff
-	targetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
+	targetRot = potentialTargetRot
+	targetPos = potentialTargetPos
 	chain.erase(initiator)
 	if initiator.move(dir, self, chain) == MoveState.Moved:
 		moved.append(initiator)
+	for rotatedDir in toMove.keys():
+		for pin in toMove[rotatedDir]:
+			pin.move(intToDir(rotatedDir) * Workspace.pinTravel, self, chain)
 	inMotion = true
 	pass
 

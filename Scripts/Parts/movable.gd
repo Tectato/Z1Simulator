@@ -264,9 +264,9 @@ func sortByFixed(A, B):
 
 func dirToInt(dir : Vector2):
 	if abs(dir.x) > 0.1:
-		return 1 if dir.x > 0 else 2
+		return 1 if dir.x > 0 else 3
 	else:
-		return 0 if dir.y < 0 else 3
+		return 0 if dir.y < 0 else 2
 
 func intToDir(id : int):
 	match(id):
