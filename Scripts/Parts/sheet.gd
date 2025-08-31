@@ -17,9 +17,10 @@ var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
 var pivot : Pin
-var turnInstead = false
+var turnInstead = {0:false, 1:false, 2:false, 3:false}
 var restRot  = 0.0
 var targetRot = 0.0
+var toMoveInRotation = {}
 var potentialTargetRot = 0.0 # Set in canTurn, but not committed as targetRot until we actually move
 var potentialTargetPos = Vector3.ZERO
 var rotSpeed = 2.0
@@ -477,7 +478,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if out != MoveState.Moved: return out
 	if selected:
 		print("")
-	turnInstead = false
+	var dirID = dirToInt(dir)
+	turnInstead[dirID] = false
 	forces[initiator] = [dir, chain]
 	
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
@@ -485,7 +487,6 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if check1 > 0:
 		check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	var cantMove = 0
-	var dirID = dirToInt(dir)
 	if selected:
 		print("")
 	if check2 > 0 and toMove.has(dirID):
@@ -499,7 +500,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 				if cantMove > 1:
 					break
 	if cantMove == 1:
-		turnInstead = true
+		turnInstead[dirID] = true
 	if (check1 > 1 or check2 > 1 or cantMove == 1):
 		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			#blockedCycle = Simulator.totalStep
@@ -523,7 +524,8 @@ func move(dir : Vector2, initiator, chain = []):
 			#if part is Sheet:
 				#print(part.path.get_file())
 		#pass
-	if turnInstead:
+	var dirID = dirToInt(dir)
+	if turnInstead[dirID]:
 		chain.append(self)
 		forces[initiator] = [dir, chain]
 		if !shouldTurn():
@@ -555,9 +557,6 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	var globalOffset = getMachine().toGlobalDir(offset)
 	var cantMove = 0
 	var moveCandidates = {}
-	#for pin in interactionCandidates:
-		#if intersects(pin.global_position - diff):
-			#pin.move(dir, chain)
 	for part in pinCandidates.keys():
 		var pins = pinCandidates[part]
 		if part is Sheet:
@@ -567,15 +566,6 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 					continue
 				if intersectsOutline(pin.global_position - globalOffset):
 					moveCandidates[pin] = pin
-					#var pinMoved = pin.move(dir, self, chain.duplicate())
-					#canMove = canMove and pinMoved > 0
-					#if selected and pin is ClockPin:
-						#print("ClockPin")
-					#if pinMoved == MoveState.Moved and not pin is ClockPin:
-						#moved.append(pin)
-					#if pinMoved == MoveState.Blocked:
-						#pivot = pin
-						#cantMove += 1
 		else:
 			for pin in pins:
 				if pin == initiator:
@@ -583,15 +573,6 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 					continue
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					moveCandidates[pin] = pin
-					#var pinMoved = pin.move(dir, self, chain.duplicate())
-					#canMove = canMove and pinMoved > 0
-					#if selected and pin is ClockPin:
-						#print("ClockPin")
-					#if pinMoved == MoveState.Moved and not pin is ClockPin:
-						#moved.append(pin)
-					#if pinMoved == MoveState.Blocked:
-						#pivot = pin
-						#cantMove += 1
 	
 	# Check if any immediate candidates are fixed to terminate search early
 	for pin in moveCandidates:
@@ -611,7 +592,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		if cantMove > 1 or !shouldTurn():
 			blockedCycle[dirID] = Simulator.totalStep
 			return 0
-		turnInstead = true
+		turnInstead[dirID] = true
 		return 2#tryTurn()
 	
 	#for movedPart in moved:
@@ -642,7 +623,7 @@ func canTurn(dir : Vector2, initiator, chain = []):
 	potentialTargetRot = targetRot + angleDiff
 	potentialTargetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
 	
-	toMove.clear()
+	toMoveInRotation.clear()
 	var canTurn = true
 	var pivotToInit = initPosARelative
 	var moveCandidates = {}
@@ -652,10 +633,10 @@ func canTurn(dir : Vector2, initiator, chain = []):
 			for pin in pins:
 				if pin == initiator:
 					var dirID = dirToInt(dir)
-					if toMove.has(dirID):
-						toMove[dirID][pin] = pin
+					if toMoveInRotation.has(dirID):
+						toMoveInRotation[dirID][pin] = pin
 					else:
-						toMove[dirID] = {pin:pin}
+						toMoveInRotation[dirID] = {pin:pin}
 					continue
 				if pin == pivot:
 					continue
@@ -668,10 +649,10 @@ func canTurn(dir : Vector2, initiator, chain = []):
 					if !canTurn: break
 					else:
 						var dirID = dirToInt(rotatedDir)
-						if toMove.has(dirID):
-							toMove[dirID][pin] = pin
+						if toMoveInRotation.has(dirID):
+							toMoveInRotation[dirID][pin] = pin
 						else:
-							toMove[dirID] = {pin:pin}
+							toMoveInRotation[dirID] = {pin:pin}
 	return canTurn
 
 func tryTurn():

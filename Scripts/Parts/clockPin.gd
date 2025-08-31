@@ -44,6 +44,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 	return super.canMove(dir, initiator, chain)
 
 func move(dir : Vector2, initiator, chain = []):
+	if selected:
+		print()
 	if not chain.is_empty(): #TODO: check what can be removed here
 		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep())
 		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) > 0.5:
@@ -88,6 +90,8 @@ func updateLabel():
 	inputCheckbox.visible = input
 
 func clockCycle(clockStep : int, forwards = true):
+	if selected:
+		print()
 	if input and inputCheckbox.isLocked(): return
 	if input and !activateNextCycle: return false
 	if wouldMove(clockStep):
@@ -166,6 +170,8 @@ func deserialize(source : Dictionary):
 	place()
 
 func _on_reset_timer_timeout() -> void:
+	if selected:
+		print()
 	updateInActivePos()
 	var dir = getMoveDir(machine.clock.getCurrentStep())
 	canMove(dir, null)
