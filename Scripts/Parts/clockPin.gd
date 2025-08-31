@@ -110,7 +110,7 @@ func wouldMove(clockStep):
 
 func getMoveDir(clockStep):
 	updateInActivePos()
-	var toActivePos = clockStep == forwardStep
+	var toActivePos = clockStep == forwardStep and not (pulsing and inActivePos)
 	if input and clockStep == forwardStep:
 		if inActivePos:
 			return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
@@ -172,7 +172,7 @@ func deserialize(source : Dictionary):
 func _on_reset_timer_timeout() -> void:
 	if selected:
 		print()
-	updateInActivePos()
+	#updateInActivePos()
 	var dir = getMoveDir(machine.clock.getCurrentStep())
 	canMove(dir, null)
 	call_deferred("move", dir, null)

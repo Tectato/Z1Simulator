@@ -679,14 +679,17 @@ func turn(dir : Vector2, initiator, chain = []):
 	if chain.count(self) > 1:
 		print("Circular turn sequence at " + id)
 		return
+	if selected:
+		print()
 	Simulator.spawnIndicator(pivot, EventIndicator.Type.Turn)
 	targetRot = potentialTargetRot
 	targetPos = potentialTargetPos
 	chain.erase(initiator)
 	if initiator.move(dir, self, chain) == MoveState.Moved:
 		moved.append(initiator)
-	for rotatedDir in toMove.keys():
-		for pin in toMove[rotatedDir]:
+	for rotatedDir in toMoveInRotation.keys():
+		for pin in toMoveInRotation[rotatedDir]:
+			if pin == initiator: continue
 			pin.move(intToDir(rotatedDir) * Workspace.pinTravel, self, chain)
 	inMotion = true
 	pass
