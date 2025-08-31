@@ -14,7 +14,7 @@ var interactionCandidates = []
 var relations = []
 var constraints = []
 var fixed = false
-var blockedCycle = -1
+var blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
 var setToMove = -1
 var inMotion = false
 var movedBy = {}
@@ -37,7 +37,10 @@ func grabUUID():
 		getMachine().uuidManager.request(self)
 
 func canMove(dir : Vector2, initiator, chain = []):
-	if fixed or blockedCycle == Simulator.totalStep:
+	if selected:
+		print("")
+	var dirID = dirToInt(dir)
+	if fixed or blockedCycle[dirID] == Simulator.totalStep:
 		return MoveState.Blocked
 	if chain.has(self):
 		return MoveState.AlreadyMoving
@@ -47,7 +50,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		toMove.clear()
 	movedBy[initiator] = initiator
 	#if setToMove == Simulator.totalStep or chain.has(self):
-	if toMove.has(dirToInt(dir)):
+	if toMove.has(dirID):
 		return MoveState.AlreadyMoving
 	
 	chain.append(self)
@@ -68,7 +71,8 @@ func move(dir : Vector2, initiator, chain = []):
 	if !setToMove == Simulator.totalStep:
 		return MoveState.AlreadyMoving
 	setToMove = -1
-	if fixed or blockedCycle == Simulator.totalStep:
+	var dirID = dirToInt(dir)
+	if fixed or blockedCycle[dirID] == Simulator.totalStep:
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
 	movedBy[initiator] = initiator
@@ -90,7 +94,6 @@ func move(dir : Vector2, initiator, chain = []):
 	var canMove = true
 	if selected:
 		print("")
-	var dirID = dirToInt(dir)
 	if toMove.has(dirID):
 		for part in toMove[dirID]:
 			if part == initiator:
@@ -263,7 +266,7 @@ func sortByFixed(A, B):
 	return PartA.fixed
 
 func dirToInt(dir : Vector2):
-	if abs(dir.x) > 0.1:
+	if abs(dir.x) > 0.01:
 		return 1 if dir.x > 0 else 3
 	else:
 		return 0 if dir.y < 0 else 2

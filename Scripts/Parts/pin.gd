@@ -163,19 +163,19 @@ func canMove(dir : Vector2, initiator, chain = []):
 		print("")
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
+	var dirID = dirToInt(dir)
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
 	if !check1:
-		blockedCycle = Simulator.totalStep
+		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
 		return MoveState.Blocked
 	var check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	if !check2:
-		blockedCycle = Simulator.totalStep
+		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
 	var canMove = check2
 	if selected:
 		print("")
-	var dirID = dirToInt(dir)
 	if check2 and toMove.has(dirID):
 		for sheet in toMove[dirID]:
 			if sheet == initiator:

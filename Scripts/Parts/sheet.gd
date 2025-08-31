@@ -609,7 +609,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	if cantMove > 0:
 		#abortMove(self, chain)
 		if cantMove > 1 or !shouldTurn():
-			blockedCycle = Simulator.totalStep
+			blockedCycle[dirID] = Simulator.totalStep
 			return 0
 		turnInstead = true
 		return 2#tryTurn()
@@ -629,6 +629,8 @@ func shouldTurn():
 	return angle < 0.5
 
 func canTurn(dir : Vector2, initiator, chain = []):
+	if selected:
+		print("")
 	var posDiff = position - pivot.position
 	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
 	var ALinearized = Vector2(
