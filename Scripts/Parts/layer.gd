@@ -178,6 +178,25 @@ func moveDown():
 func addLayer():
 	machine.addLayer()
 
+func duplicateLayer():
+	machine.duplicateLayer(self)
+
+func setupAfterDuplication():
+	collider = $BoundingBox
+	bb = $BoundingBox/CollisionShape3D
+	widgets = $Widgets
+	add = $Widgets/Add
+	button_up = $Widgets/MoveUp
+	button_down = $Widgets/MoveDown
+	baseplate = $Baseplate
+	for thing in get_children():
+		if thing is Movable:
+			parts.append(thing)
+	for part in parts:
+		part.layer = self
+		part.place()
+		part.resetUUID()
+
 func updatePosition():
 	for part in parts:
 		part.updatePositions()

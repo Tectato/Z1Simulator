@@ -7,6 +7,6 @@ func checkPos(pos):
 func getSnapPosDiff(srcPos):
 	var adjustedSrcPos = srcPos + position.rotated(Vector3.UP, get_parent().rotation.y)
 	var srcPos2D = Vector2(adjustedSrcPos.x,adjustedSrcPos.z)
-	var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/8,Workspace.gridSize/8))
+	var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/16,Workspace.gridSize/16))
 	var snapped3D = Vector3(snapped.x,adjustedSrcPos.y,snapped.y)
 	return snapped3D - adjustedSrcPos

@@ -36,6 +36,9 @@ func grabUUID():
 	if uuid < 0:
 		getMachine().uuidManager.request(self)
 
+func resetUUID():
+	getMachine().uuidManager.request(self)
+
 func canMove(dir : Vector2, initiator, chain = []):
 	if selected:
 		print("")

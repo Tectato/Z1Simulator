@@ -112,7 +112,7 @@ func snap(srcPos):
 		#global_position = global_position * Vector3.UP + (global_position - closestDist) * Vector3(1,0,1)
 	#return srcPos #TODO: return snap source pos
 	var srcPos2D = Vector2(srcPos.x,srcPos.z)
-	var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/8,Workspace.gridSize/8))
+	var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/16,Workspace.gridSize/16))
 	global_position = Vector3(snapped.x,srcPos.y,snapped.y)
 	restPos = global_position
 	targetPos = position

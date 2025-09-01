@@ -63,7 +63,7 @@ void vertex() {
 	);
 }
 
-varying vec3 view_dir; 
+varying vec3 view_dir;
 void fragment() {
 	view_dir = normalize(normalize(-VERTEX) * TBN);
 	vec2 base_uv = UV;
@@ -75,7 +75,7 @@ void fragment() {
 			discard;
 		}
 	}
-	
+
 	vec3 color = texture(albedo, parallax_uv).rgb;
 
 	ALBEDO = color;

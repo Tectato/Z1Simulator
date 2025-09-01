@@ -190,6 +190,10 @@ func toGridPos(pos : Vector3):
 func toPosKey(gridPos : Vector2):
 	return str(int(gridPos.x)) + "_" + str(int(gridPos.y))
 
+func insertLayer(index):
+	pinOccupancy.insert(index, {})
+	sheetOccupancy.insert(index, {})
+
 func moveLayer(index, dir):
 	pinOccupancy.insert(index+dir, pinOccupancy.pop_at(index))
 	sheetOccupancy.insert(index+dir, sheetOccupancy.pop_at(index))

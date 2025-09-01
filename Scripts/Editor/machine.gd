@@ -51,6 +51,20 @@ func addLayer():
 		Global.editor.updateSceneTree()
 	return newLayer
 
+func duplicateLayer(layer : Layer):
+	var index = layers.find(layer)
+	var newLayer = layer.duplicate()
+	add_child(newLayer)
+	newLayer.machine = self
+	layers.insert(index + 1, newLayer)
+	gridLibrary.insertLayer(index + 1)
+	newLayer.setupAfterDuplication()
+	newLayer.updateCollider()
+	updateLayerPositions()
+	if Global.editor:
+		Global.editor.selector.select(newLayer.collider)
+		Global.editor.updateSceneTree()
+
 func moveLayer(layer : Layer, dir = 1):
 	var index = layers.find(layer)
 	layers.erase(layer)

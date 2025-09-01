@@ -55,6 +55,8 @@ func move(dir : Vector2, initiator, chain = []):
 		var wouldMove = wouldMove(machine.clock.getCurrentStep())
 		var willMove = (!input or inputCheckbox.checked or setToMove == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
 		if wouldMove and willMove:
+			if !inMotion:
+				super.move(dir, null, chain)
 			return MoveState.AlreadyMoving
 		if self in chain:
 			return MoveState.AlreadyMoving

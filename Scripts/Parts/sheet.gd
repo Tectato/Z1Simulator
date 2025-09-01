@@ -474,6 +474,8 @@ func updateInteractionCandidates():
 	updateConstraints()
 
 func canMove(dir : Vector2, initiator, chain = []):
+	if setToMove < Simulator.totalStep:
+		forces.clear()
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
 	if selected:
@@ -495,13 +497,15 @@ func canMove(dir : Vector2, initiator, chain = []):
 				continue
 			var pinMovable = pin.canMove(dir, self, chain.duplicate())
 			if !pinMovable:
-				pivot = pin
 				cantMove += 1
 				if cantMove > 1:
 					break
-	if cantMove == 1:
+				var oppositeMovable = pin.canMove(-dir, self, chain.duplicate())
+				if !oppositeMovable:
+					pivot = pin
+	if cantMove >= 1:
 		turnInstead[dirID] = true
-	if (check1 > 1 or check2 > 1 or cantMove == 1):
+	if (check1 > 1 or check2 > 1 or cantMove >= 1):
 		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			#blockedCycle = Simulator.totalStep
 			#return MoveState.Blocked
@@ -600,14 +604,14 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	return 1
 
 func shouldTurn():
-	if forces.is_empty():
+	if forces.is_empty() or pivot == null:
 		return false
 	var initiator = forces.keys()[0]
 	var force = forces[initiator]
-	var pivotToInit = (pivot.position - initiator.position).normalized()
+	var initToPivot = (pivot.position - initiator.position).normalized()
 	var impulse = Space.toVec3(force[0]).normalized()
-	var angle = abs(impulse.dot(pivotToInit))
-	return angle < 0.5
+	var angle = abs(impulse.dot(initToPivot))
+	return angle < 0.6
 
 func canTurn(dir : Vector2, initiator, chain = []):
 	if selected:
@@ -677,7 +681,7 @@ func turn(dir : Vector2, initiator, chain = []):
 	if !inMotion:
 		return # Rotation was aborted
 	if chain.count(self) > 1:
-		print("Circular turn sequence at " + id)
+		#print("Circular turn sequence at " + id)
 		return
 	if selected:
 		print()
