@@ -4,7 +4,7 @@ class_name Editor
 @onready var interface = $Camera3D/Interface
 @onready var workspace = $Workspace
 @onready var selector = $Camera3D/SelectionRay
-@onready var tree = $Camera3D/Interface/SceneTree
+@onready var tree = $Camera3D/Interface/SideWindow/TabContainer/Scene
 var tempProjectPath = ""
 var currentlyLoadedPath = ""
 var savePath = ""

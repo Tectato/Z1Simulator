@@ -1,20 +1,11 @@
 extends Control
 
 @export var selector : Selector
-@onready var restPos = global_position
 @onready var tree = $Tree
 var priorSelected : TreeItem
 
 func _ready() -> void:
-	get_tree().get_root().size_changed.connect(updateRestPos)
 	tree.cell_selected.connect(cellSelected)
-	_on_hide_toggled(true)
-
-func updateRestPos():
-	restPos = global_position - Vector2(180,0) if $Hide.button_pressed else global_position
-
-func _on_hide_toggled(toggled_on: bool) -> void:
-	global_position = restPos + Vector2(180,0) if toggled_on else restPos
 
 func updateSceneTree():
 	tree.clear()
