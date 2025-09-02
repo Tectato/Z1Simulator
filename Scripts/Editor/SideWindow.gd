@@ -17,6 +17,7 @@ func updateRestPos():
 func _on_hide_toggled(toggled_on: bool) -> void:
 	global_position = global_position * Vector2(0,1) + Vector2(get_viewport_rect().size.x - (0 if toggled_on else size.x), 0)
 	$RescaleButton.visible = !toggled_on
+	$TabContainer.visible = !toggled_on
 
 func _on_move_button_button_down() -> void:
 	mouseStartPos = get_global_mouse_position()

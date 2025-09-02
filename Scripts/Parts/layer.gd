@@ -14,6 +14,7 @@ const PIN = preload("res://Scenes/Parts/Pin.tscn")
 
 var id = ""
 var machine : Machine
+var plan : Plan
 var height = 0
 var parts = []
 var gizmo : Gizmo
@@ -27,6 +28,7 @@ func setSelected(value):
 	widgets.visible = value
 	if value:
 		_draw_gizmo()
+		Global.editor.planInterface.setPlan(plan)
 	elif gizmo:
 		gizmo.free()
 
@@ -160,6 +162,8 @@ func delete():
 	machine.removeLayer(self)
 	if Global.workspace.selectedLayer == self:
 		Global.workspace.selectedLayer = null
+	if plan:
+		plan.queue_free()
 	queue_free()
 
 func updateWidgets():

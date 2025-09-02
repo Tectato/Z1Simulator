@@ -5,6 +5,7 @@ class_name Editor
 @onready var workspace = $Workspace
 @onready var selector = $Camera3D/SelectionRay
 @onready var tree = $Camera3D/Interface/SideWindow/TabContainer/Scene
+@onready var planInterface = $Camera3D/Interface/SideWindow/TabContainer/Plan/PlanInterface
 var tempProjectPath = ""
 var currentlyLoadedPath = ""
 var savePath = ""
@@ -112,6 +113,9 @@ func fileDropped(files : Array[String]):
 	elif path.ends_with(".json"):
 		tempProjectPath = path
 		interface.importChoiceDialog.popup()
+	elif workspace.selectedLayer:
+		var image = Image.load_from_file(path)
+		planInterface.createPlan(image)
 
 func getDir(path : String):
 	var nameIndex = max(path.rfind("/"), path.rfind("\\"))
