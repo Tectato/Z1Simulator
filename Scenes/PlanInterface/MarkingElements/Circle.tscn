@@ -1,3 +1,9 @@
-[gd_scene format=3 uid="uid://c5akk8gh4hxcx"]
+[gd_scene load_steps=2 format=3 uid="uid://c5akk8gh4hxcx"]
+
+[ext_resource type="Script" uid="uid://q1ovdoinfqne" path="res://Scripts/Editor/PlanInterface/Elements/markerCircle.gd" id="1_mwtu1"]
 
 [node name="Circle" type="Node2D"]
+script = ExtResource("1_mwtu1")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0, -100, 45, -90, 70, -70, 90, -45, 100, 0, 90, 45, 70, 70, 45, 90, 0, 100, -45, 90, -70, 70, -90, 45, -100, 0, -90, -45, -70, -70, -45, -90)

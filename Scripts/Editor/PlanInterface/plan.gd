@@ -1,14 +1,21 @@
 extends Node2D
 class_name Plan
 
-const LINE = preload("res://Scenes/PlanInterface/MarkingElements/Line.tscn")
-const RECTANGLE = preload("res://Scenes/PlanInterface/MarkingElements/Rectangle.tscn")
-const CIRCLE = preload("res://Scenes/PlanInterface/MarkingElements/Circle.tscn")
+const MARKER = preload("res://Scenes/PlanInterface/MarkingElements/Marker.tscn")
 
 var layer : Layer
+var selectedMarker : Marker
+var hasImage = false
 
 func setImage(image):
 	var texture = ImageTexture.create_from_image(image)
 	if texture:
 		$Image.texture = texture
+		hasImage = true
 	pass
+
+func addElement(type : Marker.ElementType):
+	if !selectedMarker:
+		selectedMarker = MARKER.instantiate()
+		add_child(selectedMarker)
+	return selectedMarker.addElement(type)

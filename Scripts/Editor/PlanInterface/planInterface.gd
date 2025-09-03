@@ -3,6 +3,9 @@ extends Control
 const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 
 @onready var viewport = $"SubViewportContainer/2DView"
+@onready var selector = $Tools/Selector
+@onready var editor = $Tools/Editor
+@onready var selectedTool = selector
 var currentPlan : Plan
 
 func setPlan(plan : Plan):
@@ -23,5 +26,13 @@ func createPlan(image):
 	newPlan.setImage(image)
 	currentPlan = newPlan
 
+func _input(event: InputEvent) -> void:
+	if event.is_echo(): return
+	if !get_window().has_focus(): return
+	if !get_rect().has_point(get_parent().get_local_mouse_position()): return
+	if currentPlan and currentPlan.hasImage:
+		selectedTool.handleInput(event)
+
 func _on_selector_toggled(toggled_on: bool) -> void:
 	$Elements.visible = !toggled_on
+	selectedTool = selector if toggled_on else editor

@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://bc5imjywbbyiv"]
+[gd_scene load_steps=2 format=3 uid="uid://bc5imjywbbyiv"]
+
+[ext_resource type="Script" uid="uid://bbrry1r1q5fbj" path="res://Scripts/Editor/PlanInterface/Elements/markerRectangle.gd" id="1_ikleu"]
 
 [node name="Rectangle" type="Node2D"]
+script = ExtResource("1_ikleu")
