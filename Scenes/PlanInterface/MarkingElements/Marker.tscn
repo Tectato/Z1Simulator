@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://8xcpo7nodhrs"]
+[gd_scene load_steps=4 format=3 uid="uid://8xcpo7nodhrs"]
 
 [ext_resource type="Script" uid="uid://cf1ngxhveckax" path="res://Scripts/Editor/PlanInterface/marker.gd" id="1_pn5ye"]
+[ext_resource type="Shader" uid="uid://c3f22d1i5cq6e" path="res://Shaders/Outline2D.gdshader" id="1_r0lgg"]
 
-[node name="Marker" type="Node2D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ljoqm"]
+resource_local_to_scene = true
+shader = ExtResource("1_r0lgg")
+shader_parameter/line_colour = Color(0, 0, 0, 1)
+shader_parameter/line_thickness = 3
+
+[node name="Marker" type="CanvasGroup"]
+material = SubResource("ShaderMaterial_ljoqm")
 script = ExtResource("1_pn5ye")

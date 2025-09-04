@@ -115,7 +115,7 @@ func fileDropped(files : Array[String]):
 		interface.importChoiceDialog.popup()
 	elif workspace.selectedLayer:
 		var image = Image.load_from_file(path)
-		planInterface.createPlan(image)
+		planInterface.createPlan(image, path)
 
 func getDir(path : String):
 	var nameIndex = max(path.rfind("/"), path.rfind("\\"))

@@ -6,6 +6,7 @@ const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 @onready var selector = $Tools/Selector
 @onready var editor = $Tools/Editor
 @onready var selectedTool = selector
+@onready var camera = $"SubViewportContainer/2DView/Camera2D"
 var currentPlan : Plan
 
 func setPlan(plan : Plan):
@@ -16,17 +17,20 @@ func setPlan(plan : Plan):
 		plan.visible = true
 	currentPlan = plan
 
-func createPlan(image):
+func createPlan(image, path):
 	if currentPlan:
 		return #TODO: prompt to replace
 	var newPlan = PLAN.instantiate()
 	viewport.add_child(newPlan)
 	newPlan.layer = Global.workspace.selectedLayer
 	newPlan.layer.plan = newPlan
-	newPlan.setImage(image)
+	newPlan.setImage(image, path)
 	currentPlan = newPlan
 
-func _input(event: InputEvent) -> void:
+func addPlan(plan : Plan):
+	viewport.add_child(plan)
+
+func handleInput(event: InputEvent) -> void:
 	if event.is_echo(): return
 	if !get_window().has_focus(): return
 	if !get_rect().has_point(get_parent().get_local_mouse_position()): return

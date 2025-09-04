@@ -1,6 +1,7 @@
 extends Node3D
 class_name Layer
 
+const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 
@@ -55,6 +56,8 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
+	if plan:
+		output["plan"] = plan.serialize()
 	return output
 
 func deserialize(source : Dictionary):
@@ -71,6 +74,11 @@ func deserialize(source : Dictionary):
 		newPart.deserialize(pin)
 	if source.has("id"):
 		id = source["id"]
+	if source.has("plan"):
+		plan = PLAN.instantiate()
+		plan.deserialize(source["plan"])
+		plan.layer = self
+		Global.editor.planInterface.addPlan(plan)
 	updateCollider()
 
 func addPart(newPart):

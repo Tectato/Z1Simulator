@@ -3,16 +3,34 @@ extends MarkerElement
 var mouseStartPos = Vector2.ZERO
 var radius = 100.0
 
+func serialize():
+	return {
+		"type" : "circle",
+		"pos_x" : position.x,
+		"pos_y" : position.y,
+		"radius" : int(radius)
+	}
+
+func deserialize(src):
+	position = Vector2(float(src["pos_x"]), float(src["pos_y"]))
+	radius = float(src["radius"])
+	$Polygon2D.scale = Vector2(1,1) * radius / 100
+	finished = true
+
 func start():
 	super.start()
 	mouseStartPos = get_global_mouse_position()
 
 func release():
 	super.release()
+	if finished: return
 	end()
+
+func end():
+	super.end()
 	radius = (get_global_mouse_position() - mouseStartPos).length()
 	if radius < 5:
-		parent.removeElement(self)
+		delete()
 
 func wasClicked(pos : Vector2):
 	var dist = (pos - global_position).length()
