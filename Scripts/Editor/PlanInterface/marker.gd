@@ -8,7 +8,7 @@ const CIRCLE = preload("res://Scenes/PlanInterface/MarkingElements/Circle.tscn")
 enum ElementType {Line, Rectangle, Circle}
 
 @onready var parent = get_parent()
-var sheet = -1
+var sheet : Movable
 var selected = false
 var color : Color
 var elements = []
@@ -18,17 +18,17 @@ func serialize():
 		"color": color.to_html(false),
 		"shapes":[]
 		}
-	if sheet >= 0:
-		out["part"] = sheet
+	if sheet != null:
+		out["part"] = sheet.uuid
 	for element in elements:
 		out["shapes"].append(element.serialize())
 	return out
 
 func deserialize(src):
-	color = Color(src["color"]) * Color(1,1,1,0.5)
-	self_modulate = color
+	setColor(Color(src["color"]))
 	if src.has("part"):
-		sheet = int(src["part"])
+		var uuid = int(src["part"])
+		call_deferred("updateSheet", uuid)
 	for part in src["shapes"]:
 		var newPart : MarkerElement
 		match (part["type"]):
@@ -43,10 +43,21 @@ func deserialize(src):
 		newPart.parent = self
 		newPart.deserialize(part)
 
+func updateSheet(uuid):
+	sheet = get_parent().layer.machine.uuidManager.getPart(uuid)
+	sheet.call_deferred("setColor", color)
+	sheet.call_deferred("setUseColor", true)
+
+func setColor(color : Color):
+	self.color = color
+	self_modulate = color * Color(1,1,1,0.5)
+	if sheet:
+		sheet.call_deferred("setColor", color)
+		sheet.call_deferred("setUseColor", true)
+
 func _ready() -> void:
 	if color.s < 0.5:
-		color = Color.from_hsv(randf_range(0,1), 1, 1, 0.5)
-		self_modulate = color
+		setColor(Color.from_hsv(randf_range(0,1), 1, 1, 1))
 
 func setSelected(value):
 	if selected == value: return
@@ -93,3 +104,15 @@ func removeElement(element):
 
 func delete():
 	parent.removeMarker(self)
+
+func linkToSheet(selected : Movable):
+	if selected.uuid < 0:
+		selected.grabUUID()
+	sheet = selected
+	sheet.setColor(color)
+	sheet.setUseColor(true)
+
+func unlink():
+	if sheet != null:
+		sheet.setUseColor(false)
+	sheet = null

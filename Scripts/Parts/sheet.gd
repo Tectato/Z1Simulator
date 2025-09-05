@@ -729,3 +729,16 @@ func snapRotation():
 		#var diff = Space.toVec2(pointConstraints.keys()[0].global_position).angle_to_point(Space.toVec2(pointConstraints.keys()[1].global_position))
 		#rotatePart(-diff)
 	updateRotation()
+
+func setColor(color : Color):
+	var adjustedColor = Color(color)
+	adjustedColor.s = adjustedColor.s * 0.8
+	adjustedColor.v = adjustedColor.v * 0.5
+	var vec3 = Vector3(adjustedColor.r, adjustedColor.g, adjustedColor.b)
+	sprite.set_instance_shader_parameter("partColor", vec3)
+	debugPolygon.set_instance_shader_parameter("partColor", vec3)
+
+func setUseColor(value : bool):
+	sprite.set_instance_shader_parameter("usePartColor", value)
+	debugPolygon.set_instance_shader_parameter("usePartColor", value)
+	

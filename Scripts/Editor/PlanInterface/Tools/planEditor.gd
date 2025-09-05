@@ -6,6 +6,7 @@ var selectedElement : MarkerElement
 var dragging = false
 var dragStartPos = Vector3.ZERO
 var partStartPos = Vector3.ZERO
+var lineWidth = 10
 
 func handleInput(event : InputEvent):
 	if interface.currentPlan:
@@ -21,6 +22,8 @@ func handleInput(event : InputEvent):
 						deselect()
 						selectedElement = clickedElement
 						clickedElement.setSelected(true)
+						if selectedElement is MarkerLine:
+							lineWidth = selectedElement.width
 					dragStartPos = get_global_mouse_position()
 					partStartPos = selectedElement.global_position
 					dragging = true
@@ -29,6 +32,12 @@ func handleInput(event : InputEvent):
 					selectedElement = selectedMarker.addElement(selectedType)
 			else:
 				selectedElement.click()
+		if Input.is_key_pressed(KEY_CTRL):
+			if event.is_action_pressed("scroll_up"):
+				lineWidth = clamp(lineWidth + 1, 1, 20)
+			if event.is_action_pressed("scroll_down"):
+				lineWidth = clamp(lineWidth - 1, 1, 20)
+		
 		if selectedElement:
 			if event.is_action_released("mouse_left"):
 				selectedElement.release()
@@ -37,6 +46,8 @@ func handleInput(event : InputEvent):
 				selectedElement.end()
 			if Input.is_action_just_pressed("delete"):
 				selectedElement.delete()
+			if selectedElement is MarkerLine:
+				selectedElement.setWidth(lineWidth)
 
 func deselect():
 	if selectedElement:

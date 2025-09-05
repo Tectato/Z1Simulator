@@ -1,6 +1,9 @@
 shader_type spatial;
 render_mode depth_prepass_alpha;
 
+instance uniform vec3 partColor = vec3(1,1,1);
+instance uniform bool usePartColor = false;
+
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
@@ -8,7 +11,7 @@ void vertex() {
 void fragment() {
 	float dir = dot(vec3(0,1,0), (vec4(NORMAL, 1.0) * VIEW_MATRIX).xyz);
 	dir = abs(dir);
-	ALBEDO = vec3(0.1,0.3,0.9);
+	ALBEDO = usePartColor ? partColor * 0.6 : vec3(0.1,0.3,0.9);
 	ALPHA = (1.0-dir);
 }
 

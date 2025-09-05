@@ -5,6 +5,8 @@ uniform sampler2D albedo : source_color, filter_nearest;
 uniform float thickness = 0.02;
 instance uniform bool selected = false;
 instance uniform bool fixed = false;
+instance uniform vec3 partColor = vec3(1,1,1);
+instance uniform bool usePartColor = false;
 varying float textureAspectRatio;
 const bool doParallax = false;
 
@@ -38,7 +40,8 @@ void fragment() {
 		vec4 topColor = texture(albedo, UV);
 		float topHeight = getHeight(topColor);
 
-		ALBEDO = (topColor.rgb * topHeight) * (fixed ? 0.5 : 1.0);
+		vec3 colorToUse = usePartColor ? (step(0.5, topColor.b) * partColor) : (topColor.rgb);
+		ALBEDO = (colorToUse * topHeight) * (fixed ? 0.5 : 1.0);
 		ALPHA = min(1.0, topHeight);
 	}
 }

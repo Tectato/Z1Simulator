@@ -40,3 +40,13 @@ func handleInput(event: InputEvent) -> void:
 func _on_selector_toggled(toggled_on: bool) -> void:
 	$Elements.visible = !toggled_on
 	selectedTool = selector if toggled_on else editor
+	if toggled_on:
+		selector.selectedMarker = editor.selectedMarker
+		selector.updateButtons()
+
+func _on_link_button_down() -> void:
+	if Global.editor.selector.selected.size() == 1 and Global.editor.selector.selected[0] is Sheet:
+		selector.selectedMarker.linkToSheet(Global.editor.selector.selected[0])
+
+func _on_unlink_button_down() -> void:
+	selector.selectedMarker.unlink()

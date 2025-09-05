@@ -18,11 +18,12 @@ func _process(delta: float) -> void:
 		var mouseDelta = get_viewport().get_mouse_position() - mouseStartPos
 		position = startPos - mouseDelta / zoomFactor
 	
-	if Input.is_action_just_pressed("scroll_up"):
-		zoomFactor = clampf(zoomFactor * 1.1, 0.1, 10)
-	if Input.is_action_just_pressed("scroll_down"):
-		zoomFactor = clampf(zoomFactor * 0.9, 0.1, 10)
-	zoom = Vector2(1,1) * zoomFactor
+	if not Input.is_key_pressed(KEY_CTRL):
+		if Input.is_action_just_pressed("scroll_up"):
+			zoomFactor = clampf(zoomFactor * 1.1, 0.1, 10)
+		if Input.is_action_just_pressed("scroll_down"):
+			zoomFactor = clampf(zoomFactor * 0.9, 0.1, 10)
+		zoom = Vector2(1,1) * zoomFactor
 
 func _on_mouse_entered() -> void:
 	mouseInWindow = true

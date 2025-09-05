@@ -11,6 +11,7 @@ var clickPos : Vector2
 var mouseDragOrigin : Vector3
 var mouseRelative = []
 var partDragOrigins = []
+var clicking = false
 var dragging = false
 var placing = false
 var selected = []
@@ -38,6 +39,7 @@ func resolutionChanged(newRes):
 func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
 		if event.is_action_pressed("mouse_left"):
+			clicking = true
 			clickPos = get_viewport().get_mouse_position()
 			if placing:
 				for part in selected:
@@ -48,6 +50,7 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				setGrabpoint()
 			cast(true, true)
 		if event.is_action_released("mouse_left"):
+			clicking = false
 			if clickedButton:
 				clickedButton.release()
 				clickedButton = null
@@ -76,7 +79,7 @@ func _process(delta: float) -> void:
 	if !selected.is_empty() and !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
-			if dist > 5:
+			if clicking and dist > 5:
 				dragging = true
 		if (dragging or placing) and not selected[0] is Layer and canModify():
 			mover.move()

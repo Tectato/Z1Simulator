@@ -281,3 +281,9 @@ func intToDir(id : int):
 		2: return Vector2(0,1)
 		3: return Vector2(-1,0)
 	return Vector2(0,0)
+
+func setColor(color : Color):
+	pass
+
+func setUseColor(value : bool):
+	pass

@@ -1,4 +1,5 @@
 extends MarkerElement
+class_name MarkerLine
 
 var previousPoint = Vector2.ZERO
 var width = 10
@@ -47,10 +48,14 @@ func wasClicked(pos : Vector2):
 	var posRelative = pos - global_position
 	for i in range(0, points.size() - 1):
 		var closestLinePoint = Geometry2D.get_closest_point_to_segment(posRelative, points[i], points[i+1])
-		if closestLinePoint.distance_to(posRelative) < 10:
+		if closestLinePoint.distance_to(posRelative) < width * 0.6:
 			return true
 	return false
 
 func _process(delta: float) -> void:
 	if !finished:
 		$Line2D.points[$Line2D.points.size()-1] = get_local_mouse_position()
+
+func setWidth(value):
+	width = value
+	$Line2D.width = width

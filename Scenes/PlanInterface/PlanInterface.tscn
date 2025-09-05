@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cocxpgshc4gnj"]
+[gd_scene load_steps=30 format=3 uid="uid://cocxpgshc4gnj"]
 
 [ext_resource type="Script" uid="uid://ddrowubkywssq" path="res://Scripts/Editor/PlanInterface/planInterface.gd" id="1_kik28"]
 [ext_resource type="Texture2D" uid="uid://x2lcxptdunwi" path="res://Sprites/Buttons/PlanInterface/selector.png" id="1_mlyfr"]
@@ -21,6 +21,12 @@
 [ext_resource type="Texture2D" uid="uid://cqg30ljd4t6gn" path="res://Sprites/Buttons/PlanInterface/Elements/circle_lit.png" id="18_wodlt"]
 [ext_resource type="Script" uid="uid://b67kqivwomnlm" path="res://Scripts/Editor/PlanInterface/Tools/planSelector.gd" id="19_l0c6k"]
 [ext_resource type="Script" uid="uid://qkalqf2s70qi" path="res://Scripts/Editor/PlanInterface/Tools/planEditor.gd" id="20_o8jo1"]
+[ext_resource type="Texture2D" uid="uid://cpuffanpsgefc" path="res://Sprites/Buttons/PlanInterface/link.png" id="22_le1aj"]
+[ext_resource type="Texture2D" uid="uid://bsq0mlgm12i1n" path="res://Sprites/Buttons/PlanInterface/link_active.png" id="23_p5888"]
+[ext_resource type="Texture2D" uid="uid://bh1ke1vqqoe0w" path="res://Sprites/Buttons/PlanInterface/link_lit.png" id="24_wbcty"]
+[ext_resource type="Texture2D" uid="uid://bu2y6vteiultu" path="res://Sprites/Buttons/PlanInterface/unlink.png" id="25_ixu5w"]
+[ext_resource type="Texture2D" uid="uid://bm67ire7qma5v" path="res://Sprites/Buttons/PlanInterface/unlink_active.png" id="26_8f2kt"]
+[ext_resource type="Texture2D" uid="uid://b4r75cg8llvly" path="res://Sprites/Buttons/PlanInterface/unlink_lit.png" id="27_y6pxa"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_mlyfr"]
 
@@ -137,11 +143,69 @@ texture_hover = ExtResource("18_wodlt")
 
 [node name="Tools" type="Node2D" parent="."]
 
-[node name="Selector" type="Node2D" parent="Tools"]
+[node name="Selector" type="Node2D" parent="Tools" node_paths=PackedStringArray("linkButton", "unlinkButton", "colorPicker")]
 script = ExtResource("19_l0c6k")
+linkButton = NodePath("../../Link")
+unlinkButton = NodePath("../../Unlink")
+colorPicker = NodePath("../../ColorPicker")
 
 [node name="Editor" type="Node2D" parent="Tools"]
 script = ExtResource("20_o8jo1")
+
+[node name="Link" type="TextureButton" parent="."]
+visible = false
+texture_filter = 1
+layout_mode = 1
+offset_right = 32.0
+offset_bottom = 32.0
+tooltip_text = "Link to selected sheet"
+texture_normal = ExtResource("22_le1aj")
+texture_pressed = ExtResource("23_p5888")
+texture_hover = ExtResource("24_wbcty")
+
+[node name="Unlink" type="TextureButton" parent="."]
+visible = false
+texture_filter = 1
+layout_mode = 1
+offset_right = 32.0
+offset_bottom = 32.0
+tooltip_text = "Link to selected sheet"
+texture_normal = ExtResource("25_ixu5w")
+texture_pressed = ExtResource("26_8f2kt")
+texture_hover = ExtResource("27_y6pxa")
+
+[node name="PartID" type="Label" parent="Unlink"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 34.0
+offset_top = -11.0
+offset_right = 88.0
+offset_bottom = 12.0
+grow_vertical = 2
+text = "Part ID"
+
+[node name="ColorRect" type="ColorRect" parent="Unlink/PartID"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.490196)
+
+[node name="ColorPicker" type="ColorPicker" parent="."]
+visible = false
+z_index = 1
+layout_mode = 0
+offset_right = 298.0
+offset_bottom = 467.0
+edit_alpha = false
+can_add_swatches = false
+presets_visible = false
 
 [connection signal="gui_input" from="NonUIInteractionArea" to="." method="handleInput"]
 [connection signal="mouse_entered" from="NonUIInteractionArea" to="SubViewportContainer/2DView/Camera2D" method="_on_mouse_entered"]
@@ -151,3 +215,6 @@ script = ExtResource("20_o8jo1")
 [connection signal="pressed" from="Elements/Line" to="Tools/Editor" method="setElementType" binds= [0]]
 [connection signal="pressed" from="Elements/Rectangle" to="Tools/Editor" method="setElementType" binds= [1]]
 [connection signal="pressed" from="Elements/Circle" to="Tools/Editor" method="setElementType" binds= [2]]
+[connection signal="button_down" from="Link" to="." method="_on_link_button_down"]
+[connection signal="button_down" from="Unlink" to="." method="_on_unlink_button_down"]
+[connection signal="color_changed" from="ColorPicker" to="Tools/Selector" method="_on_color_picker_color_changed"]

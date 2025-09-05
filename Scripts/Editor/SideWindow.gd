@@ -49,7 +49,7 @@ func _process(delta: float) -> void:
 		size = startSize + mouseDiff * Vector2(-1,1)
 		size = Vector2(
 			clampf(size.x, 200, get_viewport_rect().size.x-32),
-			clampf(size.y, 50, get_viewport_rect().size.y-32)
+			clampf(size.y, 90, get_viewport_rect().size.y-32)
 		)
 		var sizeDiff = size - startSize
 		global_position = startPos + sizeDiff * Vector2(-1,0)
