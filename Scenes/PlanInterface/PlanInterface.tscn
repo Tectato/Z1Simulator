@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cocxpgshc4gnj"]
+[gd_scene load_steps=34 format=3 uid="uid://cocxpgshc4gnj"]
 
 [ext_resource type="Script" uid="uid://ddrowubkywssq" path="res://Scripts/Editor/PlanInterface/planInterface.gd" id="1_kik28"]
 [ext_resource type="Texture2D" uid="uid://x2lcxptdunwi" path="res://Sprites/Buttons/PlanInterface/selector.png" id="1_mlyfr"]
@@ -29,6 +29,22 @@
 [ext_resource type="Texture2D" uid="uid://b4r75cg8llvly" path="res://Sprites/Buttons/PlanInterface/unlink_lit.png" id="27_y6pxa"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_mlyfr"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_ixu5w"]
+device = -1
+keycode = 83
+unicode = 115
+
+[sub_resource type="Shortcut" id="Shortcut_8f2kt"]
+events = [SubResource("InputEventKey_ixu5w")]
+
+[sub_resource type="InputEventKey" id="InputEventKey_y6pxa"]
+device = -1
+keycode = 69
+unicode = 101
+
+[sub_resource type="Shortcut" id="Shortcut_vqsom"]
+events = [SubResource("InputEventKey_y6pxa")]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_reknm"]
 
@@ -84,6 +100,7 @@ layout_mode = 2
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_mlyfr")
+shortcut = SubResource("Shortcut_8f2kt")
 texture_normal = ExtResource("1_mlyfr")
 texture_pressed = ExtResource("2_kik28")
 texture_hover = ExtResource("3_o6mp8")
@@ -93,6 +110,7 @@ texture_filter = 1
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_mlyfr")
+shortcut = SubResource("Shortcut_vqsom")
 texture_normal = ExtResource("4_8flaj")
 texture_pressed = ExtResource("5_4hopk")
 texture_hover = ExtResource("6_w6ukv")

@@ -29,24 +29,34 @@ func createPlan(image, path):
 
 func addPlan(plan : Plan):
 	viewport.add_child(plan)
+	plan.visible = false
 
 func handleInput(event: InputEvent) -> void:
+	#if event.is_action_pressed("toggle_transform_gizmo"):
+		#var selectorSelected = selectedTool == selector
+		#$ToolButtons/Selector.button_pressed = !selectorSelected
+		#$ToolButtons/Editor.button_pressed = selectorSelected
+		#_on_selector_toggled(!selectorSelected)
 	if event.is_echo(): return
-	if !get_window().has_focus(): return
-	if !get_rect().has_point(get_parent().get_local_mouse_position()): return
 	if currentPlan and currentPlan.hasImage:
 		selectedTool.handleInput(event)
+	if !get_window().has_focus(): return
+	if !get_rect().has_point(get_parent().get_local_mouse_position()): return
 
 func _on_selector_toggled(toggled_on: bool) -> void:
 	$Elements.visible = !toggled_on
 	selectedTool = selector if toggled_on else editor
 	if toggled_on:
-		selector.selectedMarker = editor.selectedMarker
+		if editor.selectedMarker:
+			selector.selectedMarkers = [editor.selectedMarker]
+		else:
+			selector.selectedMarkers = []
 		selector.updateButtons()
 
 func _on_link_button_down() -> void:
-	if Global.editor.selector.selected.size() == 1 and Global.editor.selector.selected[0] is Sheet:
-		selector.selectedMarker.linkToSheet(Global.editor.selector.selected[0])
+	if Global.editor.selector.selected.size() == 1 and Global.editor.selector.selected[0] is Sheet and selector.selectedMarkers.size() == 1:
+		selector.selectedMarkers[0].linkToSheet(Global.editor.selector.selected[0])
 
 func _on_unlink_button_down() -> void:
-	selector.selectedMarker.unlink()
+	for marker in selector.selectedMarkers:
+		marker.unlink()

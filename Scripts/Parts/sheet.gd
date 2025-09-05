@@ -115,6 +115,7 @@ func setSelected(value):
 func setFixed(value, propagate = true):
 	super.setFixed(value)
 	sprite.set_instance_shader_parameter("fixed", value)
+	debugPolygon.set_instance_shader_parameter("fixed", value)
 	if propagate:
 		for hole in pinCandidates:
 			for pin in pinCandidates[hole]:
