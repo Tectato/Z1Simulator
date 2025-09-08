@@ -192,7 +192,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
-		print("")
+		print()
 		#for part in chain:
 			#if part is Pin:
 				#print("Pin")
@@ -209,6 +209,8 @@ func move(dir : Vector2, initiator, chain = []):
 func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
+	if selected:
+		pass
 	var moveCandidates = {}
 	#if selected:
 		#print("A")

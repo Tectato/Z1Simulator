@@ -111,17 +111,23 @@ func wouldMove(clockStep):
 	return clockStep == forwardStep or (!pulsing and clockStep == antiStep)
 
 func getMoveDir(clockStep):
+	if selected:
+		pass
 	updateInActivePos()
 	var toActivePos = clockStep == forwardStep and not (pulsing and inActivePos)
 	if input and clockStep == forwardStep:
 		if inActivePos:
-			return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
+			#return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
+			return Space.toVec2(-travel).rotated(-rotation.y)
 		else:
-			return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
+			#return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
+			return Space.toVec2(travel).rotated(-rotation.y)
 	if toActivePos and !inActivePos:
-		return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
+		#return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
+		return Space.toVec2(travel).rotated(-rotation.y)
 	elif !toActivePos and inActivePos:
-		return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
+		#return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
+		return Space.toVec2(-travel).rotated(-rotation.y)
 	#print("Invalid getMoveDir call")
 	return Vector2(0,0)
 
@@ -152,7 +158,8 @@ func serialize():
 				#serialized["BParent"] = relation.BParent.uuid
 				#Global.workspace.interMachineRelations[serialized] = null
 			#else:
-			getMachine().relations[relation.serialize()] = null
+			if !relation.isInterMachineRelation() and not relation is LinearConstraint:
+				getMachine().relations[relation.serialize()] = null
 	return output
 
 func deserialize(source : Dictionary):

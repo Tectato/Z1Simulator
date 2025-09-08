@@ -40,6 +40,8 @@ func abortMove(initiator, chain = []):
 func delete():
 	A.removeRelation(self)
 	B.removeRelation(self)
+	if isInterMachineRelation():
+		Global.workspace.interMachineRelations.erase(self)
 	call_deferred("queue_free")
 
 func updatePos():
