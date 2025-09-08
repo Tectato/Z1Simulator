@@ -17,7 +17,7 @@ var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
 var pivot : Pin
-var turnInstead = {0:false, 1:false, 2:false, 3:false}
+var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
 var restRot  = 0.0
 var targetRot = 0.0
 var toMoveInRotation = {}
@@ -482,7 +482,9 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if selected:
 		print("")
 	var dirID = dirToInt(dir)
-	turnInstead[dirID] = false
+	if !turnInstead.has(initiator):
+		turnInstead[initiator] = {0:false, 1:false, 2:false, 3:false}
+	turnInstead[initiator][dirID] = false
 	forces[initiator] = [dir, chain]
 	
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
@@ -491,7 +493,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	var cantMove = 0
 	if selected:
-		print("")
+		pass
 	if check2 > 0 and toMove.has(dirID):
 		for pin in toMove[dirID]:
 			if pin == initiator:
@@ -501,11 +503,16 @@ func canMove(dir : Vector2, initiator, chain = []):
 				cantMove += 1
 				if cantMove > 1:
 					break
-				var oppositeMovable = pin.canMove(-dir, self, chain.duplicate())
-				if !oppositeMovable:
+				var turnMovable = pin.canMove(-dir, self, chain.duplicate())
+				# TODO: try turning around every pin, fixed ones first
+				if !turnMovable:
 					pivot = pin
 	if cantMove >= 1:
-		turnInstead[dirID] = true
+		if !turnInstead.has(initiator):
+			turnInstead[initiator] = {0:false, 1:false, 2:false, 3:false}
+		turnInstead[initiator][dirID] = true
+	if selected:
+		pass
 	if (check1 > 1 or check2 > 1 or cantMove >= 1):
 		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			#blockedCycle = Simulator.totalStep
@@ -530,7 +537,7 @@ func move(dir : Vector2, initiator, chain = []):
 				#print(part.path.get_file())
 		#pass
 	var dirID = dirToInt(dir)
-	if turnInstead[dirID]:
+	if turnInstead[initiator][dirID]:
 		chain.append(self)
 		forces[initiator] = [dir, chain]
 		if !shouldTurn():
@@ -597,7 +604,9 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		if cantMove > 1 or !shouldTurn():
 			blockedCycle[dirID] = Simulator.totalStep
 			return 0
-		turnInstead[dirID] = true
+		if !turnInstead.has(initiator):
+			turnInstead[initiator] = {0:false, 1:false, 2:false, 3:false}
+		turnInstead[initiator][dirID] = true
 		return 2#tryTurn()
 	
 	#for movedPart in moved:

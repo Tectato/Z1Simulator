@@ -28,7 +28,13 @@ func getCurrentStep():
 
 func catchUpTo(step : int):
 	stepTarget = step #TODO
+	$CatchupTimer.start()
 
 func delete():
 	Simulator.unregisterClockInstance(self)
 	call_deferred("queue_free")
+
+func _on_catchup_timer_timeout() -> void:
+	if (Simulator.currentStep + offset) % 4 != stepTarget:
+		increaseOffset()
+		$CatchupTimer.start()

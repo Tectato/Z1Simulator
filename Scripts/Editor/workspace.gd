@@ -143,6 +143,7 @@ func deserialize(path):
 		if entry.has("rotation"):
 			newMachine.rotatePart(entry["rotation"]*(PI/2))
 		if entry.has("currentStepOverride"):
+			newMachine.clock.catchUpTo(int(entry["currentStepOverride"]))
 			pass
 		PathHandler.setProjectDir(projectDirTemp)
 	if !machines.is_empty():

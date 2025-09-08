@@ -160,7 +160,7 @@ func delete():
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if selected:
-		print("")
+		pass
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
 	var dirID = dirToInt(dir)
@@ -175,7 +175,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		#abortMove(initiator, chain)
 	var canMove = check2
 	if selected:
-		print("")
+		pass
 	if check2 and toMove.has(dirID):
 		for sheet in toMove[dirID]:
 			if sheet == initiator:
