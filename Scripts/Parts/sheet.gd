@@ -16,7 +16,7 @@ const scaleFactor = 0.001
 var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
-var pivot : Pin
+var pivots = {0:[],1:[],2:[],3:[]}
 var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
 var restRot  = 0.0
 var targetRot = 0.0
@@ -477,10 +477,11 @@ func updateInteractionCandidates():
 func canMove(dir : Vector2, initiator, chain = []):
 	if setToMove < Simulator.totalStep:
 		forces.clear()
+		pivots = {0:[],1:[],2:[],3:[]}
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
 	if selected:
-		print("")
+		pass
 	var dirID = dirToInt(dir)
 	if !turnInstead.has(initiator):
 		turnInstead[initiator] = {0:false, 1:false, 2:false, 3:false}
@@ -503,10 +504,10 @@ func canMove(dir : Vector2, initiator, chain = []):
 				cantMove += 1
 				if cantMove > 1:
 					break
-				var turnMovable = pin.canMove(-dir, self, chain.duplicate())
-				# TODO: try turning around every pin, fixed ones first
-				if !turnMovable:
-					pivot = pin
+				#var turnMovable = pin.canMove(-dir, self, chain.duplicate())
+				## TODO: try turning around every pin, fixed ones first
+				#if !turnMovable and not pin in pivots[dirID]:
+					#pivots[dirID].append(pin)
 	if cantMove >= 1:
 		if !turnInstead.has(initiator):
 			turnInstead[initiator] = {0:false, 1:false, 2:false, 3:false}
@@ -517,7 +518,12 @@ func canMove(dir : Vector2, initiator, chain = []):
 		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			#blockedCycle = Simulator.totalStep
 			#return MoveState.Blocked
-		if !(shouldTurn() and canTurn(dir, initiator, chain)):
+		for pin in toMove[dirID]:
+			if pin == initiator: continue
+			if canTurn(dir, pin, initiator, chain):
+				pivots[dirID] = [pin]
+				break
+		if pivots[dirID].size() != 1:
 			return MoveState.Blocked
 		setToMove = Simulator.totalStep
 		return MoveState.Moved
@@ -537,12 +543,13 @@ func move(dir : Vector2, initiator, chain = []):
 				#print(part.path.get_file())
 		#pass
 	var dirID = dirToInt(dir)
+	if !turnInstead.has(initiator): return MoveState.AlreadyMoving
 	if turnInstead[initiator][dirID]:
 		chain.append(self)
 		forces[initiator] = [dir, chain]
-		if !shouldTurn():
-			return MoveState.Blocked
-		return MoveState.Moved if tryTurn() else MoveState.Blocked
+		#if !shouldTurn():
+			#return MoveState.Blocked
+		return MoveState.Moved if pivots[dirID].size() == 1 and tryTurn(pivots[dirID][0]) else MoveState.Blocked
 		
 	var out = super.move(dir, initiator, chain)
 	if out != MoveState.Moved: return out
@@ -586,14 +593,15 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
 					moveCandidates[pin] = pin
 	
+	var dirID = dirToInt(dir)
 	# Check if any immediate candidates are fixed to terminate search early
 	for pin in moveCandidates:
 		if pin.fixed:
-			pivot = pin
+			#if not pin in pivots[dirID]:
+				#pivots[dirID].append(pin)
 			cantMove += 1
 			if cantMove > 1:
 				return 0
-	var dirID = dirToInt(dir)
 	if toMove.has(dirID):
 		toMove[dirID].merge(moveCandidates)
 	else:
@@ -601,7 +609,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	
 	if cantMove > 0:
 		#abortMove(self, chain)
-		if cantMove > 1 or !shouldTurn():
+		if cantMove > 1:# or !shouldTurn():
 			blockedCycle[dirID] = Simulator.totalStep
 			return 0
 		if !turnInstead.has(initiator):
@@ -613,19 +621,17 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		#movedPins[movedPart] = null
 	return 1
 
-func shouldTurn():
-	if forces.is_empty() or pivot == null:
+func canTurn(dir : Vector2, pivot, initiator, chain = []):
+	if forces.is_empty():
 		return false
-	var initiator = forces.keys()[0]
 	var force = forces[initiator]
 	var initToPivot = (pivot.position - initiator.position).normalized()
 	var impulse = Space.toVec3(force[0]).normalized()
 	var angle = abs(impulse.dot(initToPivot))
-	return angle < 0.6
-
-func canTurn(dir : Vector2, initiator, chain = []):
+	if angle >= 0.6: return false
+	
 	if selected:
-		print("")
+		pass
 	var posDiff = position - pivot.position
 	var initPosARelative = Space.toVec2(initiator.position - pivot.position)
 	var ALinearized = Vector2(
@@ -633,9 +639,6 @@ func canTurn(dir : Vector2, initiator, chain = []):
 		1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
 	var initPosBRelative = initPosARelative + dir
 	var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
-	rotSpeed = 1.0/abs(angleDiff)
-	potentialTargetRot = targetRot + angleDiff
-	potentialTargetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
 	
 	toMoveInRotation.clear()
 	var canTurn = true
@@ -667,9 +670,16 @@ func canTurn(dir : Vector2, initiator, chain = []):
 							toMoveInRotation[dirID][pin] = pin
 						else:
 							toMoveInRotation[dirID] = {pin:pin}
+	if canTurn:
+		if selected:
+			pass
+		rotSpeed = abs(angleDiff/0.08)#1/abs(angleDiff)
+		potentialTargetRot = targetRot + angleDiff
+		potentialTargetPos = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
+		
 	return canTurn
 
-func tryTurn():
+func tryTurn(pivot):
 	if forces.is_empty():
 		return false
 	var initiator = forces.keys()[0]
@@ -681,13 +691,13 @@ func tryTurn():
 		#pass
 	#if pointConstraints.size() + linearConstraints.size() < 3:
 	inMotion = true
-	call_deferred("turn", force[0], initiator, force[1])
+	call_deferred("turn", force[0], pivot, initiator, force[1])
 	forces.clear()
 	return true
 	#forces.clear()
 	#return false
 
-func turn(dir : Vector2, initiator, chain = []):
+func turn(dir : Vector2, pivot, initiator, chain = []):
 	if !inMotion:
 		return # Rotation was aborted
 	if chain.count(self) > 1:

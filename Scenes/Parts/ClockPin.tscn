@@ -73,7 +73,7 @@ mesh = SubResource("CylinderMesh_vjs7e")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001, 0.001, 0.032)
 
 [node name="ResetTimer" type="Timer" parent="."]
-wait_time = 0.3
+wait_time = 0.2
 one_shot = true
 
 [node name="StepLabel" type="Label3D" parent="."]
