@@ -32,6 +32,7 @@ var midPoint : Vector3
 var bounds = []
 var holes = []
 var gizmo
+var marker : Marker
 
 var sortTargetPos : Vector3
 
@@ -90,6 +91,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready():
+	Global.editor.visModeChanged.connect(visModeChanged)
 	if path:
 		loadSVG(path)
 	else:
@@ -110,16 +112,26 @@ func _process(delta: float) -> void:
 
 func setSelected(value):
 	super.setSelected(value)
-	sprite.set_instance_shader_parameter("selected", value)
+	#sprite.set_instance_shader_parameter("selected", value)
+	sprite.updateParams()
+	debugPolygon.updateParams()
+	if Global.editor.planInterface.currentPlan:
+		Global.editor.planInterface.currentPlan.updateLitMarkers()
 
 func setFixed(value, propagate = true):
 	super.setFixed(value)
-	sprite.set_instance_shader_parameter("fixed", value)
+	#sprite.set_instance_shader_parameter("fixed", value)
+	sprite.updateParams()
+	debugPolygon.updateParams()
 	debugPolygon.set_instance_shader_parameter("fixed", value)
 	if propagate:
 		for hole in pinCandidates:
 			for pin in pinCandidates[hole]:
 				pin.updateConstraints()
+
+func visModeChanged(mode : Editor.VisMode):
+	sprite.visModeChanged(mode)
+	debugPolygon.visModeChanged(mode)
 
 func updateConstraints():
 	var setToFixed = false
@@ -187,6 +199,7 @@ func loadSVG(filepath : String):
 	sprite.set_texture(image)
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
+	sprite.updateSprite()
 	
 	var rawString = FileAccess.get_file_as_string(path)
 	var elements = rawString.split("\n")
@@ -217,6 +230,7 @@ func loadSVG(filepath : String):
 	var radii = (max-min)/2
 	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
 	#_draw_gizmo()
+	visModeChanged(Global.editor.currentVisMode)
 
 func isValidElement(string : String):
 	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect")

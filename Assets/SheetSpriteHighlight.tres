@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://vhdr4absfdgr"]
+
+[ext_resource type="Shader" uid="uid://n0vyy28prjuf" path="res://Shaders/SheetHighlight.gdshader" id="1_knckj"]
+[ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_523mn"]
+
+[resource]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("1_knckj")
+shader_parameter/albedo = ExtResource("2_523mn")
+shader_parameter/thickness = 0.02

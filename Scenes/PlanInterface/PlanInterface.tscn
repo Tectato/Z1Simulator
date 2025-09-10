@@ -225,6 +225,10 @@ edit_alpha = false
 can_add_swatches = false
 presets_visible = false
 
+[node name="ReplacePlanPopup" type="ConfirmationDialog" parent="."]
+initial_position = 1
+dialog_text = "Replace current plan?"
+
 [connection signal="gui_input" from="NonUIInteractionArea" to="." method="handleInput"]
 [connection signal="mouse_entered" from="NonUIInteractionArea" to="SubViewportContainer/2DView/Camera2D" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="NonUIInteractionArea" to="SubViewportContainer/2DView/Camera2D" method="_on_mouse_exited"]
@@ -236,3 +240,4 @@ presets_visible = false
 [connection signal="button_down" from="Link" to="." method="_on_link_button_down"]
 [connection signal="button_down" from="Unlink" to="." method="_on_unlink_button_down"]
 [connection signal="color_changed" from="ColorPicker" to="Tools/Selector" method="_on_color_picker_color_changed"]
+[connection signal="confirmed" from="ReplacePlanPopup" to="." method="_on_replace_plan_popup_confirmed"]

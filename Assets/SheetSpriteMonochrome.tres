@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://o31ia3qqm05d"]
+
+[ext_resource type="Shader" uid="uid://yhx1m7i3n24k" path="res://Shaders/SheetMonochrome.gdshader" id="1_714c5"]
+
+[resource]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_714c5")
+shader_parameter/selectedColor = Vector3(1, 1, 1)

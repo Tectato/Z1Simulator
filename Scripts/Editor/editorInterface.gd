@@ -154,3 +154,13 @@ func updateSelectedLabel(parts = []):
 
 func _on_intermediate_plate_vis_toggled(toggled_on: bool) -> void:
 	editor.workspace.setIntermediatePlateVis(toggled_on)
+
+
+func visModeMonochrome() -> void:
+	editor.setVisMode(Editor.VisMode.Monochrome)
+
+func visModeColorcoded() -> void:
+	editor.setVisMode(Editor.VisMode.Colorcoded)
+
+func visModeShaded() -> void:
+	editor.setVisMode(Editor.VisMode.Realistic)

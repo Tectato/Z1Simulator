@@ -1,28 +1,18 @@
-[gd_scene load_steps=10 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=12 format=3 uid="uid://b2845uayksbce"]
 
-[ext_resource type="Shader" uid="uid://cgembklie4r0e" path="res://Shaders/Sheet.gdshader" id="1_cw2qr"]
+[ext_resource type="Material" uid="uid://bnljtoqintdji" path="res://Assets/SheetSpriteColorcoded.tres" id="2_huj6i"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
 [ext_resource type="Script" uid="uid://dqb3hgknwtj7k" path="res://Scripts/Parts/sheet.gd" id="3_k6d36"]
-[ext_resource type="Shader" uid="uid://n0vyy28prjuf" path="res://Shaders/SheetHighlight.gdshader" id="4_ptygs"]
-[ext_resource type="Shader" uid="uid://db1at10jrnts8" path="res://Shaders/SheetMesh.gdshader" id="5_1r6gd"]
+[ext_resource type="Material" uid="uid://o31ia3qqm05d" path="res://Assets/SheetSpriteMonochrome.tres" id="3_rfh3b"]
+[ext_resource type="Material" uid="uid://vhdr4absfdgr" path="res://Assets/SheetSpriteHighlight.tres" id="4_jrvcr"]
+[ext_resource type="Script" uid="uid://bfdg7rb4hi2i" path="res://Scripts/Parts/SheetElements/sheetSprite.gd" id="6_jrvcr"]
+[ext_resource type="Material" uid="uid://cfwog1tvfchgh" path="res://Assets/SheetSideColorcoded.tres" id="7_uai6l"]
+[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
+[ext_resource type="Shader" uid="uid://dm1ccxmkxramb" path="res://Shaders/SheetMeshMonochrome.gdshader" id="9_uai6l"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k6d36"]
-resource_local_to_scene = true
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wkhiy"]
 render_priority = 0
-shader = ExtResource("1_cw2qr")
-shader_parameter/albedo = ExtResource("2_k6d36")
-shader_parameter/thickness = 0.02
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ptygs"]
-resource_local_to_scene = true
-render_priority = 1
-shader = ExtResource("4_ptygs")
-shader_parameter/albedo = ExtResource("2_k6d36")
-shader_parameter/thickness = 0.02
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_huj6i"]
-render_priority = 0
-shader = ExtResource("5_1r6gd")
+shader = ExtResource("9_uai6l")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ptygs"]
 top_radius = 0.01
@@ -36,12 +26,16 @@ collider = NodePath("Outline")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351027, 0, 0.245938)
-material_override = SubResource("ShaderMaterial_k6d36")
-material_overlay = SubResource("ShaderMaterial_ptygs")
+material_override = ExtResource("2_huj6i")
+material_overlay = ExtResource("4_jrvcr")
 centered = false
 pixel_size = 0.001
 axis = 1
 texture = ExtResource("2_k6d36")
+script = ExtResource("6_jrvcr")
+materialMonochrome = ExtResource("3_rfh3b")
+materialColorcoded = ExtResource("2_huj6i")
+materialShaded = ExtResource("3_rfh3b")
 
 [node name="Outline" type="Area3D" parent="."]
 collision_mask = 0
@@ -56,7 +50,10 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 polygon = PackedVector2Array(0, 0, 1, 1, 1, 0)
 depth = 0.02
-material = SubResource("ShaderMaterial_huj6i")
+material = ExtResource("7_uai6l")
+script = ExtResource("8_wkhiy")
+materialMonochrome = SubResource("ShaderMaterial_wkhiy")
+materialColorcoded = ExtResource("7_uai6l")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false

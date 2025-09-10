@@ -9,6 +9,8 @@ const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 @onready var camera = $"SubViewportContainer/2DView/Camera2D"
 var currentPlan : Plan
 
+var tempPlanData = []
+
 func setPlan(plan : Plan):
 	if plan == currentPlan: return
 	if currentPlan:
@@ -19,7 +21,9 @@ func setPlan(plan : Plan):
 
 func createPlan(image, path):
 	if currentPlan:
-		return #TODO: prompt to replace
+		tempPlanData = [image, path]
+		$ReplacePlanPopup.popup()
+		return
 	var newPlan = PLAN.instantiate()
 	viewport.add_child(newPlan)
 	newPlan.layer = Global.workspace.selectedLayer
@@ -60,3 +64,9 @@ func _on_link_button_down() -> void:
 func _on_unlink_button_down() -> void:
 	for marker in selector.selectedMarkers:
 		marker.unlink()
+
+
+func _on_replace_plan_popup_confirmed() -> void:
+	currentPlan.delete()
+	currentPlan = null
+	createPlan(tempPlanData[0], tempPlanData[1])

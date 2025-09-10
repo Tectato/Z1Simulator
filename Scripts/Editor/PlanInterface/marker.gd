@@ -47,6 +47,7 @@ func updateSheet(uuid):
 	sheet = get_parent().layer.machine.uuidManager.getPart(uuid)
 	sheet.call_deferred("setColor", color)
 	sheet.call_deferred("setUseColor", true)
+	sheet.marker = self
 
 func setColor(color : Color):
 	self.color = color
@@ -73,6 +74,18 @@ func setSelected(value):
 		else:
 			for element in elements:
 				element.setSelected(false)
+
+func updateLit(forceLit = false):
+	if sheet == null:
+		return
+	var lit = sheet.selected or forceLit
+	match(Global.editor.currentVisMode):
+		Editor.VisMode.Monochrome:
+			self_modulate = Color(1,0,0,0.5) if sheet.selected else Color(1,1,1,0.1)
+		Editor.VisMode.Colorcoded:
+			self_modulate = color * Color(1,1,1,0.5) if lit else Color(1,1,1,0.1)
+		Editor.VisMode.Realistic:
+			self_modulate = Color(1,0,0,0.5) if sheet.selected else Color(1,1,1,0.1)
 
 func addElement(type : ElementType):
 	var newElement
@@ -103,16 +116,19 @@ func removeElement(element):
 	element.queue_free()
 
 func delete():
+	unlink()
 	parent.removeMarker(self)
 
 func linkToSheet(selected : Movable):
 	if selected.uuid < 0:
 		selected.grabUUID()
 	sheet = selected
+	sheet.marker = self
 	sheet.setColor(color)
 	sheet.setUseColor(true)
 
 func unlink():
 	if sheet != null:
 		sheet.setUseColor(false)
+		sheet.marker = null
 	sheet = null

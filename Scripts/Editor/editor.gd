@@ -11,6 +11,11 @@ var currentlyLoadedPath = ""
 var savePath = ""
 var saved = false
 var previousAction : Callable
+var currentVisMode = VisMode.Colorcoded
+
+enum VisMode { Monochrome, Colorcoded, Realistic }
+
+signal visModeChanged(mode : VisMode)
 
 func _ready() -> void:
 	get_tree().get_root().files_dropped.connect(fileDropped)
@@ -144,3 +149,8 @@ func isEmpty():
 	for machine in workspace.machines:
 		empty = empty and machine.isEmpty()
 	return empty
+
+func setVisMode(mode : VisMode):
+	if mode != currentVisMode:
+		currentVisMode = mode
+		visModeChanged.emit(currentVisMode)

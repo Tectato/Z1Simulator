@@ -8,6 +8,11 @@ var selectedMarker : Marker
 var imagePath = ""
 var hasImage = false
 var markers = []
+var updatingMarkers = false
+
+func _ready() -> void:
+	Global.editor.visModeChanged.connect(visModeChanged)
+	updateLitMarkers()
 
 func setImageFromPath(path):
 	var image = Image.load_from_file(path)
@@ -56,3 +61,27 @@ func getMarker(pos):
 func removeMarker(marker):
 	markers.erase(marker)
 	marker.queue_free()
+
+func delete():
+	while !markers.is_empty():
+		var marker = markers.pop_back()
+		marker.unlink()
+	queue_free()
+
+func visModeChanged(mode : Editor.VisMode):
+	updateLitMarkers()
+
+func updateLitMarkers():
+	if updatingMarkers: return
+	updatingMarkers = true
+	call_deferred("performLitMarkersUpdate")
+
+func performLitMarkersUpdate():
+	var sheetsSelected = false
+	for part in Global.editor.selector.selected:
+		if part is Sheet:
+			sheetsSelected = true
+			break
+	for marker in markers:
+		marker.updateLit(!sheetsSelected)
+	updatingMarkers = false
