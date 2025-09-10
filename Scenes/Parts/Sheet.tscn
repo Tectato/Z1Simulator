@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=13 format=3 uid="uid://b2845uayksbce"]
 
 [ext_resource type="Material" uid="uid://bnljtoqintdji" path="res://Assets/SheetSpriteColorcoded.tres" id="2_huj6i"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
@@ -9,6 +9,10 @@
 [ext_resource type="Material" uid="uid://cfwog1tvfchgh" path="res://Assets/SheetSideColorcoded.tres" id="7_uai6l"]
 [ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
 [ext_resource type="Shader" uid="uid://dm1ccxmkxramb" path="res://Shaders/SheetMeshMonochrome.gdshader" id="9_uai6l"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uai6l"]
+metallic = 1.0
+roughness = 0.45
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wkhiy"]
 render_priority = 0
@@ -50,10 +54,11 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 polygon = PackedVector2Array(0, 0, 1, 1, 1, 0)
 depth = 0.02
-material = ExtResource("7_uai6l")
+material = SubResource("StandardMaterial3D_uai6l")
 script = ExtResource("8_wkhiy")
 materialMonochrome = SubResource("ShaderMaterial_wkhiy")
 materialColorcoded = ExtResource("7_uai6l")
+materialShaded = SubResource("StandardMaterial3D_uai6l")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false

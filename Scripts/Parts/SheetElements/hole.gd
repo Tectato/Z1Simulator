@@ -1,6 +1,8 @@
 extends Node3D
 class_name Hole
 
+@export var cutout : CSGShape3D
+
 func checkPos(pos):
 	pass
 

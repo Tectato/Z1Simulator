@@ -1,8 +1,8 @@
 extends CSGPolygon3D
 
-@export var materialMonochrome : ShaderMaterial
-@export var materialColorcoded : ShaderMaterial
-@export var materialShaded : ShaderMaterial
+@export var materialMonochrome : Material
+@export var materialColorcoded : Material
+@export var materialShaded : Material
 
 @onready var parent = get_parent()
 

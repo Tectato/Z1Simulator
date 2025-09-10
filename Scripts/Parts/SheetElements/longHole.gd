@@ -8,14 +8,27 @@ var bounds = []
 @export var debugMesh : Node3D
 @export var debugBoundsA : Node3D
 @export var debugBoundsB : Node3D
+var rectangular = false
 
 func setRadius(value):
 	radius = value
+	$RoundedCutout/Start.radius = radius
+	$RoundedCutout/End.radius = radius
 
 func setTravelLength(value):
 	start.position = Vector3(-value/2,0,0)
 	end.position = Vector3(value/2,0,0)
 	bounds = [Vector2(-(value/2+radius),-radius), Vector2(value/2+radius, radius)]
+	$RoundedCutout/Start.position = start.position
+	$RoundedCutout/End.position = end.position
+	$RoundedCutout.size = Vector3(value, 0.2, radius * 2)
+	$RectCutout.size = Vector3(value + radius * 2, 0.2, radius * 2)
+
+func setRectangular(value):
+	rectangular = value
+	cutout = $RectCutout if value else $RoundedCutout
+	$RectCutout.visible = value
+	$RoundedCutout.visible = !value
 
 func getDir():
 	var dir3 = end.position.normalized().rotated(Vector3.UP, rotation.y)

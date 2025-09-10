@@ -208,6 +208,7 @@ func setupAfterDuplication():
 		part.layer = self
 		part.place()
 		part.resetUUID()
+		part.setupAfterDuplication()
 
 func updatePosition():
 	for part in parts:

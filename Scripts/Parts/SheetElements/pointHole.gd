@@ -6,6 +6,7 @@ var gizmo
 
 func setRadius(value):
 	radius = value
+	cutout.radius = radius
 
 func checkPos(pos : Vector3):
 	#if gizmo:

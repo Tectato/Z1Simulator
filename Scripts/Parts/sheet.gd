@@ -132,6 +132,7 @@ func setFixed(value, propagate = true):
 func visModeChanged(mode : Editor.VisMode):
 	sprite.visModeChanged(mode)
 	debugPolygon.visModeChanged(mode)
+	sprite.visible = mode != Editor.VisMode.Realistic
 
 func updateConstraints():
 	var setToFixed = false
@@ -222,9 +223,16 @@ func loadSVG(filepath : String):
 	#midPoint = Vector3(size.x/20, 0, -size.y/20)
 	$Sprite3D.position = -midPoint + offset
 	$Outline.position = -midPoint + offset
-	$CSGPolygon3D.position = -midPoint + offset - Vector3.UP * 0.02
+	debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
 	for hole in holes:
 		hole.position -= midPoint - offset
+		var cutout = hole.cutout
+		hole.remove_child(cutout)
+		debugPolygon.add_child(cutout)
+		cutout.position = (cutout.position + hole.position + midPoint - offset).rotated(Vector3.RIGHT, -PI/2)
+		cutout.rotate_y(hole.rotation.y)
+		cutout.rotate_x(-PI/2)
+		#cutout.rotation = cutout.rotation + hole.rotation - Vector3.RIGHT * PI/2
 	#debugPoint.position = midPoint
 	
 	var radii = (max-min)/2
@@ -273,6 +281,7 @@ func parseElement(part : String):
 				newHole.setTravelLength(float(dict["length"])/1000)
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
+				newHole.setRectangular(false)
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10, float(dict["horizontal"]) > 0, float(dict["length"]), false)
 			if id.contains("logicHole"):
 				var newHole = addHole(LOGICHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
@@ -299,6 +308,7 @@ func parseElement(part : String):
 				newHole.setTravelLength(float(dict["length"])/1000)
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
+				newHole.setRectangular(true)
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["width"])/20, float(dict["horizontal"]) > 0, float(dict["length"]), true)
 			if id.contains("squareHole"):
 				var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
@@ -775,4 +785,12 @@ func setColor(color : Color):
 func setUseColor(value : bool):
 	sprite.set_instance_shader_parameter("usePartColor", value)
 	debugPolygon.set_instance_shader_parameter("usePartColor", value)
-	
+
+func setupAfterDuplication():
+	# For some reason duplicating a sheet also duplicates every hole
+	var toDelete = []
+	for thing in get_children():
+		if thing is Hole and not thing in holes:
+			toDelete.append(thing)
+	for thing in toDelete:
+		thing.queue_free()

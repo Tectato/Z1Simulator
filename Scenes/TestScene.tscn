@@ -53,3 +53,19 @@ path = "G:\\codingProjects\\z1simulator\\Test\\11b_2.svg"
 
 [node name="Pin" parent="." instance=ExtResource("3_0f5h7")]
 transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0.115, 0, -0.115)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 0)
+depth = 0.1
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="CSGPolygon3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.495264, 0.514353, 0.313488)
+operation = 2
+polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
+
+[node name="Node3D" type="Node3D" parent="CSGPolygon3D"]
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="CSGPolygon3D/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274859, 0.222318, 0.313488)
+operation = 2
+polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)

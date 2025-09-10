@@ -3,14 +3,20 @@ class_name LogicHole
 
 var polygon
 var gizmo
+var openLeft = false
 
 func setOpenLeft(value):
+	openLeft = value
 	if value:
 		$Area3D/PolygonOpenRight.queue_free()
 		polygon = $Area3D/PolygonOpenLeft.polygon
+		cutout = $CutoutOpenLeft
 	else:
 		$Area3D/PolygonOpenLeft.queue_free()
 		polygon = $Area3D/PolygonOpenRight.polygon
+		cutout = $CutoutOpenRight
+	$CutoutOpenLeft.visible = value
+	$CutoutOpenRight.visible = !value
 
 func checkPos(pos : Vector3):
 	#var posRot = pos.rotated(Vector3.UP, -rotation.y)

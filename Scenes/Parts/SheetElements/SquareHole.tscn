@@ -6,9 +6,13 @@
 radius = 0.01
 height = 0.02
 
-[node name="SquareHole" type="Node3D"]
+[node name="SquareHole" type="Node3D" node_paths=PackedStringArray("cutout")]
 script = ExtResource("1_p2c2m")
+cutout = NodePath("Cutout")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("SphereMesh_p2c2m")
+
+[node name="Cutout" type="CSGBox3D" parent="."]
+operation = 2

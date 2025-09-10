@@ -7,8 +7,9 @@
 render_priority = 0
 shader = ExtResource("2_yik8r")
 
-[node name="CustomHole" type="Node3D"]
+[node name="CustomHole" type="Node3D" node_paths=PackedStringArray("cutout")]
 script = ExtResource("1_1ul1b")
+cutout = NodePath("Cutout")
 
 [node name="PolygonArea" type="Area3D" parent="."]
 collision_layer = 0
@@ -20,10 +21,9 @@ monitorable = false
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 depth = 0.1
 
-[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+[node name="Cutout" type="CSGPolygon3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.02, 0)
-visible = false
-flip_faces = true
+operation = 2
 polygon = PackedVector2Array(0, 0, 1, 1, 1, 0)
-depth = 0.02
+depth = 0.2
 material = SubResource("ShaderMaterial_fvcf7")

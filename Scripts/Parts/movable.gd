@@ -287,3 +287,6 @@ func setColor(color : Color):
 
 func setUseColor(value : bool):
 	pass
+
+func setupAfterDuplication():
+	pass
