@@ -64,6 +64,8 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready() -> void:
+	Simulator.rewind.connect(rewind)
+	Simulator.record.connect(record)
 	Global.editor.visModeChanged.connect(visModeChanged)
 
 func getBounds():

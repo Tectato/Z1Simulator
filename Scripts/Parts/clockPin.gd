@@ -16,6 +16,8 @@ var travelIndicator : Node3D
 @onready var inputCheckbox = $StepLabel/InputCheckbox
 
 func _ready() -> void:
+	Simulator.rewind.connect(rewind)
+	Simulator.record.connect(record)
 	machine.clock.registerClockPin(self)
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)

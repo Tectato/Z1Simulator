@@ -24,6 +24,7 @@ var toMoveInRotation = {}
 var potentialTargetRot = 0.0 # Set in canTurn, but not committed as targetRot until we actually move
 var potentialTargetPos = Vector3.ZERO
 var rotSpeed = 2.0
+var rotHistory = []
 var forces = {}
 var movedPins = {}
 #var linearConstraints = {} # TODO
@@ -560,7 +561,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
-		print("=====")
+		pass
 		#for part in chain:
 			#if part is Pin:
 				#print("Pin")
@@ -579,7 +580,7 @@ func move(dir : Vector2, initiator, chain = []):
 	var out = super.move(dir, initiator, chain)
 	if out != MoveState.Moved: return out
 	if selected:
-		print("=====")
+		pass
 	#chain.append(self)
 	#forces[initiator] = [dir, chain]
 	#var check1 = checkPropagation(Space.toVec3(dir)/2, dir, chain)
@@ -594,6 +595,18 @@ func move(dir : Vector2, initiator, chain = []):
 		##call_deferred("tryTurn")
 	#return MoveState.Moved if check1 > 0 and check2 > 0 else MoveState.Blocked
 	return MoveState.Moved
+
+func record():
+	super.record()
+	rotHistory.push_back(rotation.y)
+	if rotHistory.size() > Workspace.historyLength:
+		rotHistory.pop_front()
+
+func rewind():
+	var canRewind = !posHistory.is_empty()
+	super.rewind()
+	if canRewind:
+		targetRot = rotHistory.pop_front()
 
 # Returns: 0 if can't move, 1 if can move, 2 if we will turn instead
 func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
@@ -748,6 +761,7 @@ func abortMove(initiator, chain = []):
 		return
 	super.abortMove(initiator, chain)
 	targetRot = rotation.y
+	rotHistory.pop_back()
 
 func delete():
 	SheetLibrary.unregisterUser(path)

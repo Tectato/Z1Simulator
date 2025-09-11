@@ -7,6 +7,7 @@ const SPRING = preload("res://Scenes/Parts/Relations/Spring.tscn")
 @onready var restPos = position
 @onready var preMovePos = position
 @onready var targetPos = position
+var posHistory = []
 
 enum MoveState { Blocked, Moved, AlreadyMoving }
 
@@ -30,6 +31,8 @@ var id = ""
 var uuid = -1
 
 func _ready() -> void:
+	Simulator.rewind.connect(rewind)
+	Simulator.record.connect(record)
 	place()
 
 func grabUUID():
@@ -138,6 +141,7 @@ func abortMove(initiator, chain = []):
 		print("")
 	if !inMotion:
 		return
+	posHistory.pop_front()
 	chain.erase(self)
 	if initiator == self:
 		movedBy.clear()
@@ -159,6 +163,16 @@ func abortMove(initiator, chain = []):
 		elif part is Relation:
 			part.abortMove(self, chain)
 	moved.clear()
+
+func record():
+	posHistory.push_back(position)
+	if posHistory.size() > Workspace.historyLength:
+		posHistory.pop_front()
+
+func rewind():
+	if posHistory.is_empty(): return
+	targetPos = posHistory.pop_back()
+	inMotion = true
 
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()

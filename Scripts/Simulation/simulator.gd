@@ -10,8 +10,12 @@ var clockSpeed = 0.5 #In seconds
 var clockInstances = []
 var inputs = []
 var outputs = []
+var history = 0
 
 var gizmo : Control
+
+signal record
+signal rewind
 
 func _ready() -> void:
 	$AutoClock.wait_time = clockSpeed
@@ -43,16 +47,27 @@ func next(stopClock = true):
 	if !$Cooldown.is_stopped():
 		return
 	if stopClock: stop()
-	currentStep += 1
-	currentStep %= 4
+	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
+	history = min(history+1, Workspace.historyLength)
 	for instance in clockInstances:
 		instance.clockCycle(currentStep)
 	gizmo.setClockStep(currentStep+1)
 	$Cooldown.start()
+	call_deferred("callRecord")
+
+func callRecord():
+	record.emit()
 
 func prev(stopClock = true):
 	if stopClock: stop()
+	if history <= 0: return
+	currentStep = wrapi(currentStep-1,0,4)
+	totalStep -= 1
+	history -= 1
+	gizmo.setClockStep(currentStep+1)
+	$Cooldown.start()
+	rewind.emit()
 	pass
 
 func setClockSpeed(value):

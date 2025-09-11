@@ -10,6 +10,7 @@ const pinTravel = 0.08
 const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
+const historyLength = 12
 
 @onready var uuidManager = $UUIDManager
 
