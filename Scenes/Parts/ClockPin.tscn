@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene load_steps=18 format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
@@ -12,6 +12,10 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1a2dp"]
 metallic = 1.0
 roughness = 0.48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vinw1"]
+metallic = 1.0
+roughness = 0.1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r5mnu"]
 resource_local_to_scene = true
@@ -61,6 +65,9 @@ radius = 0.02
 
 [node name="ClockPin" type="Node3D" node_paths=PackedStringArray("collider")]
 script = ExtResource("1_pegep")
+normalMaterial = SubResource("StandardMaterial3D_1a2dp")
+staticMaterial = SubResource("StandardMaterial3D_1a2dp")
+shadedMaterial = SubResource("StandardMaterial3D_vinw1")
 collider = NodePath("Area3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

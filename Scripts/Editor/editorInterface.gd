@@ -18,6 +18,10 @@ extends Control
 func _ready() -> void:
 	saveRequestDialog.add_button("Cancel", true, "Cancel")
 	updateSelectedLabel([])
+	call_deferred("lateReady")
+
+func lateReady():
+	editor.selector.newSelection.connect(newSelection)
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -164,3 +168,10 @@ func visModeColorcoded() -> void:
 
 func visModeShaded() -> void:
 	editor.setVisMode(Editor.VisMode.Realistic)
+
+func newSelection(parts = []):
+	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
+	$MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
+
+func _on_edit_id_pressed(id: int) -> void:
+	pass # Replace with function body.

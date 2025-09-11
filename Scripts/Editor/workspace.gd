@@ -32,11 +32,20 @@ var selectedLayer : Layer
 func _ready() -> void:
 	Global.workspace = self
 	createNew()
+	call_deferred("lateReady")
+
+func lateReady():
+	Global.editor.visModeChanged.connect(visModeChanged)
 
 func setMode(newMode):
 	if newMode != mode:
 		modeChanged.emit(newMode)
 	mode = newMode
+
+func visModeChanged(mode : Editor.VisMode):
+	var shaded = mode == Editor.VisMode.Realistic
+	$DirectionalLight3D.shadow_enabled = shaded
+	$WorldEnvironment.environment.ssao_enabled = shaded
 
 func setResolution(newRes):
 	if newRes != resolution:

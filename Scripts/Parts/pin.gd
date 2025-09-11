@@ -5,6 +5,7 @@ const INDICATOR = preload("res://Scenes/Parts/OutputIndicator.tscn")
 
 @export var normalMaterial : Material
 @export var staticMaterial : Material
+@export var shadedMaterial : Material
 
 var global = false
 var output = false
@@ -62,6 +63,9 @@ func deserialize(source : Dictionary):
 					#call_deferred("addRelationByUUID", Relation.Type.Link, otherUUID)
 	place()
 
+func _ready() -> void:
+	Global.editor.visModeChanged.connect(visModeChanged)
+
 func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
 
@@ -72,6 +76,12 @@ func setFixed(value, propagate = true):
 		for thing in interactionCandidates:
 			if thing is PointHole and !thing.get_parent().fixed:
 				thing.get_parent().call_deferred("updateFixedState")
+
+func visModeChanged(mode : Editor.VisMode):
+	if mode == Editor.VisMode.Realistic:
+		$MeshInstance3D.material_override = shadedMaterial
+	else:
+		$MeshInstance3D.material_override = staticMaterial if fixed else normalMaterial
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(scale.x,value,scale.z)

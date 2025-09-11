@@ -79,7 +79,7 @@ func updateLitMarkers():
 func performLitMarkersUpdate():
 	var sheetsSelected = false
 	for part in Global.editor.selector.selected:
-		if part is Sheet:
+		if part is Sheet and part.marker:
 			sheetsSelected = true
 			break
 	for marker in markers:

@@ -7,16 +7,18 @@
 [ext_resource type="Material" uid="uid://vhdr4absfdgr" path="res://Assets/SheetSpriteHighlight.tres" id="4_jrvcr"]
 [ext_resource type="Script" uid="uid://bfdg7rb4hi2i" path="res://Scripts/Parts/SheetElements/sheetSprite.gd" id="6_jrvcr"]
 [ext_resource type="Material" uid="uid://cfwog1tvfchgh" path="res://Assets/SheetSideColorcoded.tres" id="7_uai6l"]
+[ext_resource type="Shader" uid="uid://bcuu62ucic85b" path="res://Shaders/SheetMeshMonochromeOutlined.gdshader" id="8_uai6l"]
 [ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
-[ext_resource type="Shader" uid="uid://dm1ccxmkxramb" path="res://Shaders/SheetMeshMonochrome.gdshader" id="9_uai6l"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uai6l"]
+albedo_color = Color(0.617455, 0.617455, 0.617455, 1)
 metallic = 1.0
-roughness = 0.45
+roughness = 0.4
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wkhiy"]
 render_priority = 0
-shader = ExtResource("9_uai6l")
+shader = ExtResource("8_uai6l")
+shader_parameter/outline_threshold = 0.2
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ptygs"]
 top_radius = 0.01
@@ -30,6 +32,7 @@ collider = NodePath("Outline")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351027, 0, 0.245938)
+visible = false
 material_override = ExtResource("2_huj6i")
 material_overlay = ExtResource("4_jrvcr")
 centered = false

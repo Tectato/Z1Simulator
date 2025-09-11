@@ -251,7 +251,8 @@ func _draw_gizmo() -> void:
 	if gizmo:
 		gizmo.free()
 	var extents = (bounds[1]-bounds[0])
-	gizmo = Gizmo3D.create_box_outline(Color(1.0,0.8,0.0,0.2), extents, global_position + bounds[0] + extents/2 + Vector3.UP * 5 * global_position.y)
+	var color = Color(1.0,0.5,0.0,0.2) if importedInstance else Color(1.0,0.8,0.0,0.2)
+	gizmo = Gizmo3D.create_box_outline(color, extents, global_position + bounds[0] + extents/2 + Vector3.UP * 5 * global_position.y)
 
 func getBounds():
 	var min = Vector3(1,1,1) * 100000

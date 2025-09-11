@@ -19,6 +19,9 @@ float getHeight(vec4 color){
 }
 
 void fragment() {
+	if (true){
+		ALPHA = 0.0;
+	} else {
 	if (doParallax){
 		vec3 viewDir = normalize(vec3(VIEW) * mat3(TANGENT, -BINORMAL, NORMAL));
 
@@ -43,6 +46,7 @@ void fragment() {
 		vec3 colorToUse = usePartColor ? (step(0.5, topColor.b) * partColor) : (topColor.rgb);
 		ALBEDO = (colorToUse * topHeight) * (fixed ? 0.5 : 1.0);
 		ALPHA = min(1.0, topHeight);
+	}
 	}
 }
 

@@ -115,6 +115,7 @@ func setSelected(value):
 	#sprite.set_instance_shader_parameter("selected", value)
 	sprite.updateParams()
 	debugPolygon.updateParams()
+	sprite.visible = value
 	if Global.editor.planInterface.currentPlan:
 		Global.editor.planInterface.currentPlan.updateLitMarkers()
 
@@ -132,7 +133,7 @@ func setFixed(value, propagate = true):
 func visModeChanged(mode : Editor.VisMode):
 	sprite.visModeChanged(mode)
 	debugPolygon.visModeChanged(mode)
-	sprite.visible = mode != Editor.VisMode.Realistic
+	#sprite.visible = false #mode != Editor.VisMode.Realistic
 
 func updateConstraints():
 	var setToFixed = false

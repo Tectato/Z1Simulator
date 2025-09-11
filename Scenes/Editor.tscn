@@ -483,6 +483,13 @@ item_6/id = 4
 item_7/text = "Reload current Project"
 item_7/id = 7
 
+[node name="Edit" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
+auto_translate_mode = 1
+size = Vector2i(121, 143)
+item_count = 1
+item_0/text = "Make local copy"
+item_0/id = 0
+
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
 title = "Save Project"
 initial_position = 1
@@ -1233,6 +1240,7 @@ shape = SubResource("BoxShape3D_mtfo3")
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
+[connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Edit" to="Camera3D/Interface" method="_on_edit_id_pressed"]
 [connection signal="file_selected" from="Camera3D/Interface/SaveDialog" to="." method="saveAs"]
 [connection signal="file_selected" from="Camera3D/Interface/MachineExportDialog" to="." method="_on_machine_export_dialog_file_selected"]
 [connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="_on_load_project_dialog_file_selected"]
