@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://ds1fiycigq3fa"]
+
+[ext_resource type="ArrayMesh" uid="uid://bhwu8rtdh1dfb" path="res://Models/spring.obj" id="1_rhkto"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y6igh"]
+albedo_color = Color(0.633757, 0.633757, 0.633757, 1)
+metallic = 1.0
+roughness = 0.39
+
+[node name="SpringMesh" type="Node3D"]
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.31134e-07, 1, 0, -1, 1.31134e-07, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_y6igh")
+mesh = ExtResource("1_rhkto")
+skeleton = NodePath("../..")

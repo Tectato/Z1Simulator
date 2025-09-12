@@ -1,13 +1,21 @@
 extends Link
 class_name Spring
 
+const SPRING_MESH = preload("res://Scenes/Parts/Relations/SpringMesh.tscn")
+
 const epsilon = 0.04
 var initialDist = 0.0
+@export var materialNormal : Material
+@export var materialTension : Material
 # TODO: if one part is static, observer on other to move part if it gets unblocked
 
 func init():
 	super.init()
+	#var aPos = A.get_parent().to_global(A.position)
+	#var aPos2 = A.global_position
+	#initialDist = A.to_global(A.position).distance_to(B.to_global(B.position))
 	initialDist = A.global_position.distance_to(B.global_position)
+	Simulator.record.connect(updateTension)
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if inEffect:
@@ -52,20 +60,41 @@ func applyMove(dir : Vector2, initiator, chain = []):
 
 func updatePos():
 	global_position = A.global_position
-	updateMesh()
+	updateVisuals()
 
-func updateMesh():
+func updateMeshInstances():
+	for part in $MeshPivot.get_children():
+		part.queue_free()
+	var numInstances = 0
+
+func updateVisuals():
 	$MeshPivot.look_at(B.global_position + Vector3.UP * 0.1)
-	$MeshPivot/Mesh.scale = Vector3(0.2,A.global_position.distance_to(B.global_position),0.2)
+	$MeshPivot.scale = Vector3(.2,.2,A.global_position.distance_to(B.global_position))
 	#$Mesh.global_position = (A.global_position + B.global_position) / 2
+
+func isUnderTension():
+	var newDist = A.get_parent().to_global(A.targetPos).distance_to(B.get_parent().to_global(B.targetPos))
+	var diff = newDist - initialDist
+	return int(abs(diff) > epsilon) * sign(diff)
+
+func updateTension():
+	$MeshPivot/Mesh.material_override = materialTension if isUnderTension() != 0 else materialNormal
+
+func flipTension():
+	var tension = isUnderTension()
+	if tension != 0:
+		initialDist += Workspace.pinTravel * tension
+	else:
+		initialDist -= Workspace.pinTravel
 
 func _process(delta: float) -> void:
 	if A.inMotion or B.inMotion:
-		updateMesh()
+		updateVisuals()
 
 func serialize():
 	var out = super.serialize()
 	out["type"] = "spring"
+	out["restLength"] = initialDist
 	return out
 
 func isBlocking():
