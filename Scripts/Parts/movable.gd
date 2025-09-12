@@ -165,11 +165,13 @@ func abortMove(initiator, chain = []):
 	moved.clear()
 
 func record():
+	if fixed: return
 	posHistory.push_back(position)
 	if posHistory.size() > Workspace.historyLength:
 		posHistory.pop_front()
 
 func rewind():
+	if fixed: return
 	if posHistory.is_empty(): return
 	targetPos = posHistory.pop_back()
 	inMotion = true

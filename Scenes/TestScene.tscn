@@ -1,8 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bvtgwlrwutvvr"]
+[gd_scene load_steps=8 format=3 uid="uid://bvtgwlrwutvvr"]
 
 [ext_resource type="PackedScene" uid="uid://crobnroqc51y8" path="res://Scenes/Parts/ClockPin.tscn" id="1_8k7wh"]
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_iufkg"]
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="3_0f5h7"]
+[ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="4_iufkg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0f5h7"]
+render_priority = 0
+shader = ExtResource("4_iufkg")
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/outline_threshold = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qsjrb"]
+render_priority = 0
+shader = ExtResource("4_iufkg")
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/outline_threshold = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_c264a"]
 
 [node name="TestScene" type="Node3D"]
 
@@ -57,6 +72,7 @@ transform = Transform3D(1, 0, 0, 0, 4, 0, 0, 0, 1, 0.115, 0, -0.115)
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 0)
 depth = 0.1
+material = SubResource("ShaderMaterial_0f5h7")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="CSGPolygon3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.495264, 0.514353, 0.313488)
@@ -69,3 +85,8 @@ polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.274859, 0.222318, 0.313488)
 operation = 2
 polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.19796, 2.22992, 0.524549)
+material_override = SubResource("ShaderMaterial_qsjrb")
+mesh = SubResource("BoxMesh_c264a")

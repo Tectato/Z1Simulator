@@ -1,15 +1,12 @@
 shader_type spatial;
 render_mode depth_prepass_alpha;
 
-instance uniform bool fixed = false;
-instance uniform vec3 partColor = vec3(1,1,1);
-instance uniform bool usePartColor = false;
 uniform sampler2D screen_texture: hint_screen_texture;
 uniform sampler2D depth_texture: hint_depth_texture;
 uniform sampler2D normal_texture: hint_normal_roughness_texture;
 
-const vec3 outline_color = vec3(0,0,0);
-uniform float outline_threshold = 0.8;
+uniform vec3 outline_color: source_color;
+uniform float outline_threshold = 0.2;
 
 const float sobel_x[8] = float[](
         -1.0,  0.0,  1.0,
@@ -27,12 +24,19 @@ const vec2 offset[8] = vec2[](
         vec2(-1,  1), vec2( 0,  1), vec2( 1,  1)
     );
 
+const float blur[24] = float[](
+	1.0,  4.0,  6.0,  4.0, 1.0,
+	4.0, 16.0, 24.0, 16.0, 4.0,
+	6.0, 24.0,       24.0, 6.0,
+	4.0, 16.0, 24.0, 16.0, 4.0,
+	1.0,  4.0,  6.0,  4.0, 1.0
+);
+
 vec3 get_view_pos(vec2 uv, float depth, mat4 inv_proj_m){
 	vec4 ncd = vec4((uv*2.0)-1.0,depth,1.0);
 	vec4 veiw_pos = inv_proj_m*ncd;
 	return veiw_pos.xyz /= veiw_pos.w;
 }
-
 
 void fragment() {
 	vec2 uv = SCREEN_UV;
@@ -49,6 +53,8 @@ void fragment() {
 
 	float norm_edge_x = 0.0;
 	float norm_edge_y = 0.0;
+
+	vec3 norm_avg = center_normal;
  
 	for (int i = 0; i < 8; i++) {
 		vec2 neighbor_uv = clamp(uv + offset[i] * texel, vec2(0.0), vec2(1.0));
@@ -65,7 +71,18 @@ void fragment() {
 
 		norm_edge_x += diff * sobel_x[i];
 		norm_edge_y += diff * sobel_y[i];
+		
+		//norm_avg += neighbor_normal * (abs(sobel_x[i]) + abs(sobel_y[i]));
 	}
+	
+	for (int i = 0; i < 24; i++) {
+		vec2 neighbor_uv = clamp(uv + offset[i] * texel, vec2(0.0), vec2(1.0));
+		vec3 neighbor_normal = texture(normal_texture, neighbor_uv).rgb * 2.0 - 1.0;
+		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
+		float contribution = float(abs(neighbor_depth-center_depth) < 0.001);
+		norm_avg += contribution * neighbor_normal * (abs(blur[i]) + abs(blur[i]));
+	}
+	norm_avg /= 256.0;
 
 	float depth_edge = sqrt(depth_edge_x * depth_edge_x + depth_edge_y * depth_edge_y)*10.0;
 	depth_edge = clamp(depth_edge, 0.0, 1.0);
@@ -74,6 +91,13 @@ void fragment() {
 	float normal_edge = float(gradient > outline_threshold);
 
 	float combined_edge = max(normal_edge, depth_edge);
-	
-	ALBEDO = (usePartColor ? partColor : vec3(0.1,0.3,0.9)) * (fixed ? 0.5 : 1.0) * (1.0-min(0.8, combined_edge));
+
+	//ALBEDO = vec3(1,1,1) * (1.0-normal_edge);
+	//ALBEDO = (vec4(normalize(norm_avg),1)*VIEW_MATRIX).xyz;//vec3(1,1,1);
+	//ALBEDO = vec3(1,1,1);
+	ALBEDO = normalize(center_normal);
+	//NORMAL = (vec4(normalize(norm_avg),1)*VIEW_MATRIX).xyz;
+	//NORMAL = normalize(norm_avg);
+	//NORMAL = center_normal;
+	NORMAL = NORMAL;
 }
