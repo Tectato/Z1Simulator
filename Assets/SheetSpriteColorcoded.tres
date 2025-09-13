@@ -5,7 +5,7 @@
 
 [resource]
 resource_local_to_scene = true
-render_priority = 0
+render_priority = 1
 shader = ExtResource("1_33kv5")
 shader_parameter/albedo = ExtResource("2_yxshs")
 shader_parameter/thickness = 0.02

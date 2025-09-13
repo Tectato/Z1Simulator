@@ -75,5 +75,5 @@ void fragment() {
 
 	float combined_edge = max(normal_edge, depth_edge);
 	
-	ALBEDO = (usePartColor ? partColor : vec3(0.1,0.3,0.9)) * (fixed ? 0.5 : 1.0) * (1.0-combined_edge);
+	ALBEDO = (usePartColor ? partColor : vec3(0.1,0.3,0.9)) * (fixed ? 0.5 : 1.0) * (1.0-min(0.8, combined_edge));
 }

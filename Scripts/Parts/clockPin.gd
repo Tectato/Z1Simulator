@@ -21,6 +21,7 @@ func _ready() -> void:
 	machine.clock.registerClockPin(self)
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)
+	visModeChanged(Global.editor.currentVisMode)
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(1,value,1)

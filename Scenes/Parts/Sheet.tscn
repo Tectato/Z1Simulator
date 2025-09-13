@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=16 format=3 uid="uid://b2845uayksbce"]
 
 [ext_resource type="Material" uid="uid://bnljtoqintdji" path="res://Assets/SheetSpriteColorcoded.tres" id="2_huj6i"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
@@ -9,6 +9,7 @@
 [ext_resource type="Material" uid="uid://cfwog1tvfchgh" path="res://Assets/SheetSideColorcoded.tres" id="7_uai6l"]
 [ext_resource type="Shader" uid="uid://bcuu62ucic85b" path="res://Shaders/SheetMeshMonochromeOutlined.gdshader" id="8_uai6l"]
 [ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
+[ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="10_wkhiy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uai6l"]
 albedo_color = Color(0.617455, 0.617455, 0.617455, 1)
@@ -19,6 +20,16 @@ roughness = 0.4
 render_priority = 0
 shader = ExtResource("8_uai6l")
 shader_parameter/outline_threshold = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8aa0u"]
+render_priority = 0
+shader = ExtResource("10_wkhiy")
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/bevel_size = 0.125
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4tf48"]
+next_pass = SubResource("ShaderMaterial_8aa0u")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_ptygs"]
 top_radius = 0.01
@@ -31,7 +42,7 @@ debugPoint = NodePath("MeshInstance3D")
 collider = NodePath("Outline")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351027, 0, 0.245938)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351, 0.001, 0.246)
 visible = false
 material_override = ExtResource("2_huj6i")
 material_overlay = ExtResource("4_jrvcr")
@@ -61,7 +72,7 @@ material = SubResource("StandardMaterial3D_uai6l")
 script = ExtResource("8_wkhiy")
 materialMonochrome = SubResource("ShaderMaterial_wkhiy")
 materialColorcoded = ExtResource("7_uai6l")
-materialShaded = SubResource("StandardMaterial3D_uai6l")
+materialShaded = SubResource("StandardMaterial3D_4tf48")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false

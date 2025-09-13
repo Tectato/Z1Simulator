@@ -67,13 +67,15 @@ func _ready() -> void:
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
 	Global.editor.visModeChanged.connect(visModeChanged)
+	visModeChanged(Global.editor.currentVisMode)
 
 func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
 
 func setFixed(value, propagate = true):
 	super.setFixed(value, propagate)
-	$MeshInstance3D.material_override = staticMaterial if value else normalMaterial
+	if Global.editor.currentVisMode != Editor.VisMode.Realistic:
+		$MeshInstance3D.material_override = staticMaterial if value else normalMaterial
 	if propagate:
 		for thing in interactionCandidates:
 			if thing is PointHole and !thing.get_parent().fixed:
