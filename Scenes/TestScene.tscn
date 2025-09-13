@@ -1,23 +1,42 @@
-[gd_scene load_steps=8 format=3 uid="uid://bvtgwlrwutvvr"]
+[gd_scene load_steps=13 format=3 uid="uid://bvtgwlrwutvvr"]
 
 [ext_resource type="PackedScene" uid="uid://crobnroqc51y8" path="res://Scenes/Parts/ClockPin.tscn" id="1_8k7wh"]
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_iufkg"]
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="3_0f5h7"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="4_iufkg"]
+[ext_resource type="Shader" uid="uid://dajexqetfnvm" path="res://Shaders/NormalTest.gdshader" id="5_0f5h7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0f5h7"]
 render_priority = 0
 shader = ExtResource("4_iufkg")
 shader_parameter/outline_color = Color(0, 0, 0, 1)
 shader_parameter/outline_threshold = 0.2
+shader_parameter/bevel_size = 0.125
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qsjrb"]
 render_priority = 0
 shader = ExtResource("4_iufkg")
 shader_parameter/outline_color = Color(0, 0, 0, 1)
 shader_parameter/outline_threshold = 0.2
+shader_parameter/bevel_size = 0.125
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c264a"]
+next_pass = SubResource("ShaderMaterial_qsjrb")
 
 [sub_resource type="BoxMesh" id="BoxMesh_c264a"]
+size = Vector3(1, 0.02, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0f5h7"]
+albedo_color = Color(0.617455, 0.617455, 0.617455, 1)
+metallic = 1.0
+roughness = 0.4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c264a"]
+render_priority = 0
+shader = ExtResource("5_0f5h7")
+
+[sub_resource type="BoxMesh" id="BoxMesh_6xh1p"]
+size = Vector3(5, 5, 5)
 
 [node name="TestScene" type="Node3D"]
 
@@ -87,6 +106,22 @@ operation = 2
 polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.19796, 2.22992, 0.524549)
-material_override = SubResource("ShaderMaterial_qsjrb")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.19796, 1.88813, 0.524549)
+material_override = SubResource("StandardMaterial3D_c264a")
 mesh = SubResource("BoxMesh_c264a")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.60134, 1.86201, 0.178206)
+material_override = SubResource("StandardMaterial3D_c264a")
+mesh = SubResource("BoxMesh_c264a")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.69626, 1.86201, 0.178206)
+material_override = SubResource("StandardMaterial3D_0f5h7")
+mesh = SubResource("BoxMesh_c264a")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.41308, 3.22992, 2.41322)
+visible = false
+material_override = SubResource("ShaderMaterial_c264a")
+mesh = SubResource("BoxMesh_6xh1p")

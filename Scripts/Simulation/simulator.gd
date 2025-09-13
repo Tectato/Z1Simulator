@@ -11,6 +11,7 @@ var clockInstances = []
 var inputs = []
 var outputs = []
 var history = 0
+var stepScheduled = false
 
 var gizmo : Control
 
@@ -45,6 +46,9 @@ func setStep(value = 3):
 
 func next(stopClock = true):
 	if !$Cooldown.is_stopped():
+		if stepScheduled:
+			return
+		stepScheduled = true
 		return
 	if stopClock: stop()
 	currentStep = wrapi(currentStep+1,0,4)
@@ -81,3 +85,8 @@ func spawnIndicator(origin : Node3D, type : EventIndicator.Type):
 	add_child(indicator)
 	indicator.global_position = origin.global_position
 	indicator.setType(type)
+
+func _on_cooldown_timeout() -> void:
+	if stepScheduled:
+		stepScheduled = false
+		next()

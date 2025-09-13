@@ -223,7 +223,7 @@ func loadSVG(filepath : String):
 	midPoint = (Vector3(min.x,0,min.y) + Vector3(max.x,0,max.y))/2
 	var offset = Vector3(partOffset.x,0,partOffset.y)
 	#midPoint = Vector3(size.x/20, 0, -size.y/20)
-	$Sprite3D.position = -midPoint + offset
+	$Sprite3D.position = -midPoint + offset + Vector3.UP * 0.001
 	$Outline.position = -midPoint + offset
 	debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
 	for hole in holes:
