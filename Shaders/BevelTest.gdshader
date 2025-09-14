@@ -64,33 +64,33 @@ void fragment() {
 
 	vec3 norm_avg = center_normal;
  
-	/*for (int i = 0; i < 8; i++) {
-		vec2 neighbor_uv = clamp(uv + offset[i] * bevel_size * 0.5 * center_depth, vec2(0.0), vec2(1.0));
+	for (int i = 0; i < 8; i++) {
+		vec2 neighbor_uv = clamp(uv + offset[i] * bevel_size * 0.2 * center_depth, vec2(0.0), vec2(1.0));
 
 		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
-		vec3  neighbor_view   = get_view_pos(neighbor_uv, neighbor_depth, inv_proj_m);
+		//vec3  neighbor_view   = get_view_pos(neighbor_uv, neighbor_depth, inv_proj_m);
 		vec3  neighbor_normal = texture(normal_texture, neighbor_uv).rgb * 2.0 - 1.0;
 
-		float dist = distance(center_view, neighbor_view);
+		/*float dist = distance(center_view, neighbor_view);
 		float diff = length(neighbor_normal - center_normal);
 
 		depth_edge_x += dist * sobel_x[i];
 		depth_edge_y += dist * sobel_y[i];
 
 		norm_edge_x += diff * sobel_x[i];
-		norm_edge_y += diff * sobel_y[i];
+		norm_edge_y += diff * sobel_y[i];*/
 		
-		float contribution = float(abs(neighbor_depth-center_depth) < center_depth * 0.1);
+		float contribution = float(abs(neighbor_depth-center_depth) < center_depth * 0.01);
 		norm_avg += contribution * neighbor_normal * (abs(sobel_x[i]) + abs(sobel_y[i]));
-	}*/
+	}
 	
-	for (int i = 0; i < 24; i++) {
+	/*for (int i = 0; i < 24; i++) {
 		vec2 neighbor_uv = clamp(uv + blur_offset[i] * 0.1 * bevel_size * center_depth, vec2(0.0), vec2(1.0));
 		vec3 neighbor_normal = textureLod(normal_texture, neighbor_uv, 1.0).rgb * 2.0 - 1.0;
 		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
 		float contribution = float(abs(neighbor_depth-center_depth) < center_depth * 0.01);
 		norm_avg += contribution * neighbor_normal * (abs(blur[i]) + abs(blur[i]));
-	}
+	}*/
 	//norm_avg /= 256.0;
 
 	/*float depth_edge = sqrt(depth_edge_x * depth_edge_x + depth_edge_y * depth_edge_y)*10.0;

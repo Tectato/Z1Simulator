@@ -50,13 +50,13 @@ func visModeChanged(mode : Editor.VisMode):
 
 func setResolution(newRes):
 	if newRes != resolution:
+		resolution = newRes
 		resolutionChanged.emit(newRes)
-	resolution = newRes
 
 func setIntermediatePlateVis(newVis):
 	if newVis != intermediatePlateVis:
+		intermediatePlateVis = newVis
 		intermediatePlateVisChanged.emit(newVis)
-	intermediatePlateVis = newVis
 
 func clear():
 	uuidManager.clear()

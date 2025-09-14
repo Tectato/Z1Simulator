@@ -106,7 +106,7 @@ operation = 2
 polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.19796, 1.88813, 0.524549)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.55949, 1.88813, 0.524549)
 material_override = SubResource("StandardMaterial3D_c264a")
 mesh = SubResource("BoxMesh_c264a")
 

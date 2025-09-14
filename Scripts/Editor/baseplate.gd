@@ -4,9 +4,10 @@ extends Node3D
 @onready var box = $MeshInstance3D/Area3D/CollisionShape3D
 
 func _ready() -> void:
-	if get_parent() is Layer:
-		Global.workspace.intermediatePlateVisChanged.connect(setVisible)
-		call_deferred("setVisible", Global.workspace.intermediatePlateVis)
+	pass
+	#if get_parent() is Layer:
+		#Global.workspace.intermediatePlateVisChanged.connect(setVisible)
+		#call_deferred("setVisible", Global.workspace.intermediatePlateVis)
 
 func setVisible(value):
 	if get_parent() is Layer and get_parent().machine.getLayerBelow(get_parent()):

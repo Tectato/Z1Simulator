@@ -24,6 +24,7 @@ var colliderUpdateScheduled = false
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
+	Global.workspace.intermediatePlateVisChanged.connect(updateBaseplateVis)
 
 func setSelected(value):
 	widgets.visible = value
@@ -115,17 +116,24 @@ func updateBaseplate(bounds):
 	var expand = Global.workspace.resolution == Workspace.Resolution.Part
 	var below = machine.getLayerBelow(self)
 	var newBounds = [bounds[0], bounds[1]]
-	baseplate.visible = below != null and (Global.workspace.intermediatePlateVis or Global.workspace.selectedLayer == self)
+	updateBaseplateVis()
 	if below:
 		if expand:
-			newBounds[0] = bounds[0] - Vector3(0.5,0,0.5)
-			newBounds[1] = bounds[1] + Vector3(0.5,0,0.5)
+			newBounds[0] = bounds[0] - Vector3(0.2,0,0.2)
+			newBounds[1] = bounds[1] + Vector3(0.2,0,0.2)
 		var boundsBelow = below.getBounds()
-		var min = Vector3(min(bounds[0].x,boundsBelow[0].x),min(bounds[0].y,boundsBelow[0].y),min(bounds[0].z,boundsBelow[0].z))
-		var max = Vector3(max(bounds[1].x,boundsBelow[1].x),max(bounds[1].y,boundsBelow[1].y),max(bounds[1].z,boundsBelow[1].z))
+		var min = Vector3(min(newBounds[0].x,boundsBelow[0].x),min(newBounds[0].y,boundsBelow[0].y),min(newBounds[0].z,boundsBelow[0].z))
+		var max = Vector3(max(newBounds[1].x,boundsBelow[1].x),max(newBounds[1].y,boundsBelow[1].y),max(newBounds[1].z,boundsBelow[1].z))
 		baseplate.setBounds([min,max])
 	else:
 		baseplate.setBounds([Vector3(-1,0,-1)*10,Vector3(1,0,1)*10])
+
+func updateBaseplateVis(setting = true):
+	var below = machine.getLayerBelow(self)
+	var plateVis = Global.workspace.intermediatePlateVis
+	var selected = Global.workspace.selectedLayer == self
+	var resolutionMatches = Global.workspace.resolution == Workspace.Resolution.Part
+	baseplate.visible = below != null and (Global.workspace.intermediatePlateVis or (Global.workspace.selectedLayer == self and Global.workspace.resolution == Workspace.Resolution.Part))
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()
