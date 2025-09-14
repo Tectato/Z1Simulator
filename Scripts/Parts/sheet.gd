@@ -357,14 +357,35 @@ func addPolygon(segments, isOutline):
 		holes.append(hole)
 	polygon.clear()
 	var prevPoint : Vector2
-	var segmentDir : Vector2
+	var prevSegmentDir : Vector2
 	for segment in segments:
 		var numbers = segment.replace(","," ").split(" ", false)
-		if numbers.size() > 2:
-			polygon.push_back(Vector2(float(numbers[5]), float(numbers[6])) * scaleFactor + partOffset)
-			#TODO: extend current line to arc corner
+		var newPoint : Vector2
+		if numbers.size() <= 2: # Straight
+			newPoint = Vector2(float(numbers[0]), float(numbers[1])) * scaleFactor + partOffset
+		else: # Arc
+			newPoint = Vector2(float(numbers[5]), float(numbers[6])) * scaleFactor + partOffset
+		
+		if numbers.size() <= 2:
+			polygon.push_back(newPoint)
+			if prevPoint:
+				prevSegmentDir = newPoint - prevPoint
 		else:
-			polygon.push_back(Vector2(float(numbers[0]), float(numbers[1])) * scaleFactor + partOffset)
+			if prevPoint:
+				var prevSegmentDirOrth = Vector2(-prevSegmentDir.y, prevSegmentDir.x)
+				var radius = (newPoint - prevPoint).dot(prevSegmentDirOrth.normalized())
+				var displacement = prevSegmentDirOrth.normalized() * radius
+				var curveMidpoint = prevPoint + displacement
+				var curveDir = sign(radius)
+				const curveRes = 2
+				const angleDelta = (PI/2) / curveRes
+				prevSegmentDir = displacement
+				for i in range(1,curveRes):
+					polygon.push_back(curveMidpoint - displacement.rotated(angleDelta * curveDir * i))
+			else:
+				print("Malformed sheet data (Outline begins with arc)")
+			polygon.push_back(newPoint)
+		prevPoint = newPoint
 	if isOutline:
 		debugPolygon.polygon = polygon
 	polygonParent.polygon = polygon
