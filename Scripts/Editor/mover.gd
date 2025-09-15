@@ -13,6 +13,7 @@ var startGrabposAngle = 0.0
 var startPosRelative = Vector3.ZERO
 
 func move():
+	if Global.editor.editingLocked: return
 	if Simulator.running:
 		return
 	cast()
@@ -36,6 +37,7 @@ func initRot(sheet : Sheet):
 	startPosRelative = sheet.global_position - sheet.getPivot().global_position
 
 func spin():
+	if Global.editor.editingLocked: return
 	if startAngle < -6:
 		selector.setSpinGrabpoint()
 	var sheet = selector.selected[0]

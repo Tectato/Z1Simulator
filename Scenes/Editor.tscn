@@ -1,4 +1,4 @@
-[gd_scene load_steps=138 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=145 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -49,8 +49,11 @@
 [ext_resource type="Texture2D" uid="uid://rx1h2lhhnpk3" path="res://Sprites/Buttons/Parts/logicPin.png" id="31_y3ns8"]
 [ext_resource type="Texture2D" uid="uid://uxguglkdmj7s" path="res://Sprites/Buttons/Parts/logicPin_active.png" id="32_625ua"]
 [ext_resource type="Texture2D" uid="uid://bfmtr4ye6rroe" path="res://Sprites/Buttons/Parts/logicPin_lit.png" id="33_2ery0"]
+[ext_resource type="Texture2D" uid="uid://c4ftqyg0owpec" path="res://Sprites/Buttons/Generic/lock.png" id="33_dacgg"]
 [ext_resource type="Texture2D" uid="uid://o4cmvvgkeyqc" path="res://Sprites/Buttons/Parts/globalPin.png" id="34_2ery0"]
+[ext_resource type="Texture2D" uid="uid://bwuek4778be0d" path="res://Sprites/Buttons/Generic/lock_active.png" id="34_jk3a4"]
 [ext_resource type="Texture2D" uid="uid://rk7b7u020vb3" path="res://Sprites/Buttons/Parts/clockPin.png" id="34_syg30"]
+[ext_resource type="Texture2D" uid="uid://8enx5vt47rls" path="res://Sprites/Buttons/Generic/lock_lit.png" id="35_1opyq"]
 [ext_resource type="Texture2D" uid="uid://c75i67tcahpo7" path="res://Sprites/Buttons/Parts/clockPin_active.png" id="35_n4fht"]
 [ext_resource type="Texture2D" uid="uid://c3mj3omovi2ga" path="res://Sprites/Buttons/Parts/globalPin_active.png" id="35_syg30"]
 [ext_resource type="Texture2D" uid="uid://7tivbhc2qew7" path="res://Sprites/Buttons/Parts/clockPin_lit.png" id="36_3icuf"]
@@ -66,11 +69,13 @@
 [ext_resource type="Texture2D" uid="uid://bphpq6htm6nbr" path="res://Sprites/Buttons/Parts/staticPin_lit.png" id="48_2gkkl"]
 [ext_resource type="Script" uid="uid://cxd3fkwtr80us" path="res://Scripts/Editor/SideWindow.gd" id="51_12riw"]
 [ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
+[ext_resource type="Texture2D" uid="uid://drcn2gkyoxtg4" path="res://Sprites/Buttons/Parts/sheet_locked.png" id="52_v5nsg"]
 [ext_resource type="Script" uid="uid://uhy52kfjvhai" path="res://Scripts/Editor/clockGizmo.gd" id="53_hujvp"]
 [ext_resource type="Script" uid="uid://batiwcuij3vw7" path="res://Scripts/Editor/popup.gd" id="54_w82wx"]
 [ext_resource type="Script" uid="uid://bmnbwfatq35jk" path="res://Scripts/Editor/fpsLabel.gd" id="55_mtfo3"]
 [ext_resource type="Texture2D" uid="uid://i67e7d12m2h7" path="res://Sprites/Buttons/PlanInterface/grabHandle.png" id="56_2gkkl"]
 [ext_resource type="Texture2D" uid="uid://bos5bkd1g5dle" path="res://Sprites/Buttons/Visibility/intermediatePlate.png" id="56_8faq4"]
+[ext_resource type="Texture2D" uid="uid://ccp2r7f1p1pjs" path="res://Sprites/Buttons/Parts/logicPin_locked.png" id="56_81ubf"]
 [ext_resource type="Script" uid="uid://bn2xlil2nmxpc" path="res://Scripts/Editor/3DUI/transformGizmo.gd" id="56_egdbq"]
 [ext_resource type="PackedScene" uid="uid://cocxpgshc4gnj" path="res://Scenes/PlanInterface/PlanInterface.tscn" id="56_nb5ba"]
 [ext_resource type="Script" uid="uid://y1gdw60ddrne" path="res://Scripts/Editor/3DUI/transformGizmoAxis.gd" id="56_pbycb"]
@@ -79,6 +84,8 @@
 [ext_resource type="Texture2D" uid="uid://c52v632ftoffo" path="res://Sprites/Buttons/Visibility/intermediatePlate_lit.png" id="58_2pu55"]
 [ext_resource type="Texture2D" uid="uid://dh2rf4vfko3ow" path="res://Sprites/Buttons/PlanInterface/scaleHandle_active.png" id="58_nb5ba"]
 [ext_resource type="Texture2D" uid="uid://dw2shl5gx61yw" path="res://Sprites/Buttons/PlanInterface/scaleHandle_lit.png" id="59_pyiqs"]
+[ext_resource type="Texture2D" uid="uid://3rtr06md5j2c" path="res://Sprites/Buttons/Parts/globalPin_locked.png" id="60_36n1v"]
+[ext_resource type="Texture2D" uid="uid://b53eygwnjfjwg" path="res://Sprites/Buttons/Parts/clockPin_locked.png" id="64_ybrqq"]
 [ext_resource type="Script" uid="uid://xv8jqf1vcuuv" path="res://Scripts/Editor/settings.gd" id="77_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://h0ki0tf2su2a" path="res://Sprites/Buttons/Generic/close.png" id="77_v2xkj"]
 [ext_resource type="Texture2D" uid="uid://cuww8ivyn1bu7" path="res://Sprites/Buttons/Generic/close_lit.png" id="78_rgbjt"]
@@ -674,6 +681,23 @@ texture_normal = ExtResource("56_8faq4")
 texture_pressed = ExtResource("57_ia0pe")
 texture_hover = ExtResource("58_2pu55")
 
+[node name="EditLock" type="TextureButton" parent="Camera3D/Interface"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -339.0
+offset_right = -323.0
+offset_bottom = 16.0
+grow_horizontal = 0
+scale = Vector2(2, 2)
+tooltip_text = "Lock scene"
+toggle_mode = true
+texture_normal = ExtResource("33_dacgg")
+texture_pressed = ExtResource("34_jk3a4")
+texture_hover = ExtResource("35_1opyq")
+
 [node name="ImportChoice" type="ConfirmationDialog" parent="Camera3D/Interface"]
 initial_position = 1
 size = Vector2i(412, 100)
@@ -756,6 +780,7 @@ tooltip_text = "Import sheet"
 texture_normal = ExtResource("28_v7xow")
 texture_pressed = ExtResource("29_cv1oh")
 texture_hover = ExtResource("30_vtcxi")
+texture_disabled = ExtResource("52_v5nsg")
 
 [node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 layout_mode = 2
@@ -763,6 +788,7 @@ tooltip_text = "Place logic pin (Local to layer)"
 texture_normal = ExtResource("31_y3ns8")
 texture_pressed = ExtResource("32_625ua")
 texture_hover = ExtResource("33_2ery0")
+texture_disabled = ExtResource("56_81ubf")
 
 [node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 layout_mode = 2
@@ -770,6 +796,7 @@ tooltip_text = "Place global logic pin (Across all layers)"
 texture_normal = ExtResource("34_2ery0")
 texture_pressed = ExtResource("35_syg30")
 texture_hover = ExtResource("36_n4fht")
+texture_disabled = ExtResource("60_36n1v")
 
 [node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 layout_mode = 2
@@ -777,6 +804,7 @@ tooltip_text = "Place clock pin"
 texture_normal = ExtResource("34_syg30")
 texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
+texture_disabled = ExtResource("64_ybrqq")
 
 [node name="StaticPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 visible = false
@@ -1351,6 +1379,7 @@ shape = SubResource("BoxShape3D_mtfo3")
 [connection signal="toggled" from="Camera3D/Interface/ResolutionBar/Layer" to="Camera3D/Interface" method="_on_layer_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/ResolutionBar/Machine" to="Camera3D/Interface" method="_on_machine_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/IntermediatePlateVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/EditLock" to="Camera3D/Interface" method="_on_edit_lock_toggled"]
 [connection signal="canceled" from="Camera3D/Interface/ImportChoice" to="Camera3D/Interface" method="_on_import_choice_canceled"]
 [connection signal="confirmed" from="Camera3D/Interface/ImportChoice" to="Camera3D/Interface" method="_on_import_choice_confirmed"]
 [connection signal="canceled" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_canceled"]

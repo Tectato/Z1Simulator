@@ -223,7 +223,8 @@ func deserializeFromDict(source):
 	clock.offset = stepDiff
 
 func makeLocal():
-	pass
+	importedInstance = false
+	_draw_gizmo()
 
 func sortByHeight(a : Layer, b : Layer):
 	return a.height < b.height

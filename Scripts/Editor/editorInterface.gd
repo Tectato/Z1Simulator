@@ -66,6 +66,11 @@ func _on_file_id_pressed(id: int) -> void:
 		8:
 			$Settings.show()
 
+func _on_edit_id_pressed(id: int) -> void:
+	match(id):
+		0:
+			editor.localizeMachine()
+
 func requestSheet():
 	importSheetDialog.popup()
 
@@ -175,5 +180,12 @@ func newSelection(parts = []):
 	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
 	$MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
 
-func _on_edit_id_pressed(id: int) -> void:
-	pass # Replace with function body.
+func _on_edit_lock_toggled(toggled_on: bool) -> void:
+	editor.editingLocked = toggled_on
+	editor.selector.updateGizmo()
+	if toggled_on:
+		$PartPlacers.hide()
+	else:
+		$PartPlacers.show()
+	#for button in $PartPlacers.get_children():
+		#button.disabled = toggled_on

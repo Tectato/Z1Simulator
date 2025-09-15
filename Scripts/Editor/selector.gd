@@ -149,6 +149,8 @@ func _process(delta: float) -> void:
 		updateGizmo()
 
 func canModify():
+	if Global.editor.editingLocked:
+		return false
 	var out = true
 	for part in selected:
 		out = out and part.canModify()

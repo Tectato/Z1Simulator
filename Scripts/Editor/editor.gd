@@ -12,6 +12,7 @@ var savePath = ""
 var saved = false
 var previousAction : Callable
 var currentVisMode = VisMode.Colorcoded
+var editingLocked = false
 
 enum VisMode { Monochrome, Colorcoded, Realistic }
 
@@ -154,3 +155,7 @@ func setVisMode(mode : VisMode):
 	if mode != currentVisMode:
 		currentVisMode = mode
 		visModeChanged.emit(currentVisMode)
+
+func localizeMachine():
+	if selector.selected.size() == 1 and selector.selected[0] is Machine:
+		selector.selected[0].makeLocal()
