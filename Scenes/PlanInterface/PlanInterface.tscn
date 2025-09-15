@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://ddrowubkywssq" path="res://Scripts/Editor/PlanInterface/planInterface.gd" id="1_kik28"]
 [ext_resource type="Texture2D" uid="uid://x2lcxptdunwi" path="res://Sprites/Buttons/PlanInterface/selector.png" id="1_mlyfr"]
 [ext_resource type="Texture2D" uid="uid://cgjt6k6u2lf35" path="res://Sprites/Buttons/PlanInterface/selector_active.png" id="2_kik28"]
+[ext_resource type="Texture2D" uid="uid://cd46csgp0ng3" path="res://Sprites/crosshair.png" id="3_ixu5w"]
 [ext_resource type="Texture2D" uid="uid://77djtovcchj6" path="res://Sprites/Buttons/PlanInterface/selector_lit.png" id="3_o6mp8"]
 [ext_resource type="Texture2D" uid="uid://dvh8dasomg7s5" path="res://Sprites/Buttons/PlanInterface/edit.png" id="4_8flaj"]
 [ext_resource type="Script" uid="uid://i30hdsyh45pl" path="res://Scripts/Editor/PlanInterface/inputRedirector.gd" id="4_o8jo1"]
 [ext_resource type="Texture2D" uid="uid://df4dqsivp1yqw" path="res://Sprites/Buttons/PlanInterface/edit_active.png" id="5_4hopk"]
 [ext_resource type="Texture2D" uid="uid://2ivlq4syx0b5" path="res://Sprites/Buttons/PlanInterface/edit_lit.png" id="6_w6ukv"]
 [ext_resource type="Script" uid="uid://t3oul7gg0jsc" path="res://Scripts/Editor/PlanInterface/planCamera.gd" id="8_8flaj"]
-[ext_resource type="Texture2D" uid="uid://bku32rejvvh8q" path="res://Sprites/Buttons/Resolution/machine_active.png" id="8_o6mp8"]
 [ext_resource type="Texture2D" uid="uid://cxm7uaxkgo575" path="res://Sprites/Buttons/PlanInterface/Elements/line.png" id="10_6beup"]
 [ext_resource type="Texture2D" uid="uid://dloyj7xrfjtfc" path="res://Sprites/Buttons/PlanInterface/Elements/line_active.png" id="11_ibd3a"]
 [ext_resource type="Texture2D" uid="uid://ko3qytorjy3l" path="res://Sprites/Buttons/PlanInterface/Elements/line_lit.png" id="12_tl25v"]
@@ -69,11 +69,15 @@ handle_input_locally = false
 size = Vector2i(300, 300)
 render_target_update_mode = 4
 
-[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/2DView"]
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/2DView" node_paths=PackedStringArray("planInterface", "currentPlanSprite", "defaultSprite")]
 script = ExtResource("8_8flaj")
+planInterface = NodePath("../../..")
+currentPlanSprite = NodePath("../Sprite2D")
+defaultSprite = NodePath("../Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/2DView"]
-texture = ExtResource("8_o6mp8")
+texture_filter = 1
+texture = ExtResource("3_ixu5w")
 
 [node name="NonUIInteractionArea" type="Control" parent="."]
 layout_mode = 1

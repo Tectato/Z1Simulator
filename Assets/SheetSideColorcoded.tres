@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cfwog1tvfchgh"]
 
-[ext_resource type="Shader" path="res://Assets/SheetMeshColorcodedOutlined.gdshader" id="1_w3e6d"]
+[ext_resource type="Shader" uid="uid://cpbtaxt1nucbw" path="res://Assets/SheetMeshColorcodedOutlined.gdshader" id="1_w3e6d"]
 
 [resource]
 render_priority = 0

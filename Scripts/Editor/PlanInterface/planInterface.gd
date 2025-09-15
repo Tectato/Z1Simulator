@@ -8,6 +8,7 @@ const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 @onready var selectedTool = selector
 @onready var camera = $"SubViewportContainer/2DView/Camera2D"
 var currentPlan : Plan
+signal currentPlanChanged(plan : Plan)
 
 var tempPlanData = []
 
@@ -18,6 +19,7 @@ func setPlan(plan : Plan):
 	if plan:
 		plan.visible = true
 	currentPlan = plan
+	currentPlanChanged.emit(currentPlan)
 
 func createPlan(image, path):
 	if currentPlan:
@@ -30,6 +32,7 @@ func createPlan(image, path):
 	newPlan.layer.plan = newPlan
 	newPlan.setImage(image, path)
 	currentPlan = newPlan
+	currentPlanChanged.emit(currentPlan)
 
 func addPlan(plan : Plan):
 	viewport.add_child(plan)

@@ -9,6 +9,7 @@ var imagePath = ""
 var hasImage = false
 var markers = []
 var updatingMarkers = false
+@onready var sprite = $Image
 
 func _ready() -> void:
 	Global.editor.visModeChanged.connect(visModeChanged)
@@ -22,7 +23,8 @@ func setImage(image, path):
 	imagePath = path
 	var texture = ImageTexture.create_from_image(image)
 	if texture:
-		$Image.texture = texture
+		if !sprite: sprite = $Image
+		sprite.texture = texture
 		hasImage = true
 	pass
 
