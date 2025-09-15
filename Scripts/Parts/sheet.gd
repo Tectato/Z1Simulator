@@ -16,6 +16,7 @@ const scaleFactor = 0.001
 var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
+var heightIndex = 0
 var pivots = {0:[],1:[],2:[],3:[]}
 var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
 var restRot  = 0.0
@@ -42,7 +43,7 @@ func serialize():
 	var relativePath = PathHandler.toRelativePath(path)
 	var output = {
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
-		"pos_y" : int(max(1,roundf(position.y / 0.045))),
+		"pos_y" : heightIndex,
 		"pos_z" : ("%0.4f" % position.z).rstrip("0"),
 		"rotation" : rotation.y,
 		"file" : relativePath
@@ -66,7 +67,7 @@ func deserialize(source : Dictionary):
 	if abs(height - floor(height)) > 0:
 		height = height - layer.global_position.y
 	else:
-		height = height * 0.045
+		height = height * Global.workspace.sheetSpacing
 	position = Vector3(float(source["pos_x"]), height, float(source["pos_z"]))
 	rotation = Vector3(0, source["rotation"], 0)
 	restRot = source["rotation"]
@@ -93,6 +94,7 @@ func deserialize(source : Dictionary):
 
 func _ready():
 	Global.editor.visModeChanged.connect(visModeChanged)
+	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	if path:
 		loadSVG(path)
 	else:
@@ -102,14 +104,14 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if !fixed and inMotion:
-		position = position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * position
+		position = position.move_toward(targetPos, delta * Global.workspace.moveSpeed) * Vector3(1,0,1) + Vector3.UP * position
 		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
 		if !inMotion:
 			forces.clear()
 			movedBy.clear()
 			#blockedThisCycle = -1
 	if !fixed and !pointConstraints.is_empty():
-		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed)
+		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
 
 func setSelected(value):
 	super.setSelected(value)
@@ -487,7 +489,11 @@ func getIntersector(pos : Vector3):
 func place():
 	super.place()
 	call_deferred("updateConstraints")
+	heightIndex = int(max(1,roundf(position.y / Global.workspace.sheetSpacing)))
 	#_draw_gizmo()
+
+func updateHeight():
+	position = position * Vector3(1,0,1) + Vector3.UP * heightIndex * Global.workspace.sheetSpacing
 
 func updateInteractionCandidates():
 	if !layer: return

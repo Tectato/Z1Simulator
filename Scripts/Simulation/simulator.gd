@@ -20,6 +20,10 @@ signal rewind
 
 func _ready() -> void:
 	$AutoClock.wait_time = clockSpeed
+	call_deferred("lateReady")
+
+func lateReady():
+	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
 
 func registerClockInstance(instance):
 	clockInstances.append(instance)
@@ -45,12 +49,12 @@ func setStep(value = 3):
 	gizmo.setClockStep(currentStep+1)
 
 func next(stopClock = true):
+	if stopClock: stop()
 	if !$Cooldown.is_stopped():
 		if stepScheduled:
 			return
 		stepScheduled = true
 		return
-	if stopClock: stop()
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
 	history = min(history+1, Workspace.historyLength)
@@ -89,4 +93,9 @@ func spawnIndicator(origin : Node3D, type : EventIndicator.Type):
 func _on_cooldown_timeout() -> void:
 	if stepScheduled:
 		stepScheduled = false
-		next()
+		next($AutoClock.paused)
+
+func moveSpeedChanged():
+	$Cooldown.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed) * 2 + 0.2
+	#TODO
+	pass

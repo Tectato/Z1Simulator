@@ -11,6 +11,10 @@ const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
 const historyLength = 12
+var sheetSpacing = 0.045
+signal sheetSpacingChanged
+var moveSpeed = 1.0
+signal moveSpeedChanged
 
 @onready var uuidManager = $UUIDManager
 

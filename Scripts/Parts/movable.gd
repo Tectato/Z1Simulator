@@ -44,7 +44,7 @@ func resetUUID():
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if selected:
-		print("")
+		pass
 	var dirID = dirToInt(dir)
 	if fixed or blockedCycle[dirID] == Simulator.totalStep:
 		return MoveState.Blocked
@@ -99,7 +99,7 @@ func move(dir : Vector2, initiator, chain = []):
 	
 	var canMove = true
 	if selected:
-		print("")
+		pass
 	if toMove.has(dirID):
 		for part in toMove[dirID]:
 			if part == initiator:
@@ -138,7 +138,7 @@ func abortMove(initiator, chain = []):
 	#if Global.editor.selector.selected.is_empty():
 		#Global.editor.selector.select(collider)
 	if selected:
-		print("")
+		pass
 	if !inMotion:
 		return
 	posHistory.pop_front()
@@ -260,7 +260,7 @@ func updateInteractionCandidates():
 
 func _process(delta: float) -> void:
 	if !fixed and inMotion:
-		position = position.move_toward(targetPos, delta) * Vector3(1,0,1) + Vector3.UP * position
+		position = position.move_toward(targetPos, delta * Global.workspace.moveSpeed) * Vector3(1,0,1) + Vector3.UP * position
 		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
 		if !inMotion:
 			movedBy.clear()

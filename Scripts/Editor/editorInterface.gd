@@ -63,6 +63,8 @@ func _on_file_id_pressed(id: int) -> void:
 		7:
 			if editor.currentlyLoadedPath.length() > 0:
 				editor.loadProject(editor.currentlyLoadedPath)
+		8:
+			$Settings.show()
 
 func requestSheet():
 	importSheetDialog.popup()

@@ -206,7 +206,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
-		print()
+		pass
 		#for part in chain:
 			#if part is Pin:
 				#print("Pin")

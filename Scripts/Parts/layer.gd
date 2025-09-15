@@ -25,6 +25,7 @@ var colliderUpdateScheduled = false
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
 	Global.workspace.intermediatePlateVisChanged.connect(updateBaseplateVis)
+	Global.workspace.sheetSpacingChanged.connect(updateCollider)
 
 func setSelected(value):
 	widgets.visible = value

@@ -32,6 +32,7 @@ func _ready() -> void:
 	frame.machine = self
 	if uuid < 0:
 		Global.workspace.uuidManager.request(self, true)
+	Global.workspace.sheetSpacingChanged.connect(updateCollider)
 
 func setSelected(value):
 	if value:

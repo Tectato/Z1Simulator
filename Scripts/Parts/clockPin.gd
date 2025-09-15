@@ -22,6 +22,8 @@ func _ready() -> void:
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)
 	visModeChanged(Global.editor.currentVisMode)
+	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
+	moveSpeedChanged()
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(1,value,1)
@@ -49,7 +51,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:
-		print()
+		pass
 	if not chain.is_empty(): #TODO: check what can be removed here
 		var ownMoveDir = getMoveDir(machine.clock.getCurrentStep())
 		if (ownMoveDir.x == 0 and ownMoveDir.y == 0) or dir.angle_to(ownMoveDir) > 0.5:
@@ -97,7 +99,7 @@ func updateLabel():
 
 func clockCycle(clockStep : int, forwards = true):
 	if selected:
-		print()
+		pass
 	if input and inputCheckbox.isLocked(): return
 	if input and !activateNextCycle: return false
 	if wouldMove(clockStep):
@@ -184,7 +186,7 @@ func deserialize(source : Dictionary):
 
 func _on_reset_timer_timeout() -> void:
 	if selected:
-		print()
+		pass
 	#updateInActivePos()
 	var dir = getMoveDir(machine.clock.getCurrentStep())
 	canMove(dir, null)
@@ -261,3 +263,7 @@ func inputCheckboxToggled(value):
 	for relation in relations:
 		if relation is InputLink:
 			relation.toggle(self, value)
+
+func moveSpeedChanged():
+	$ResetTimer.wait_time = Workspace.pinTravel/Global.workspace.moveSpeed + 0.1
+	pass
