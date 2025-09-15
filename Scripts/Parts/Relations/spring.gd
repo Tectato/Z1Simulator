@@ -7,7 +7,12 @@ const epsilon = 0.04
 var initialDist = 0.0
 @export var materialNormal : Material
 @export var materialTension : Material
+@export var materialSelected : Material
 # TODO: if one part is static, observer on other to move part if it gets unblocked
+
+func _ready() -> void:
+	$MeshPivot/SpringSelectable.selectionUpdated.connect(setSelected)
+	$MeshPivot/SpringSelectable.id = "Spring"
 
 func init():
 	super.init()
@@ -86,6 +91,7 @@ func flipTension():
 		initialDist += Workspace.pinTravel * tension
 	else:
 		initialDist -= Workspace.pinTravel
+	updateTension()
 
 func _process(delta: float) -> void:
 	if A.inMotion or B.inMotion:
@@ -99,3 +105,6 @@ func serialize():
 
 func isBlocking():
 	return false
+
+func setSelected(value):
+	$MeshPivot/Mesh.material_overlay = materialSelected if value else null

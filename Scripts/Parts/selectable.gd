@@ -4,6 +4,7 @@ class_name Selectable
 var selected = false
 var machine : Machine
 var layer : Layer
+var id = ""
 @export var collider : CollisionObject3D
 @onready var mesh = $MeshInstance3D
 
@@ -27,4 +28,7 @@ func canModify():
 	var machine = getMachine()
 	if machine:
 		return !machine.importedInstance
-	return true
+	return false
+
+func canBeMoved():
+	return false

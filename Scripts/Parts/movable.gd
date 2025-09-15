@@ -27,7 +27,6 @@ var stateX = false
 var stateY = false
 @onready var restStateX = stateX
 @onready var restStateY = stateY
-var id = ""
 var uuid = -1
 
 func _ready() -> void:
@@ -41,6 +40,10 @@ func grabUUID():
 
 func resetUUID():
 	getMachine().uuidManager.request(self)
+
+# Whether object can be moved by user in scene
+func canBeMoved():
+	return true
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if selected:

@@ -40,6 +40,9 @@ func setSelected(value):
 	elif gizmo:
 		gizmo.free()
 
+func canBeMoved():
+	return true
+
 func addLayer():
 	var newLayer = LAYER.instantiate()
 	add_child(newLayer)

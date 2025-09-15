@@ -23,6 +23,7 @@ func move():
 	#selector.selected.snap(projectDown(selector.partDragOrigin + selector.mouseRelative + dragDelta) - selector.mouseRelative)
 	for i in range(selector.selected.size()):
 		var part = selector.selected[i]
+		if !part.canBeMoved(): continue
 		part.global_position = selector.partDragOrigins[i] + dragDelta
 		for otherPart in selector.selected:
 			downcaster.add_exception(otherPart.collider)

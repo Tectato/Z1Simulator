@@ -27,6 +27,9 @@ func _ready() -> void:
 	Global.workspace.intermediatePlateVisChanged.connect(updateBaseplateVis)
 	Global.workspace.sheetSpacingChanged.connect(updateCollider)
 
+func canBeMoved():
+	return false
+
 func setSelected(value):
 	widgets.visible = value
 	if value:
