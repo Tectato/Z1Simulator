@@ -1,4 +1,4 @@
-[gd_scene load_steps=145 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=147 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -259,6 +259,13 @@ animations = [{
 "speed": 2.0
 }]
 
+[sub_resource type="InputEventKey" id="InputEventKey_v5nsg"]
+device = -1
+keycode = 4194305
+
+[sub_resource type="Shortcut" id="Shortcut_81ubf"]
+events = [SubResource("InputEventKey_v5nsg")]
+
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
 height = 0.02
@@ -505,6 +512,7 @@ item_0/id = 0
 title = "Save Project"
 initial_position = 1
 size = Vector2i(640, 540)
+display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
@@ -513,6 +521,7 @@ auto_translate_mode = 1
 title = "EXport Machine"
 initial_position = 1
 size = Vector2i(640, 540)
+display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
@@ -523,6 +532,7 @@ initial_position = 1
 size = Vector2i(640, 540)
 ok_button_text = "Open"
 file_mode = 0
+display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
@@ -533,6 +543,7 @@ initial_position = 1
 size = Vector2i(640, 540)
 ok_button_text = "Open"
 file_mode = 0
+display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
@@ -637,6 +648,7 @@ theme_override_constants/separation = 1
 
 [node name="Part" type="TextureButton" parent="Camera3D/Interface/ResolutionBar"]
 layout_mode = 2
+tooltip_text = "Parts"
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_ia0pe")
@@ -647,6 +659,7 @@ texture_hover = ExtResource("20_xccxh")
 
 [node name="Layer" type="TextureButton" parent="Camera3D/Interface/ResolutionBar"]
 layout_mode = 2
+tooltip_text = "Layers"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_ia0pe")
 shortcut = SubResource("Shortcut_w82wx")
@@ -656,6 +669,7 @@ texture_hover = ExtResource("17_egdbq")
 
 [node name="Machine" type="TextureButton" parent="Camera3D/Interface/ResolutionBar"]
 layout_mode = 2
+tooltip_text = "Machines"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_ia0pe")
 shortcut = SubResource("Shortcut_85c8q")
@@ -1140,6 +1154,7 @@ color = Color(0.244776, 0.244776, 0.244776, 0.72549)
 [node name="Close" type="TextureButton" parent="Camera3D/Interface/Settings/VBoxContainer/Header"]
 texture_filter = 1
 layout_mode = 2
+shortcut = SubResource("Shortcut_81ubf")
 texture_normal = ExtResource("77_v2xkj")
 texture_pressed = ExtResource("78_rgbjt")
 texture_hover = ExtResource("79_e2vqq")

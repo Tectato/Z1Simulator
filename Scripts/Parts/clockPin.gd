@@ -39,8 +39,9 @@ func canMove(dir : Vector2, initiator, chain = []):
 			return MoveState.Blocked
 		if inMotion:
 			return MoveState.AlreadyMoving
+		var dirID = dirToInt(dir)
 		var wouldMove = wouldMove(machine.clock.getCurrentStep())
-		var willMove = (!input or inputCheckbox.checked or setToMove == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
+		var willMove = (!input or inputCheckbox.checked or setToMove[dirID] == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
 		if wouldMove and willMove:
 			return MoveState.AlreadyMoving
 		if self in chain:
@@ -58,8 +59,9 @@ func move(dir : Vector2, initiator, chain = []):
 			return MoveState.Blocked
 		if inMotion:
 			return MoveState.AlreadyMoving
+		var dirID = dirToInt(dir)
 		var wouldMove = wouldMove(machine.clock.getCurrentStep())
-		var willMove = (!input or inputCheckbox.checked or setToMove == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
+		var willMove = (!input or inputCheckbox.checked or setToMove[dirID] == Simulator.totalStep or inMotion or (input and pulsing and inActivePos))
 		if wouldMove and willMove:
 			if !inMotion:
 				super.move(dir, null, chain)

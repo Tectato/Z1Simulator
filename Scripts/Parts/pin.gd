@@ -199,7 +199,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 			if !canMove:
 				break
 	if canMove:
-		setToMove = Simulator.totalStep
+		setToMove[dirID] = Simulator.totalStep
 	else:
 		movedBy.clear()
 	return MoveState.Moved if canMove else MoveState.Blocked

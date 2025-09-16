@@ -16,7 +16,7 @@ var relations = []
 var constraints = []
 var fixed = false
 var blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
-var setToMove = -1
+var setToMove = [-1,-1,-1,-1]
 var inMotion = false
 var movedBy = {}
 var toMove = {}
@@ -53,10 +53,10 @@ func canMove(dir : Vector2, initiator, chain = []):
 		return MoveState.Blocked
 	if chain.has(self):
 		return MoveState.AlreadyMoving
-	if setToMove != Simulator.totalStep:
+	if setToMove[dirID] != Simulator.totalStep:
 		# Was set to move but move never executed (can happen if intended to move by spring)
 		movedBy.clear()
-		toMove.clear()
+		toMove.erase(dirID)
 	movedBy[initiator] = initiator
 	#if setToMove == Simulator.totalStep or chain.has(self):
 	if toMove.has(dirID):
@@ -77,10 +77,10 @@ func canMove(dir : Vector2, initiator, chain = []):
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func move(dir : Vector2, initiator, chain = []):
-	if !setToMove == Simulator.totalStep:
-		return MoveState.AlreadyMoving
-	setToMove = -1
 	var dirID = dirToInt(dir)
+	if !setToMove[dirID] == Simulator.totalStep:
+		return MoveState.AlreadyMoving
+	setToMove[dirID] = -1
 	if fixed or blockedCycle[dirID] == Simulator.totalStep:
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
@@ -110,6 +110,8 @@ func move(dir : Vector2, initiator, chain = []):
 			canMove = canMove and part.move(dir, self, chain) != MoveState.Blocked
 			if canMove:
 				moved.append(part)
+			else:
+				pass
 	else:
 		Simulator.spawnIndicator(self, EventIndicator.Type.Error)
 		print("Unexpected move operation")
@@ -137,7 +139,7 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 			relation.applyMove(dir, self, chain)
 
 func abortMove(initiator, chain = []):
-	setToMove = -1
+	setToMove = [-1,-1,-1,-1]
 	#if Global.editor.selector.selected.is_empty():
 		#Global.editor.selector.select(collider)
 	if selected:
