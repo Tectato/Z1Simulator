@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://cwo44ntj3d7av"]
+
+[ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="1_ynhlo"]
+[ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="2_0tmtl"]
+[ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/ProgramInterface/notch.png" id="3_0tmtl"]
+
+[sub_resource type="Theme" id="Theme_jdcwa"]
+CheckBox/icons/checked = ExtResource("1_ynhlo")
+CheckBox/icons/unchecked = ExtResource("2_0tmtl")
+CheckBox/icons/unchecked_disabled = ExtResource("3_0tmtl")
+
+[node name="HBoxContainer" type="HBoxContainer"]
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "Clock Pin 1"
+clip_text = true
+
+[node name="Checkbox" type="CheckBox" parent="."]
+texture_filter = 1
+layout_mode = 2
+theme = SubResource("Theme_jdcwa")
+
+[node name="Notch" type="CheckBox" parent="."]
+texture_filter = 1
+layout_mode = 2
+theme = SubResource("Theme_jdcwa")
+disabled = true
+
+[node name="Notch2" type="CheckBox" parent="."]
+texture_filter = 1
+layout_mode = 2
+theme = SubResource("Theme_jdcwa")
+disabled = true
+
+[node name="Notch3" type="CheckBox" parent="."]
+texture_filter = 1
+layout_mode = 2
+theme = SubResource("Theme_jdcwa")
+disabled = true

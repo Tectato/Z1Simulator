@@ -1,4 +1,4 @@
-[gd_scene load_steps=147 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=150 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -86,8 +86,11 @@
 [ext_resource type="Texture2D" uid="uid://dw2shl5gx61yw" path="res://Sprites/Buttons/PlanInterface/scaleHandle_lit.png" id="59_pyiqs"]
 [ext_resource type="Texture2D" uid="uid://3rtr06md5j2c" path="res://Sprites/Buttons/Parts/globalPin_locked.png" id="60_36n1v"]
 [ext_resource type="Texture2D" uid="uid://b53eygwnjfjwg" path="res://Sprites/Buttons/Parts/clockPin_locked.png" id="64_ybrqq"]
+[ext_resource type="PackedScene" uid="uid://c0b7ninygm6xm" path="res://Scenes/ProgramInterface/ProgramEntry.tscn" id="76_ybrqq"]
 [ext_resource type="Script" uid="uid://xv8jqf1vcuuv" path="res://Scripts/Editor/settings.gd" id="77_rgbjt"]
+[ext_resource type="Texture2D" uid="uid://c5086h3nigrd7" path="res://Sprites/Buttons/ProgramInterface/add.png" id="77_uima5"]
 [ext_resource type="Texture2D" uid="uid://h0ki0tf2su2a" path="res://Sprites/Buttons/Generic/close.png" id="77_v2xkj"]
+[ext_resource type="Texture2D" uid="uid://c0j0rqw7w7le" path="res://Sprites/Buttons/ProgramInterface/add_lit.png" id="78_gidbq"]
 [ext_resource type="Texture2D" uid="uid://cuww8ivyn1bu7" path="res://Sprites/Buttons/Generic/close_lit.png" id="78_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
 
@@ -857,7 +860,7 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -210.0
+offset_left = -304.0
 offset_top = -153.0
 offset_bottom = 153.0
 grow_horizontal = 0
@@ -884,7 +887,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 1
+current_tab = 2
 
 [node name="Scene" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
 visible = false
@@ -903,6 +906,7 @@ grow_vertical = 2
 hide_root = true
 
 [node name="Plan" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -915,6 +919,32 @@ offset_right = 0.0
 offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Programs" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Programs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Programs/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ProgramEntry" parent="Camera3D/Interface/SideWindow/TabContainer/Programs/ScrollContainer/VBoxContainer" instance=ExtResource("76_ybrqq")]
+layout_mode = 2
+
+[node name="Add" type="TextureButton" parent="Camera3D/Interface/SideWindow/TabContainer/Programs/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+texture_normal = ExtResource("77_uima5")
+texture_pressed = ExtResource("78_gidbq")
+texture_hover = ExtResource("78_gidbq")
 
 [node name="MoveButton" type="Button" parent="Camera3D/Interface/SideWindow"]
 layout_mode = 1
