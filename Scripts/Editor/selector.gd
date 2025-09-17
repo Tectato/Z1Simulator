@@ -84,7 +84,7 @@ func _process(delta: float) -> void:
 				dragging = true
 		if (dragging or placing) and not selected[0] is Layer and canModify():
 			mover.move()
-	if !selected.is_empty():
+	if !selected.is_empty() and !focusElsewhere:
 		if selected.size() == 1 and selected[0] is Sheet and selected[0].hasPivot() and Input.is_action_pressed("mouse_right"):
 			mover.spin()
 		var i = -1

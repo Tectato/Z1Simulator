@@ -85,13 +85,18 @@ one_shot = true
 
 [node name="StepLabel" type="Label3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
 text = "1+3"
 font = ExtResource("4_r5mnu")
 script = ExtResource("4_rcjpo")
 
 [node name="InputCheckbox" type="Node3D" parent="StepLabel"]
-visible = false
 script = ExtResource("7_fc7u5")
+
+[node name="IDLabel" type="Label3D" parent="StepLabel/InputCheckbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33411968, 0)
+sorting_offset = 1.0
+font = ExtResource("4_r5mnu")
 
 [node name="Area3D" type="Area3D" parent="StepLabel/InputCheckbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
@@ -104,6 +109,7 @@ shape = SubResource("BoxShape3D_vjs7e")
 
 [node name="Sprite" type="AnimatedSprite3D" parent="StepLabel/InputCheckbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
+sorting_offset = 1.0
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_vinw1")
 animation = &"false"
@@ -112,6 +118,7 @@ autoplay = "false"
 [node name="Lock" type="Sprite3D" parent="StepLabel/InputCheckbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0.007)
 visible = false
+sorting_offset = 1.0
 texture_filter = 0
 texture = ExtResource("8_1a2dp")
 

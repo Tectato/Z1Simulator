@@ -6,6 +6,7 @@ class_name Editor
 @onready var selector = $Camera3D/SelectionRay
 @onready var tree = $Camera3D/Interface/SideWindow/TabContainer/Scene
 @onready var planInterface = $Camera3D/Interface/SideWindow/TabContainer/Plan/PlanInterface
+@onready var programInterface = $Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface
 var tempProjectPath = ""
 var currentlyLoadedPath = ""
 var savePath = ""

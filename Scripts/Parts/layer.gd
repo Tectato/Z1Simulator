@@ -38,6 +38,9 @@ func setSelected(value):
 	elif gizmo:
 		gizmo.free()
 
+func rename(newID):
+	id = newID
+
 func resolutionChanged(newRes):
 	updateBaseplate(getBounds())
 	if newRes == Workspace.Resolution.Part:

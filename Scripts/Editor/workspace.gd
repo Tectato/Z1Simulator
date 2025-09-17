@@ -65,6 +65,7 @@ func setIntermediatePlateVis(newVis):
 func clear():
 	uuidManager.clear()
 	Global.editor.selector.deselect()
+	Global.editor.programInterface.clear()
 	while !machines.is_empty():
 		machines[0].delete()
 	#Simulator.setStep()
@@ -125,6 +126,9 @@ func serialize(path : String):
 		for relation in list:
 			outList.append(relation.serialize())
 		output["relations"] = outList
+	var sequences = Global.editor.programInterface.serialize()
+	if !sequences.is_empty():
+		output["sequences"] = sequences
 	return output
 
 func deserialize(path):
@@ -141,9 +145,13 @@ func deserialize(path):
 	var machinesDict = FileHandler.extractMachines(path)
 	var projectDirTemp = PathHandler.projectDir + "a.json"
 	var relations = []
+	var sequences = []
 	for entry in machinesDict:
-		if entry is Array: # Relations entry
-			relations.append_array(entry)
+		if entry.has("relations"): # Relations entry
+			relations.append_array(entry["relations"])
+			continue
+		if entry.has("sequences"): # Relations entry
+			sequences.append_array(entry["sequences"])
 			continue
 		var machinePath = ""
 		if entry["instance"]:
@@ -177,7 +185,9 @@ func deserialize(path):
 				A.addRelation(Relation.Type.Link, B)
 			"spring":
 				A.addRelation(Relation.Type.Spring, B)
-
+	if !sequences.is_empty():
+		Global.editor.programInterface.call_deferred("deserialize", sequences)
+	
 func exportMachine(path):
 	pass
 

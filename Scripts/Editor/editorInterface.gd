@@ -15,6 +15,8 @@ extends Control
 @onready var ModeSelect = $ModeBar/Select
 @onready var ModeManage = $ModeBar/Manage
 
+var toRename : Node
+
 func _ready() -> void:
 	saveRequestDialog.add_button("Cancel", true, "Cancel")
 	updateSelectedLabel([])
@@ -25,15 +27,25 @@ func lateReady():
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
-		if event.is_action_pressed("rename") and editor.selector.selected.size() == 1:
-			var selected = editor.selector.selected[0]
-			if selected is Movable or selected is Machine or selected is Layer:
-				renamingBox.show()
-				renamingBox.global_position = get_viewport().get_mouse_position()
-				renamingBox.grab_focus()
-				renamingBox.text = selected.id
+		if event.is_action_pressed("rename"):
+			if editor.selector.selected.size() == 1:
+				var selected = editor.selector.selected[0]
+				if selected is Movable or selected is Machine or selected is Layer:
+					toRename = selected
+					openRenameBox(selected.id)
+			else:
+				var selectedUIElement = get_viewport().gui_get_focus_owner()
+				if selectedUIElement is Sequence:
+					toRename = selectedUIElement
+					openRenameBox(selectedUIElement.id)
 		if event.is_action_pressed("mouse_left") and get_viewport().gui_get_focus_owner() and get_viewport().gui_get_hovered_control() == $ClickArea:
 			get_viewport().gui_get_focus_owner().release_focus()
+
+func openRenameBox(currentID):
+	renamingBox.show()
+	renamingBox.global_position = get_viewport().get_mouse_position()
+	renamingBox.grab_focus()
+	renamingBox.text = currentID
 
 func _on_file_id_pressed(id: int) -> void:
 	match(id):
@@ -123,11 +135,13 @@ func _on_part_toggled(toggled_on: bool) -> void:
 
 
 func _on_renaming_box_text_submitted(new_text: String) -> void:
-	if editor.selector.selected.size() == 1:
-		var selected = editor.selector.selected[0]
-		selected.id = new_text
-		if selected is Machine or selected is Layer:
+	if toRename is Movable or toRename is Machine or toRename is Layer:
+		#var selected = editor.selector.selected[0]
+		toRename.rename(new_text)
+		if toRename is Machine or toRename is Layer:
 			editor.updateSceneTree()
+	elif toRename is Sequence:
+		toRename.rename(new_text)
 	renamingBox.position = Vector2(-100,-100)
 	renamingBox.release_focus()
 	renamingBox.hide()

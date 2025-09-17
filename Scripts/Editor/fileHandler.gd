@@ -30,7 +30,9 @@ func extractMachines(path : String):
 			out.append({"machine":source["machines"],"pos_x":0.0,"pos_z":0.0, "instance" : false})
 		
 		if source.has("relations"):
-			out.append(source["relations"])
+			out.append({"relations":source["relations"]})
+		if source.has("sequences"):
+			out.append({"sequences":source["sequences"]})
 		return out
 	else:
 		return [{"machine":source,"pos_x":0.0,"pos_z":0.0, "instance" : false}]

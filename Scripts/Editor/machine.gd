@@ -40,6 +40,9 @@ func setSelected(value):
 	elif gizmo:
 		gizmo.free()
 
+func rename(newID):
+	id = newID
+
 func canBeMoved():
 	return true
 

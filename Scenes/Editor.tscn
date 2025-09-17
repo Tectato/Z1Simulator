@@ -1,4 +1,4 @@
-[gd_scene load_steps=150 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=151 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -86,6 +86,7 @@
 [ext_resource type="Texture2D" uid="uid://dw2shl5gx61yw" path="res://Sprites/Buttons/PlanInterface/scaleHandle_lit.png" id="59_pyiqs"]
 [ext_resource type="Texture2D" uid="uid://3rtr06md5j2c" path="res://Sprites/Buttons/Parts/globalPin_locked.png" id="60_36n1v"]
 [ext_resource type="Texture2D" uid="uid://b53eygwnjfjwg" path="res://Sprites/Buttons/Parts/clockPin_locked.png" id="64_ybrqq"]
+[ext_resource type="Script" uid="uid://byqm58pgi73or" path="res://Scripts/Editor/ProgramInterface/programInterface.gd" id="76_uima5"]
 [ext_resource type="PackedScene" uid="uid://c0b7ninygm6xm" path="res://Scenes/ProgramInterface/ProgramEntry.tscn" id="76_ybrqq"]
 [ext_resource type="Script" uid="uid://xv8jqf1vcuuv" path="res://Scripts/Editor/settings.gd" id="77_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://c5086h3nigrd7" path="res://Sprites/Buttons/ProgramInterface/add.png" id="77_uima5"]
@@ -920,11 +921,11 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Programs" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
+[node name="Sequencer" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Programs"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -932,16 +933,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Programs/ScrollContainer"]
+[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+script = ExtResource("76_uima5")
 
-[node name="ProgramEntry" parent="Camera3D/Interface/SideWindow/TabContainer/Programs/ScrollContainer/VBoxContainer" instance=ExtResource("76_ybrqq")]
+[node name="First" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
 layout_mode = 2
 
-[node name="Add" type="TextureButton" parent="Camera3D/Interface/SideWindow/TabContainer/Programs/ScrollContainer/VBoxContainer"]
+[node name="ProgramEntry" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" instance=ExtResource("76_ybrqq")]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 0
+
+[node name="Add" type="TextureButton" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Add new sequence"
 texture_normal = ExtResource("77_uima5")
 texture_pressed = ExtResource("78_gidbq")
 texture_hover = ExtResource("78_gidbq")
@@ -1439,6 +1446,7 @@ shape = SubResource("BoxShape3D_mtfo3")
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
 [connection signal="toggled" from="Camera3D/Interface/SideWindow/Hide" to="Camera3D/Interface/SideWindow" method="_on_hide_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
 [connection signal="button_down" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_down"]
 [connection signal="button_up" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_up"]
 [connection signal="button_down" from="Camera3D/Interface/SideWindow/RescaleButton" to="Camera3D/Interface/SideWindow" method="_on_rescale_button_button_down"]

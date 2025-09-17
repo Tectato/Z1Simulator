@@ -99,3 +99,11 @@ func moveSpeedChanged():
 	$Cooldown.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed) * 2 + 0.2
 	#TODO
 	pass
+
+func stepToString(i : int):
+	match(i):
+		0: return "I"
+		1: return "II"
+		2: return "III"
+		3: return "IV"
+	

@@ -15,6 +15,9 @@ var travelIndicator : Node3D
 @onready var tempTravelIndicator = $ClockPinTravelIndicator
 @onready var inputCheckbox = $StepLabel/InputCheckbox
 
+signal forwardStepChanged
+signal pulsingChanged
+
 func _ready() -> void:
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
@@ -24,6 +27,11 @@ func _ready() -> void:
 	visModeChanged(Global.editor.currentVisMode)
 	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
 	moveSpeedChanged()
+
+func rename(newID : String):
+	super.rename(newID)
+	$StepLabel/InputCheckbox/IDLabel.text = newID
+	$StepLabel/InputCheckbox/IDLabel.visible = newID.length() > 0
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(1,value,1)
@@ -80,10 +88,12 @@ func setStep(value):
 	antiStep = wrap(value+2, 0, 4)
 	updateLabel()
 	clockCycle(getMachine().clock.getCurrentStep())
+	forwardStepChanged.emit()
 
 func setPulsing(value):
 	pulsing = value
 	updateLabel()
+	pulsingChanged.emit()
 
 func setInput(value):
 	input = value
@@ -179,7 +189,7 @@ func deserialize(source : Dictionary):
 	input = bool(source["input"])
 	inActivePos = bool(source["active"] if source.has("active") else false)
 	if source.has("id"):
-		id = source["id"]
+		rename(source["id"])
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)

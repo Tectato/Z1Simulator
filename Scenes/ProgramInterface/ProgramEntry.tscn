@@ -1,13 +1,14 @@
 [gd_scene load_steps=6 format=3 uid="uid://c0b7ninygm6xm"]
 
-[ext_resource type="PackedScene" uid="uid://cwo44ntj3d7av" path="res://Scenes/ProgramInterface/PinEntry.tscn" id="1_jltm3"]
-[ext_resource type="Texture2D" uid="uid://bm4bqm31ao5u7" path="res://Sprites/Buttons/ProgramInterface/clockStep1.png" id="1_s54jd"]
-[ext_resource type="Texture2D" uid="uid://dx1mvqq8tfbff" path="res://Sprites/Buttons/ProgramInterface/clockStep2.png" id="2_oswim"]
-[ext_resource type="Texture2D" uid="uid://clyvgg6u7yof" path="res://Sprites/Buttons/ProgramInterface/clockStep3.png" id="3_k8b4v"]
-[ext_resource type="Texture2D" uid="uid://c3loq1p4vumd2" path="res://Sprites/Buttons/ProgramInterface/clockStep4.png" id="4_4aovi"]
+[ext_resource type="Script" uid="uid://bqrma2o0id4hf" path="res://Scripts/Editor/ProgramInterface/programEntry.gd" id="1_oswim"]
+[ext_resource type="PackedScene" uid="uid://j87cpoiat8iy" path="res://Scenes/ProgramInterface/ClockCycle.tscn" id="2_jfob8"]
+[ext_resource type="Texture2D" uid="uid://bf1wojjlmw6u6" path="res://Sprites/Buttons/ProgramInterface/start.png" id="2_s54jd"]
+[ext_resource type="Texture2D" uid="uid://bcia5inffhce0" path="res://Sprites/Buttons/ProgramInterface/start_active.png" id="3_oswim"]
+[ext_resource type="Texture2D" uid="uid://siv56qurjeuu" path="res://Sprites/Buttons/ProgramInterface/start_lit.png" id="4_k8b4v"]
 
-[node name="FoldableContainer" type="FoldableContainer"]
+[node name="ProgramEntry" type="FoldableContainer"]
 title = "Program 1"
+script = ExtResource("1_oswim")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -15,33 +16,20 @@ layout_mode = 2
 [node name="ClockSteps" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
+[node name="Start" type="TextureButton" parent="VBoxContainer/ClockSteps"]
+texture_filter = 1
+layout_mode = 2
+tooltip_text = "Start sequence"
+toggle_mode = true
+texture_normal = ExtResource("2_s54jd")
+texture_pressed = ExtResource("3_oswim")
+texture_hover = ExtResource("4_k8b4v")
+
 [node name="Spacer" type="Control" parent="VBoxContainer/ClockSteps"]
-custom_minimum_size = Vector2(132, 16)
+custom_minimum_size = Vector2(112, 16)
 layout_mode = 2
 
-[node name="Cycle" type="Control" parent="VBoxContainer/ClockSteps"]
-custom_minimum_size = Vector2(108, 16)
+[node name="Cycle" parent="VBoxContainer/ClockSteps" instance=ExtResource("2_jfob8")]
 layout_mode = 2
 
-[node name="I" type="Sprite2D" parent="VBoxContainer/ClockSteps/Cycle"]
-texture_filter = 1
-position = Vector2(8, 8)
-texture = ExtResource("1_s54jd")
-
-[node name="II" type="Sprite2D" parent="VBoxContainer/ClockSteps/Cycle"]
-texture_filter = 1
-position = Vector2(36, 8)
-texture = ExtResource("2_oswim")
-
-[node name="III" type="Sprite2D" parent="VBoxContainer/ClockSteps/Cycle"]
-texture_filter = 1
-position = Vector2(64, 8)
-texture = ExtResource("3_k8b4v")
-
-[node name="IV" type="Sprite2D" parent="VBoxContainer/ClockSteps/Cycle"]
-texture_filter = 1
-position = Vector2(92, 8)
-texture = ExtResource("4_4aovi")
-
-[node name="PinEntry" parent="VBoxContainer" instance=ExtResource("1_jltm3")]
-layout_mode = 2
+[connection signal="toggled" from="VBoxContainer/ClockSteps/Start" to="." method="_on_start_toggled"]

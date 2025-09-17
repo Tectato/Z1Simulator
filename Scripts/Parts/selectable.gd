@@ -8,6 +8,8 @@ var id = ""
 @export var collider : CollisionObject3D
 @onready var mesh = $MeshInstance3D
 
+signal idChanged
+
 func setSelected(value):
 	selected = value
 	if mesh:
@@ -32,3 +34,7 @@ func canModify():
 
 func canBeMoved():
 	return false
+
+func rename(newID):
+	id = newID
+	idChanged.emit()
