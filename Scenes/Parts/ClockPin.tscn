@@ -91,6 +91,7 @@ font = ExtResource("4_r5mnu")
 script = ExtResource("4_rcjpo")
 
 [node name="InputCheckbox" type="Node3D" parent="StepLabel"]
+visible = false
 script = ExtResource("7_fc7u5")
 
 [node name="IDLabel" type="Label3D" parent="StepLabel/InputCheckbox"]

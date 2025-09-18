@@ -1,4 +1,4 @@
-[gd_scene load_steps=151 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=150 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -87,7 +87,6 @@
 [ext_resource type="Texture2D" uid="uid://3rtr06md5j2c" path="res://Sprites/Buttons/Parts/globalPin_locked.png" id="60_36n1v"]
 [ext_resource type="Texture2D" uid="uid://b53eygwnjfjwg" path="res://Sprites/Buttons/Parts/clockPin_locked.png" id="64_ybrqq"]
 [ext_resource type="Script" uid="uid://byqm58pgi73or" path="res://Scripts/Editor/ProgramInterface/programInterface.gd" id="76_uima5"]
-[ext_resource type="PackedScene" uid="uid://c0b7ninygm6xm" path="res://Scenes/ProgramInterface/ProgramEntry.tscn" id="76_ybrqq"]
 [ext_resource type="Script" uid="uid://xv8jqf1vcuuv" path="res://Scripts/Editor/settings.gd" id="77_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://c5086h3nigrd7" path="res://Sprites/Buttons/ProgramInterface/add.png" id="77_uima5"]
 [ext_resource type="Texture2D" uid="uid://h0ki0tf2su2a" path="res://Sprites/Buttons/Generic/close.png" id="77_v2xkj"]
@@ -939,10 +938,6 @@ size_flags_horizontal = 3
 script = ExtResource("76_uima5")
 
 [node name="First" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
-layout_mode = 2
-
-[node name="ProgramEntry" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" instance=ExtResource("76_ybrqq")]
-visible = false
 layout_mode = 2
 
 [node name="Add" type="TextureButton" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]

@@ -15,6 +15,7 @@ var stepScheduled = false
 
 var gizmo : Control
 
+signal step
 signal record
 signal rewind
 
@@ -58,6 +59,7 @@ func next(stopClock = true):
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
 	history = min(history+1, Workspace.historyLength)
+	step.emit()
 	for instance in clockInstances:
 		instance.clockCycle(currentStep)
 	gizmo.setClockStep(currentStep+1)

@@ -8,6 +8,10 @@ func setValue(value):
 	checked = value
 	$Sprite.play(str(value))
 
+func setValueEmit(value):
+	setValue(value)
+	toggled.emit(value)
+
 func click():
 	if !$Lock.visible:
 		setValue(!checked)

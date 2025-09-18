@@ -5,15 +5,18 @@ const PIN_ENTRY = preload("res://Scenes/ProgramInterface/PinEntry.tscn")
 const CLOCK_CYCLE = preload("res://Scenes/ProgramInterface/ClockCycle.tscn")
 
 @onready var clockVisParent = $VBoxContainer/ClockSteps
-var cycles = [$VBoxContainer/ClockSteps/Cycle]
+var cycles = []
 var pinEntries = []
 var id = "Sequence"
 var furthestCycle = -1
+var initiated = false
 var running = false
+var internalStep = -1
 
 func _ready() -> void:
 	title = id
 	call_deferred("lateReady")
+	Simulator.step.connect(clockStep)
 
 func lateReady():
 	Global.editor.selector.newSelection.connect(newSelection)
@@ -84,6 +87,7 @@ func newSelection(parts):
 		for part in parts:
 			if part is ClockPin and !hasPin(part) and part.input:
 				addPin(part)
+		if cycles.is_empty(): updateLength()
 
 func updateLength():
 	var max = -1
@@ -97,11 +101,43 @@ func updateLength():
 		var newCycle = CLOCK_CYCLE.instantiate()
 		clockVisParent.add_child(newCycle)
 		cycles.append(newCycle)
+		newCycle.offset = 4 * (cycles.size()-1)
 	while furthestCycle + 2 < cycles.size():
 		cycles.pop_back().queue_free()
+	pass
 
 func _on_start_toggled(toggled_on: bool) -> void:
-	running = toggled_on
+	initiated = toggled_on
+	if !toggled_on:
+		running = false
+		for entry in pinEntries:
+			entry.pin.inputCheckbox.setValueEmit(false)
+	else:
+		if Simulator.currentStep == 3:
+			running = true
+			prepareNextStep()
 
-func clockStep(step : int):
+func clockStep():
+	if !initiated: return
+	if !running and Simulator.currentStep == 3:
+		running = true
+		prepareNextStep()
+	elif running:
+		internalStep += 1
+		prepareNextStep()
+
+func prepareNextStep():
+	if internalStep >= (cycles.size()-1) * 4:
+		running = false
+		initiated = false
+		internalStep = -1
+		$VBoxContainer/ClockSteps/Start.set_pressed_no_signal(false)
+		for cycle in cycles:
+			cycle.setStep(internalStep)
+		return
+	for cycle in cycles:
+		cycle.setStep(internalStep)
+	for entry in pinEntries:
+		if wrapi(Simulator.currentStep + 1, 0, 4) == entry.pin.forwardStep and entry.activations[(internalStep+1)/4]:
+			entry.pin.inputCheckbox.setValueEmit(true)
 	pass

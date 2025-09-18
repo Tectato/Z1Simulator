@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://c0b7ninygm6xm"]
+[gd_scene load_steps=5 format=3 uid="uid://c0b7ninygm6xm"]
 
 [ext_resource type="Script" uid="uid://bqrma2o0id4hf" path="res://Scripts/Editor/ProgramInterface/programEntry.gd" id="1_oswim"]
-[ext_resource type="PackedScene" uid="uid://j87cpoiat8iy" path="res://Scenes/ProgramInterface/ClockCycle.tscn" id="2_jfob8"]
 [ext_resource type="Texture2D" uid="uid://bf1wojjlmw6u6" path="res://Sprites/Buttons/ProgramInterface/start.png" id="2_s54jd"]
 [ext_resource type="Texture2D" uid="uid://bcia5inffhce0" path="res://Sprites/Buttons/ProgramInterface/start_active.png" id="3_oswim"]
 [ext_resource type="Texture2D" uid="uid://siv56qurjeuu" path="res://Sprites/Buttons/ProgramInterface/start_lit.png" id="4_k8b4v"]
@@ -27,9 +26,6 @@ texture_hover = ExtResource("4_k8b4v")
 
 [node name="Spacer" type="Control" parent="VBoxContainer/ClockSteps"]
 custom_minimum_size = Vector2(112, 16)
-layout_mode = 2
-
-[node name="Cycle" parent="VBoxContainer/ClockSteps" instance=ExtResource("2_jfob8")]
 layout_mode = 2
 
 [connection signal="toggled" from="VBoxContainer/ClockSteps/Start" to="." method="_on_start_toggled"]
