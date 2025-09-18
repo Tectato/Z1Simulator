@@ -225,7 +225,7 @@ func updatePositions():
 		relation.updatePos()
 
 func rotatePart(by):
-	super.rotatePart(by)
+	rotate_y(by)
 	#travel = Vector3(0,0,1).rotated(Vector3.UP,-rotation.y) * Global.workspace.pinTravel
 	if travelIndicator:
 		travelIndicator.rotate_y(by)

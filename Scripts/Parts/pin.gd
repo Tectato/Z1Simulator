@@ -12,6 +12,7 @@ var output = false
 var outputState = false
 var flippingOutput = false
 var indicator : Node3D
+var directionality = 0 # 0 = Both, 1 = X, 2 = Y
 
 func serialize():
 	grabUUID()
@@ -22,7 +23,7 @@ func serialize():
 	if id.length() > 0:
 		output["id"] = id
 	if self.output:
-		output["output"] = outputState
+		output["output"] = [outputState, directionality]
 	elif fixed:
 		output["static"] = fixed
 	output["uuid"] = uuid
@@ -44,8 +45,15 @@ func deserialize(source : Dictionary):
 		id = source["id"]
 	if source.has("output"):
 		setOutput(true)
-		outputState = source["output"]
+		var value = source["output"]
+		if value is Array:
+			outputState = value[0]
+			directionality = int(value[1])
+		else:
+			outputState = value
+			directionality = 0
 		indicator.setValue(outputState)
+		indicator.setDirection(directionality)
 	if source.has("static"):
 		setFixed(true, false)
 		#call_deferred("setFixed",true)
@@ -143,6 +151,11 @@ func place():
 	if machine:
 		machine.gridLibrary.requestUpdate(self)
 
+func rotatePart(by):
+	if output:
+		directionality = wrapi(directionality+1*sign(by),0,3)
+		indicator.setDirection(directionality)
+
 func updateInteractionCandidates():
 	var inRange = []
 	if machine:
@@ -217,7 +230,16 @@ func move(dir : Vector2, initiator, chain = []):
 	if out != MoveState.Moved: return out
 	#chain.append(self)
 	if output:
-		flipOutput()
+		var dirID = dirToInt(dir)
+		match(directionality):
+			0:
+				flipOutput()
+			1:
+				if dirID % 2 == 1:
+					flipOutput()
+			2:
+				if dirID % 2 == 0:
+					flipOutput()
 	return MoveState.Moved
 	
 func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):

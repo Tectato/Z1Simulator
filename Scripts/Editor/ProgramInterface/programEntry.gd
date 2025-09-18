@@ -127,7 +127,7 @@ func clockStep():
 		prepareNextStep()
 
 func prepareNextStep():
-	if internalStep >= (cycles.size()-1) * 4:
+	if internalStep+1 >= (cycles.size()-1) * 4:
 		running = false
 		initiated = false
 		internalStep = -1
