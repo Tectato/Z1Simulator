@@ -28,6 +28,7 @@ var stateY = false
 @onready var restStateX = stateX
 @onready var restStateY = stateY
 var uuid = -1
+var marker : Marker
 
 func _ready() -> void:
 	Simulator.rewind.connect(rewind)
@@ -44,6 +45,11 @@ func resetUUID():
 # Whether object can be moved by user in scene
 func canBeMoved():
 	return true
+
+func setSelected(value):
+	super.setSelected(value)
+	if Global.editor.planInterface.currentPlan:
+		Global.editor.planInterface.currentPlan.updateLitMarkers()
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if selected:

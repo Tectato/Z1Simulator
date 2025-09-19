@@ -51,6 +51,7 @@ func handleInput(event: InputEvent) -> void:
 	if !get_rect().has_point(get_parent().get_local_mouse_position()): return
 
 func _on_selector_toggled(toggled_on: bool) -> void:
+	if (selectedTool == selector) == toggled_on: return
 	$Elements.visible = !toggled_on
 	selectedTool = selector if toggled_on else editor
 	if toggled_on:
@@ -61,8 +62,8 @@ func _on_selector_toggled(toggled_on: bool) -> void:
 		selector.updateButtons()
 
 func _on_link_button_down() -> void:
-	if Global.editor.selector.selected.size() == 1 and Global.editor.selector.selected[0] is Sheet and selector.selectedMarkers.size() == 1:
-		selector.selectedMarkers[0].linkToSheet(Global.editor.selector.selected[0])
+	if Global.editor.selector.selected.size() == 1 and Global.editor.selector.selected[0] is Movable and selector.selectedMarkers.size() == 1:
+		selector.selectedMarkers[0].linkToPart(Global.editor.selector.selected[0])
 
 func _on_unlink_button_down() -> void:
 	for marker in selector.selectedMarkers:

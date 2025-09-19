@@ -37,7 +37,6 @@ var midPoint : Vector3
 var bounds = []
 var holes = []
 var gizmo
-var marker : Marker
 
 var sortTargetPos : Vector3
 
@@ -122,8 +121,6 @@ func setSelected(value):
 	sprite.updateParams()
 	debugPolygon.updateParams()
 	sprite.visible = value
-	if Global.editor.planInterface.currentPlan:
-		Global.editor.planInterface.currentPlan.updateLitMarkers()
 
 func setFixed(value, propagate = true):
 	super.setFixed(value)

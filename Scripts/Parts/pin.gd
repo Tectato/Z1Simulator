@@ -13,6 +13,7 @@ var outputState = false
 var flippingOutput = false
 var indicator : Node3D
 var directionality = 0 # 0 = Both, 1 = X, 2 = Y
+var color = Color(1,1,1)
 
 func serialize():
 	grabUUID()
@@ -72,6 +73,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready() -> void:
+	color = normalMaterial.albedo_color
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
 	Global.editor.visModeChanged.connect(visModeChanged)
@@ -94,6 +96,15 @@ func visModeChanged(mode : Editor.VisMode):
 		$MeshInstance3D.material_override = shadedMaterial
 	else:
 		$MeshInstance3D.material_override = staticMaterial if fixed else normalMaterial
+		normalMaterial.albedo_color = color if mode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+
+func setColor(newColor : Color):
+	color = Color.from_hsv(newColor.h, newColor.s * 0.5, newColor.v * 0.7)
+	normalMaterial.albedo_color = color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+
+func setUseColor(value : bool):
+	if !value:
+		normalMaterial.albedo_color = Color(0.58,0.58,0.58)
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(scale.x,value,scale.z)

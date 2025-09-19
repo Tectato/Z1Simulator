@@ -53,10 +53,10 @@ func handleInput(event : InputEvent):
 func updateButtons():
 	var numSelected = selectedMarkers.size()
 	var prime = selectedMarkers[0] if numSelected > 0 else null
-	linkButton.visible = numSelected == 1 and prime.sheet == null
-	unlinkButton.visible = numSelected == 1 and prime.sheet != null
+	linkButton.visible = numSelected == 1 and prime.part == null
+	unlinkButton.visible = numSelected == 1 and prime.part != null
 	if unlinkButton.visible:
-		unlinkButton.get_child(0).text = prime.sheet.id
+		unlinkButton.get_child(0).text = prime.part.id
 	
 func deselect():
 	colorPicker.hide()
