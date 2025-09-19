@@ -80,6 +80,7 @@ func move(dir : Vector2, initiator, chain = []):
 			return MoveState.Blocked
 	super.move(dir, null, chain)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
+	
 	return MoveState.Moved
 	#$TravelIndicator.translate(-Vector3(dir.x,0,dir.y))
 
@@ -113,10 +114,10 @@ func clockCycle(clockStep : int, forwards = true):
 	if selected:
 		pass
 	if input and inputCheckbox.isLocked(): return
-	if input and !activateNextCycle: return false
+	if input and !activateNextCycle and !inActivePos: return false
 	if wouldMove(clockStep):
 		if input and ((inActivePos and clockStep == antiStep) or pulsing):
-			inputCheckbox.setValue(!inputCheckbox.checked)
+			inputCheckbox.setValue(false)
 			setActivateNextCycle(false)
 		var dir = getMoveDir(clockStep)
 		canMove(dir, null)
