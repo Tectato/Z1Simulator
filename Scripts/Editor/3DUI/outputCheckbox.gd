@@ -5,8 +5,15 @@ enum Directionality { Both, X, Y }
 
 @onready var checkbox = $Checkbox
 @onready var direction = $Directionality
+var state = false
+var stateHistory = []
+
+func _ready() -> void:
+	Simulator.record.connect(record)
+	Simulator.rewind.connect(rewind)
 
 func setValue(value : bool):
+	state = value
 	checkbox.play(str(value))
 
 func setDirection(dir : Directionality):
@@ -19,3 +26,12 @@ func setDirection(dir : Directionality):
 			direction.visible = true
 		Directionality.Both:
 			direction.visible = false
+
+func record():
+	stateHistory.push_back(state)
+	if stateHistory.size() > Workspace.historyLength:
+		stateHistory.pop_front()
+
+func rewind():
+	if stateHistory.is_empty(): return
+	setValue(stateHistory.pop_back())

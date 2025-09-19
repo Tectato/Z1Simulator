@@ -887,7 +887,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 2
+current_tab = 1
 
 [node name="Scene" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
 visible = false
@@ -906,7 +906,6 @@ grow_vertical = 2
 hide_root = true
 
 [node name="Plan" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -921,6 +920,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Sequencer" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 

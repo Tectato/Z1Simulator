@@ -17,6 +17,7 @@ func _ready() -> void:
 	title = id
 	call_deferred("lateReady")
 	Simulator.step.connect(clockStep)
+	Simulator.rewind.connect(rewind)
 
 func lateReady():
 	Global.editor.selector.newSelection.connect(newSelection)
@@ -121,6 +122,7 @@ func clockStep():
 	if !initiated: return
 	if !running and Simulator.currentStep == 3:
 		running = true
+		internalStep = -1
 		prepareNextStep()
 	elif running:
 		internalStep += 1
@@ -141,3 +143,12 @@ func prepareNextStep():
 		if wrapi(Simulator.currentStep + 1, 0, 4) == entry.pin.forwardStep and entry.activations[(internalStep+1)/4]:
 			entry.pin.inputCheckbox.setValueEmit(true)
 	pass
+
+func rewind():
+	if running:
+		internalStep -= 1
+		if internalStep < 0:
+			running = Simulator.currentStep == 3
+		for entry in pinEntries:
+			entry.pin.inputCheckbox.setValueEmit(false)
+		prepareNextStep()
