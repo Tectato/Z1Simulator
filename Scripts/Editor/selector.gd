@@ -87,6 +87,27 @@ func _process(delta: float) -> void:
 	if !selected.is_empty() and !focusElsewhere:
 		if selected.size() == 1 and selected[0] is Sheet and selected[0].hasPivot() and Input.is_action_pressed("mouse_right"):
 			mover.spin()
+		if Input.is_action_just_pressed("select_all"):
+			var prime = selected[0]
+			if prime is Movable:
+				if prime.layer:
+					selectSet(prime.layer.parts)
+				else:
+					var combined = prime.machine.globalPins + prime.machine.clockPins
+					selectSet(combined)
+				return
+		if Input.is_action_just_pressed("invert_selection"):
+			var prime = selected[0]
+			if prime is Movable:
+				var toSelect = []
+				if prime.layer:
+					toSelect = prime.layer.parts.duplicate()
+				else:
+					toSelect = (prime.machine.globalPins + prime.machine.clockPins).duplicate()
+				for part in selected:
+					toSelect.erase(part)
+				selectSet(toSelect)
+				return
 		var i = -1
 		for part in selected:
 			i += 1
@@ -348,6 +369,15 @@ func select(target, shift = false):
 	else:
 		pass
 		#print("No Hit")
+
+func selectSet(parts = []):
+	deselect()
+	selected = parts
+	for part in selected:
+		part.setSelected(true)
+		partDragOrigins.append(part.global_position)
+	updateGizmo()
+	newSelection.emit(selected)
 
 func deselect():
 	for part in selected:
