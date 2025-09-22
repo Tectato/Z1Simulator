@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://5l6bwx3w32ff"]
+
+[ext_resource type="Script" uid="uid://brawbhi4c0p48" path="res://Scripts/Editor/PlanInterface/Elements/markerStateIndicator.gd" id="1_4sp6s"]
+[ext_resource type="Theme" uid="uid://c2j3j4ivsnlki" path="res://Fonts/PixelFontTheme.tres" id="2_kjeek"]
+[ext_resource type="Texture2D" uid="uid://bjbs3kl7uni0l" path="res://Sprites/outputXY.png" id="3_8d2bg"]
+[ext_resource type="Texture2D" uid="uid://b2fjioapdugm" path="res://Sprites/outputX.png" id="4_n0e1e"]
+[ext_resource type="Texture2D" uid="uid://dnlmdht4wr7a4" path="res://Sprites/outputY.png" id="5_t6x1r"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m4ol2"]
+atlas = ExtResource("3_8d2bg")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n0si8"]
+atlas = ExtResource("5_t6x1r")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jjhqa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m4ol2")
+}],
+"loop": true,
+"name": &"Both",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_n0e1e")
+}],
+"loop": false,
+"name": &"X",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n0si8")
+}],
+"loop": false,
+"name": &"Y",
+"speed": 5.0
+}]
+
+[node name="StateIndicator" type="Node2D"]
+script = ExtResource("1_4sp6s")
+
+[node name="Direction" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(6, 8)
+sprite_frames = SubResource("SpriteFrames_jjhqa")
+animation = &"Both"
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 1
+offset_left = -5.0
+offset_top = -15.0
+offset_right = 1.0
+offset_bottom = -2.0
+scale = Vector2(2, 2)
+theme = ExtResource("2_kjeek")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "0"

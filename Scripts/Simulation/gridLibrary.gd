@@ -20,6 +20,7 @@ func executeUpdate():
 	#print("Updating " + str(toUpdate.keys().size()) + " parts")
 	for part in toUpdate.keys():
 		unregisterPart(part, false)
+		if part is Sheet and part.heightIndex == 0: continue
 		registerPart(part, false)
 	for part in toUpdate.keys():
 		part.updateInteractionCandidates()

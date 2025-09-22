@@ -21,6 +21,7 @@ size = Vector3(8, 0.01, 8)
 script = ExtResource("1_3p2xn")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
 material_override = SubResource("ShaderMaterial_3p2xn")
 mesh = SubResource("PlaneMesh_frs87")
 

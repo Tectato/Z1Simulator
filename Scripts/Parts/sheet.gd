@@ -158,7 +158,7 @@ func updateConstraints():
 				#var newRelation = addRelation(Relation.Type.LinearConstraint, pin)
 				#if newRelation:
 					#newRelation.dir = hole.getGlobalDir()
-	setFixed(false)
+	setFixed(heightIndex == 0)
 	for relation in relations:
 		if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
 			relation.call_deferred("delete")
@@ -487,9 +487,9 @@ func getIntersector(pos : Vector3):
 	
 
 func place():
+	heightIndex = int(max(0,roundf(position.y / Global.workspace.sheetSpacing)))
 	super.place()
 	call_deferred("updateConstraints")
-	heightIndex = int(max(1,roundf(position.y / Global.workspace.sheetSpacing)))
 	#_draw_gizmo()
 
 func updateHeight():

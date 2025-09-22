@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cocxpgshc4gnj"]
+[gd_scene load_steps=37 format=3 uid="uid://cocxpgshc4gnj"]
 
 [ext_resource type="Script" uid="uid://ddrowubkywssq" path="res://Scripts/Editor/PlanInterface/planInterface.gd" id="1_kik28"]
 [ext_resource type="Texture2D" uid="uid://x2lcxptdunwi" path="res://Sprites/Buttons/PlanInterface/selector.png" id="1_mlyfr"]
@@ -21,7 +21,10 @@
 [ext_resource type="Texture2D" uid="uid://cqg30ljd4t6gn" path="res://Sprites/Buttons/PlanInterface/Elements/circle_lit.png" id="18_wodlt"]
 [ext_resource type="Script" uid="uid://b67kqivwomnlm" path="res://Scripts/Editor/PlanInterface/Tools/planSelector.gd" id="19_l0c6k"]
 [ext_resource type="Script" uid="uid://qkalqf2s70qi" path="res://Scripts/Editor/PlanInterface/Tools/planEditor.gd" id="20_o8jo1"]
+[ext_resource type="Texture2D" uid="uid://beypvjdawbpuq" path="res://Sprites/Buttons/PlanInterface/Elements/state.png" id="20_vqsom"]
+[ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="21_kyo7v"]
 [ext_resource type="Texture2D" uid="uid://cpuffanpsgefc" path="res://Sprites/Buttons/PlanInterface/link.png" id="22_le1aj"]
+[ext_resource type="Texture2D" uid="uid://cgri48sphexwa" path="res://Sprites/Buttons/PlanInterface/Elements/state_lit.png" id="22_tnj58"]
 [ext_resource type="Texture2D" uid="uid://bsq0mlgm12i1n" path="res://Sprites/Buttons/PlanInterface/link_active.png" id="23_p5888"]
 [ext_resource type="Texture2D" uid="uid://bh1ke1vqqoe0w" path="res://Sprites/Buttons/PlanInterface/link_lit.png" id="24_wbcty"]
 [ext_resource type="Texture2D" uid="uid://bu2y6vteiultu" path="res://Sprites/Buttons/PlanInterface/unlink.png" id="25_ixu5w"]
@@ -120,7 +123,6 @@ texture_pressed = ExtResource("5_4hopk")
 texture_hover = ExtResource("6_w6ukv")
 
 [node name="Elements" type="HBoxContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -162,6 +164,16 @@ button_group = SubResource("ButtonGroup_reknm")
 texture_normal = ExtResource("16_o8jo1")
 texture_pressed = ExtResource("17_pasjj")
 texture_hover = ExtResource("18_wodlt")
+
+[node name="StateIndicator" type="TextureButton" parent="Elements"]
+texture_filter = 1
+layout_mode = 2
+tooltip_text = "Circle"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_reknm")
+texture_normal = ExtResource("20_vqsom")
+texture_pressed = ExtResource("21_kyo7v")
+texture_hover = ExtResource("22_tnj58")
 
 [node name="Tools" type="Node2D" parent="."]
 
@@ -241,6 +253,7 @@ dialog_text = "Replace current plan?"
 [connection signal="pressed" from="Elements/Line" to="Tools/Editor" method="setElementType" binds= [0]]
 [connection signal="pressed" from="Elements/Rectangle" to="Tools/Editor" method="setElementType" binds= [1]]
 [connection signal="pressed" from="Elements/Circle" to="Tools/Editor" method="setElementType" binds= [2]]
+[connection signal="pressed" from="Elements/StateIndicator" to="Tools/Editor" method="setElementType" binds= [3]]
 [connection signal="button_down" from="Link" to="." method="_on_link_button_down"]
 [connection signal="button_down" from="Unlink" to="." method="_on_unlink_button_down"]
 [connection signal="color_changed" from="ColorPicker" to="Tools/Selector" method="_on_color_picker_color_changed"]

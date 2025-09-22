@@ -4,14 +4,17 @@ class_name Marker
 const LINE = preload("res://Scenes/PlanInterface/MarkingElements/Line.tscn")
 const RECTANGLE = preload("res://Scenes/PlanInterface/MarkingElements/Rectangle.tscn")
 const CIRCLE = preload("res://Scenes/PlanInterface/MarkingElements/Circle.tscn")
+const STATE_INDICATOR = preload("res://Scenes/PlanInterface/MarkingElements/StateIndicator.tscn")
 
-enum ElementType {Line, Rectangle, Circle}
+enum ElementType {Line, Rectangle, Circle, StateIndicator}
 
 @onready var parent = get_parent()
 var part : Movable
 var selected = false
 var color : Color
 var elements = []
+
+signal selectionChanged(value : bool)
 
 func serialize():
 	var out = {
@@ -38,6 +41,8 @@ func deserialize(src):
 				newElement = RECTANGLE.instantiate()
 			"circle":
 				newElement = CIRCLE.instantiate()
+			"indicator":
+				newElement = STATE_INDICATOR.instantiate()
 		add_child(newElement)
 		elements.append(newElement)
 		newElement.parent = self
@@ -48,6 +53,11 @@ func updatePart(uuid):
 	part.call_deferred("setColor", color)
 	part.call_deferred("setUseColor", true)
 	part.marker = self
+
+func partMoved(dirID = 0):
+	for element in elements:
+		if element is MarkerStateIndicator:
+			element.partMoved(dirID)
 
 func setColor(color : Color):
 	self.color = color
@@ -63,6 +73,7 @@ func _ready() -> void:
 func setSelected(value):
 	if selected == value: return
 	selected = value
+	selectionChanged.emit(value)
 	set_instance_shader_parameter("active", value)
 	if value:
 		parent.selectedMarker = self
@@ -96,6 +107,8 @@ func addElement(type : ElementType):
 			newElement = RECTANGLE.instantiate()
 		ElementType.Circle:
 			newElement = CIRCLE.instantiate()
+		ElementType.StateIndicator:
+			newElement = STATE_INDICATOR.instantiate()
 	elements.append(newElement)
 	newElement.parent = self
 	add_child(newElement)

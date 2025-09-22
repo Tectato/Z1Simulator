@@ -9,6 +9,7 @@ const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 @onready var camera = $"SubViewportContainer/2DView/Camera2D"
 var currentPlan : Plan
 signal currentPlanChanged(plan : Plan)
+signal toolChanged(editing : bool)
 
 var tempPlanData = []
 
@@ -54,6 +55,7 @@ func _on_selector_toggled(toggled_on: bool) -> void:
 	if (selectedTool == selector) == toggled_on: return
 	$Elements.visible = !toggled_on
 	selectedTool = selector if toggled_on else editor
+	toolChanged.emit(!toggled_on)
 	if toggled_on:
 		if editor.selectedMarker:
 			selector.selectedMarkers = [editor.selectedMarker]

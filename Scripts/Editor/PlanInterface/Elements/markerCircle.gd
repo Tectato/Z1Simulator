@@ -6,8 +6,8 @@ var radius = 100.0
 func serialize():
 	return {
 		"type" : "circle",
-		"pos_x" : position.x,
-		"pos_y" : position.y,
+		"pos_x": ("%0.2f" % position.x).rstrip("0"),
+		"pos_y": ("%0.2f" % position.y).rstrip("0"),
 		"radius" : int(radius)
 	}
 

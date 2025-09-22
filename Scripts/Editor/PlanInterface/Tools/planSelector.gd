@@ -1,4 +1,5 @@
 extends PlanTool
+class_name PlanSelector
 
 var selectedMarkers = []
 var dragging = false

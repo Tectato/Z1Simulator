@@ -1,4 +1,5 @@
 extends PlanTool
+class_name PlanEditor
 
 @export var selectedType : Marker.ElementType
 var selectedMarker : Marker
@@ -46,6 +47,13 @@ func handleInput(event : InputEvent):
 				selectedElement.end()
 			if Input.is_action_just_pressed("delete"):
 				selectedElement.delete()
+			if selectedElement is MarkerStateIndicator:
+				if Input.is_action_just_pressed("rotate_cw"):
+					selectedElement.cycleDirection(1)
+				if Input.is_action_just_pressed("rotate_ccw"):
+					selectedElement.cycleDirection(-1)
+				if Input.is_action_just_pressed("flip"):
+					selectedElement.flipState()
 			if selectedElement is MarkerLine:
 				selectedElement.setWidth(lineWidth)
 
