@@ -62,7 +62,7 @@ func handleOrthoInputs():
 	if Input.is_action_just_pressed("nav_switch_ortho"):
 		orthographic = !orthographic
 		if orthographic:
-			rotation_degrees = Vector3(-90,0,0)
+			rotation_degrees = Vector3(-90,0,0) + Vector3.UP * snappedi(rotation_degrees.y, 90)
 	if Input.is_action_just_pressed("nav_ortho_north"):
 		orthographic = true
 		rotation_degrees = Vector3(-90,0,0)

@@ -34,11 +34,16 @@ func rename(newID : String):
 	$StepLabel/InputCheckbox/IDLabel.visible = newID.length() > 0
 
 func setHeight(value):
-	$MeshInstance3D.scale = Vector3(1,value,1)
-	$MeshInstance3D.position = Vector3(0,value/20,0)
-	collider.scale = Vector3(1,value,1)
-	collider.position = Vector3(0,value/20,0)
-	$StepLabel.position = Vector3.UP * (value*0.1 + 0.15)
+	var maxHeight = 0.1
+	for thing in interactionCandidates:
+		maxHeight = max(maxHeight, thing.global_position.y)
+	maxHeight *= 10
+	maxHeight += 0.4
+	$MeshInstance3D.scale = Vector3(1,maxHeight,1)
+	$MeshInstance3D.position = Vector3(0,maxHeight/20,0)
+	collider.scale = Vector3(1,maxHeight,1)
+	collider.position = Vector3(0,maxHeight/20,0)
+	$StepLabel.position = Vector3.UP * (maxHeight*0.1 + 0.15)
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():
@@ -217,6 +222,7 @@ func place():
 	if machine:
 		machine.gridLibrary.requestUpdate(self)
 	updateInteractionCandidates()
+	setHeight(0.1)
 
 func updatePositions():
 	restPos = position if !inActivePos else position - travel.rotated(Vector3.UP,rotation.y)

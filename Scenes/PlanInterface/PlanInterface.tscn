@@ -168,7 +168,7 @@ texture_hover = ExtResource("18_wodlt")
 [node name="StateIndicator" type="TextureButton" parent="Elements"]
 texture_filter = 1
 layout_mode = 2
-tooltip_text = "Circle"
+tooltip_text = "State Indicator"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_reknm")
 texture_normal = ExtResource("20_vqsom")

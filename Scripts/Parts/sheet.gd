@@ -43,11 +43,17 @@ var sortTargetPos : Vector3
 func serialize():
 	grabUUID()
 	var relativePath = PathHandler.toRelativePath(path)
+	#var rotationPos = rotation.y + 2.0*PI
+	var rotationMod = wrapf(rotation_degrees.y, -45, 45)
+	var rotationOut = ("%0.2f" % rotation_degrees.y).rstrip("0")
+	if abs(rotationMod) < 0.01:
+		var quarts = rotation.y/(PI/2.0)
+		rotationOut = str(int(round(quarts))) + "q"
 	var output = {
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
 		"pos_y" : heightIndex,
 		"pos_z" : ("%0.4f" % position.z).rstrip("0"),
-		"rotation" : rotation.y,
+		"rotation" : rotationOut,
 		"file" : relativePath
 	}
 	if id.length() > 0 and id != relativePath.get_file().trim_suffix(".svg"):
@@ -71,7 +77,15 @@ func deserialize(source : Dictionary):
 	else:
 		height = height * Global.workspace.sheetSpacing
 	position = Vector3(float(source["pos_x"]), height, float(source["pos_z"]))
-	rotation = Vector3(0, source["rotation"], 0)
+	var rotationIn = source["rotation"]
+	if str(rotationIn).is_valid_float():
+		if str(rotationIn).length() > 10:
+			rotation = Vector3(0, float(rotationIn), 0)
+		else:
+			rotation_degrees = Vector3(0, float(rotationIn), 0)
+	else:
+		var angle = float(rotationIn.rstrip("q")) * PI/2
+		rotation = Vector3(0, angle, 0)
 	restRot = source["rotation"]
 	targetRot = restRot
 	loadSVG(PathHandler.toAbsolutePath(source["file"]))

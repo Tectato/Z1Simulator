@@ -8,10 +8,10 @@ func serialize():
 	var end = position + endPos
 	return {
 		"type" : "rectangle",
-		"start_x" : start.x,
-		"start_y" : start.y,
-		"end_x" : end.x,
-		"end_y" : end.y
+		"start_x" : ("%0.2f" % start.x).rstrip("0"),
+		"start_y" : ("%0.2f" % start.y).rstrip("0"),
+		"end_x" : ("%0.2f" % end.x).rstrip("0"),
+		"end_y" : ("%0.2f" % end.y).rstrip("0")
 	}
 
 func deserialize(src):

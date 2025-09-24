@@ -60,6 +60,8 @@ func _on_selector_toggled(toggled_on: bool) -> void:
 		if editor.selectedMarker:
 			selector.selectedMarkers = [editor.selectedMarker]
 		else:
+			if !selector.selectedMarkers.is_empty():
+				editor.selectedMarker = selector.selectedMarkers[0]
 			selector.selectedMarkers = []
 		selector.updateButtons()
 
