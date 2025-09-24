@@ -78,6 +78,7 @@ mesh = SubResource("CylinderMesh_vjs7e")
 
 [node name="ClockPinTravelIndicator" parent="." instance=ExtResource("3_r5mnu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001, 0.001, 0.032)
+alpha_cut = 1
 
 [node name="ResetTimer" type="Timer" parent="."]
 wait_time = 0.2
@@ -86,6 +87,7 @@ one_shot = true
 [node name="StepLabel" type="Label3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
 sorting_offset = 1.0
+alpha_cut = 1
 text = "1+3"
 font = ExtResource("4_r5mnu")
 script = ExtResource("4_rcjpo")
@@ -97,6 +99,7 @@ script = ExtResource("7_fc7u5")
 [node name="IDLabel" type="Label3D" parent="StepLabel/InputCheckbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33411968, 0)
 sorting_offset = 1.0
+alpha_cut = 1
 font = ExtResource("4_r5mnu")
 
 [node name="Area3D" type="Area3D" parent="StepLabel/InputCheckbox"]
