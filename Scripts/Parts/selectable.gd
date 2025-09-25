@@ -35,6 +35,9 @@ func canModify():
 func canBeMoved():
 	return false
 
+func getValidMoveDirections():
+	return [true,true,true]
+
 func rename(newID):
 	id = newID
 	idChanged.emit()

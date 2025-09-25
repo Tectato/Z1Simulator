@@ -17,6 +17,7 @@ var id = ""
 var machine : Machine
 var plan : Plan
 var height = 0
+var offset = 0.0
 var parts = []
 var gizmo : Gizmo
 var bounds = []
@@ -62,6 +63,12 @@ func serialize():
 		"sheets" : sheets,
 		"pins" : pins
 	}
+	offset = position.y
+	var below = machine.getLayerBelow(self)
+	if below:
+		offset = position.y - (below.position.y + below.getBounds()[1].y)
+	if offset > 0.01:
+		output["offset"] = ("%0.4f" % offset).rstrip("0")
 	if id.length() > 0:
 		output["id"] = id
 	if plan:
@@ -87,6 +94,9 @@ func deserialize(source : Dictionary):
 		plan.deserialize(source["plan"])
 		plan.layer = self
 		Global.editor.planInterface.addPlan(plan)
+	if source.has("offset"):
+		position.y = float(source["offset"])
+		offset = position.y
 	updateCollider()
 
 func addPart(newPart):
@@ -172,7 +182,11 @@ func updateBounds():
 
 
 func place():
-	pass
+	offset = position.y
+	var below = machine.getLayerBelow(self)
+	if below:
+		offset = position.y - (below.position.y + below.getBounds()[1].y)
+	machine.updateLayerPositions()
 
 func snap(srcPos):
 	return srcPos
@@ -239,6 +253,9 @@ func canModify():
 	if machine:
 		return !machine.importedInstance
 	return true
+
+func getValidMoveDirections():
+	return [false,true,false]
 
 func rotatePart(angle):
 	return

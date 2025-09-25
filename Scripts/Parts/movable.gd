@@ -289,10 +289,11 @@ func delete():
 		#print("Failed to unregister part; layer is gone")
 	call_deferred("queue_free")
 
-func setFixed(value, propagate = true):
+func setFixed(value, _propagate = true):
 	fixed = value
 
-func sortByFixed(A, B):
+static func sortByFixed(A, B):
+	if A == B: return false
 	var PartA = A if A is Movable else A.get_parent()
 	#var PartB = B if B is Movable else B.get_parent()
 	return PartA.fixed

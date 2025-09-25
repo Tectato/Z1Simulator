@@ -316,3 +316,6 @@ func getMachine():
 		return machine
 	else:
 		return super.getMachine()
+
+func getValidMoveDirections():
+	return [true,false,true]

@@ -389,8 +389,15 @@ func deselect():
 	newSelection.emit([])
 
 func updateGizmo():
-	if gizmoOn and !selected.is_empty() and selected[0] is Movable and canModify():
+	if gizmoOn and !selected.is_empty() and canModify():
 		transformGizmo.global_position = getMidPoint(selected)
 		transformGizmo.show()
+		var movability = [true, true, true]
+		for part in selected:
+			var partMovability = part.getValidMoveDirections()
+			movability[0] = movability[0] and partMovability[0]
+			movability[1] = movability[1] and partMovability[1]
+			movability[2] = movability[2] and partMovability[2]
+		transformGizmo.setAxesEnabled(movability)
 	else:
 		transformGizmo.hide()

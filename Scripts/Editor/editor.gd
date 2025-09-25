@@ -68,6 +68,8 @@ func loadProject(srcPath = ""):
 	workspace.deserialize(path)
 	updateSceneTree()
 	previousAction = doNothing
+	interface.saveDialog.current_dir = path.get_base_dir()
+	interface.saveDialog.current_file = path.get_file()
 	pass
 
 func importProjectInstace(srcPath = ""):

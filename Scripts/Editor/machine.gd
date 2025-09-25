@@ -100,11 +100,17 @@ func getLayerBelow(layer):
 
 func updateLayerPositions():
 	var height = 0.0
+	var prevLayer = null
 	for layer in layers:
-		layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * height
+		#layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * (height  + layer.offset)
+		if prevLayer:
+			layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * (max(prevLayer.getBounds()[1].y,0.1) + prevLayer.position.y + layer.offset)
+		else:
+			layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * layer.offset
 		layer.updateWidgets()
 		layer.updatePosition()
-		height = height + max(layer.getBounds()[1].y,0.1) + 0.05
+		#height = height + max(layer.getBounds()[1].y,0.1) + 0.05
+		prevLayer = layer
 	updateCollider()
 
 func addSheet(sheet):
@@ -315,6 +321,9 @@ func getMachine():
 
 func canModify():
 	return true
+
+func getValidMoveDirections():
+	return [true,false,true]
 
 func isEmpty():
 	var empty = parts.get_children().is_empty()
