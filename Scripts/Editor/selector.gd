@@ -237,7 +237,10 @@ func iterate(shift = false):
 	clear_exceptions()
 	force_raycast_update()
 	target = get_collider()
-	select(target, shift)
+	if target and target.get_parent().is_visible_in_tree():
+		select(target, shift)
+	else:
+		select(null, shift)
 
 func setGrabpoint():
 	partDragOrigins.clear()

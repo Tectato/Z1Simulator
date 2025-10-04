@@ -546,7 +546,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if setToMove[dirID] < Simulator.totalStep:
 		forces.clear()
 		#pivots = {0:[],1:[],2:[],3:[]}
-		pivots[dirID].clear()
+		pivots[dirID%2].clear()
 	#if !turnInstead.has(initiator):
 		#turnInstead[initiator] = {0:false, 1:false, 2:false, 3:false}
 	if selected:
@@ -595,9 +595,9 @@ func canMove(dir : Vector2, initiator, chain = []):
 		for pin in moveCandidates:
 			if pin == initiator: continue
 			if canTurn(dir, pin, initiator, chain):
-				pivots[dirID] = [pin]
+				pivots[dirID%2] = [pin]
 				break
-		if pivots[dirID].size() != 1:
+		if pivots[dirID%2].size() != 1:
 			return MoveState.Blocked
 		setToMove[dirID] = Simulator.totalStep
 		return MoveState.Moved
@@ -624,7 +624,8 @@ func move(dir : Vector2, initiator, chain = []):
 		forces[initiator] = [dir, chain]
 		#if !shouldTurn():
 			#return MoveState.Blocked
-		return MoveState.Moved if pivots[dirID].size() == 1 and tryTurn(pivots[dirID][0], initiator) else MoveState.Blocked
+		# Assuming pivots of opposite directions are the same
+		return MoveState.Moved if pivots[dirID%2].size() == 1 and tryTurn(pivots[dirID%2][0], initiator) else MoveState.Blocked
 		
 	var out = super.move(dir, initiator, chain)
 	if out != MoveState.Moved: return out

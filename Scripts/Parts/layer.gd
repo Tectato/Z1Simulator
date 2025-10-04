@@ -22,6 +22,7 @@ var parts = []
 var gizmo : Gizmo
 var bounds = []
 var colliderUpdateScheduled = false
+var selected = false
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
@@ -32,6 +33,7 @@ func canBeMoved():
 	return false
 
 func setSelected(value):
+	selected = value
 	widgets.visible = value
 	if value:
 		_draw_gizmo()
@@ -168,7 +170,7 @@ func updateBounds():
 	var min = Vector3(1,1,1) * 100000
 	var max = Vector3(1,1,1) * -100000
 	if parts.is_empty():
-		return [Vector3(-1,global_position.y,-1), Vector3(1,global_position.y+0.1,1)]
+		return [Vector3(-1,0,-1), Vector3(1,0.1,1)]
 	for part in parts:
 		var partBounds = part.getBounds()
 		if part is Pin:
