@@ -180,6 +180,9 @@ func updateSelectedLabel(parts = []):
 func _on_intermediate_plate_vis_toggled(toggled_on: bool) -> void:
 	editor.workspace.setIntermediatePlateVis(toggled_on)
 
+func _on_unselected_layer_vis_toggled(toggled_on: bool) -> void:
+	editor.workspace.setUnselectedLayersHidden(toggled_on)
+
 
 func visModeMonochrome() -> void:
 	editor.setVisMode(Editor.VisMode.Monochrome)

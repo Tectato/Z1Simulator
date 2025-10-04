@@ -27,6 +27,7 @@ var selected = false
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
 	Global.workspace.intermediatePlateVisChanged.connect(updateBaseplateVis)
+	Global.workspace.unselectedLayersVisChanged.connect(updateVisibility)
 	Global.workspace.sheetSpacingChanged.connect(updateCollider)
 
 func canBeMoved():
@@ -46,8 +47,11 @@ func rename(newID):
 
 func resolutionChanged(newRes):
 	updateBaseplate(getBounds())
-	if newRes == Workspace.Resolution.Part:
-		visible = Global.workspace.selectedLayer == self
+	updateVisibility()
+
+func updateVisibility():
+	if Global.workspace.resolution == Workspace.Resolution.Part:
+		visible = Global.workspace.selectedLayer == self or !Global.workspace.hideUnselectedLayers
 	else:
 		visible = true
 

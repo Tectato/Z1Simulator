@@ -29,6 +29,9 @@ signal resolutionChanged(newRes)
 var intermediatePlateVis = true
 signal intermediatePlateVisChanged(newVis)
 
+var hideUnselectedLayers = true
+signal unselectedLayersVisChanged()
+
 var machines = []
 var interMachineRelations = {}
 var selectedMachine : Machine
@@ -61,6 +64,11 @@ func setIntermediatePlateVis(newVis):
 	if newVis != intermediatePlateVis:
 		intermediatePlateVis = newVis
 		intermediatePlateVisChanged.emit(newVis)
+
+func setUnselectedLayersHidden(newVis):
+	if newVis != hideUnselectedLayers:
+		hideUnselectedLayers = newVis
+		unselectedLayersVisChanged.emit()
 
 func clear():
 	uuidManager.clear()
