@@ -137,6 +137,7 @@ func move(dir : Vector2, initiator, chain = []):
 	movedBy.clear()
 	if marker:
 		marker.partMoved(dirID)
+	blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):

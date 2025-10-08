@@ -319,3 +319,21 @@ func getMachine():
 
 func getValidMoveDirections():
 	return [true,false,true]
+
+func nudge():
+	if output and directionality > 0:
+		var dirP
+		var dirN
+		if directionality == 1:
+			dirP = Vector2(1,0)*Workspace.pinTravel
+			dirN = Vector2(-1,0)*Workspace.pinTravel
+		else:
+			dirP = Vector2(0,1)*Workspace.pinTravel
+			dirN = Vector2(0,-1)*Workspace.pinTravel
+		if canMove(dirP, self, []):
+			move(dirP, self, [])
+			return
+		if canMove(dirN, self, []):
+			move(dirN, self, [])
+			return
+	pass

@@ -28,7 +28,10 @@ func _ready() -> void:
 
 func resolutionChanged(newRes):
 	deselect()
-	match(newRes):
+	updateMask(newRes)
+
+func updateMask(resolution):
+	match(resolution):
 		Workspace.Resolution.Machine:
 			collision_mask = 0b110000
 		Workspace.Resolution.Layer:
@@ -64,6 +67,8 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				else:
 					cast(true, false)
 				dragging = false
+		if event.is_action_pressed("mouse_right"):
+			cast(false, false, false)
 		if event.is_action_released("mouse_right"):
 			if selected.size() == 1 and selected[0] is Sheet:
 				mover.finishRot()
@@ -183,7 +188,7 @@ func canModify():
 		out = out and part.canModify()
 	return out
 
-func cast(select = true, checkForUI = false):
+func cast(select = true, checkForUI = false, leftClick = true):
 	var mask = collision_mask
 	if checkForUI:
 		collision_mask = 0b100000
@@ -218,10 +223,15 @@ func cast(select = true, checkForUI = false):
 	
 	if select:
 		iterate(Input.is_key_pressed(KEY_SHIFT))
+	elif !leftClick:
+		iterate(Input.is_key_pressed(KEY_SHIFT), false)
 	if !selected.is_empty():
 		setGrabpoint()
 
-func iterate(shift = false):
+func iterate(shift = false, leftClick = true):
+	if !leftClick:
+		collision_mask = 0b000010
+		force_raycast_update()
 	var target = get_collider()
 	var index = 0
 	while target:
@@ -231,16 +241,29 @@ func iterate(shift = false):
 			target = get_collider()
 		else:
 			ignoreList.clear()
-			select(target, shift)
+			if leftClick:
+				select(target, shift)
+			else:
+				updateMask(Global.workspace.resolution)
+				if target.get_parent() is Pin:
+					target.get_parent().nudge()
 			return
 	ignoreList.clear()
 	clear_exceptions()
 	force_raycast_update()
 	target = get_collider()
 	if target and target.get_parent().is_visible_in_tree():
-		select(target, shift)
+		if leftClick:
+			select(target, shift)
+		else:
+			updateMask(Global.workspace.resolution)
+			if target.get_parent() is Pin:
+				target.get_parent().nudge()
 	else:
-		select(null, shift)
+		if leftClick:
+			select(null, shift)
+		else:
+			updateMask(Global.workspace.resolution)
 
 func setGrabpoint():
 	partDragOrigins.clear()

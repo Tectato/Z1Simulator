@@ -69,6 +69,7 @@ script = ExtResource("3_ml58t")
 
 [node name="Directionality" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.05013243, 0)
+visible = false
 axis = 1
 alpha_cut = 1
 texture_filter = 0

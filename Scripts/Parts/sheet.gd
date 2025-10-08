@@ -560,6 +560,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 	turnInstead[initiator][dirID] = false
 	forces[initiator] = [dir, chain]
 	
+	if !toMove.has(dirID): toMove[dirID] = {}
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
 	var check2 = 0
 	if check1 > 0:
@@ -569,7 +570,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		pass
 	var moveCandidates = toMove[dirID].keys()
 	moveCandidates.sort_custom(sortByFixed)
-	if check2 > 0 and toMove.has(dirID):
+	if check2 > 0 and toMove.has(dirID) and !toMove[dirID].is_empty():
 		for pin in moveCandidates:
 			if pin == initiator:
 				continue
