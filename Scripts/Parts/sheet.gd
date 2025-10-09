@@ -86,9 +86,8 @@ func deserialize(source : Dictionary):
 	else:
 		var angle = float(rotationIn.rstrip("q")) * PI/2
 		rotation = Vector3(0, angle, 0)
-	restRot = rotation
+	restRot = rotation.y
 	targetRot = restRot
-	loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	if source.has("id"):
 		id = source["id"]
 	else:
@@ -106,12 +105,14 @@ func deserialize(source : Dictionary):
 					#if other == self:
 						#other = dict["B"]
 					#addRelation(Relation.Type.Link, other)
+	if bounds.is_empty():
+		loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	place()
 
 func _ready():
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
-	if path:
+	if path and bounds.is_empty():
 		loadSVG(path)
 	else:
 		sprite.material_override.set_shader_parameter("albedo", sprite.texture)

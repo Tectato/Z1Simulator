@@ -3,7 +3,6 @@ extends Node
 var spriteDict = {}
 var polygonDict = {}
 var users = {}
-var prefabDict = {}
 
 func query(path : String):
 	if spriteDict.has(path):
@@ -14,7 +13,7 @@ func query(path : String):
 			spriteDict.erase(path)
 			polygonDict.erase(path)
 			return null
-		return [prefabDict[path], spriteDict[path], polygonDict[path]]
+		return [users[path].front(), spriteDict[path], polygonDict[path]]
 	else:
 		return null
 
@@ -25,9 +24,6 @@ func registerSprite(user : Sheet, path : String, sprite : ImageTexture, polygon 
 		users[path].append(user)
 	else:
 		users[path] = [user]
-		var packedScene = PackedScene.new()
-		packedScene.pack(user)
-		prefabDict[path] = packedScene
 
 func registerUser(user : Sheet, path : String):
 	if users.has(path):
