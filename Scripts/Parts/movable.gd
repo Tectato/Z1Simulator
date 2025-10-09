@@ -295,12 +295,12 @@ func setFixed(value, _propagate = true):
 	fixed = value
 
 static func sortByFixed(A, B):
-	if A == B: return false
 	var PartA = A if A is Movable else A.get_parent()
-	#var PartB = B if B is Movable else B.get_parent()
-	if A is Movable:
+	var PartB = B if B is Movable else B.get_parent()
+	if PartA.fixed == PartB.fixed: return false
+	if PartA is Movable:
 		return PartA.fixed
-	else: return false
+	return false
 
 func dirToInt(dir : Vector2):
 	if abs(dir.x) > 0.01:

@@ -251,7 +251,7 @@ func executeColliderUpdate():
 	colliderUpdateScheduled = false
 	var bounds = getBounds()
 	var extents = (bounds[1]-bounds[0])
-	colliderShape.shape.size = extents
+	colliderShape.shape.size = abs(extents)
 	collider.position = bounds[0] + extents/2
 	for pin in globalPins:
 		pin.setHeight(max(extents.y*10,1))
