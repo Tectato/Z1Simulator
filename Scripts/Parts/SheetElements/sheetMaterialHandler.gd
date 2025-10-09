@@ -1,21 +1,44 @@
 extends GeometryInstance3D
 
-@export var materialMonochrome : Material
-@export var materialColorcoded : Material
+@export var materialFlat : Material
 @export var materialShaded : Material
 
 @onready var parent = get_parent()
+const standardColor = Color(0.239, 0.411, 0.834, 1.0)
+var markerColor = standardColor
+var currentColor = standardColor
+var fixedFac = 0.7
 
 func visModeChanged(mode : Editor.VisMode):
-	match(mode):
+	updateMaterial()
+
+func updateMaterial():
+	match(Global.editor.currentVisMode):
 		Editor.VisMode.Monochrome:
-			material_override = materialMonochrome
+			#currentColor = Color(0.58,0.58,0.58)
+			currentColor = Color(0.5,0.5,0.5)
+			material_override = materialFlat
 		Editor.VisMode.Colorcoded:
-			material_override = materialColorcoded
+			currentColor = markerColor
+			material_override = materialFlat
 		Editor.VisMode.Realistic:
-			material_override = materialShaded
-	updateParams()
+			currentColor = Color(0.5,0.5,0.5)
+			material_override = materialFlat if parent.selected else materialShaded
+	if parent.selected:
+		currentColor = currentColor.blend(Color(1.0, 0.0, 0.0, 0.5))
+	if parent.fixed:
+		currentColor *= fixedFac
+	materialFlat.emission_energy_multiplier = 0.5 if parent.selected else 0.0
+	materialFlat.albedo_color = currentColor
 
 func updateParams():
 	set_instance_shader_parameter("selected", parent.selected)
 	set_instance_shader_parameter("fixed", parent.fixed)
+
+func setColor(color):
+	if color:
+		markerColor = color
+	else:
+		markerColor = standardColor
+	#materialFlat.albedo_color = color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+	updateMaterial()

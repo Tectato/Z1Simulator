@@ -7,20 +7,23 @@ extends Sprite3D
 @onready var parent = get_parent()
 
 func updateSprite():
-	materialMonochrome.set_shader_parameter("albedo", texture)
-	materialColorcoded.set_shader_parameter("albedo", texture)
-	materialShaded.set_shader_parameter("albedo", texture)
+	pass
+	#materialMonochrome.set_shader_parameter("albedo", texture)
+	#materialColorcoded.set_shader_parameter("albedo", texture)
+	#materialShaded.set_shader_parameter("albedo", texture)
 
 func visModeChanged(mode : Editor.VisMode):
-	match(mode):
-		Editor.VisMode.Monochrome:
-			material_override = materialMonochrome
-		Editor.VisMode.Colorcoded:
-			material_override = materialColorcoded
-		Editor.VisMode.Realistic:
-			material_override = materialShaded
-	updateParams()
+	pass
+	#match(mode):
+		#Editor.VisMode.Monochrome:
+			#material_override = materialMonochrome
+		#Editor.VisMode.Colorcoded:
+			#material_override = materialColorcoded
+		#Editor.VisMode.Realistic:
+			#material_override = materialShaded
+	#updateParams()
 
 func updateParams():
-	set_instance_shader_parameter("selected", parent.selected)
-	set_instance_shader_parameter("fixed", parent.fixed)
+	pass
+	#set_instance_shader_parameter("selected", parent.selected)
+	#set_instance_shader_parameter("fixed", parent.fixed)

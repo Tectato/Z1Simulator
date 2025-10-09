@@ -3,7 +3,8 @@ render_mode cull_disabled, depth_test_disabled, shadows_disabled, unshaded;
 
 uniform sampler2D albedo : source_color, filter_nearest;
 uniform float thickness = 0.02;
-instance uniform bool selected = false;
+//instance uniform bool selected = false;
+const bool selected = true;
 const vec4 selectedColor = vec4(1.0,0.3,0.0,1.0) * 0.7;
 
 void vertex() {
@@ -26,7 +27,7 @@ void fragment() {
 	}
 	ALBEDO = topColor.rgb * topHeight;
 	if (selected){
-		ALPHA = topHeight * max(0.1,mask);
+		ALPHA = topHeight * max(0.2,mask);
 		DEPTH = 100.0;
 	} else {
 		ALPHA = 0.0;

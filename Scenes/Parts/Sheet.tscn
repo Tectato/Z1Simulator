@@ -1,22 +1,38 @@
-[gd_scene load_steps=15 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=18 format=3 uid="uid://b2845uayksbce"]
 
 [ext_resource type="Material" uid="uid://bnljtoqintdji" path="res://Assets/SheetSpriteColorcoded.tres" id="2_huj6i"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
+[ext_resource type="Shader" uid="uid://bi2w6t8vmi1w0" path="res://Shaders/SheetBasic.gdshader" id="2_wkhiy"]
 [ext_resource type="Script" uid="uid://dqb3hgknwtj7k" path="res://Scripts/Parts/sheet.gd" id="3_k6d36"]
 [ext_resource type="Material" uid="uid://o31ia3qqm05d" path="res://Assets/SheetSpriteMonochrome.tres" id="3_rfh3b"]
 [ext_resource type="Material" uid="uid://vhdr4absfdgr" path="res://Assets/SheetSpriteHighlight.tres" id="4_jrvcr"]
 [ext_resource type="Script" uid="uid://bfdg7rb4hi2i" path="res://Scripts/Parts/SheetElements/sheetSprite.gd" id="6_jrvcr"]
-[ext_resource type="Material" uid="uid://cfwog1tvfchgh" path="res://Assets/SheetSideColorcoded.tres" id="7_uai6l"]
-[ext_resource type="Shader" uid="uid://bcuu62ucic85b" path="res://Shaders/SheetMeshMonochromeOutlined.gdshader" id="8_uai6l"]
-[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMaterialHandler.gd" id="8_wkhiy"]
+[ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="8_8aa0u"]
+[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="10_wkhiy"]
 
-[sub_resource type="PlaceholderMesh" id="PlaceholderMesh_wkhiy"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wkhiy"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4tf48"]
 render_priority = 0
-shader = ExtResource("8_uai6l")
-shader_parameter/outline_threshold = 0.2
+shader = ExtResource("2_wkhiy")
+shader_parameter/thickness = 0.02
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uai6l"]
+albedo_color = Color(0.617455, 0.617455, 0.617455, 1)
+metallic = 1.0
+roughness = 0.4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uai6l"]
+render_priority = 0
+shader = ExtResource("8_8aa0u")
+shader_parameter/outline_threshold = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkhiy"]
+resource_local_to_scene = true
+next_pass = SubResource("ShaderMaterial_uai6l")
+albedo_color = Color(0.78431374, 0.78431374, 0.78431374, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 0.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8aa0u"]
 render_priority = 0
@@ -32,11 +48,12 @@ next_pass = SubResource("ShaderMaterial_8aa0u")
 script = ExtResource("3_k6d36")
 debugPoint = NodePath("MeshInstance3D")
 collider = NodePath("Outline")
+mesh = NodePath("MeshInstance3D")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351, 0.001, 0.246)
 visible = false
-material_override = ExtResource("2_huj6i")
+material_override = SubResource("ShaderMaterial_4tf48")
 material_overlay = ExtResource("4_jrvcr")
 centered = false
 pixel_size = 0.001
@@ -60,6 +77,5 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("PlaceholderMesh_wkhiy")
 script = ExtResource("8_wkhiy")
-materialMonochrome = SubResource("ShaderMaterial_wkhiy")
-materialColorcoded = ExtResource("7_uai6l")
+materialFlat = SubResource("StandardMaterial3D_wkhiy")
 materialShaded = SubResource("StandardMaterial3D_4tf48")

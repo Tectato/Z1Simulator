@@ -6,7 +6,7 @@ var machine : Machine
 var layer : Layer
 var id = ""
 @export var collider : CollisionObject3D
-@onready var mesh = $MeshInstance3D
+@export var mesh : MeshInstance3D
 
 signal idChanged
 

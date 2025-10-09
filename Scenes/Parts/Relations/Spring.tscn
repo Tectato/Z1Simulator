@@ -39,9 +39,11 @@ material_override = SubResource("StandardMaterial3D_bydxs")
 mesh = ExtResource("2_2xbpn")
 skeleton = NodePath("../..")
 
-[node name="SpringSelectable" type="Node3D" parent="MeshPivot" node_paths=PackedStringArray("parent")]
+[node name="SpringSelectable" type="Node3D" parent="MeshPivot" node_paths=PackedStringArray("parent", "collider", "mesh")]
 script = ExtResource("3_2xbpn")
 parent = NodePath("../..")
+collider = NodePath("SelectionHitbox")
+mesh = NodePath("../Mesh")
 
 [node name="SelectionHitbox" type="Area3D" parent="MeshPivot/SpringSelectable"]
 collision_layer = 3

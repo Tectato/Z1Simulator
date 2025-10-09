@@ -116,7 +116,7 @@ func _ready():
 	if path and bounds.is_empty():
 		loadSVG(path)
 	else:
-		sprite.material_override.set_shader_parameter("albedo", sprite.texture)
+		#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 		sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	super._ready()
 
@@ -135,14 +135,14 @@ func setSelected(value):
 	super.setSelected(value)
 	#sprite.set_instance_shader_parameter("selected", value)
 	sprite.updateParams()
-	mesh.updateParams()
+	mesh.updateMaterial()
 	sprite.visible = value
 
 func setFixed(value, propagate = true):
 	super.setFixed(value)
 	#sprite.set_instance_shader_parameter("fixed", value)
 	sprite.updateParams()
-	mesh.updateParams()
+	mesh.updateMaterial()
 	mesh.set_instance_shader_parameter("fixed", value)
 	#if propagate:
 		#for hole in pinCandidates:
@@ -223,7 +223,7 @@ func loadSVG(filepath : String):
 	else:
 		image = ImageTexture.create_from_image(Image.load_from_file(path))
 	sprite.set_texture(image)
-	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
+	#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	sprite.updateSprite()
 	if cached and cached[0]:
@@ -920,15 +920,20 @@ func snapRotation():
 
 func setColor(color : Color):
 	var adjustedColor = Color(color)
-	adjustedColor.s = adjustedColor.s * 0.8
-	adjustedColor.v = adjustedColor.v * 0.5
+	#adjustedColor.s = adjustedColor.s * 0.8
+	adjustedColor.s = adjustedColor.s * 0.7
+	#adjustedColor.v = adjustedColor.v * 0.5
+	adjustedColor.v = adjustedColor.v * 0.7
 	var vec3 = Vector3(adjustedColor.r, adjustedColor.g, adjustedColor.b)
-	sprite.set_instance_shader_parameter("partColor", vec3)
-	mesh.set_instance_shader_parameter("partColor", vec3)
+	#sprite.set_instance_shader_parameter("partColor", vec3)
+	mesh.setColor(adjustedColor)
+	#mesh.set_instance_shader_parameter("partColor", vec3)
 
 func setUseColor(value : bool):
-	sprite.set_instance_shader_parameter("usePartColor", value)
-	mesh.set_instance_shader_parameter("usePartColor", value)
+	#sprite.set_instance_shader_parameter("usePartColor", value)
+	if !value:
+		mesh.setColor(null)
+	#mesh.set_instance_shader_parameter("usePartColor", value)
 
 func setupAfterDuplication(source = null):
 	if holes.is_empty():
