@@ -29,6 +29,7 @@ var stateY = false
 @onready var restStateY = stateY
 var uuid = -1
 var marker : Marker
+var scheduled = {}
 
 func _ready() -> void:
 	Simulator.rewind.connect(rewind)
@@ -257,7 +258,7 @@ func place():
 	if layer:
 		layer.machine.gridLibrary.requestUpdate(self)
 		layer.updateCollider()
-	call_deferred("updateInteractionCandidates")
+	schedule(updateInteractionCandidates)
 
 func updatePositions():
 	restPos = position
@@ -297,7 +298,9 @@ static func sortByFixed(A, B):
 	if A == B: return false
 	var PartA = A if A is Movable else A.get_parent()
 	#var PartB = B if B is Movable else B.get_parent()
-	return PartA.fixed
+	if A is Movable:
+		return PartA.fixed
+	else: return false
 
 func dirToInt(dir : Vector2):
 	if abs(dir.x) > 0.01:
@@ -319,5 +322,13 @@ func setColor(color : Color):
 func setUseColor(value : bool):
 	pass
 
-func setupAfterDuplication():
+func setupAfterDuplication(source = null):
 	pass
+
+func schedule(callable : Callable):
+	if scheduled.has(callable): return
+	scheduled[callable] = null
+	call_deferred("execute", callable)
+
+func execute(callable : Callable):
+	scheduled.erase(callable)

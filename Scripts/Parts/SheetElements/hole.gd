@@ -2,6 +2,7 @@ extends Node3D
 class_name Hole
 
 @export var cutout : CSGShape3D
+var id = ""
 
 func checkPos(pos):
 	pass
@@ -12,3 +13,7 @@ func getSnapPosDiff(srcPos):
 	var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/16,Workspace.gridSize/16))
 	var snapped3D = Vector3(snapped.x,adjustedSrcPos.y,snapped.y)
 	return snapped3D - adjustedSrcPos
+
+func setupAfterDuplication(source):
+	id = source.id
+	pass

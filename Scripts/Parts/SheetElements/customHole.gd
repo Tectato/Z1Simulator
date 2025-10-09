@@ -6,3 +6,7 @@ class_name CustomHole
 
 func checkPos(pos):
 	return Geometry2D.is_point_in_polygon(Vector2(pos.x,pos.z), $PolygonArea/Polygon.polygon)
+
+func setupAfterDuplication(source):
+	super.setupAfterDuplication(source)
+	polygon = source.polygon

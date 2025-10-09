@@ -24,3 +24,8 @@ func checkPos(pos : Vector3):
 		#gizmo.free()
 	#gizmo = Gizmo3D.create_line(Color.RED, Vector3.ZERO, Vector3.UP, global_position + pos)
 	return Geometry2D.is_point_in_polygon(Vector2(pos.x,pos.z), polygon)
+
+func setupAfterDuplication(source):
+	super.setupAfterDuplication(source)
+	openLeft = source.openLeft
+	polygon = source.polygon

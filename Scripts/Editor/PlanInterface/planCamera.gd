@@ -12,7 +12,7 @@ var zoomFactor = 1.0
 func _ready() -> void:
 	planInterface.currentPlanChanged.connect(newPlan)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if !mouseInWindow and !dragging: return
 	if Input.is_action_just_pressed("nav_orbit"):
 		dragging = true

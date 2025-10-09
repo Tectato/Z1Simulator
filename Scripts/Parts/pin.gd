@@ -182,13 +182,14 @@ func updateInteractionCandidates():
 		else:
 			interactionCandidates.append(hole)
 	interactionCandidates.sort_custom(sortByFixed)
-	updateConstraints()
+	#updateConstraints()
 
 func updateConstraints():
-	for thing in interactionCandidates:
-		if thing is PointHole and thing.get_parent().fixed:
-			setFixed(true)
-			return
+	pass
+	#for thing in interactionCandidates:
+		#if thing is PointHole and thing.get_parent().fixed:
+			#setFixed(true)
+			#return
 
 func delete():
 	super.delete()

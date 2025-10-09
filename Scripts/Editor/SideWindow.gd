@@ -36,7 +36,7 @@ func _on_rescale_button_button_down() -> void:
 func _on_rescale_button_button_up() -> void:
 	scaling = false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if moving:
 		var mouseDiff = get_global_mouse_position() - mouseStartPos
 		global_position = startPos + mouseDiff

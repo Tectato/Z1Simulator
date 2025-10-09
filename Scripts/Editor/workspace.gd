@@ -20,7 +20,7 @@ signal moveSpeedChanged
 
 # Select: Select & move things - Manage: Define inputs/outputs, link Machines together
 enum Mode {Select, Manage}
-var mode = Mode.Select
+var editMode = Mode.Select
 signal modeChanged(newMode)
 enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
@@ -46,9 +46,9 @@ func lateReady():
 	Global.editor.visModeChanged.connect(visModeChanged)
 
 func setMode(newMode):
-	if newMode != mode:
+	if newMode != editMode:
 		modeChanged.emit(newMode)
-	mode = newMode
+	editMode = newMode
 
 func visModeChanged(mode : Editor.VisMode):
 	var shaded = mode == Editor.VisMode.Realistic
@@ -93,7 +93,7 @@ func createNew():
 func exists(object):
 	return object != null
 
-func serialize(path : String):
+func serialize(_path : String):
 	Global.unnamedIDs.clear()
 	var machineEntries = FileHandler.compile(machines)
 	#if machines.size() > 1:
@@ -196,7 +196,7 @@ func deserialize(path):
 	if !sequences.is_empty():
 		Global.editor.programInterface.call_deferred("deserialize", sequences)
 	
-func exportMachine(path):
+func exportMachine(_path):
 	pass
 
 func importMachines(src):
@@ -226,8 +226,13 @@ func importSheet(path):
 	createIfNotExists()
 	setMode(Mode.Select)
 	setResolution(Resolution.Part)
-	var newSheet = SHEET.instantiate()
-	newSheet.call_deferred("loadSVG",path)
+	var cached = SheetLibrary.query(path)
+	var newSheet
+	if cached:
+		newSheet = cached[0].duplicateCustom()
+	else:
+		newSheet = SHEET.instantiate()
+		newSheet.call_deferred("loadSVG",path)
 	selectedLayer.addPart(newSheet)
 	return newSheet
 
@@ -279,18 +284,17 @@ func getClosestAlignmentPoint(type : AlignmentType, srcPos : Vector3):
 			#var staticPin = vround(pos, Vector2(gridSize, gridSize))
 			pos = vmod(pos, Vector2(gridSize/8,gridSize/8))
 			return pos
-			pass
 		AlignmentType.LogicHole:
 			pos = vmod(pos, Vector2(gridSize/4,gridSize/4))
 			return pos
 	return pos
 
-func getClosestAlignmentAxes(type : AlignmentType, srcPos : Vector3, srcDirX : bool):
+func getClosestAlignmentAxes(type : AlignmentType, srcPos : Vector3, _srcDirX : bool):
 	var pos = Vector2(srcPos.x, srcPos.z)
 	match(type):
 		AlignmentType.OutlineSegment:
 			pos = vmod(pos, Vector2(gridSize, gridSize))
-			var staticPin = vround(pos, Vector2(gridSize, gridSize))
+			#var staticPin = vround(pos, Vector2(gridSize, gridSize))
 			pass
 
 

@@ -32,7 +32,11 @@ func delete():
 
 func updatePos():
 	global_position = A.global_position
-	look_at(B.global_position)
+	if A.global_position.distance_squared_to(B.global_position) > 0.001:
+		if (A.global_position.x-B.global_position.x)+(A.global_position.z-B.global_position.z) > 0:
+			look_at(B.global_position)
+		else:
+			rotation_degrees = Vector3(90,0,0)
 	$LineVis.mesh.height = A.global_position.distance_to(B.global_position)
 	$LineVis.global_position = (A.global_position + B.global_position) / 2
 

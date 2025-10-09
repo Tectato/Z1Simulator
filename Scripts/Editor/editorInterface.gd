@@ -114,7 +114,7 @@ func _on_save_request_confirmed() -> void:
 	else:
 		saveDialog.popup()
 
-func _on_save_request_custom_action(action: StringName) -> void:
+func _on_save_request_custom_action(_action: StringName) -> void:
 	saveRequestDialog.hide()
 
 func _on_save_request_canceled() -> void:

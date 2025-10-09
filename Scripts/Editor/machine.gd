@@ -65,7 +65,7 @@ func duplicateLayer(layer : Layer):
 	newLayer.machine = self
 	layers.insert(index + 1, newLayer)
 	gridLibrary.insertLayer(index + 1)
-	newLayer.setupAfterDuplication()
+	newLayer.setupAfterDuplication(layer)
 	newLayer.updateCollider()
 	updateLayerPositions()
 	if Global.editor:
@@ -207,8 +207,8 @@ func deserializeFromDict(source):
 	layers.sort_custom(sortByHeight)
 	updateLayerPositions()
 	
-	for part in gridLibrary.occupies.keys():
-		part.updateInteractionCandidates()
+	#for part in gridLibrary.occupies.keys():
+		#part.updateInteractionCandidates()
 	
 	if source.has("relations"):
 		#uuid = source["uuid"]

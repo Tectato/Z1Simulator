@@ -13,3 +13,7 @@ func checkPos(pos):
 func getSnapPositions():
 	var diff = Global.workspace.pinTravel
 	return [Vector3.ZERO, Vector3(-diff,0,-diff), Vector3(-diff,0,diff), Vector3(diff,0,-diff), Vector3(diff,0,diff)]
+
+func setupAfterDuplication(source):
+	super.setupAfterDuplication(source)
+	edgeLength = source.edgeLength

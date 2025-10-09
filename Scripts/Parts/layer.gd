@@ -86,7 +86,15 @@ func deserialize(source : Dictionary):
 	var pins = source["pins"]
 	height = source["height"]
 	for sheet in sheets:
-		var newPart = SHEET.instantiate()
+		#Check if sheet has been deserialized already and copy that instead
+		var imagePath = PathHandler.toAbsolutePath(sheet["file"])
+		var cached = SheetLibrary.query(imagePath)
+		var newPart
+		if false:
+			newPart = cached[0].duplicateCustom()
+			#cached[0].get_parent().remove_child(newPart)
+		else:
+			newPart = SHEET.instantiate()
 		addPart(newPart)
 		newPart.deserialize(sheet)
 	for pin in pins:
@@ -228,7 +236,7 @@ func addLayer():
 func duplicateLayer():
 	machine.duplicateLayer(self)
 
-func setupAfterDuplication():
+func setupAfterDuplication(source : Layer):
 	collider = $BoundingBox
 	bb = $BoundingBox/CollisionShape3D
 	widgets = $Widgets
@@ -236,14 +244,18 @@ func setupAfterDuplication():
 	button_up = $Widgets/MoveUp
 	button_down = $Widgets/MoveDown
 	baseplate = $Baseplate
+	var ownHash = {}
 	for thing in get_children():
 		if thing is Movable:
 			parts.append(thing)
+			ownHash[thing.position] = thing
 	for part in parts:
 		part.layer = self
 		part.place()
 		part.resetUUID()
-		part.setupAfterDuplication()
+	for part in source.parts:
+		if ownHash.has(part.position):
+			ownHash[part.position].setupAfterDuplication(part)
 
 func updatePosition():
 	for part in parts:

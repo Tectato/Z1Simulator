@@ -76,7 +76,7 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 func exists(item):
 	return item != null and weakref(item).get_ref()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
 	if hovered != clickArea:
 		return
@@ -113,13 +113,13 @@ func _process(delta: float) -> void:
 					toSelect.erase(part)
 				selectSet(toSelect)
 				return
-		var i = -1
+		#var i = -1
 		for part in selected:
-			i += 1
+			#i += 1
 			if part.canBeMoved():
 				if Input.is_action_just_pressed("rotate_ccw"):
-					var bounds = part.getBounds()
-					var midPoint = (bounds[1]-bounds[0])/2
+					#var bounds = part.getBounds()
+					#var midPoint = (bounds[1]-bounds[0])/2
 					#mouseRelative[i] -= midPoint
 					#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
 					#mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
@@ -188,7 +188,7 @@ func canModify():
 		out = out and part.canModify()
 	return out
 
-func cast(select = true, checkForUI = false, leftClick = true):
+func cast(toSelect = true, checkForUI = false, leftClick = true):
 	var mask = collision_mask
 	if checkForUI:
 		collision_mask = 0b100000
@@ -206,7 +206,7 @@ func cast(select = true, checkForUI = false, leftClick = true):
 			hoveredButton = null
 		
 		if get_collider() and get_collider().get_parent() is Control3D and get_collider().get_parent().is_visible_in_tree():
-			if select:
+			if toSelect:
 				clickedButton = get_collider().get_parent()
 				clickedButton.click()
 				mouseDragOrigin = get_collision_point()
@@ -218,10 +218,10 @@ func cast(select = true, checkForUI = false, leftClick = true):
 				hoveredButton.setHovered(true)
 			return
 		else:
-			#cast(select, false)
+			#cast(toSelect, false)
 			return
 	
-	if select:
+	if toSelect:
 		iterate(Input.is_key_pressed(KEY_SHIFT))
 	elif !leftClick:
 		iterate(Input.is_key_pressed(KEY_SHIFT), false)
@@ -321,7 +321,10 @@ func paste():
 	
 	for part in clipboard:
 		if part is Sheet:
-			selected.append(Global.workspace.importSheet(part.path))
+			#selected.append(Global.workspace.importSheet(part.path))
+			var instance = part.duplicateCustom()
+			Global.workspace.selectedLayer.addPart(instance)
+			selected.append(instance)
 		elif part is ClockPin:
 			selected.append(Global.workspace.addClockPin())
 		elif part is Pin:

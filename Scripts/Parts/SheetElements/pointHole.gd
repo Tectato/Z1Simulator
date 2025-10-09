@@ -14,3 +14,7 @@ func checkPos(pos : Vector3):
 	#gizmo = Gizmo3D.create_line(Color.RED, Vector3.ZERO, Vector3.UP, global_position + pos)
 	var dist = Vector2(pos.x,pos.z).length() 
 	return dist < radius
+
+func setupAfterDuplication(source):
+	super.setupAfterDuplication(source)
+	radius = source.radius

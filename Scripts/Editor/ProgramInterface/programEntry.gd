@@ -140,7 +140,7 @@ func prepareNextStep():
 	for cycle in cycles:
 		cycle.setStep(internalStep)
 	for entry in pinEntries:
-		if wrapi(Simulator.currentStep + 1, 0, 4) == entry.pin.forwardStep and entry.activations[(internalStep+1)/4]:
+		if wrapi(Simulator.currentStep + 1, 0, 4) == entry.pin.forwardStep and entry.activations[int(internalStep+1)/4]:
 			entry.pin.inputCheckbox.setValueEmit(true)
 	pass
 

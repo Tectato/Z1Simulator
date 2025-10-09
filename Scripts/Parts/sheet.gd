@@ -86,7 +86,7 @@ func deserialize(source : Dictionary):
 	else:
 		var angle = float(rotationIn.rstrip("q")) * PI/2
 		rotation = Vector3(0, angle, 0)
-	restRot = source["rotation"]
+	restRot = rotation
 	targetRot = restRot
 	loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	if source.has("id"):
@@ -142,10 +142,10 @@ func setFixed(value, propagate = true):
 	sprite.updateParams()
 	debugPolygon.updateParams()
 	debugPolygon.set_instance_shader_parameter("fixed", value)
-	if propagate:
-		for hole in pinCandidates:
-			for pin in pinCandidates[hole]:
-				pin.updateConstraints()
+	#if propagate:
+		#for hole in pinCandidates:
+			#for pin in pinCandidates[hole]:
+				#pin.updateConstraints()
 
 func visModeChanged(mode : Editor.VisMode):
 	sprite.visModeChanged(mode)
@@ -209,10 +209,11 @@ func loadSVG(filepath : String):
 	var cached = SheetLibrary.query(path)
 	var image
 	if cached:
-		SheetLibrary.registerUser(path)
-		image = cached[0]
-		outline.polygon = cached[1]
-		debugPolygon.polygon = cached[1]
+		SheetLibrary.registerUser(self, path)
+		image = cached[1]
+		outline.polygon = cached[2]
+		debugPolygon.polygon = cached[2]
+		#return
 	else:
 		image = ImageTexture.create_from_image(Image.load_from_file(path))
 	sprite.set_texture(image)
@@ -224,8 +225,6 @@ func loadSVG(filepath : String):
 	var elements = rawString.split("\n")
 	for element in elements:
 		parseElement(element)
-	if not cached:
-		SheetLibrary.registerSprite(path, image, outline.polygon)
 	var size = sprite.texture.get_size()/100.0
 	#bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
 	
@@ -255,6 +254,7 @@ func loadSVG(filepath : String):
 	
 	var radii = (max-min)/2
 	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
+	SheetLibrary.registerSprite(self, path, image, outline.polygon)
 	#_draw_gizmo()
 	visModeChanged(Global.editor.currentVisMode)
 
@@ -300,11 +300,15 @@ func parseElement(part : String):
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
 				newHole.setRectangular(false)
+				newHole.id = id
+				newHole.name = id
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10, float(dict["horizontal"]) > 0, float(dict["length"]), false)
 			if id.contains("logicHole"):
 				var newHole = addHole(LOGICHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
 				newHole.setOpenLeft(float(dict["openLeft"]) > 0)
 				newHole.rotate_y(-int(dict["pinTravelDir"]) * PI/2)
+				newHole.id = id
+				newHole.name = id
 				pass#Global.partHandler.addLogicHole(float(dict["cx"]), float(dict["cy"]), int(dict["pinTravelDir"]), float(dict["openLeft"]) > 0)
 			if id.contains("customHole") or id.contains("outlinePath"):
 				var pointString = dict["d"]
@@ -312,10 +316,15 @@ func parseElement(part : String):
 				var segments = []
 				for chunk in split1:
 					segments.append_array(chunk.split("A "))
-				addPolygon(segments, id.contains("outlinePath"))
+				var newHole = addPolygon(segments, id.contains("outlinePath"))
+				if newHole:
+					newHole.id = id
+					newHole.name = id
 		"circle":
 			var newHole = addHole(POINTHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
 			newHole.setRadius(float(dict["r"])/1000)
+			newHole.id = id
+			newHole.name = id
 			pass#Global.partHandler.addPointHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10)
 		"rect":
 			if id.contains("rectHole"):
@@ -327,10 +336,14 @@ func parseElement(part : String):
 				if float(dict["horizontal"]) < 1:
 					newHole.rotate_y(PI/2)
 				newHole.setRectangular(true)
+				newHole.id = id
+				newHole.name = id
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["width"])/20, float(dict["horizontal"]) > 0, float(dict["length"]), true)
 			if id.contains("squareHole"):
 				var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
 				newHole.setEdgeLength(float(dict["edgeLength"])/1000)
+				newHole.id = id
+				newHole.name = id
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
 			pass
 		"svg":
@@ -407,6 +420,7 @@ func addPolygon(segments, isOutline):
 	polygonParent.polygon = polygon
 	if not isOutline:
 		hole.debugPolygon.polygon = polygon
+	return hole
 
 #TODO
 func snap(srcPos):
@@ -514,7 +528,7 @@ func updateInteractionCandidates():
 	var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
 	pinCandidates.clear()
 	pointConstraints.clear()
-	linearConstraints.clear()
+	#linearConstraints.clear()
 	for pin in inRange:
 		var hole = getIntersector(pin.global_position)
 		var key = hole if hole != null else self
@@ -524,8 +538,8 @@ func updateInteractionCandidates():
 			pinCandidates[key] = [pin]
 		if hole is PointHole:
 			pointConstraints[pin] = null
-		if hole is LongHole and pin.fixed:
-			linearConstraints[pin] = null
+		#if hole is LongHole and pin.fixed:
+			#linearConstraints[pin] = null
 		# TODO: case for LongHoles
 	if pointConstraints.size() > 0:
 		targetRot = rotation.y
@@ -841,7 +855,7 @@ func abortMove(initiator, chain = []):
 	rotHistory.pop_back()
 
 func delete():
-	SheetLibrary.unregisterUser(path)
+	SheetLibrary.unregisterUser(self, path)
 	super.delete()
 
 func hasPivot():
@@ -878,11 +892,44 @@ func setUseColor(value : bool):
 	sprite.set_instance_shader_parameter("usePartColor", value)
 	debugPolygon.set_instance_shader_parameter("usePartColor", value)
 
-func setupAfterDuplication():
-	# For some reason duplicating a sheet also duplicates every hole
-	var toDelete = []
-	for thing in get_children():
-		if thing is Hole and not thing in holes:
-			toDelete.append(thing)
-	for thing in toDelete:
-		thing.queue_free()
+func duplicateCustom():
+	var clone = duplicate()
+	#clone.sprite = clone.find_child("Sprite3D")
+	#clone.outline = clone.find_child("Polygon")
+	#clone.debugPolygon = clone.find_child("CSGPolygon3D")
+	clone.setupAfterDuplication(self)
+	return clone
+
+func setupAfterDuplication(source = null):
+	# For some reason duplicating a sheet also duplicates every hole. Sometimes.
+	if holes.is_empty():
+		var ownHash = {}
+		for thing in get_children():
+			if thing is Hole:
+				ownHash[thing.name] = thing
+				holes.append(thing)
+				for part in thing.get_children():
+					if part is CSGShape3D:
+						part.queue_free()
+			elif thing is Sprite3D:
+				sprite = thing
+			elif thing is Area3D:
+				outline = thing.get_child(0)
+			elif thing is CSGPolygon3D:
+				debugPolygon = thing
+		if source == null:
+			print("Invalid sheet duplication call")
+			return
+		bounds = source.bounds
+		for hole in source.holes:
+			if ownHash.has(hole.name):
+				ownHash[hole.name].setupAfterDuplication(hole)
+			else:
+				print("Sheet duplication incomplete")
+	else:
+		var toDelete = []
+		for thing in get_children():
+			if thing is Hole and not thing in holes:
+				toDelete.append(thing)
+		for thing in toDelete:
+			thing.queue_free()

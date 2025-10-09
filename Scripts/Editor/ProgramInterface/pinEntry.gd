@@ -71,13 +71,13 @@ func hasActivation():
 	return false
 
 func getFurthestActivationCycle():
-	var size = activations.size()
-	for i in range(0,size):
-		if activations[(size-1)-i]:
-			return (size-1)-i
+	var length = activations.size()
+	for i in range(0,length):
+		if activations[(length-1)-i]:
+			return (length-1)-i
 	return -1
 
-func boxTicked(pressed):
+func boxTicked(_pressed):
 	for i in range(0,boxes.size()):
 		activations[i] = boxes[i].button_pressed
 	parent.updateLength()

@@ -25,6 +25,7 @@ func executeUpdate():
 	for part in toUpdate.keys():
 		part.updateInteractionCandidates()
 	for existingPart in toNotify.keys():
+		if existingPart in toUpdate: continue
 		existingPart.updateInteractionCandidates()
 	toUpdate.clear()
 
@@ -84,6 +85,7 @@ func registerPartCell(part : Movable, gridPos : Vector2):
 		occupies[part] = [gridPos]
 
 func unregisterPart(part : Movable, notifyNeighbors = true):
+	if get_parent().beingDeleted: return
 	#print("Removing " + (part.id if part is Sheet else "Pin"))
 	if !occupies.has(part):
 		return
@@ -135,9 +137,10 @@ func unregisterPartCell(part : Movable, cell : Vector2):
 					toNotify[sheet] = null
 
 func getIntersectionCandidates(part : Movable):
-	checkValidity()
+	#checkValidity()
 	var output = {}
 	if occupies.has(part):
+		if occupies[part] == null: return output
 		for cell in occupies[part]:
 			for candidate in getIntersectionCandidatesAtCell(cell, getLayer(part), part is Pin):
 				output.set(candidate,null)
