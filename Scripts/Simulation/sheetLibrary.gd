@@ -2,6 +2,7 @@ extends Node
 
 var spriteDict = {}
 var polygonDict = {}
+var meshDict = {}
 var users = {}
 
 func query(path : String):
@@ -13,7 +14,8 @@ func query(path : String):
 			spriteDict.erase(path)
 			polygonDict.erase(path)
 			return null
-		return [users[path].front(), spriteDict[path], polygonDict[path]]
+		var mesh = meshDict[path] if meshDict.has(path) else null
+		return [users[path].front(), spriteDict[path], polygonDict[path], mesh]
 	else:
 		return null
 
@@ -24,6 +26,9 @@ func registerSprite(user : Sheet, path : String, sprite : ImageTexture, polygon 
 		users[path].append(user)
 	else:
 		users[path] = [user]
+
+func registerMesh(path : String, mesh : ArrayMesh):
+	meshDict[path] = mesh
 
 func registerUser(user : Sheet, path : String):
 	if users.has(path):
@@ -37,3 +42,4 @@ func unregisterUser(user : Sheet, path : String):
 		users.erase(path)
 		spriteDict.erase(path)
 		polygonDict.erase(path)
+		meshDict.erase(path)

@@ -1,4 +1,4 @@
-extends CSGPolygon3D
+extends GeometryInstance3D
 
 @export var materialMonochrome : Material
 @export var materialColorcoded : Material

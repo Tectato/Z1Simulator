@@ -90,8 +90,9 @@ func deserialize(source : Dictionary):
 		var imagePath = PathHandler.toAbsolutePath(sheet["file"])
 		var cached = SheetLibrary.query(imagePath)
 		var newPart
-		if false:
-			newPart = cached[0].duplicateCustom()
+		if cached:
+			newPart = Global.workspace.duplicateSheet(cached[0])
+			#newPart = cached[0].duplicateCustom()
 			#cached[0].get_parent().remove_child(newPart)
 		else:
 			newPart = SHEET.instantiate()

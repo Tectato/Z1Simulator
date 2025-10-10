@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://bfdg7rb4hi2i" path="res://Scripts/Parts/SheetElements/sheetSprite.gd" id="6_jrvcr"]
 [ext_resource type="Material" uid="uid://cfwog1tvfchgh" path="res://Assets/SheetSideColorcoded.tres" id="7_uai6l"]
 [ext_resource type="Shader" uid="uid://bcuu62ucic85b" path="res://Shaders/SheetMeshMonochromeOutlined.gdshader" id="8_uai6l"]
-[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
+[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMaterialHandler.gd" id="8_wkhiy"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="10_wkhiy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uai6l"]
@@ -31,10 +31,7 @@ shader_parameter/bevel_size = 0.125
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4tf48"]
 next_pass = SubResource("ShaderMaterial_8aa0u")
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_ptygs"]
-top_radius = 0.01
-bottom_radius = 0.01
-height = 1.0
+[sub_resource type="PlaceholderMesh" id="PlaceholderMesh_wkhiy"]
 
 [node name="Sheet" type="Node3D" node_paths=PackedStringArray("debugPoint", "collider")]
 script = ExtResource("3_k6d36")
@@ -66,7 +63,7 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
-polygon = PackedVector2Array(0, 0, 1, 1, 1, 0)
+polygon = PackedVector2Array(0, 0, 0.01, 0.01, 0.01, 0)
 depth = 0.02
 material = SubResource("StandardMaterial3D_uai6l")
 script = ExtResource("8_wkhiy")
@@ -75,5 +72,10 @@ materialColorcoded = ExtResource("7_uai6l")
 materialShaded = SubResource("StandardMaterial3D_4tf48")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 visible = false
-mesh = SubResource("CylinderMesh_ptygs")
+mesh = SubResource("PlaceholderMesh_wkhiy")
+script = ExtResource("8_wkhiy")
+materialMonochrome = SubResource("ShaderMaterial_wkhiy")
+materialColorcoded = ExtResource("7_uai6l")
+materialShaded = SubResource("StandardMaterial3D_4tf48")

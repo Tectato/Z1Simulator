@@ -229,12 +229,19 @@ func importSheet(path):
 	var cached = SheetLibrary.query(path)
 	var newSheet
 	if cached:
-		newSheet = cached[0].duplicateCustom()
+		#newSheet = cached[0].duplicateCustom()
+		newSheet = duplicateSheet(cached[0])
 	else:
 		newSheet = SHEET.instantiate()
 		newSheet.call_deferred("loadSVG",path)
 	selectedLayer.addPart(newSheet)
 	return newSheet
+
+func duplicateSheet(source):
+	var copy = SHEET.instantiate()
+	copy.setupAfterDuplication(source)
+	copy.call_deferred("loadSVG", source.path)
+	return copy
 
 func addPin():
 	createIfNotExists()

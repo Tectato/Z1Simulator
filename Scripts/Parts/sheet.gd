@@ -110,6 +110,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready():
+	mesh = debugPolygon
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	if path and bounds.is_empty():
@@ -134,15 +135,15 @@ func setSelected(value):
 	super.setSelected(value)
 	#sprite.set_instance_shader_parameter("selected", value)
 	sprite.updateParams()
-	debugPolygon.updateParams()
+	mesh.updateParams()
 	sprite.visible = value
 
 func setFixed(value, propagate = true):
 	super.setFixed(value)
 	#sprite.set_instance_shader_parameter("fixed", value)
 	sprite.updateParams()
-	debugPolygon.updateParams()
-	debugPolygon.set_instance_shader_parameter("fixed", value)
+	mesh.updateParams()
+	mesh.set_instance_shader_parameter("fixed", value)
 	#if propagate:
 		#for hole in pinCandidates:
 			#for pin in pinCandidates[hole]:
@@ -150,7 +151,7 @@ func setFixed(value, propagate = true):
 
 func visModeChanged(mode : Editor.VisMode):
 	sprite.visModeChanged(mode)
-	debugPolygon.visModeChanged(mode)
+	mesh.visModeChanged(mode)
 	#sprite.visible = false #mode != Editor.VisMode.Realistic
 
 func updateConstraints():
@@ -213,7 +214,11 @@ func loadSVG(filepath : String):
 		SheetLibrary.registerUser(self, path)
 		image = cached[1]
 		outline.polygon = cached[2]
-		debugPolygon.polygon = cached[2]
+		#debugPolygon.polygon = cached[2]
+		if cached[3] == null:
+			call_deferred("updateBakedMesh")
+		else:
+			updateBakedMesh()
 		#return
 	else:
 		image = ImageTexture.create_from_image(Image.load_from_file(path))
@@ -221,6 +226,8 @@ func loadSVG(filepath : String):
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	sprite.updateSprite()
+	if cached:
+		return
 	
 	var rawString = FileAccess.get_file_as_string(path)
 	var elements = rawString.split("\n")
@@ -242,6 +249,7 @@ func loadSVG(filepath : String):
 	$Sprite3D.position = -midPoint + offset + Vector3.UP * 0.001
 	$Outline.position = -midPoint + offset
 	debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
+	$MeshInstance3D.position = debugPolygon.position
 	for hole in holes:
 		hole.position -= midPoint - offset
 		var cutout = hole.cutout
@@ -255,8 +263,25 @@ func loadSVG(filepath : String):
 	
 	var radii = (max-min)/2
 	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
+	
 	SheetLibrary.registerSprite(self, path, image, outline.polygon)
+	await get_tree().process_frame
+	var bakedMesh = debugPolygon.bake_static_mesh()
+	SheetLibrary.registerMesh(path, bakedMesh)
+	#call_deferred("updateBakedMesh")
 	#_draw_gizmo()
+	visModeChanged(Global.editor.currentVisMode)
+
+func updateBakedMesh():
+	var cached = SheetLibrary.query(path)
+	if cached[3] == null:
+		await get_tree().process_frame
+		call_deferred("updateBakedMesh")
+		return
+	mesh = $MeshInstance3D
+	mesh.visible = true
+	debugPolygon.queue_free()
+	$MeshInstance3D.mesh = cached[3]
 	visModeChanged(Global.editor.currentVisMode)
 
 func isValidElement(string : String):
@@ -517,6 +542,8 @@ func getIntersector(pos : Vector3):
 
 func place():
 	heightIndex = int(max(0,roundf(position.y / Global.workspace.sheetSpacing)))
+	if holes.is_empty():
+		await get_tree().process_frame
 	super.place()
 	call_deferred("updateConstraints")
 	#_draw_gizmo()
@@ -887,47 +914,31 @@ func setColor(color : Color):
 	adjustedColor.v = adjustedColor.v * 0.5
 	var vec3 = Vector3(adjustedColor.r, adjustedColor.g, adjustedColor.b)
 	sprite.set_instance_shader_parameter("partColor", vec3)
-	debugPolygon.set_instance_shader_parameter("partColor", vec3)
+	mesh.set_instance_shader_parameter("partColor", vec3)
 
 func setUseColor(value : bool):
 	sprite.set_instance_shader_parameter("usePartColor", value)
-	debugPolygon.set_instance_shader_parameter("usePartColor", value)
-
-func duplicateCustom():
-	var clone = duplicate()
-	#clone.sprite = clone.find_child("Sprite3D")
-	#clone.outline = clone.find_child("Polygon")
-	#clone.debugPolygon = clone.find_child("CSGPolygon3D")
-	clone.setupAfterDuplication(self)
-	return clone
+	mesh.set_instance_shader_parameter("usePartColor", value)
 
 func setupAfterDuplication(source = null):
-	# For some reason duplicating a sheet also duplicates every hole. Sometimes.
 	if holes.is_empty():
-		var ownHash = {}
-		for thing in get_children():
-			if thing is Hole:
-				ownHash[thing.name] = thing
-				holes.append(thing)
-				for part in thing.get_children():
-					if part is CSGShape3D:
-						part.queue_free()
-			elif thing is Sprite3D:
-				sprite = thing
-			elif thing is Area3D:
-				outline = thing.get_child(0)
-			elif thing is CSGPolygon3D:
-				debugPolygon = thing
 		if source == null:
 			print("Invalid sheet duplication call")
 			return
 		bounds = source.bounds
+		restRot = source.restRot
+		targetRot = source.targetRot
+		$Outline/Polygon.polygon = source.outline.polygon
+		$Outline.position = source.outline.get_parent().position
+		$Sprite3D.position = source.sprite.position
+		$MeshInstance3D.position = $Outline.position
 		for hole in source.holes:
-			if ownHash.has(hole.name):
-				ownHash[hole.name].setupAfterDuplication(hole)
-			else:
-				print("Sheet duplication incomplete")
+			var copy = hole.duplicate(7)
+			add_child(copy)
+			holes.append(copy)
+			copy.setupAfterDuplication(hole)
 	else:
+		# For some reason duplicating a sheet also duplicates every hole. Sometimes.
 		var toDelete = []
 		for thing in get_children():
 			if thing is Hole and not thing in holes:

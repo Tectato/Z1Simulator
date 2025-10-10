@@ -16,4 +16,7 @@ func getSnapPosDiff(srcPos):
 
 func setupAfterDuplication(source):
 	id = source.id
+	for part in get_children():
+		if part is CSGShape3D:
+			part.queue_free()
 	pass

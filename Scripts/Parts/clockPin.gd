@@ -33,7 +33,7 @@ func rename(newID : String):
 	$StepLabel/InputCheckbox/IDLabel.text = newID
 	$StepLabel/InputCheckbox/IDLabel.visible = newID.length() > 0
 
-func setHeight(value):
+func setHeight(_value):
 	var maxHeight = 0.1
 	for thing in interactionCandidates:
 		maxHeight = max(maxHeight, thing.global_position.y)
@@ -222,6 +222,10 @@ func place():
 	if machine:
 		machine.gridLibrary.requestUpdate(self)
 	updateInteractionCandidates()
+	setHeight(0.1)
+
+func updateInteractionCandidates():
+	super.updateInteractionCandidates()
 	setHeight(0.1)
 
 func updatePositions():

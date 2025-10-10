@@ -11,9 +11,11 @@ var toUpdate = {}
 var toNotify = {}
 
 func requestUpdate(part : Movable):
-	if toUpdate.is_empty():
-		call_deferred("executeUpdate")
+	var notScheduled = toUpdate.is_empty()
 	toUpdate[part] = null
+	if notScheduled:
+		await get_tree().create_timer(0.2).timeout
+		call_deferred("executeUpdate")
 
 func executeUpdate():
 	toNotify.clear()
