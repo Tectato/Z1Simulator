@@ -4,7 +4,7 @@ extends GeometryInstance3D
 @export var materialShaded : Material
 
 @onready var parent = get_parent()
-const standardColor = Color(0.239, 0.411, 0.834, 1.0)
+const standardColor = Color("3d9ee2ff")#Color(0.239, 0.411, 0.834, 1.0)
 var markerColor = standardColor
 var currentColor = standardColor
 var fixedFac = 0.7
@@ -25,7 +25,7 @@ func updateMaterial():
 			currentColor = Color(0.5,0.5,0.5)
 			material_override = materialFlat if parent.selected else materialShaded
 	if parent.selected:
-		currentColor = currentColor.blend(Color(1.0, 0.0, 0.0, 0.5))
+		currentColor = currentColor.blend(Color(1.0, 0.4, 0.4, 0.25))
 	if parent.fixed:
 		currentColor *= fixedFac
 	materialFlat.emission_energy_multiplier = 0.5 if parent.selected else 0.0
