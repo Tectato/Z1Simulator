@@ -9,6 +9,7 @@ shader = ExtResource("2_yik8r")
 
 [node name="CustomHole" type="Node3D" node_paths=PackedStringArray("cutout")]
 script = ExtResource("1_1ul1b")
+type = 4
 cutout = NodePath("Cutout")
 
 [node name="PolygonArea" type="Area3D" parent="."]

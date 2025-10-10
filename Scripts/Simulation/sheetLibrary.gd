@@ -4,6 +4,7 @@ var spriteDict = {}
 var polygonDict = {}
 var meshDict = {}
 var users = {}
+@onready var meshCompiler = $MeshCompiler
 
 func query(path : String):
 	if spriteDict.has(path):

@@ -32,6 +32,7 @@ script = ExtResource("1_7vhs4")
 debugMesh = NodePath("MeshInstance3D")
 debugBoundsA = NodePath("DebugBall1")
 debugBoundsB = NodePath("DebugBall2")
+type = 1
 cutout = NodePath("RoundedCutout")
 
 [node name="Start" type="Node3D" parent="."]

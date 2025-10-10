@@ -8,6 +8,7 @@ height = 0.02
 
 [node name="SquareHole" type="Node3D" node_paths=PackedStringArray("cutout")]
 script = ExtResource("1_p2c2m")
+type = 3
 cutout = NodePath("Cutout")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

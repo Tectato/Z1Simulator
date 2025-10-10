@@ -29,3 +29,5 @@ func setupAfterDuplication(source):
 	super.setupAfterDuplication(source)
 	openLeft = source.openLeft
 	polygon = source.polygon
+	$CutoutOpenLeft.visible = false
+	$CutoutOpenRight.visible = false

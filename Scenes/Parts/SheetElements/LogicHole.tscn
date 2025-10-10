@@ -8,6 +8,7 @@ height = 0.02
 
 [node name="LogicHole" type="Node3D"]
 script = ExtResource("1_mseuv")
+type = 2
 
 [node name="Area3D" type="Area3D" parent="."]
 collision_layer = 0

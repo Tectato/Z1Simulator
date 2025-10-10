@@ -10,7 +10,7 @@ const CUSTOMHOLE = preload("res://Scenes/Parts/SheetElements/CustomHole.tscn")
 const scaleFactor = 0.001
 @onready var sprite = $Sprite3D
 @onready var outline = $Outline/Polygon
-@onready var debugPolygon = $CSGPolygon3D
+#@onready var debugPolygon = $CSGPolygon3D
 @export var path : String
 @export var debugPoint : Node3D
 var pinCandidates = {}
@@ -110,7 +110,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready():
-	mesh = debugPolygon
+	#mesh = debugPolygon
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	if path and bounds.is_empty():
@@ -248,13 +248,16 @@ func loadSVG(filepath : String):
 	#midPoint = Vector3(size.x/20, 0, -size.y/20)
 	$Sprite3D.position = -midPoint + offset + Vector3.UP * 0.001
 	$Outline.position = -midPoint + offset
-	debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
-	$MeshInstance3D.position = debugPolygon.position
+	#debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
+	$MeshInstance3D.position = -midPoint + offset - Vector3.UP * 0.02
+	var compilerInstance = SheetLibrary.meshCompiler.prepareInstance(path)
+	compilerInstance.polygon = outline.polygon
 	for hole in holes:
 		hole.position -= midPoint - offset
-		var cutout = hole.cutout
-		hole.remove_child(cutout)
-		debugPolygon.add_child(cutout)
+		var cutout = hole.cutout.duplicate()
+		hole.cutout.visible = false
+		#hole.remove_child(cutout)
+		compilerInstance.add_child(cutout)
 		cutout.position = (cutout.position + hole.position + midPoint - offset).rotated(Vector3.RIGHT, -PI/2)
 		cutout.rotate_y(hole.rotation.y)
 		cutout.rotate_x(-PI/2)
@@ -265,12 +268,13 @@ func loadSVG(filepath : String):
 	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
 	
 	SheetLibrary.registerSprite(self, path, image, outline.polygon)
-	await get_tree().process_frame
-	var bakedMesh = debugPolygon.bake_static_mesh()
-	SheetLibrary.registerMesh(path, bakedMesh)
-	#call_deferred("updateBakedMesh")
+	SheetLibrary.meshCompiler.compile(path)
+	#await get_tree().process_frame
+	#var bakedMesh = debugPolygon.bake_static_mesh()
+	#SheetLibrary.registerMesh(path, bakedMesh)
+	call_deferred("updateBakedMesh")
 	#_draw_gizmo()
-	visModeChanged(Global.editor.currentVisMode)
+	#visModeChanged(Global.editor.currentVisMode)
 
 func updateBakedMesh():
 	var cached = SheetLibrary.query(path)
@@ -280,7 +284,7 @@ func updateBakedMesh():
 		return
 	mesh = $MeshInstance3D
 	mesh.visible = true
-	debugPolygon.queue_free()
+	#debugPolygon.queue_free()
 	$MeshInstance3D.mesh = cached[3]
 	visModeChanged(Global.editor.currentVisMode)
 
@@ -441,8 +445,8 @@ func addPolygon(segments, isOutline):
 				print("Malformed sheet data (Outline begins with arc)")
 			polygon.push_back(newPoint)
 		prevPoint = newPoint
-	if isOutline:
-		debugPolygon.polygon = polygon
+	#if isOutline:
+		#debugPolygon.polygon = polygon
 	polygonParent.polygon = polygon
 	if not isOutline:
 		hole.debugPolygon.polygon = polygon
@@ -931,9 +935,20 @@ func setupAfterDuplication(source = null):
 		$Outline/Polygon.polygon = source.outline.polygon
 		$Outline.position = source.outline.get_parent().position
 		$Sprite3D.position = source.sprite.position
-		$MeshInstance3D.position = $Outline.position
+		$MeshInstance3D.position = source.mesh.position
 		for hole in source.holes:
-			var copy = hole.duplicate(7)
+			var copy
+			match hole.type:
+				Hole.HoleType.Point:
+					copy = POINTHOLE.instantiate()
+				Hole.HoleType.Long:
+					copy = LONGHOLE.instantiate()
+				Hole.HoleType.Logic:
+					copy = LOGICHOLE.instantiate()
+				Hole.HoleType.Square:
+					copy = SQUAREHOLE.instantiate()
+				Hole.HoleType.Custom:
+					copy = CUSTOMHOLE.instantiate()
 			add_child(copy)
 			holes.append(copy)
 			copy.setupAfterDuplication(hole)

@@ -54,3 +54,5 @@ func setupAfterDuplication(source):
 	radius = source.radius
 	travelLength = source.travelLength
 	bounds = source.bounds
+	$RectCutout.visible = false
+	$RoundedCutout.visible = false

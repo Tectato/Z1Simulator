@@ -1,6 +1,9 @@
 extends Node3D
 class_name Hole
 
+enum HoleType { Point, Long, Logic, Square, Custom }
+
+@export var type : HoleType
 @export var cutout : CSGShape3D
 var id = ""
 
@@ -16,7 +19,12 @@ func getSnapPosDiff(srcPos):
 
 func setupAfterDuplication(source):
 	id = source.id
-	for part in get_children():
-		if part is CSGShape3D:
-			part.queue_free()
+	name = id
+	transform = source.transform
+	await ready
+	if cutout:
+		cutout.visible = false
+	#for part in get_children():
+		#if part is CSGShape3D:
+			#part.queue_free()
 	pass
