@@ -1,11 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://83x4wnh2bt5f"]
+[gd_scene load_steps=2 format=3 uid="uid://83x4wnh2bt5f"]
 
 [ext_resource type="Script" uid="uid://cdhcyuf8n2x1t" path="res://Scripts/Parts/SheetElements/customHole.gd" id="1_1ul1b"]
-[ext_resource type="Shader" uid="uid://db1at10jrnts8" path="res://Shaders/SheetMesh.gdshader" id="2_yik8r"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fvcf7"]
-render_priority = 0
-shader = ExtResource("2_yik8r")
 
 [node name="CustomHole" type="Node3D" node_paths=PackedStringArray("cutout")]
 script = ExtResource("1_1ul1b")
@@ -27,4 +22,3 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.
 operation = 2
 polygon = PackedVector2Array(0, 0, 1, 1, 1, 0)
 depth = 0.2
-material = SubResource("ShaderMaterial_fvcf7")
