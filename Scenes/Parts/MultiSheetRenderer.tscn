@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://jml3afidrivd"]
+
+[ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="1_qt1x1"]
+[ext_resource type="Shader" uid="uid://lkk624m4uf5b" path="res://Shaders/SheetMesh/InstancedSheet.gdshader" id="2_ey87k"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbqta"]
+render_priority = 0
+shader = ExtResource("1_qt1x1")
+shader_parameter/outline_threshold = 0.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_75s5b"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_hbqta")
+shader = ExtResource("2_ey87k")
+
+[sub_resource type="MultiMesh" id="MultiMesh_rvjf8"]
+transform_format = 1
+use_custom_data = true
+
+[node name="MultiSheetRenderer" type="MultiMeshInstance3D"]
+material_override = SubResource("ShaderMaterial_75s5b")
+multimesh = SubResource("MultiMesh_rvjf8")
