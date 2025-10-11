@@ -111,6 +111,7 @@ func deserialize(source : Dictionary):
 
 func _ready():
 	#mesh = debugPolygon
+	mesh = $MeshInstance3D
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	if path and bounds.is_empty():
@@ -138,7 +139,7 @@ func setSelected(value):
 	mesh.updateMaterial()
 	sprite.visible = value
 
-func setFixed(value, propagate = true):
+func setFixed(value, _propagate = true):
 	super.setFixed(value)
 	#sprite.set_instance_shader_parameter("fixed", value)
 	sprite.updateParams()
@@ -921,7 +922,7 @@ func snapRotation():
 func setColor(color : Color):
 	var adjustedColor = Color(color)
 	#adjustedColor.s = adjustedColor.s * 0.8
-	adjustedColor.s = adjustedColor.s * 0.7
+	adjustedColor.s = adjustedColor.s * 0.6
 	#adjustedColor.v = adjustedColor.v * 0.5
 	adjustedColor.v = adjustedColor.v * 0.7
 	var vec3 = Vector3(adjustedColor.r, adjustedColor.g, adjustedColor.b)

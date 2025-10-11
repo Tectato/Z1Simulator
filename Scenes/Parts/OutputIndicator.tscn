@@ -62,6 +62,8 @@ script = ExtResource("1_jc0ww")
 [node name="Checkbox" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 sorting_offset = 1.0
+double_sided = false
+alpha_cut = 1
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_n0si8")
 animation = &"false"
@@ -71,6 +73,7 @@ script = ExtResource("3_ml58t")
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.05013243, 0)
 visible = false
 axis = 1
+double_sided = false
 alpha_cut = 1
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_ml58t")

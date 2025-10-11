@@ -16,7 +16,7 @@ func updateMaterial():
 	match(Global.editor.currentVisMode):
 		Editor.VisMode.Monochrome:
 			#currentColor = Color(0.58,0.58,0.58)
-			currentColor = Color(0.5,0.5,0.5)
+			currentColor = Color(0.7,0.7,0.7)
 			material_override = materialFlat
 		Editor.VisMode.Colorcoded:
 			currentColor = markerColor

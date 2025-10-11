@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=17 format=3 uid="uid://b2845uayksbce"]
 
 [ext_resource type="Material" uid="uid://bnljtoqintdji" path="res://Assets/SheetSpriteColorcoded.tres" id="2_huj6i"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
@@ -8,7 +8,7 @@
 [ext_resource type="Material" uid="uid://vhdr4absfdgr" path="res://Assets/SheetSpriteHighlight.tres" id="4_jrvcr"]
 [ext_resource type="Script" uid="uid://bfdg7rb4hi2i" path="res://Scripts/Parts/SheetElements/sheetSprite.gd" id="6_jrvcr"]
 [ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="8_8aa0u"]
-[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMesh.gd" id="8_wkhiy"]
+[ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMaterialHandler.gd" id="8_wkhiy"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="10_wkhiy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4tf48"]
@@ -16,10 +16,7 @@ render_priority = 0
 shader = ExtResource("2_wkhiy")
 shader_parameter/thickness = 0.02
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uai6l"]
-albedo_color = Color(0.617455, 0.617455, 0.617455, 1)
-metallic = 1.0
-roughness = 0.4
+[sub_resource type="PlaceholderMesh" id="PlaceholderMesh_wkhiy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_uai6l"]
 render_priority = 0
@@ -47,7 +44,6 @@ next_pass = SubResource("ShaderMaterial_8aa0u")
 script = ExtResource("3_k6d36")
 debugPoint = NodePath("MeshInstance3D")
 collider = NodePath("Outline")
-mesh = NodePath("MeshInstance3D")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351, 0.001, 0.246)
