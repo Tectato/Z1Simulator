@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://balp2k880s574"]
+
+[node name="Cutout" type="CSGBox3D"]
+operation = 2

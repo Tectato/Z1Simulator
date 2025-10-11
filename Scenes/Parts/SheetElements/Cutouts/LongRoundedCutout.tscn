@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://wykx0jx8js1b"]
+
+[node name="RoundedCutout" type="CSGBox3D"]
+operation = 2
+size = Vector3(1, 0.2, 1)
+
+[node name="Start" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+height = 0.2
+
+[node name="End" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+height = 0.2

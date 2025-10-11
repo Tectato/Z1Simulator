@@ -4,7 +4,6 @@ class_name Hole
 enum HoleType { Point, Long, Logic, Square, Custom }
 
 @export var type : HoleType
-@export var cutout : CSGShape3D
 var id = ""
 
 func checkPos(pos):
@@ -17,13 +16,16 @@ func getSnapPosDiff(srcPos):
 	var snapped3D = Vector3(snapped.x,adjustedSrcPos.y,snapped.y)
 	return snapped3D - adjustedSrcPos
 
+func getCutout():
+	pass
+
 func setupAfterDuplication(source):
 	id = source.id
 	name = id
 	transform = source.transform
-	await ready
-	if cutout:
-		cutout.visible = false
+	#await ready
+	#if cutout:
+		#cutout.visible = false
 	#for part in get_children():
 		#if part is CSGShape3D:
 			#part.queue_free()

@@ -10,12 +10,14 @@ func query(path : String):
 	if spriteDict.has(path):
 		while !users[path].is_empty() and !users[path].front():
 			users[path].remove_at(0)
-		if users[path].is_empty():
-			users.erase(path)
-			spriteDict.erase(path)
-			polygonDict.erase(path)
-			return null
+		#if users[path].is_empty():
+			#users.erase(path)
+			#spriteDict.erase(path)
+			#polygonDict.erase(path)
+			#return null
 		var mesh = meshDict[path] if meshDict.has(path) else null
+		if users[path].is_empty():
+			return [null, spriteDict[path], polygonDict[path], mesh]
 		return [users[path].front(), spriteDict[path], polygonDict[path], mesh]
 	else:
 		return null
@@ -39,8 +41,28 @@ func registerUser(user : Sheet, path : String):
 
 func unregisterUser(user : Sheet, path : String):
 	users[path].erase(user)
-	if users[path].is_empty():
+	#if users[path].is_empty():
+		#users.erase(path)
+		#spriteDict.erase(path)
+		#polygonDict.erase(path)
+		#meshDict.erase(path)
+
+func cleanUnusedSheets():
+	var toDelete = []
+	#var framesTaken = 0
+	for path in users.keys():
+		var entry = users[path]
+		while !entry.is_empty() and entry[0] == null:
+			entry.pop_front()
+		if entry.is_empty():
+			toDelete.append(path)
+		#framesTaken += 1
+		await get_tree().process_frame
+	for path in toDelete:
 		users.erase(path)
 		spriteDict.erase(path)
 		polygonDict.erase(path)
 		meshDict.erase(path)
+		#framesTaken += 1
+		await get_tree().process_frame
+	#print("Cleanup took " + str(framesTaken) + " frames")

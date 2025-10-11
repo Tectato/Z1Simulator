@@ -27,13 +27,12 @@ material = SubResource("StandardMaterial3D_nrdih")
 radius = 0.01
 height = 0.02
 
-[node name="LongHole" type="Node3D" node_paths=PackedStringArray("debugMesh", "debugBoundsA", "debugBoundsB", "cutout")]
+[node name="LongHole" type="Node3D" node_paths=PackedStringArray("debugMesh", "debugBoundsA", "debugBoundsB")]
 script = ExtResource("1_7vhs4")
 debugMesh = NodePath("MeshInstance3D")
 debugBoundsA = NodePath("DebugBall1")
 debugBoundsB = NodePath("DebugBall2")
 type = 1
-cutout = NodePath("RoundedCutout")
 
 [node name="Start" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, 0)
@@ -61,19 +60,3 @@ mesh = SubResource("SphereMesh_q8qxb")
 [node name="DebugBall2" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("SphereMesh_0t7g4")
-
-[node name="RoundedCutout" type="CSGBox3D" parent="."]
-operation = 2
-size = Vector3(1, 0.2, 1)
-
-[node name="Start" type="CSGCylinder3D" parent="RoundedCutout"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
-height = 0.2
-
-[node name="End" type="CSGCylinder3D" parent="RoundedCutout"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
-height = 0.2
-
-[node name="RectCutout" type="CSGBox3D" parent="."]
-operation = 2
-size = Vector3(1, 0.2, 1)

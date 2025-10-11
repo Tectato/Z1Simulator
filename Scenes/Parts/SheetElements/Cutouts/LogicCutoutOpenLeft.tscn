@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cyg5mtpkpixcp"]
+
+[node name="CutoutOpenLeft" type="CSGPolygon3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+operation = 2
+polygon = PackedVector2Array(-0.075, -0.075, -0.075, 0.075, 0.075, 0.075, 0.075, 0.015, 0, 0.015, 0, -0.075)
+depth = 0.1

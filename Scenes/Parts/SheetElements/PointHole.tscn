@@ -11,12 +11,9 @@ rings = 0
 
 [node name="PointHole" type="Node3D" node_paths=PackedStringArray("cutout")]
 script = ExtResource("1_1rgk4")
-cutout = NodePath("Cutout")
+type = null
+cutout = NodePath("")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 visible = false
 mesh = SubResource("CylinderMesh_1rgk4")
-
-[node name="Cutout" type="CSGCylinder3D" parent="."]
-operation = 2
-height = 0.2

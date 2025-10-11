@@ -1,6 +1,9 @@
 extends Hole
 class_name LongHole
 
+const CUTOUT_ROUNDED = preload("res://Scenes/Parts/SheetElements/Cutouts/LongRoundedCutout.tscn")
+const CUTOUT_RECT = preload("res://Scenes/Parts/SheetElements/Cutouts/LongRectCutout.tscn")
+
 @onready var start = $Start
 @onready var end = $End
 var radius = 0.04
@@ -13,24 +16,24 @@ var rectangular = false
 
 func setRadius(value):
 	radius = value
-	$RoundedCutout/Start.radius = radius
-	$RoundedCutout/End.radius = radius
+	#$RoundedCutout/Start.radius = radius
+	#$RoundedCutout/End.radius = radius
 
 func setTravelLength(value):
 	travelLength = value
 	start.position = Vector3(-value/2,0,0)
 	end.position = Vector3(value/2,0,0)
 	bounds = [Vector2(-(value/2+radius),-radius), Vector2(value/2+radius, radius)]
-	$RoundedCutout/Start.position = start.position
-	$RoundedCutout/End.position = end.position
-	$RoundedCutout.size = Vector3(value, 0.2, radius * 2)
-	$RectCutout.size = Vector3(value + radius * 2, 0.2, radius * 2)
+	#$RoundedCutout/Start.position = start.position
+	#$RoundedCutout/End.position = end.position
+	#$RoundedCutout.size = Vector3(value, 0.2, radius * 2)
+	#$RectCutout.size = Vector3(value + radius * 2, 0.2, radius * 2)
 
 func setRectangular(value):
 	rectangular = value
-	cutout = $RectCutout if value else $RoundedCutout
-	$RectCutout.visible = value
-	$RoundedCutout.visible = !value
+	#cutout = $RectCutout if value else $RoundedCutout
+	#$RectCutout.visible = value
+	#$RoundedCutout.visible = !value
 
 func getDir():
 	var dir3 = end.position.normalized().rotated(Vector3.UP, rotation.y)
@@ -49,10 +52,24 @@ func checkPos(pos):
 	var pos2D = Vector2(pos.x, pos.z)
 	return (pos2D.x > bounds[0].x and pos2D.y > bounds[0].y) and (pos2D.x < bounds[1].x and pos2D.y < bounds[1].y)
 
+func getCutout():
+	var cutout = CUTOUT_RECT.instantiate() if rectangular else CUTOUT_ROUNDED.instantiate()
+	if rectangular:
+		cutout.size = Vector3(travelLength + radius * 2, 0.2, radius * 2)
+	else:
+		var cutoutStart = cutout.get_child(0)
+		var cutoutEnd = cutout.get_child(1)
+		cutoutStart.position = start.position
+		cutoutEnd.position = end.position
+		cutoutStart.radius = radius
+		cutoutEnd.radius = radius
+		cutout.size = Vector3(travelLength, 0.2, radius * 2)
+	return cutout
+
 func setupAfterDuplication(source):
 	super.setupAfterDuplication(source)
 	radius = source.radius
 	travelLength = source.travelLength
 	bounds = source.bounds
-	$RectCutout.visible = false
-	$RoundedCutout.visible = false
+	#$RectCutout.visible = false
+	#$RoundedCutout.visible = false

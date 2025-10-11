@@ -226,7 +226,7 @@ func loadSVG(filepath : String):
 	sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	sprite.updateSprite()
-	if cached:
+	if cached and cached[0]:
 		return
 	
 	var rawString = FileAccess.get_file_as_string(path)
@@ -243,6 +243,9 @@ func loadSVG(filepath : String):
 		min = Vector2(min(min.x,pointMod.x),min(min.y,pointMod.y))
 		max = Vector2(max(max.x,pointMod.x),max(max.y,pointMod.y))
 	
+	var radii = (max-min)/2
+	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
+	
 	midPoint = (Vector3(min.x,0,min.y) + Vector3(max.x,0,max.y))/2
 	var offset = Vector3(partOffset.x,0,partOffset.y)
 	#midPoint = Vector3(size.x/20, 0, -size.y/20)
@@ -250,12 +253,17 @@ func loadSVG(filepath : String):
 	$Outline.position = -midPoint + offset
 	#debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
 	$MeshInstance3D.position = -midPoint + offset - Vector3.UP * 0.02
+	
+	if cached:
+		for hole in holes:
+			hole.position -= midPoint - offset
+		return
 	var compilerInstance = SheetLibrary.meshCompiler.prepareInstance(path)
 	compilerInstance.polygon = outline.polygon
 	for hole in holes:
 		hole.position -= midPoint - offset
-		var cutout = hole.cutout.duplicate()
-		hole.cutout.visible = false
+		var cutout = hole.getCutout()
+		#hole.cutout.visible = false
 		#hole.remove_child(cutout)
 		compilerInstance.add_child(cutout)
 		cutout.position = (cutout.position + hole.position + midPoint - offset).rotated(Vector3.RIGHT, -PI/2)
@@ -264,8 +272,6 @@ func loadSVG(filepath : String):
 		#cutout.rotation = cutout.rotation + hole.rotation - Vector3.RIGHT * PI/2
 	#debugPoint.position = midPoint
 	
-	var radii = (max-min)/2
-	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
 	
 	SheetLibrary.registerSprite(self, path, image, outline.polygon)
 	SheetLibrary.meshCompiler.compile(path)
@@ -411,8 +417,8 @@ func addPolygon(segments, isOutline):
 		hole = CUSTOMHOLE.instantiate()
 		add_child(hole)
 		hole.position = Vector3.ZERO
-		polygon = hole.find_child("Polygon").polygon
-		polygonParent = hole.find_child("Polygon")
+		polygon = hole.polygonArea.polygon
+		polygonParent = hole.polygonArea
 		holes.append(hole)
 	polygon.clear()
 	var prevPoint : Vector2
@@ -448,8 +454,8 @@ func addPolygon(segments, isOutline):
 	#if isOutline:
 		#debugPolygon.polygon = polygon
 	polygonParent.polygon = polygon
-	if not isOutline:
-		hole.debugPolygon.polygon = polygon
+	#if not isOutline:
+		#hole.debugPolygon.polygon = polygon
 	return hole
 
 #TODO
