@@ -74,6 +74,7 @@ func clear():
 	uuidManager.clear()
 	Global.editor.selector.deselect()
 	Global.editor.programInterface.clear()
+	SheetLibrary.renderHandler.clearInstances()
 	while !machines.is_empty():
 		machines[0].delete()
 	#Simulator.setStep()

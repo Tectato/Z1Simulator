@@ -70,7 +70,7 @@ func loadProject(srcPath = ""):
 	previousAction = doNothing
 	interface.saveDialog.current_dir = path.get_base_dir()
 	interface.saveDialog.current_file = path.get_file()
-	await get_tree().create_timer(1.0)
+	await get_tree().create_timer(0.1).timeout
 	SheetLibrary.cleanUnusedSheets()
 
 func importProjectInstace(srcPath = ""):

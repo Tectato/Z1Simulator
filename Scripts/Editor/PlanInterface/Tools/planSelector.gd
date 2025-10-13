@@ -52,13 +52,17 @@ func handleInput(event : InputEvent):
 		updateButtons()
 
 func updateButtons():
+	selectedMarkers = selectedMarkers.filter(filterExists)
 	var numSelected = selectedMarkers.size()
 	var prime = selectedMarkers[0] if numSelected > 0 else null
 	linkButton.visible = numSelected == 1 and prime.part == null
 	unlinkButton.visible = numSelected == 1 and prime.part != null
 	if unlinkButton.visible:
 		unlinkButton.get_child(0).text = prime.part.id
-	
+
+func filterExists(thing):
+	return thing != null
+
 func deselect():
 	colorPicker.hide()
 	while !selectedMarkers.is_empty():

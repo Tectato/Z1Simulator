@@ -12,8 +12,8 @@ signal idChanged
 
 func setSelected(value):
 	selected = value
-	if mesh:
-		mesh.set_instance_shader_parameter("selected", value)
+	#if mesh:
+		#mesh.set_instance_shader_parameter("selected", value)
 
 func serialize():
 	return {}

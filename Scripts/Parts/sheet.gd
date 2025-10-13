@@ -13,6 +13,7 @@ const scaleFactor = 0.001
 #@onready var debugPolygon = $CSGPolygon3D
 @export var path : String
 @export var debugPoint : Node3D
+var meshIndex = 0
 var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
@@ -112,6 +113,8 @@ func deserialize(source : Dictionary):
 func _ready():
 	#mesh = debugPolygon
 	mesh = $MeshInstance3D
+	set_notify_transform(true)
+	visibility_changed.connect(visibilityChanged)
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	if path and bounds.is_empty():
@@ -129,8 +132,13 @@ func _process(delta: float) -> void:
 			forces.clear()
 			movedBy.clear()
 			#blockedThisCycle = -1
-	if !fixed and !pointConstraints.is_empty():
-		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
+		if !pointConstraints.is_empty():
+			rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
+		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+
+func _notification(what):
+	if what == NOTIFICATION_TRANSFORM_CHANGED:
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func setSelected(value):
 	super.setSelected(value)
@@ -290,7 +298,7 @@ func updateBakedMesh():
 		call_deferred("updateBakedMesh")
 		return
 	mesh = $MeshInstance3D
-	mesh.visible = true
+	mesh.visible = false
 	#debugPolygon.queue_free()
 	$MeshInstance3D.mesh = cached[3]
 	visModeChanged(Global.editor.currentVisMode)
@@ -557,6 +565,11 @@ func place():
 		await get_tree().process_frame
 	super.place()
 	call_deferred("updateConstraints")
+	if !path.is_empty():
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+	else:
+		await get_tree().process_frame
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 	#_draw_gizmo()
 
 func updateHeight():
@@ -921,10 +934,10 @@ func snapRotation():
 
 func setColor(color : Color):
 	var adjustedColor = Color(color)
-	#adjustedColor.s = adjustedColor.s * 0.8
-	adjustedColor.s = adjustedColor.s * 0.6
-	#adjustedColor.v = adjustedColor.v * 0.5
-	adjustedColor.v = adjustedColor.v * 0.7
+	adjustedColor.s = adjustedColor.s * 0.8
+	#adjustedColor.s = adjustedColor.s * 0.6
+	adjustedColor.v = adjustedColor.v * 0.5
+	#adjustedColor.v = adjustedColor.v * 0.7
 	var vec3 = Vector3(adjustedColor.r, adjustedColor.g, adjustedColor.b)
 	#sprite.set_instance_shader_parameter("partColor", vec3)
 	mesh.setColor(adjustedColor)
@@ -972,3 +985,9 @@ func setupAfterDuplication(source = null):
 				toDelete.append(thing)
 		for thing in toDelete:
 			thing.queue_free()
+
+func visibilityChanged():
+	if is_visible_in_tree():
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+	else:
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, Transform3D(Basis(Quaternion(0,0,0,0)),Vector3.ZERO))

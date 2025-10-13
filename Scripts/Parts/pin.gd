@@ -6,6 +6,7 @@ const INDICATOR = preload("res://Scenes/Parts/OutputIndicator.tscn")
 @export var normalMaterial : Material
 @export var staticMaterial : Material
 @export var shadedMaterial : Material
+@export var highlightMaterial : Material
 
 var global = false
 var output = false
@@ -81,6 +82,9 @@ func _ready() -> void:
 
 func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
+
+func setSelected(value):
+	$MeshInstance3D/Highlight.visible = value
 
 func setFixed(value, propagate = true):
 	super.setFixed(value, propagate)

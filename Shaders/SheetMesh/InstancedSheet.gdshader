@@ -2,7 +2,7 @@ shader_type spatial;
 render_mode unshaded;
 
 void vertex() {
-	COLOR = INSTANCE_CUSTOM;
+	//COLOR = INSTANCE_CUSTOM;
 }
 
 void fragment() {

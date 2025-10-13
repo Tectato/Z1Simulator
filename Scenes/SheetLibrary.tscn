@@ -1,8 +1,31 @@
-[gd_scene load_steps=4 format=3 uid="uid://6qjqjjxchgkh"]
+[gd_scene load_steps=11 format=3 uid="uid://6qjqjjxchgkh"]
 
 [ext_resource type="Script" uid="uid://bfnu2vl3xbceg" path="res://Scripts/Simulation/sheetLibrary.gd" id="1_c1se5"]
 [ext_resource type="Script" uid="uid://dpodqe2t280op" path="res://Scripts/Parts/SheetElements/sheetMeshCompiler.gd" id="2_7bnwt"]
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/sheetRenderHandler.gd" id="3_lqynr"]
+[ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="4_cpvvm"]
+[ext_resource type="Shader" uid="uid://lkk624m4uf5b" path="res://Shaders/SheetMesh/InstancedSheet.gdshader" id="5_16t2h"]
+[ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="5_fsur0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbqta"]
+render_priority = 0
+shader = ExtResource("4_cpvvm")
+shader_parameter/outline_threshold = 0.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_75s5b"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_hbqta")
+shader = ExtResource("5_16t2h")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8aa0u"]
+render_priority = 0
+shader = ExtResource("5_fsur0")
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/bevel_size = 0.125
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4tf48"]
+next_pass = SubResource("ShaderMaterial_8aa0u")
 
 [node name="SheetLibrary" type="Node"]
 script = ExtResource("1_c1se5")
@@ -14,3 +37,5 @@ script = ExtResource("2_7bnwt")
 
 [node name="RenderHandler" type="Node3D" parent="."]
 script = ExtResource("3_lqynr")
+materialFlat = SubResource("ShaderMaterial_75s5b")
+materialShaded = SubResource("StandardMaterial3D_4tf48")
