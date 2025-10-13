@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bfnu2vl3xbceg" path="res://Scripts/Simulation/sheetLibrary.gd" id="1_c1se5"]
 [ext_resource type="Script" uid="uid://dpodqe2t280op" path="res://Scripts/Parts/SheetElements/sheetMeshCompiler.gd" id="2_7bnwt"]
-[ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/sheetRenderHandler.gd" id="3_lqynr"]
+[ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="3_lqynr"]
 [ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="4_cpvvm"]
 [ext_resource type="Shader" uid="uid://lkk624m4uf5b" path="res://Shaders/SheetMesh/InstancedSheet.gdshader" id="5_16t2h"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="5_fsur0"]

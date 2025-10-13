@@ -91,7 +91,7 @@ func deserialize(source : Dictionary):
 		var cached = SheetLibrary.query(imagePath)
 		var newPart
 		if cached and cached[0]:
-			newPart = Global.workspace.duplicateSheet(cached[0])
+			newPart = Global.workspace.duplicateSheet(cached[0], imagePath)
 			#newPart = cached[0].duplicateCustom()
 			#cached[0].get_parent().remove_child(newPart)
 		else:

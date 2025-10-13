@@ -13,7 +13,7 @@ const scaleFactor = 0.001
 #@onready var debugPolygon = $CSGPolygon3D
 @export var path : String
 @export var debugPoint : Node3D
-var meshIndex = 0
+var meshIndex = -1
 var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
@@ -22,6 +22,7 @@ var pivots = {0:[],1:[],2:[],3:[]}
 var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
 var restRot  = 0.0
 var targetRot = 0.0
+var rotating = false
 var toMoveInCWRotation = {}
 var toMoveInCCWRotation = {}
 var turnDirections = {} # indexed by pins, entries are 4-arrays of bools where true means CW
@@ -116,6 +117,7 @@ func _ready():
 	set_notify_transform(true)
 	visibility_changed.connect(visibilityChanged)
 	Global.editor.visModeChanged.connect(visModeChanged)
+	Global.editor.updateInstancePos.connect(updateInstance)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	if path and bounds.is_empty():
 		loadSVG(path)
@@ -132,12 +134,13 @@ func _process(delta: float) -> void:
 			forces.clear()
 			movedBy.clear()
 			#blockedThisCycle = -1
-		if !pointConstraints.is_empty():
-			rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
+	if !fixed and rotating and !pointConstraints.is_empty():
+		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
+		rotating = abs(rotation.y-targetRot) > 0.1
 		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func _notification(what):
-	if what == NOTIFICATION_TRANSFORM_CHANGED:
+	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
 		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func setSelected(value):
@@ -148,15 +151,17 @@ func setSelected(value):
 	sprite.visible = value
 
 func setFixed(value, _propagate = true):
+	var before = fixed
 	super.setFixed(value)
 	#sprite.set_instance_shader_parameter("fixed", value)
-	sprite.updateParams()
-	mesh.updateMaterial()
-	mesh.set_instance_shader_parameter("fixed", value)
-	#if propagate:
-		#for hole in pinCandidates:
-			#for pin in pinCandidates[hole]:
-				#pin.updateConstraints()
+	if fixed != before:
+		sprite.updateParams()
+		mesh.updateMaterial()
+		#mesh.set_instance_shader_parameter("fixed", value)
+		#if propagate:
+			#for hole in pinCandidates:
+				#for pin in pinCandidates[hole]:
+					#pin.updateConstraints()
 
 func visModeChanged(mode : Editor.VisMode):
 	sprite.visModeChanged(mode)
@@ -565,12 +570,15 @@ func place():
 		await get_tree().process_frame
 	super.place()
 	call_deferred("updateConstraints")
-	if !path.is_empty():
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
-	else:
-		await get_tree().process_frame
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+	#if !path.is_empty():
+		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+	#else:
+		#await get_tree().process_frame
+		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 	#_draw_gizmo()
+
+func updateInstance():
+	SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func updateHeight():
 	position = position * Vector3(1,0,1) + Vector3.UP * heightIndex * Global.workspace.sheetSpacing
@@ -897,6 +905,7 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 			if pin == initiator: continue
 			pin.move(intToDir(rotatedDir) * Workspace.pinTravel, self, chain)
 	inMotion = true
+	rotating = true
 	pass
 
 func abortMove(initiator, chain = []):
@@ -907,6 +916,7 @@ func abortMove(initiator, chain = []):
 	rotHistory.pop_back()
 
 func delete():
+	beingDeleted = true
 	SheetLibrary.unregisterUser(self, path)
 	super.delete()
 

@@ -33,9 +33,9 @@ func registerSprite(user : Sheet, path : String, sprite : ImageTexture, polygon 
 
 func registerMesh(path : String, mesh : ArrayMesh):
 	meshDict[path] = mesh
-	renderHandler.initSheet(path, mesh)
+	renderHandler.initMesh(path, mesh)
 	for user in users[path]:
-		user.meshIndex = renderHandler.addSheetInstance(path)
+		user.meshIndex = renderHandler.addInstance(path)
 		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
 
 func registerUser(user : Sheet, path : String):
@@ -44,12 +44,12 @@ func registerUser(user : Sheet, path : String):
 	else:
 		users[path] = [user]
 	if meshDict.has(path):
-		user.meshIndex = renderHandler.addSheetInstance(path)
+		user.meshIndex = renderHandler.addInstance(path)
 		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
 
 func unregisterUser(user : Sheet, path : String):
 	users[path].erase(user)
-	renderHandler.removeSheetInstance(path, user.meshIndex)
+	renderHandler.removeInstance(path, user.meshIndex)
 	#if users[path].is_empty():
 		#users.erase(path)
 		#spriteDict.erase(path)

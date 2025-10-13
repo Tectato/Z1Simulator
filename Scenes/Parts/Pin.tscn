@@ -4,7 +4,6 @@
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_ax1co"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqpos"]
-resource_local_to_scene = true
 albedo_color = Color(0.589096, 0.589096, 0.589096, 1)
 roughness = 0.48
 
@@ -40,14 +39,17 @@ highlightMaterial = SubResource("ShaderMaterial_ag57m")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Highlight" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
-material_override = SubResource("StandardMaterial3D_vqpos")
-mesh = SubResource("CylinderMesh_vqpos")
-
-[node name="Highlight" type="MeshInstance3D" parent="MeshInstance3D"]
 visible = false
 material_overlay = SubResource("ShaderMaterial_ag57m")
+mesh = SubResource("CylinderMesh_vqpos")
+skeleton = NodePath("../MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_vqpos")
 mesh = SubResource("CylinderMesh_vqpos")
 
 [node name="Area3D" type="Area3D" parent="."]

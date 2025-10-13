@@ -21,6 +21,7 @@ var inMotion = false
 var movedBy = {}
 var toMove = {}
 var moved = []
+var beingDeleted = false
 
 # Don't impact simulation, just for visualization later
 var stateX = false
@@ -258,7 +259,7 @@ func place():
 	if layer:
 		layer.machine.gridLibrary.requestUpdate(self)
 		layer.updateCollider()
-	schedule(updateInteractionCandidates)
+	#schedule(updateInteractionCandidates) #Apparently not necessary?
 
 func updatePositions():
 	restPos = position
@@ -332,3 +333,4 @@ func schedule(callable : Callable):
 
 func execute(callable : Callable):
 	scheduled.erase(callable)
+	callable.call()

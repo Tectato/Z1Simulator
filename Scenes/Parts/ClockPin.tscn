@@ -17,18 +17,18 @@ roughness = 0.48
 metallic = 1.0
 roughness = 0.1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_vjs7e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1a2dp"]
+render_priority = 0
+shader = ExtResource("2_4euxk")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vinw1"]
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.1
 radial_segments = 8
 rings = 0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1a2dp"]
-render_priority = 0
-shader = ExtResource("2_4euxk")
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_vinw1"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_vjs7e"]
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.1
@@ -77,15 +77,18 @@ shadedMaterial = SubResource("StandardMaterial3D_vinw1")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Highlight" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
-material_override = SubResource("StandardMaterial3D_1a2dp")
-mesh = SubResource("CylinderMesh_vjs7e")
-
-[node name="Highlight" type="MeshInstance3D" parent="MeshInstance3D"]
 visible = false
 material_overlay = SubResource("ShaderMaterial_1a2dp")
 mesh = SubResource("CylinderMesh_vinw1")
+skeleton = NodePath("../MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_1a2dp")
+mesh = SubResource("CylinderMesh_vjs7e")
 
 [node name="ClockPinTravelIndicator" parent="." instance=ExtResource("3_r5mnu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001, 0.001, 0.032)

@@ -18,6 +18,7 @@ var editingLocked = false
 enum VisMode { Monochrome, Colorcoded, Realistic }
 
 signal visModeChanged(mode : VisMode)
+signal updateInstancePos()
 
 func _ready() -> void:
 	get_tree().get_root().files_dropped.connect(fileDropped)
@@ -72,6 +73,7 @@ func loadProject(srcPath = ""):
 	interface.saveDialog.current_file = path.get_file()
 	await get_tree().create_timer(0.1).timeout
 	SheetLibrary.cleanUnusedSheets()
+	updateInstancePos.emit()
 
 func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath

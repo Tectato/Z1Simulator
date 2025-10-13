@@ -33,7 +33,7 @@ func delete():
 func updatePos():
 	global_position = A.global_position
 	if A.global_position.distance_squared_to(B.global_position) > 0.001:
-		if (A.global_position.x-B.global_position.x)+(A.global_position.z-B.global_position.z) > 0:
+		if abs(A.global_position.x-B.global_position.x)+abs(A.global_position.z-B.global_position.z) > 0:
 			look_at(B.global_position)
 		else:
 			rotation_degrees = Vector3(90,0,0)

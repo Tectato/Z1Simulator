@@ -75,6 +75,7 @@ func clear():
 	Global.editor.selector.deselect()
 	Global.editor.programInterface.clear()
 	SheetLibrary.renderHandler.clearInstances()
+	PinRenderHandler.clearInstances()
 	while !machines.is_empty():
 		machines[0].delete()
 	#Simulator.setStep()
@@ -231,17 +232,17 @@ func importSheet(path):
 	var newSheet
 	if cached:
 		#newSheet = cached[0].duplicateCustom()
-		newSheet = duplicateSheet(cached[0])
+		newSheet = duplicateSheet(cached[0], path)
 	else:
 		newSheet = SHEET.instantiate()
 		newSheet.call_deferred("loadSVG",path)
 	selectedLayer.addPart(newSheet)
 	return newSheet
 
-func duplicateSheet(source):
+func duplicateSheet(source, path):
 	var copy = SHEET.instantiate()
 	copy.setupAfterDuplication(source)
-	copy.call_deferred("loadSVG", source.path)
+	copy.call_deferred("loadSVG", path)
 	return copy
 
 func addPin():

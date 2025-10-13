@@ -205,6 +205,7 @@ func moveLayer(index, dir):
 	sheetOccupancy.insert(index+dir, sheetOccupancy.pop_at(index))
 
 func removeLayer(index):
+	if index < 0 or index >= pinOccupancy.size(): return
 	pinOccupancy.remove_at(index)
 	sheetOccupancy.remove_at(index)
 

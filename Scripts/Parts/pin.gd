@@ -8,13 +8,15 @@ const INDICATOR = preload("res://Scenes/Parts/OutputIndicator.tscn")
 @export var shadedMaterial : Material
 @export var highlightMaterial : Material
 
+var meshIndex = -1
 var global = false
 var output = false
 var outputState = false
 var flippingOutput = false
 var indicator : Node3D
 var directionality = 0 # 0 = Both, 1 = X, 2 = Y
-var color = Color(1,1,1)
+const standardColor = Color("969696")
+var color = standardColor
 
 func serialize():
 	grabUUID()
@@ -74,45 +76,59 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready() -> void:
-	color = normalMaterial.albedo_color
+	#color = normalMaterial.albedo_color
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
 	Global.editor.visModeChanged.connect(visModeChanged)
+	Global.editor.updateInstancePos.connect(updateInstance)
 	visModeChanged(Global.editor.currentVisMode)
+	meshIndex = PinRenderHandler.addInstance("pin")
+	await get_tree().process_frame
+	if !fixed:
+		PinRenderHandler.setColor("pin", meshIndex, color)
+	set_notify_transform(true)
 
 func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
 
 func setSelected(value):
-	$MeshInstance3D/Highlight.visible = value
+	$Highlight.visible = value
 
 func setFixed(value, propagate = true):
+	var before = fixed
 	super.setFixed(value, propagate)
-	if Global.editor.currentVisMode != Editor.VisMode.Realistic:
-		$MeshInstance3D.material_override = staticMaterial if value else normalMaterial
-	if propagate:
-		for thing in interactionCandidates:
-			if thing is PointHole and !thing.get_parent().fixed:
-				thing.get_parent().call_deferred("updateFixedState")
+	if fixed != before:
+		PinRenderHandler.setColor("pin", meshIndex, color if !value else Color(0.194, 0.194, 0.194, 1.0))
+		#if Global.editor.currentVisMode != Editor.VisMode.Realistic:
+			#$MeshInstance3D.material_override = staticMaterial if value else normalMaterial
+		if propagate:
+			for thing in interactionCandidates:
+				if thing is PointHole and !thing.get_parent().fixed:
+					thing.get_parent().call_deferred("updateFixedState")
 
 func visModeChanged(mode : Editor.VisMode):
-	if mode == Editor.VisMode.Realistic:
-		$MeshInstance3D.material_override = shadedMaterial
-	else:
-		$MeshInstance3D.material_override = staticMaterial if fixed else normalMaterial
-		normalMaterial.albedo_color = color if mode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+	pass
+	#if mode == Editor.VisMode.Realistic:
+		#$MeshInstance3D.material_override = shadedMaterial
+	#else:
+		#$MeshInstance3D.material_override = staticMaterial if fixed else normalMaterial
+		#normalMaterial.albedo_color = color if mode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
 
 func setColor(newColor : Color):
 	color = Color.from_hsv(newColor.h, newColor.s * 0.5, newColor.v * 0.7)
-	normalMaterial.albedo_color = color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+	#color = Color.from_hsv(newColor.h, newColor.s * 0.5, newColor.v * 0.5)
+	#normalMaterial.albedo_color = color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+	PinRenderHandler.setColor("pin", meshIndex, color)
 
 func setUseColor(value : bool):
 	if !value:
-		normalMaterial.albedo_color = Color(0.58,0.58,0.58)
+		setColor(standardColor)
+		#normalMaterial.albedo_color = Color(0.58,0.58,0.58)
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(scale.x,value,scale.z)
 	$MeshInstance3D.position = Vector3.UP * 0.1 * value / 2
+	$Highlight.transform = $MeshInstance3D.transform
 	$Area3D.scale = Vector3(scale.x,value,scale.z)
 	$Area3D.position = Vector3.UP * 0.1 * value / 2
 	if output:
@@ -143,6 +159,10 @@ func executeFlip():
 	outputState = !outputState
 	indicator.setValue(outputState)
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
+		PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
+
 func snap(srcPos):
 	#var closestDist = Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, global_position)
 	#if closestDist.length() < Workspace.snapDist:
@@ -163,8 +183,12 @@ func projectDown(ray : RayCast3D):
 
 func place():
 	super.place()
+	#PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
 	if machine:
 		machine.gridLibrary.requestUpdate(self)
+
+func updateInstance():
+	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
 
 func rotatePart(by):
 	if output:
@@ -196,6 +220,7 @@ func updateConstraints():
 			#return
 
 func delete():
+	PinRenderHandler.removeInstance("pin", meshIndex)
 	super.delete()
 	if machine:
 		machine.gridLibrary.unregisterPart(self)

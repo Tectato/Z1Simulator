@@ -320,10 +320,11 @@ func paste():
 	
 	
 	for part in clipboard:
+		if !part: continue
 		if part is Sheet:
 			#selected.append(Global.workspace.importSheet(part.path))
 			#var instance = part.duplicateCustom()
-			var instance = Global.workspace.duplicateSheet(part)
+			var instance = Global.workspace.duplicateSheet(part, part.path)
 			Global.workspace.selectedLayer.addPart(instance)
 			selected.append(instance)
 		elif part is ClockPin:

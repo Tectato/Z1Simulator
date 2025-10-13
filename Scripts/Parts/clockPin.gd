@@ -27,6 +27,10 @@ func _ready() -> void:
 	visModeChanged(Global.editor.currentVisMode)
 	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
 	moveSpeedChanged()
+	meshIndex = PinRenderHandler.addInstance("pin")
+	await get_tree().process_frame
+	PinRenderHandler.setColor("pin", meshIndex, color)
+	set_notify_transform(true)
 
 func rename(newID : String):
 	super.rename(newID)
@@ -41,6 +45,8 @@ func setHeight(_value):
 	maxHeight += 0.4
 	$MeshInstance3D.scale = Vector3(1,maxHeight,1)
 	$MeshInstance3D.position = Vector3(0,maxHeight/20,0)
+	$Highlight.transform = $MeshInstance3D.transform
+	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 	collider.scale = Vector3(1,maxHeight,1)
 	collider.position = Vector3(0,maxHeight/20,0)
 	$StepLabel.position = Vector3.UP * (maxHeight*0.1 + 0.15)
