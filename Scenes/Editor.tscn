@@ -1,4 +1,4 @@
-[gd_scene load_steps=153 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=155 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -96,6 +96,7 @@
 [ext_resource type="Texture2D" uid="uid://c0j0rqw7w7le" path="res://Sprites/Buttons/ProgramInterface/add_lit.png" id="78_gidbq"]
 [ext_resource type="Texture2D" uid="uid://cuww8ivyn1bu7" path="res://Sprites/Buttons/Generic/close_lit.png" id="78_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
+[ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -413,6 +414,12 @@ albedo_color = Color(0, 0.54902, 1, 1)
 material = SubResource("StandardMaterial3D_ia0pe")
 size = Vector2(0.1, 0.1)
 orientation = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_obh6b"]
+render_priority = 50
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
 
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_5v8xv")
@@ -1426,6 +1433,10 @@ monitoring = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotZ/Area3D"]
 shape = SubResource("BoxShape3D_mtfo3")
+
+[node name="PowerFlowVis" type="Node3D" parent="."]
+script = ExtResource("97_obh6b")
+lineMaterial = SubResource("StandardMaterial3D_obh6b")
 
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]

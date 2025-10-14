@@ -86,6 +86,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 
 func move(dir : Vector2, initiator, chain = []):
 	var dirID = dirToInt(dir)
+	if selected:
+		pass
 	if !setToMove[dirID] == Simulator.totalStep:
 		return MoveState.AlreadyMoving
 	setToMove[dirID] = -1
@@ -136,10 +138,12 @@ func move(dir : Vector2, initiator, chain = []):
 	toMove.erase(dirID)
 	if !canMove:
 		abortMove(self, chain)
-	movedBy.clear()
+	#movedBy.clear()
 	if marker:
 		marker.partMoved(dirID)
 	blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
+	if canMove and selected:
+		schedule(visualizeChain)
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):
@@ -325,6 +329,9 @@ func setUseColor(value : bool):
 
 func setupAfterDuplication(source = null):
 	pass
+
+func visualizeChain():
+	Global.editor.powerFlow.visualizeChain(self)
 
 func schedule(callable : Callable):
 	if scheduled.has(callable): return

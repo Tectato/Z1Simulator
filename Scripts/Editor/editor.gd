@@ -7,6 +7,7 @@ class_name Editor
 @onready var tree = $Camera3D/Interface/SideWindow/TabContainer/Scene
 @onready var planInterface = $Camera3D/Interface/SideWindow/TabContainer/Plan/PlanInterface
 @onready var programInterface = $Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface
+@onready var powerFlow = $PowerFlowVis
 var tempProjectPath = ""
 var currentlyLoadedPath = ""
 var savePath = ""

@@ -92,6 +92,7 @@ func getBounds():
 	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
 
 func setSelected(value):
+	super.setSelected(value)
 	$Highlight.visible = value
 
 func setFixed(value, propagate = true):

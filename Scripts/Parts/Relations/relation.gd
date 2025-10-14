@@ -69,3 +69,7 @@ func isInterMachineRelation():
 
 func isBlocking():
 	return true
+
+func getOppositeOf(part):
+	if part == A: return B
+	return A
