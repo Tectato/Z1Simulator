@@ -417,9 +417,10 @@ orientation = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_obh6b"]
 render_priority = 50
+transparency = 1
 no_depth_test = true
 shading_mode = 0
-albedo_color = Color(1, 0, 0, 1)
+albedo_color = Color(1, 0, 0, 0.7411765)
 
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_5v8xv")

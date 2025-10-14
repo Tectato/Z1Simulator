@@ -5,14 +5,25 @@ class_name PowerFlow
 var gizmos = {}
 var chains = {}
 
-func visualizeChain(end : Movable):
+func _ready() -> void:
+	await get_tree().process_frame
+	get_parent().selector.newSelection.connect(selectionChanged)
+
+func selectionChanged(newSelection):
+	if newSelection.is_empty():
+		clearGizmos()
+
+func clearGizmos():
 	for i in gizmos:
 		if gizmos[i]:
 			gizmos[i].free()
 	gizmos.clear()
 	chains.clear()
-	#if chains.has(end):
-		#gizmos[end].free()
+
+func visualizeChain(end : Movable):
+	#clearGizmos()
+	if chains.has(end):
+		gizmos[end].free()
 	
 	# Travel along chain, X/Z determined by pins, Y by sheets
 	var points = []
