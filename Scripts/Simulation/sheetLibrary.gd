@@ -58,7 +58,7 @@ func unregisterUser(user : Sheet, path : String):
 
 func cleanUnusedSheets():
 	var toDelete = []
-	var batch = 20
+	#var batch = 20
 	for path in users.keys():
 		var entry = users[path]
 		while !entry.is_empty() and entry[0] == null:
@@ -69,7 +69,7 @@ func cleanUnusedSheets():
 		#if batch <= 0:
 			#batch = 20
 			#await get_tree().process_frame
-	batch = 20
+	#batch = 20
 	for path in toDelete:
 		users.erase(path)
 		spriteDict.erase(path)

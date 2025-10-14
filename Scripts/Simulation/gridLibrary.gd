@@ -91,9 +91,9 @@ func unregisterPart(part : Movable, notifyNeighbors = true):
 	#print("Removing " + (part.id if part is Sheet else "Pin"))
 	if !occupies.has(part):
 		return
-	var layer = getLayer(part)
-	var occupancy = getDict(part is Sheet, layer)
-	var otherOccupancy = getDict(not part is Sheet, layer)
+	#var layer = getLayer(part)
+	#var occupancy = getDict(part is Sheet, layer)
+	#var otherOccupancy = getDict(not part is Sheet, layer)
 	var cells = occupies[part]
 	for cell in cells:
 		unregisterPartCell(part, cell)

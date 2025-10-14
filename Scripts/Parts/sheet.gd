@@ -887,11 +887,12 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 	if selected:
 		pass
 	var toMoveInRotation
-	var clockwise = turnDirections[initiator][dirToInt(dir)]
+	var clockwise = true
 	if turnDirections.has(initiator):
+		clockwise = turnDirections[initiator][dirToInt(dir)]
 		toMoveInRotation = toMoveInCWRotation if clockwise else toMoveInCCWRotation
 	else:
-		print("Unexpected turn")
+		print("Unexpected turn of sheet " + id + " (" + str(uuid) + ")")
 		return
 	Simulator.spawnIndicator(pivot, EventIndicator.Type.Turn)
 	rotSpeed = potentialRotSpeed[0 if clockwise else 1]

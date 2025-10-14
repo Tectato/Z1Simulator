@@ -15,7 +15,7 @@ func updateRestPos():
 	restPos = global_position - Vector2(180,0) if $Hide.button_pressed else global_position
 
 func _on_hide_toggled(toggled_on: bool) -> void:
-	global_position = global_position * Vector2(0,1) + Vector2(get_viewport_rect().size.x - (0 if toggled_on else size.x), 0)
+	global_position = global_position * Vector2(0,1) + Vector2(get_viewport_rect().size.x - (0.0 if toggled_on else size.x), 0)
 	$RescaleButton.visible = !toggled_on
 	$TabContainer.visible = !toggled_on
 

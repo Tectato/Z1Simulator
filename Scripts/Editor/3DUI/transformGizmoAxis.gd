@@ -56,7 +56,7 @@ func getSnappedMousePos():
 	var mousePos = get_viewport().get_mouse_position()
 	var cameraNormal
 	var cameraPos
-	var dragPos
+	#var dragPos
 	if camera.orthographic:
 		cameraPos = camera.project_ray_origin(mousePos)
 		cameraNormal = Vector3.DOWN
@@ -77,7 +77,7 @@ func getSnappedMousePos():
 		#var intersectionPos = cameraPos + cameraNormal * dist
 		#dragPos = parentOrigin + position + axis * axis.dot(intersectionPos)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if grabbed:
 		var dragPos = getSnappedMousePos()
 		if !plane:

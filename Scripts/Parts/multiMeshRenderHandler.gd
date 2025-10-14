@@ -65,7 +65,7 @@ func executeAdd():
 		for i in range(0,colorBuffer.size()):
 			renderer.multimesh.set_instance_color(i, colorBuffer[i])
 			renderer.multimesh.set_instance_transform(i, transformBuffer[i])
-			var absIndex = prevCount + i
+		
 		if toColor.has(key) and !toColor[key].is_empty():
 			for i in toColor[key].keys():
 				renderer.multimesh.set_instance_color(i, toColor[key][i])

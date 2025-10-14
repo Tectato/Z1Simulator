@@ -4,8 +4,8 @@ class_name UUIDManager
 var currentIndex = 0
 var parts = {}
 
-func request(part, randomize = false):
-	if randomize:
+func request(part, random = false):
+	if random:
 		randomize()
 		var id = randi_range(0,999999)
 		while parts.has(id):

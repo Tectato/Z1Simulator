@@ -72,11 +72,11 @@ func duplicateLayer(layer : Layer):
 		Global.editor.selector.select(newLayer.collider)
 		Global.editor.updateSceneTree()
 
-func moveLayer(layer : Layer, dir = 1):
+func moveLayer(layer : Layer, direction = 1):
 	var index = layers.find(layer)
 	layers.erase(layer)
-	layers.insert(index+dir, layer)
-	gridLibrary.moveLayer(index, dir)
+	layers.insert(index+direction, layer)
+	gridLibrary.moveLayer(index, direction)
 	updateLayerPositions()
 
 func removeLayer(layer):
@@ -277,7 +277,7 @@ func getBounds():
 		if thing is Movable or thing is Layer:
 			var offset = thing.position
 			var thingBounds = thing.getBounds()
-			var extents = thingBounds[1] - thingBounds[0]
+			#var extents = thingBounds[1] - thingBounds[0]
 			var bMin = thingBounds[0] + offset
 			var bMax = thingBounds[1] + offset
 			min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
@@ -298,7 +298,7 @@ func snap(srcPos):
 		pin.updatePositions()
 	return srcPos
 
-func projectDown(ray : RayCast3D):
+func projectDown(_ray : RayCast3D):
 	return global_position * Vector3(1,0,1)
 
 func delete(): #TODO: prompt for confirmation or undo
@@ -335,16 +335,16 @@ func rotatePart(angle):
 	rotate_y(angle)
 	snap(global_position)
 
-func toGlobalDir(dir):
-	if dir is Vector3:
-		return dir.rotated(Vector3.UP, rotation.y)
-	elif dir is Vector2:
-		return dir.rotated(-rotation.y)
+func toGlobalDir(direction):
+	if direction is Vector3:
+		return direction.rotated(Vector3.UP, rotation.y)
+	elif direction is Vector2:
+		return direction.rotated(-rotation.y)
 	return null
 
-func toLocalDir(dir):
-	if dir is Vector3:
-		return dir.rotated(Vector3.UP, -rotation.y)
-	elif dir is Vector2:
-		return dir.rotated(rotation.y)
+func toLocalDir(direction):
+	if direction is Vector3:
+		return direction.rotated(Vector3.UP, -rotation.y)
+	elif direction is Vector2:
+		return direction.rotated(rotation.y)
 	return null
