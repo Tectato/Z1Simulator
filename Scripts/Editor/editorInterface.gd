@@ -24,6 +24,7 @@ func _ready() -> void:
 
 func lateReady():
 	editor.selector.newSelection.connect(newSelection)
+	Global.workspace.resolutionChanged.connect(resolutionChanged)
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -133,6 +134,17 @@ func _on_part_toggled(toggled_on: bool) -> void:
 	if toggled_on:
 		Global.workspace.setResolution(Workspace.Resolution.Part)
 
+func resolutionChanged(newRes : Workspace.Resolution):
+	$Toggles/ResolutionBar/Machine.set_pressed_no_signal(false)
+	$Toggles/ResolutionBar/Layer.set_pressed_no_signal(false)
+	$Toggles/ResolutionBar/Part.set_pressed_no_signal(false)
+	match(newRes):
+		Workspace.Resolution.Machine:
+			$Toggles/ResolutionBar/Machine.set_pressed_no_signal(true)
+		Workspace.Resolution.Layer:
+			$Toggles/ResolutionBar/Layer.set_pressed_no_signal(true)
+		Workspace.Resolution.Part:
+			$Toggles/ResolutionBar/Part.set_pressed_no_signal(true)
 
 func _on_renaming_box_text_submitted(new_text: String) -> void:
 	if toRename is Movable or toRename is Machine or toRename is Layer:
@@ -183,6 +195,11 @@ func _on_intermediate_plate_vis_toggled(toggled_on: bool) -> void:
 func _on_unselected_layer_vis_toggled(toggled_on: bool) -> void:
 	editor.workspace.setUnselectedLayersHidden(toggled_on)
 
+func _on_flow_vis_toggled(toggled_on: bool) -> void:
+	editor.workspace.setShowPowerFlow(toggled_on)
+
+func _on_static_sheet_vis_toggled(toggled_on: bool) -> void:
+	editor.workspace.setStaticSheetVis(toggled_on)
 
 func visModeMonochrome() -> void:
 	editor.setVisMode(Editor.VisMode.Monochrome)

@@ -82,6 +82,7 @@ func _ready() -> void:
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.editor.updateInstancePos.connect(updateInstance)
 	visModeChanged(Global.editor.currentVisMode)
+	visibility_changed.connect(visibilityChanged)
 	meshIndex = PinRenderHandler.addInstance("pin")
 	await get_tree().process_frame
 	if !fixed:
@@ -368,3 +369,9 @@ func nudge():
 			move(dirN, self, [])
 			return
 	pass
+
+func visibilityChanged():
+	if is_visible_in_tree():
+		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
+	else:
+		PinRenderHandler.setTransform("pin", meshIndex, Transform3D(Basis(Quaternion(0,0,0,0)),Vector3.ZERO))

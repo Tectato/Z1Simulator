@@ -119,6 +119,7 @@ func _ready():
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.editor.updateInstancePos.connect(updateInstance)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
+	Global.workspace.staticSheetVisChanged.connect(staticSheetVisChanged)
 	if path and bounds.is_empty():
 		loadSVG(path)
 	else:
@@ -140,7 +141,7 @@ func _process(delta: float) -> void:
 		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func _notification(what):
-	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
+	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted and is_visible_in_tree():
 		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func setSelected(value):
@@ -157,6 +158,8 @@ func setFixed(value, _propagate = true):
 	if fixed != before:
 		sprite.updateParams()
 		mesh.updateMaterial()
+		visible = Global.workspace.showStaticSheets
+		visibilityChanged()
 		#mesh.set_instance_shader_parameter("fixed", value)
 		#if propagate:
 			#for hole in pinCandidates:
@@ -578,7 +581,8 @@ func place():
 	#_draw_gizmo()
 
 func updateInstance():
-	SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+	if is_visible_in_tree():
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func updateHeight():
 	position = position * Vector3(1,0,1) + Vector3.UP * heightIndex * Global.workspace.sheetSpacing
@@ -1002,3 +1006,8 @@ func visibilityChanged():
 		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 	else:
 		SheetLibrary.renderHandler.setTransform(path, meshIndex, Transform3D(Basis(Quaternion(0,0,0,0)),Vector3.ZERO))
+
+func staticSheetVisChanged(newVis):
+	if fixed:
+		visible = newVis
+		visibilityChanged()

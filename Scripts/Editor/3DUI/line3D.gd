@@ -33,6 +33,7 @@ static func createLine(points : PackedVector3Array, thickness : float, material 
 		segment.position = (prevPoint + point) / 2
 		#segment.call_deferred("look_at", point)
 		var axis = (prevPoint-point).cross(Vector3.UP).normalized()
+		if axis == Vector3.ZERO: axis = Vector3.FORWARD
 		var angle = Vector3.UP.angle_to(prevPoint-point)
 		segment.rotate(axis, angle)
 		

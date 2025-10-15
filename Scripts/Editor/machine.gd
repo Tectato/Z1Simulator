@@ -247,6 +247,8 @@ func updateCollider():
 		call_deferred("executeColliderUpdate")
 
 func executeColliderUpdate():
+	# In case layers are also updated this frame, ensure we update global stuff last
+	await get_tree().process_frame
 	#print("Updating Machine collider")
 	colliderUpdateScheduled = false
 	var bounds = getBounds()

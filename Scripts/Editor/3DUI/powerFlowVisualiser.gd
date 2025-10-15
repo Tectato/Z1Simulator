@@ -2,39 +2,57 @@ extends Node3D
 class_name PowerFlow
 
 @export var lineMaterial : Material
-var gizmos = {}
-var chains = {}
+var gizmos = []
+#var chains = {}
+var visualizedStep = -1
 
 func _ready() -> void:
 	await get_tree().process_frame
-	get_parent().selector.newSelection.connect(selectionChanged)
+	#get_parent().selector.newSelection.connect(selectionChanged)
+	Global.workspace.showPowerFlowChanged.connect(visSettingChanged)
+	Simulator.rewind.connect(clearGizmos)
 
 func selectionChanged(newSelection):
 	if newSelection.is_empty():
 		clearGizmos()
 
+func visSettingChanged(value):
+	if !value:
+		clearGizmos()
+
 func clearGizmos():
-	for i in gizmos:
-		if gizmos[i]:
-			gizmos[i].free()
+	for gizmo in gizmos:
+		if gizmo:
+			gizmo.free()
 	gizmos.clear()
-	chains.clear()
+	#chains.clear()
 
 func visualizeChain(end : Movable):
-	#clearGizmos()
-	if chains.has(end):
-		gizmos[end].free()
+	if !Global.workspace.showPowerFlow: return
+	if end is ClockPin: return
+	if visualizedStep != Simulator.totalStep:
+		clearGizmos()
+		visualizedStep = Simulator.totalStep
+	#if chains.has(end):
+		#gizmos[end].free()
 	
 	# Travel along chain, X/Z determined by pins, Y by sheets
 	var points = []
 	var prevPoint = null
 	var reachedClockPin = false
 	var chain = []
-	var searchQueue = end.movedBy.keys()
+	var searchQueue = []
 	var parentDict = {}
+	for node in end.movedBy.keys():
+		if node is Movable:
+			searchQueue.append(node)
+			parentDict[node] = end
+		elif node is Relation:
+			searchQueue.append(node.getOppositeOf(end))
+			parentDict[searchQueue.back()] = end
 	var source = null
-	for node in searchQueue:
-		parentDict[node] = end
+	#for node in searchQueue:
+		#parentDict[node] = end
 	while !searchQueue.is_empty():
 		var currentPart = searchQueue.pop_front()
 		if currentPart is ClockPin:
@@ -93,9 +111,11 @@ func visualizeChain(end : Movable):
 		#GeometryInstance3D.SHADOW_CASTING_SETTING_OFF,
 		#false,
 		#[lineMaterial])
-	var newGizmo = Line3D.createLine(points, 0.01, lineMaterial)
+	var newGizmo = Line3D.createLine(points, 0.015, lineMaterial)
 	end.add_child(newGizmo)
-	newGizmo.position -= end.global_position
-	gizmos[end] = newGizmo
-	chains[end] = chain
+	#newGizmo.position -= end.global_position
+	newGizmo.global_position = Vector3.ZERO
+	newGizmo.global_rotation = Vector3.ZERO
+	gizmos.append(newGizmo)
+	#chains[end] = chain
 	

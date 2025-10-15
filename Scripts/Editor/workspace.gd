@@ -26,11 +26,17 @@ enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
 signal resolutionChanged(newRes)
 
-var intermediatePlateVis = true
+var intermediatePlateVis = false
 signal intermediatePlateVisChanged(newVis)
 
-var hideUnselectedLayers = true
+var hideUnselectedLayers = false
 signal unselectedLayersVisChanged()
+
+var showPowerFlow = true
+signal showPowerFlowChanged(visible)
+
+var showStaticSheets = true
+signal staticSheetVisChanged(newVis)
 
 var machines = []
 var interMachineRelations = {}
@@ -69,6 +75,16 @@ func setUnselectedLayersHidden(newVis):
 	if newVis != hideUnselectedLayers:
 		hideUnselectedLayers = newVis
 		unselectedLayersVisChanged.emit()
+
+func setShowPowerFlow(value):
+	if value != showPowerFlow:
+		showPowerFlow = value
+		showPowerFlowChanged.emit(showPowerFlow)
+
+func setStaticSheetVis(newVis):
+	if newVis != showStaticSheets:
+		showStaticSheets = newVis
+		staticSheetVisChanged.emit(newVis)
 
 func clear():
 	uuidManager.clear()

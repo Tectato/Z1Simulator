@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bos5bkd1g5dle"
-path="res://.godot/imported/intermediatePlate.png-e630f67f5e7048bf2df2b949e1073dbf.ctex"
+uid="uid://u845reyhgtr1"
+path="res://.godot/imported/flow_active.png-ce24506f4a3295d1b99f84ce1a125259.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Buttons/Visibility/intermediatePlate.png"
-dest_files=["res://.godot/imported/intermediatePlate.png-e630f67f5e7048bf2df2b949e1073dbf.ctex"]
+source_file="res://Sprites/Buttons/Visibility/flow_active.png"
+dest_files=["res://.godot/imported/flow_active.png-ce24506f4a3295d1b99f84ce1a125259.ctex"]
 
 [params]
 
