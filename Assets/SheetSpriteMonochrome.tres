@@ -6,4 +6,3 @@
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("1_714c5")
-shader_parameter/selectedColor = Vector3(1, 1, 1)

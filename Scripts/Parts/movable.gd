@@ -30,6 +30,8 @@ var stateY = false
 @onready var restStateY = stateY
 var uuid = -1
 var marker : Marker
+var color : Color
+var highlighted = false
 var scheduled = {}
 
 func _ready() -> void:
@@ -52,6 +54,9 @@ func setSelected(value):
 	super.setSelected(value)
 	if Global.editor.planInterface.currentPlan:
 		Global.editor.planInterface.currentPlan.updateLitMarkers()
+
+func setHighlight(enabled : bool, highlightColor : Color):
+	pass
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if selected:

@@ -16,7 +16,6 @@ var flippingOutput = false
 var indicator : Node3D
 var directionality = 0 # 0 = Both, 1 = X, 2 = Y
 const standardColor = Color("969696")
-var color = standardColor
 
 func serialize():
 	grabUUID()
@@ -76,6 +75,7 @@ func deserialize(source : Dictionary):
 	place()
 
 func _ready() -> void:
+	color = standardColor
 	#color = normalMaterial.albedo_color
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
@@ -109,6 +109,11 @@ func setFixed(value, propagate = true):
 					thing.get_parent().call_deferred("updateFixedState")
 
 func visModeChanged(mode : Editor.VisMode):
+	if highlighted: return
+	if mode == Editor.VisMode.Colorcoded:
+		PinRenderHandler.setColor("pin", meshIndex, color if !fixed else Color(0.194, 0.194, 0.194, 1.0))
+	elif mode == Editor.VisMode.Monochrome:
+		PinRenderHandler.setColor("pin", meshIndex, standardColor if !fixed else Color(0.194, 0.194, 0.194, 1.0))
 	pass
 	#if mode == Editor.VisMode.Realistic:
 		#$MeshInstance3D.material_override = shadedMaterial
@@ -120,12 +125,20 @@ func setColor(newColor : Color):
 	color = Color.from_hsv(newColor.h, newColor.s * 0.5, newColor.v * 0.7)
 	#color = Color.from_hsv(newColor.h, newColor.s * 0.5, newColor.v * 0.5)
 	#normalMaterial.albedo_color = color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
+	if highlighted: return
 	PinRenderHandler.setColor("pin", meshIndex, color)
 
 func setUseColor(value : bool):
 	if !value:
 		setColor(standardColor)
 		#normalMaterial.albedo_color = Color(0.58,0.58,0.58)
+
+func setHighlight(enabled : bool, highlightColor : Color):
+	highlighted = enabled
+	if enabled:
+		PinRenderHandler.setColor("pin", meshIndex, highlightColor)
+	else:
+		PinRenderHandler.setColor("pin", meshIndex, color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else standardColor)
 
 func setHeight(value):
 	$MeshInstance3D.scale = Vector3(scale.x,value,scale.z)

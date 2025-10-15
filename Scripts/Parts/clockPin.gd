@@ -19,6 +19,7 @@ signal forwardStepChanged
 signal pulsingChanged
 
 func _ready() -> void:
+	color = standardColor
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
 	machine.clock.registerClockPin(self)

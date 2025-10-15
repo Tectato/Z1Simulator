@@ -1,4 +1,4 @@
-[gd_scene load_steps=161 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=163 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -426,7 +426,19 @@ render_priority = 50
 transparency = 1
 no_depth_test = true
 shading_mode = 0
-albedo_color = Color(1, 0, 0, 0.93333334)
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 0.8745098)
+
+[sub_resource type="Gradient" id="Gradient_uhjy1"]
+offsets = PackedFloat32Array(0, 0.52868855, 1)
+colors = PackedColorArray(1, 0, 0, 1, 1, 0.69803923, 0, 1, 0, 1, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_qikgm"]
+top_radius = 0.015
+bottom_radius = 0.015
+height = 1.0
+radial_segments = 8
+rings = 0
 
 [node name="Editor" type="Node3D"]
 script = ExtResource("1_5v8xv")
@@ -1431,6 +1443,8 @@ shape = SubResource("BoxShape3D_mtfo3")
 [node name="PowerFlowVis" type="Node3D" parent="."]
 script = ExtResource("97_obh6b")
 lineMaterial = SubResource("StandardMaterial3D_obh6b")
+lineGradient = SubResource("Gradient_uhjy1")
+lineMesh = SubResource("CylinderMesh_qikgm")
 
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]

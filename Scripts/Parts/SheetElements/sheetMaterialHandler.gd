@@ -32,12 +32,17 @@ func updateMaterial():
 		currentColor *= fixedFac
 	#materialFlat.emission_energy_multiplier = 0.5 if parent.selected else 0.0
 	#materialFlat.albedo_color = currentColor
+	if parent.highlighted: return
+	setMeshColor(currentColor)
+
+func setMeshColor(color : Color):
 	if parent.meshIndex >= 0:
-		SheetLibrary.renderHandler.setColor(parent.path, parent.meshIndex, currentColor)
+		SheetLibrary.renderHandler.setColor(parent.path, parent.meshIndex, color)
 
 func updateParams():
-	set_instance_shader_parameter("selected", parent.selected)
-	set_instance_shader_parameter("fixed", parent.fixed)
+	pass
+	#set_instance_shader_parameter("selected", parent.selected)
+	#set_instance_shader_parameter("fixed", parent.fixed)
 
 func setColor(color):
 	if color:
@@ -46,3 +51,9 @@ func setColor(color):
 		markerColor = standardColor
 	#materialFlat.albedo_color = color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else Color(0.58,0.58,0.58)
 	updateMaterial()
+
+func setHighlight(color):
+	if color:
+		setMeshColor(color)
+	else:
+		setMeshColor(currentColor)

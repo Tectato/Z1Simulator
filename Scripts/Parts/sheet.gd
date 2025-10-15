@@ -147,7 +147,6 @@ func _notification(what):
 func setSelected(value):
 	super.setSelected(value)
 	#sprite.set_instance_shader_parameter("selected", value)
-	sprite.updateParams()
 	mesh.updateMaterial()
 	sprite.visible = value
 
@@ -156,7 +155,6 @@ func setFixed(value, _propagate = true):
 	super.setFixed(value)
 	#sprite.set_instance_shader_parameter("fixed", value)
 	if fixed != before:
-		sprite.updateParams()
 		mesh.updateMaterial()
 		visible = Global.workspace.showStaticSheets
 		visibilityChanged()
@@ -167,7 +165,6 @@ func setFixed(value, _propagate = true):
 					#pin.updateConstraints()
 
 func visModeChanged(mode : Editor.VisMode):
-	sprite.visModeChanged(mode)
 	mesh.visModeChanged(mode)
 	#sprite.visible = false #mode != Editor.VisMode.Realistic
 
@@ -242,7 +239,6 @@ func loadSVG(filepath : String):
 	sprite.set_texture(image)
 	#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
-	sprite.updateSprite()
 	if cached and cached[0]:
 		return
 	
@@ -947,15 +943,15 @@ func snapRotation():
 		#rotatePart(-diff)
 	updateRotation()
 
-func setColor(color : Color):
-	var adjustedColor = Color(color)
+func setColor(newColor : Color):
+	var adjustedColor = Color(newColor)
 	adjustedColor.s = adjustedColor.s * 0.8
 	#adjustedColor.s = adjustedColor.s * 0.6
 	adjustedColor.v = adjustedColor.v * 0.5
 	#adjustedColor.v = adjustedColor.v * 0.7
-	var vec3 = Vector3(adjustedColor.r, adjustedColor.g, adjustedColor.b)
+	color = adjustedColor
 	#sprite.set_instance_shader_parameter("partColor", vec3)
-	mesh.setColor(adjustedColor)
+	mesh.setColor(color)
 	#mesh.set_instance_shader_parameter("partColor", vec3)
 
 func setUseColor(value : bool):
@@ -963,6 +959,15 @@ func setUseColor(value : bool):
 	if !value:
 		mesh.setColor(null)
 	#mesh.set_instance_shader_parameter("usePartColor", value)
+
+func setHighlight(enabled : bool, highlightColor : Color):
+	highlighted = enabled
+	if enabled:
+		#sprite.visible = true
+		mesh.setHighlight(highlightColor)
+	else:
+		#sprite.visible = selected
+		mesh.setHighlight(null)
 
 func setupAfterDuplication(source = null):
 	if holes.is_empty():

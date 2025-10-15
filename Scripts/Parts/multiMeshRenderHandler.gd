@@ -68,9 +68,11 @@ func executeAdd():
 		
 		if toColor.has(key) and !toColor[key].is_empty():
 			for i in toColor[key].keys():
+				if i >= renderer.multimesh.instance_count: break # Idk why this would happen but apparently it can
 				renderer.multimesh.set_instance_color(i, toColor[key][i])
 		if toTransform.has(key) and !toTransform[key].is_empty():
 			for i in toTransform[key].keys():
+				if i >= renderer.multimesh.instance_count: break
 				renderer.multimesh.set_instance_transform(i, toTransform[key][i])
 	toAdd.clear()
 	toColor.clear()

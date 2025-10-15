@@ -1,12 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://b2845uayksbce"]
+[gd_scene load_steps=15 format=3 uid="uid://b2845uayksbce"]
 
-[ext_resource type="Material" uid="uid://bnljtoqintdji" path="res://Assets/SheetSpriteColorcoded.tres" id="2_huj6i"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
 [ext_resource type="Shader" uid="uid://bi2w6t8vmi1w0" path="res://Shaders/SheetBasic.gdshader" id="2_wkhiy"]
 [ext_resource type="Script" uid="uid://dqb3hgknwtj7k" path="res://Scripts/Parts/sheet.gd" id="3_k6d36"]
-[ext_resource type="Material" uid="uid://o31ia3qqm05d" path="res://Assets/SheetSpriteMonochrome.tres" id="3_rfh3b"]
 [ext_resource type="Material" uid="uid://vhdr4absfdgr" path="res://Assets/SheetSpriteHighlight.tres" id="4_jrvcr"]
-[ext_resource type="Script" uid="uid://bfdg7rb4hi2i" path="res://Scripts/Parts/SheetElements/sheetSprite.gd" id="6_jrvcr"]
 [ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="8_8aa0u"]
 [ext_resource type="Script" uid="uid://dhxssnwr75etn" path="res://Scripts/Parts/SheetElements/sheetMaterialHandler.gd" id="8_wkhiy"]
 [ext_resource type="Shader" uid="uid://lkk624m4uf5b" path="res://Shaders/SheetMesh/InstancedSheet.gdshader" id="10_8aa0u"]
@@ -53,10 +50,6 @@ centered = false
 pixel_size = 0.001
 axis = 1
 texture = ExtResource("2_k6d36")
-script = ExtResource("6_jrvcr")
-materialMonochrome = ExtResource("3_rfh3b")
-materialColorcoded = ExtResource("2_huj6i")
-materialShaded = ExtResource("3_rfh3b")
 
 [node name="Outline" type="Area3D" parent="."]
 collision_mask = 0

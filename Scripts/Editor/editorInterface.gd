@@ -12,8 +12,8 @@ extends Control
 @onready var saveError = $SaveError
 @onready var selectedLabel = $SelectedLabel/Label
 
-@onready var ModeSelect = $ModeBar/Select
-@onready var ModeManage = $ModeBar/Manage
+@onready var ModeSelect = $Toggles/ModeBar/Select
+@onready var ModeManage = $Toggles/ModeBar/Manage
 
 var toRename : Node
 

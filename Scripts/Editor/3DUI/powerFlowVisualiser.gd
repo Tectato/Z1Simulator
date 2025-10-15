@@ -2,8 +2,10 @@ extends Node3D
 class_name PowerFlow
 
 @export var lineMaterial : Material
+@export var lineGradient : Gradient
+@export var lineMesh : Mesh
 var gizmos = []
-#var chains = {}
+var chains = []
 var visualizedStep = -1
 
 func _ready() -> void:
@@ -24,8 +26,12 @@ func clearGizmos():
 	for gizmo in gizmos:
 		if gizmo:
 			gizmo.free()
+	for chain in chains:
+		for node in chain:
+			if node:
+				node.setHighlight(false, Color.WHITE)
 	gizmos.clear()
-	#chains.clear()
+	chains.clear()
 
 func visualizeChain(end : Movable):
 	if !Global.workspace.showPowerFlow: return
@@ -111,11 +117,21 @@ func visualizeChain(end : Movable):
 		#GeometryInstance3D.SHADOW_CASTING_SETTING_OFF,
 		#false,
 		#[lineMaterial])
-	var newGizmo = Line3D.createLine(points, 0.015, lineMaterial)
+	var newGizmo = Line3D.createLine(points, 0.015, lineMesh, lineMaterial, lineGradient)
 	end.add_child(newGizmo)
 	#newGizmo.position -= end.global_position
 	newGizmo.global_position = Vector3.ZERO
 	newGizmo.global_rotation = Vector3.ZERO
 	gizmos.append(newGizmo)
-	#chains[end] = chain
-	
+	chains.append(chain)
+	var totalNodes = chain.size()
+	var i = 0
+	for node in chain:
+		var sampledColor = lineGradient.sample(float(i)/totalNodes)
+		# TODO: adjust this once sheet shading is fixed
+		if node is Sheet:
+			sampledColor = Color.from_hsv(sampledColor.h, sampledColor.s * 0.4, sampledColor.v * 0.5)
+		elif node is Pin:
+			sampledColor = Color.from_hsv(sampledColor.h, sampledColor.s * 0.4, sampledColor.v * 0.8)
+		node.setHighlight(true, sampledColor)
+		i += 1
