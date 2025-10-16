@@ -135,6 +135,13 @@ func deserializeDiff(diff):
 	if diff.has("rotation"):
 		rotation_degrees.y = float(diff["rotation"])
 
+func clearDiff():
+	position = storedPos
+	targetPos = position
+	restPos = position
+	rotation.y = storedRot
+	targetRot = storedRot
+
 func _ready():
 	#mesh = debugPolygon
 	mesh = $MeshInstance3D

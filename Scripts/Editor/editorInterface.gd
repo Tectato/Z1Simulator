@@ -83,6 +83,8 @@ func _on_edit_id_pressed(id: int) -> void:
 	match(id):
 		0:
 			editor.localizeMachine()
+		1:
+			editor.clearDiff()
 
 func requestSheet():
 	importSheetDialog.popup()
@@ -213,6 +215,7 @@ func visModeShaded() -> void:
 func newSelection(parts = []):
 	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
 	$MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
+	$MenuBar/Edit.set_item_disabled(1, !oneInstanceMachineSelected)
 
 func _on_edit_lock_toggled(toggled_on: bool) -> void:
 	editor.editingLocked = toggled_on

@@ -232,6 +232,11 @@ func deserializeDiff(diff):
 	if diff.has("active"):
 		inActivePos = diff["active"]
 
+func clearDiff():
+	position = storedPos
+	targetPos = position
+	inActivePos = storedInActivePos
+
 func _on_reset_timer_timeout() -> void:
 	if selected:
 		pass

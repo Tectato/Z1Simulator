@@ -106,6 +106,17 @@ func deserializeDiff(diff):
 		directionality = int(arr[2])
 		indicator.setDirection(directionality)
 
+func clearDiff():
+	position = storedPos
+	targetPos = position
+	restPos = position
+	setOutput(storedStates[0])
+	if output and outputState != storedStates[1]:
+		flipOutput()
+	directionality = int(storedStates[2])
+	if indicator:
+		indicator.setDirection(directionality)
+
 func _ready() -> void:
 	color = standardColor
 	#color = normalMaterial.albedo_color
