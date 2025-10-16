@@ -145,7 +145,7 @@ func _process(_delta: float) -> void:
 				if part is Sheet:
 					if Input.is_action_just_pressed("flip"):
 						part.setFixed(!part.fixed)
-			elif part is Pin and part.canModify():
+			elif part is Pin:# and part.canModify(): # Stored in diff if enabled now
 				if Input.is_action_just_pressed("toggle_output"):
 					part.setOutput(!part.output)
 				if Input.is_action_just_pressed("flip"):

@@ -166,3 +166,7 @@ func setVisMode(mode : VisMode):
 func localizeMachine():
 	if selector.selected.size() == 1 and selector.selected[0] is Machine:
 		selector.selected[0].makeLocal()
+
+func clearDiff():
+	if selector.selected.size() == 1 and selector.selected[0] is Machine:
+		selector.selected[0].clearDiff()

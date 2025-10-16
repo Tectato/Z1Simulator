@@ -31,12 +31,14 @@ func delete():
 	super.delete()
 
 func updatePos():
-	global_position = A.global_position
+	#global_position = A.global_position
 	if A.global_position.distance_squared_to(B.global_position) > 0.001:
-		if abs(A.global_position.x-B.global_position.x)+abs(A.global_position.z-B.global_position.z) > 0:
-			look_at(B.global_position)
-		else:
-			rotation_degrees = Vector3(90,0,0)
+		$LineVis.rotation_degrees = Vector3(0,0,0)
+		var diff = (B.global_position-A.global_position)
+		var axis = diff.cross(Vector3.UP).normalized()
+		if axis == Vector3.ZERO: axis = Vector3.FORWARD
+		var angle = Vector3.UP.angle_to(diff)
+		$LineVis.rotate(axis, -angle)
 	$LineVis.mesh.height = A.global_position.distance_to(B.global_position)
 	$LineVis.global_position = (A.global_position + B.global_position) / 2
 

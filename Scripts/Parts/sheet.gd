@@ -20,7 +20,8 @@ var linearConstraints = {}
 var heightIndex = 0
 var pivots = {0:[],1:[],2:[],3:[]}
 var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
-var restRot  = 0.0
+var storedRot = 0.0
+var restRot = 0.0
 var targetRot = 0.0
 var rotating = false
 var toMoveInCWRotation = {}
@@ -79,6 +80,7 @@ func deserialize(source : Dictionary):
 	else:
 		height = height * Global.workspace.sheetSpacing
 	position = Vector3(float(source["pos_x"]), height, float(source["pos_z"]))
+	storedPos = position
 	var rotationIn = source["rotation"]
 	if str(rotationIn).is_valid_float():
 		if str(rotationIn).length() > 10:
@@ -89,6 +91,7 @@ func deserialize(source : Dictionary):
 		var angle = float(rotationIn.rstrip("q")) * PI/2
 		rotation = Vector3(0, angle, 0)
 	restRot = rotation.y
+	storedRot = restRot
 	targetRot = restRot
 	if source.has("id"):
 		id = source["id"]
@@ -110,6 +113,27 @@ func deserialize(source : Dictionary):
 	if bounds.is_empty():
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	place()
+
+func serializeDiff():
+	var out = {}
+	var posModified = position.distance_to(storedPos) > Workspace.pinTravel / 2
+	var rotModified = abs(storedRot - rotation.y) > 0.05
+	if posModified:
+		out["pos_x"] = ("%0.4f" % position.x).rstrip("0")
+		out["pos_z"] = ("%0.4f" % position.z).rstrip("0")
+	if rotModified:
+		out["rotation"] = ("%0.2f" % rotation_degrees.y).rstrip("0")
+	if posModified or rotModified:
+		return {uuid:out}
+	return null
+
+func deserializeDiff(diff):
+	if diff.has("pos_x"):
+		position = Vector3(float(diff["pos_x"]), position.y, float(diff["pos_z"]))
+		targetPos = position
+		restPos = position
+	if diff.has("rotation"):
+		rotation_degrees.y = float(diff["rotation"])
 
 func _ready():
 	#mesh = debugPolygon
@@ -137,7 +161,7 @@ func _process(delta: float) -> void:
 			#blockedThisCycle = -1
 	if !fixed and rotating and !pointConstraints.is_empty():
 		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
-		rotating = abs(rotation.y-targetRot) > 0.1
+		rotating = abs(rotation.y-targetRot) > 0.01
 		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func _notification(what):

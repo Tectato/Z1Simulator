@@ -1,4 +1,4 @@
-[gd_scene load_steps=163 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=167 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -103,6 +103,9 @@
 [ext_resource type="Texture2D" uid="uid://cuww8ivyn1bu7" path="res://Sprites/Buttons/Generic/close_lit.png" id="78_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
 [ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
+[ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
+[ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
+[ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/ProgramInterface/notch.png" id="102_u1ej8"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -278,6 +281,11 @@ keycode = 4194305
 
 [sub_resource type="Shortcut" id="Shortcut_81ubf"]
 events = [SubResource("InputEventKey_v5nsg")]
+
+[sub_resource type="Theme" id="Theme_pd6ol"]
+CheckBox/icons/checked = ExtResource("100_kkpsg")
+CheckBox/icons/unchecked = ExtResource("101_msmja")
+CheckBox/icons/unchecked_disabled = ExtResource("102_u1ej8")
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -536,9 +544,11 @@ item_7/id = 8
 [node name="Edit" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(121, 143)
-item_count = 1
+item_count = 2
 item_0/text = "Make local copy"
 item_0/id = 0
+item_1/text = "Clear Diff"
+item_1/id = 1
 
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
 title = "Save Project"
@@ -1253,6 +1263,22 @@ size_flags_horizontal = 3
 text = "1.0"
 emoji_menu_enabled = false
 
+[node name="Store diff" type="HBoxContainer" parent="Camera3D/Interface/Settings/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/Settings/VBoxContainer/Store diff"]
+layout_mode = 2
+tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
+mouse_filter = 1
+text = "Store diff of imported machines"
+
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/Settings/VBoxContainer/Store diff"]
+layout_mode = 2
+tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
+theme = SubResource("Theme_pd6ol")
+button_pressed = true
+
 [node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea", "transformGizmo")]
 enabled = false
 collision_mask = 35
@@ -1496,3 +1522,4 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/Settings" method="_on_close_pressed"]
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/Settings" method="_on_sheet_spacing_input_text_submitted"]
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/Settings" method="_on_movement_speed_input_text_submitted"]
+[connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/Settings" method="_on_check_box_toggled"]

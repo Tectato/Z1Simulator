@@ -114,6 +114,18 @@ func deserialize(source : Dictionary):
 		offset = position.y
 	updateCollider()
 
+func serializeDiff():
+	var out = {}
+	for part in parts:
+		var partDiff = part.serializeDiff()
+		if partDiff:
+			out.merge(partDiff)
+	return out
+
+func clearDiff():
+	for part in parts:
+		part.clearDiff()
+
 func addPart(newPart):
 	parts.append(newPart)
 	newPart.layer = self

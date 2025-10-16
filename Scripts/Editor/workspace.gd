@@ -15,6 +15,7 @@ var sheetSpacing = 0.045
 signal sheetSpacingChanged
 var moveSpeed = 1.0
 signal moveSpeedChanged
+var saveDiff = true
 
 @onready var uuidManager = $UUIDManager
 
@@ -183,7 +184,8 @@ func deserialize(path):
 		if entry["instance"]:
 			machinePath = PathHandler.toAbsolutePath(entry["path"])
 			PathHandler.setProjectDir(machinePath)
-		var newMachine = importMachine(entry["machine"], entry["instance"], machinePath)
+		var diff = entry["diff"] if entry.has("diff") else null
+		var newMachine = importMachine(entry["machine"], entry["instance"], machinePath, diff)
 		if entry.has("uuid"):
 			newMachine.uuid = int(entry["uuid"])
 			uuidManager.registerID(newMachine, newMachine.uuid)
@@ -228,7 +230,7 @@ func importMachines(src):
 		if entry.has("currentStepOverride"):
 			pass
 
-func importMachine(src, instance = false, path = ""):
+func importMachine(src, instance = false, path = "", diff = null):
 	var newMachine = MACHINE.instantiate()
 	machines.append(newMachine)
 	add_child(newMachine)
@@ -238,6 +240,8 @@ func importMachine(src, instance = false, path = ""):
 		newMachine.deserialize(src) # TODO: check whether machine or project
 	else:
 		newMachine.deserializeFromDict(src)
+	if diff:
+		newMachine.call_deferred("deserializeDiff", diff)
 	return newMachine
 
 func importSheet(path):

@@ -3,6 +3,9 @@ class_name Pin
 
 const INDICATOR = preload("res://Scenes/Parts/OutputIndicator.tscn")
 
+# output, output state, output directionality
+var storedStates = [false, false, 0]
+
 @export var normalMaterial : Material
 @export var staticMaterial : Material
 @export var shadedMaterial : Material
@@ -63,6 +66,9 @@ func deserialize(source : Dictionary):
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
+	
+	storedPos = position
+	storedStates = [output, outputState, directionality]
 	#if source.has("relations"):
 		#uuid = source["uuid"]
 		#for dict in source["relations"]:
@@ -73,6 +79,32 @@ func deserialize(source : Dictionary):
 				#"link":
 					#call_deferred("addRelationByUUID", Relation.Type.Link, otherUUID)
 	place()
+
+func serializeDiff():
+	var out = {}
+	var posModified = position.distance_to(storedPos) > Workspace.pinTravel / 2
+	var outStateModified = [output, outputState, directionality] != storedStates
+	if posModified:
+		out["pos_x"] = ("%0.4f" % position.x).rstrip("0")
+		out["pos_z"] = ("%0.4f" % position.z).rstrip("0")
+	if outStateModified:
+		out["output"] = [output, outputState, directionality]
+	if posModified or outStateModified:
+		return {uuid:out}
+	return null
+
+func deserializeDiff(diff):
+	if diff.has("pos_x"):
+		position = Vector3(float(diff["pos_x"]), position.y, float(diff["pos_z"]))
+		targetPos = position
+		restPos = position
+	if diff.has("output"):
+		var arr = diff["output"]
+		setOutput(arr[0])
+		if outputState != arr[1]:
+			flipOutput()
+		directionality = int(arr[2])
+		indicator.setDirection(directionality)
 
 func _ready() -> void:
 	color = standardColor

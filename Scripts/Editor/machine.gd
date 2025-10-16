@@ -234,6 +234,36 @@ func deserializeFromDict(source):
 	stepDiff = wrapi(stepDiff, 0, 3)
 	clock.offset = stepDiff
 
+func serializeDiff():
+	var out = {}
+	for layer in layers:
+		var layerDiff = layer.serializeDiff()
+		if layerDiff:
+			out.merge(layerDiff)
+	for part in globalPins:
+		var partDiff = part.serializeDiff()
+		if partDiff:
+			out.merge(partDiff)
+	for part in clockPins:
+		var partDiff = part.serializeDiff()
+		if partDiff:
+			out.merge(partDiff)
+	return out
+
+func deserializeDiff(diff : Dictionary):
+	for partUUID in diff.keys():
+		var part = uuidManager.getPart(int(partUUID))
+		if part:
+			part.deserializeDiff(diff[partUUID])
+
+func clearDiff():
+	for layer in layers:
+		layer.clearDiff()
+	for part in globalPins:
+		part.clearDiff()
+	for part in clockPins:
+		part.clearDiff()
+
 func makeLocal():
 	importedInstance = false
 	_draw_gizmo()

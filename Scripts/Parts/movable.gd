@@ -4,6 +4,8 @@ class_name Movable
 const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 const SPRING = preload("res://Scenes/Parts/Relations/Spring.tscn")
 
+var storedPos : Vector3
+
 @onready var restPos = position
 @onready var preMovePos = position
 @onready var targetPos = position
@@ -38,6 +40,16 @@ func _ready() -> void:
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
 	place()
+
+# Diff format: {uuid:{pos_x,pos_z,[part-specific stuff]}}
+func serializeDiff():
+	pass
+
+func deserializeDiff(diff : Dictionary):
+	pass
+
+func clearDiff():
+	pass
 
 func grabUUID():
 	if uuid < 0:

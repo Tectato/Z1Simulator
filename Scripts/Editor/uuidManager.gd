@@ -29,7 +29,7 @@ func getPart(id : int):
 	if parts.has(id):
 		return parts[id]
 	else:
-		print("Tried to get part through nonexistant UUID")
+		#print("Tried to get part through nonexistant UUID")
 		return null
 
 func clear():

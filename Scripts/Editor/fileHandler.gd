@@ -21,6 +21,8 @@ func extractMachines(path : String):
 						newMachine["rotation"] = machine["rotation"]
 					if machine.has("currentStepOverride"):
 						newMachine["currentStepOverride"] = machine["currentStepOverride"]
+					if machine.has("diff"):
+						newMachine["diff"] = machine["diff"]
 					out.append(newMachine)
 				else:
 					machine["instance"] = false
@@ -65,6 +67,10 @@ func compile(machines : Array):
 				"currentStepOverride":entry.clock.getCurrentStep(),
 				"uuid":entry.uuid
 			})
+			if Global.workspace.saveDiff:
+				var diff = entry.serializeDiff()
+				if diff:
+					out.back()["diff"] = diff
 		else:
 			out.append({
 				"machine":entry.serialize(),

@@ -9,6 +9,7 @@ const INPUTLINK = preload("res://Scenes/Parts/Relations/InputLink.tscn")
 @export var pulsing = false # If false, move forward in step X and back in step X+2. If true, move forward and back in X and don't move in X+2
 @export var input = false
 @export var activateNextCycle = false
+var storedInActivePos : bool
 var inActivePos = false
 var travel = Vector3(0,0,1) * Global.workspace.pinTravel #.rotated(Vector3.UP,-rotation.y)
 var travelIndicator : Node3D
@@ -201,6 +202,8 @@ func deserialize(source : Dictionary):
 	pulsing = bool(source["pulsing"])
 	input = bool(source["input"])
 	inActivePos = bool(source["active"] if source.has("active") else false)
+	storedPos = position
+	storedInActivePos = inActivePos
 	if source.has("id"):
 		rename(source["id"])
 	if source.has("uuid"):
@@ -208,6 +211,26 @@ func deserialize(source : Dictionary):
 		getMachine().uuidManager.registerID(self, uuid)
 	updateLabel()
 	place()
+
+func serializeDiff():
+	var out = {}
+	var posModified = position.distance_to(storedPos) > Workspace.pinTravel / 2
+	var stateModified = storedInActivePos != inActivePos
+	if posModified:
+		out["pos_x"] = ("%0.4f" % position.x).rstrip("0")
+		out["pos_z"] = ("%0.4f" % position.z).rstrip("0")
+	if stateModified:
+		out["active"] = inActivePos
+	if posModified or stateModified:
+		return {uuid:out}
+	return null
+
+func deserializeDiff(diff):
+	if diff.has("pos_x"):
+		position = Vector3(float(diff["pos_x"]), position.y, float(diff["pos_z"]))
+		targetPos = position
+	if diff.has("active"):
+		inActivePos = diff["active"]
 
 func _on_reset_timer_timeout() -> void:
 	if selected:
