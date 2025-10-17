@@ -226,3 +226,7 @@ func _on_edit_lock_toggled(toggled_on: bool) -> void:
 		$PartPlacers.show()
 	#for button in $PartPlacers.get_children():
 		#button.disabled = toggled_on
+
+
+func _on_help_id_pressed(id: int) -> void:
+	$HelpWindow.show()

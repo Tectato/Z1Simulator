@@ -13,6 +13,7 @@ func _ready() -> void:
 	#get_parent().selector.newSelection.connect(selectionChanged)
 	Global.workspace.showPowerFlowChanged.connect(visSettingChanged)
 	Simulator.rewind.connect(clearGizmos)
+	Simulator.step.connect(clockStep)
 
 func selectionChanged(newSelection):
 	if newSelection.is_empty():
@@ -20,6 +21,10 @@ func selectionChanged(newSelection):
 
 func visSettingChanged(value):
 	if !value:
+		clearGizmos()
+
+func clockStep():
+	if visualizedStep != Simulator.totalStep:
 		clearGizmos()
 
 func clearGizmos():
