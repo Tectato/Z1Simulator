@@ -97,8 +97,6 @@ func deserialize(source : Dictionary):
 		id = source["id"]
 	else:
 		id = path.get_file().trim_suffix(".svg")
-	if source.has("static"):
-		setFixed(true, false)
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
@@ -113,6 +111,8 @@ func deserialize(source : Dictionary):
 	if bounds.is_empty():
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	place()
+	if source.has("static"):
+		setFixed(true, false)
 
 func serializeDiff():
 	var out = {}
@@ -219,7 +219,8 @@ func updateConstraints():
 				#var newRelation = addRelation(Relation.Type.LinearConstraint, pin)
 				#if newRelation:
 					#newRelation.dir = hole.getGlobalDir()
-	setFixed(heightIndex == 0)
+	if heightIndex == 0:
+		setFixed(true)
 	for relation in relations:
 		if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
 			relation.call_deferred("delete")
@@ -641,7 +642,7 @@ func updateInteractionCandidates():
 			if numFixedPins >= 2:
 				setFixed(true)
 				return
-	if numFixedPins < 2:
+	if numFixedPins < 1:
 		setFixed(false)
 	interactionCandidates.sort_custom(sortByFixed)
 	updateConstraints()

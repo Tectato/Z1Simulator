@@ -184,11 +184,13 @@ func setHighlight(enabled : bool, highlightColor : Color):
 		PinRenderHandler.setColor("pin", meshIndex, color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else standardColor)
 
 func setHeight(value):
-	$MeshInstance3D.scale = Vector3(scale.x,value,scale.z)
-	$MeshInstance3D.position = Vector3.UP * 0.1 * value / 2
+	var effectiveHeight = value if fixed else value - 0.4
+	$MeshInstance3D.scale = Vector3(scale.x,effectiveHeight,scale.z)
+	$MeshInstance3D.position = Vector3.UP * 0.1 * effectiveHeight / 2
 	$Highlight.transform = $MeshInstance3D.transform
-	$Area3D.scale = Vector3(scale.x,value,scale.z)
-	$Area3D.position = Vector3.UP * 0.1 * value / 2
+	$Area3D.transform = $MeshInstance3D.transform
+	#$Area3D.scale = Vector3(scale.x,value,scale.z)
+	#$Area3D.position = Vector3.UP * 0.1 * value / 2
 	if output:
 		indicator.position = Vector3.UP * (value * 0.1 + 0.05)
 

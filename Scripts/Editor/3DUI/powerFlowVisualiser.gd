@@ -86,7 +86,7 @@ func visualizeChain(end : Movable):
 				if not other in searchQueue:
 					searchQueue.append(other)
 	if source == null:
-		print("Movement source not found")
+		#print("Movement source not found")
 		return
 	
 	var currentNode = source

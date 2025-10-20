@@ -15,6 +15,7 @@ export_credentials.cfg
 data_*/
 mono_crash.*.json
 
+Builds/
 Test/
 Sprites/Environment/
 
