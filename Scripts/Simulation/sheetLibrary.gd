@@ -23,7 +23,7 @@ func query(path : String):
 	else:
 		return null
 
-func registerSprite(user : Sheet, path : String, sprite : ImageTexture, polygon : PackedVector2Array):
+func registerSprite(user : Sheet, path : String, sprite : Texture, polygon : PackedVector2Array):
 	spriteDict[path] = sprite
 	polygonDict[path] = polygon
 	if users.has(path):

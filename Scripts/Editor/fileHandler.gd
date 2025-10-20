@@ -1,5 +1,12 @@
 extends Node
 
+func _ready() -> void:
+	if OS.get_name() == "Web":
+		pass
+		# Copy example machines to web user folder
+		#print("Trying to copy machine files")
+		#copy_dir_recursively("res://Test/", "Test/")
+
 func extractMachines(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if !source:
@@ -81,3 +88,23 @@ func compile(machines : Array):
 				"uuid":entry.uuid
 			})
 	return out
+
+# Taken from https://www.reddit.com/r/godot/comments/19f0mf2
+func copy_dir_recursively(source: String, destination: String):
+	DirAccess.make_dir_recursive_absolute(destination)
+	
+	var source_dir = DirAccess.open(source);
+	
+	for filename in source_dir.get_files():
+		#if ResourceLoader.exists(filename.rstrip(".import")):
+			#print(filename.get_file())
+		#else:
+			#print("No resource found for " + filename.get_file().rstrip(".import"))
+		var file = filename.rstrip(".import")
+		if file.ends_with("json") or file.ends_with("svg") or file.ends_with("png") or file.ends_with("jpg") or file.ends_with("jpeg"):
+			#print(file.get_file())
+			#OS.alert(source + filename, 'Datei erkannt')
+			source_dir.copy(source + filename, destination + filename)
+		
+	for dir in source_dir.get_directories():
+		self.copy_dir_recursively(source + dir + "/", destination + dir + "/")

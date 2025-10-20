@@ -251,7 +251,7 @@ func getBounds():
 func loadSVG(filepath : String):
 	path = filepath
 	if id.length() == 0:
-		id = path.get_file().trim_suffix(".svg") 
+		id = path.get_file().trim_suffix(".import").trim_suffix(".svg") 
 	#if path.is_absolute_path():
 		#path = ProjectSettings.localize_path(path)
 	var cached = SheetLibrary.query(path)
@@ -267,7 +267,20 @@ func loadSVG(filepath : String):
 			updateBakedMesh()
 		#return
 	else:
-		image = ImageTexture.create_from_image(Image.load_from_file(path))
+		if path.ends_with(".import"):
+			var imageTemp = Image.new()
+			if ResourceLoader.exists(path.rstrip(".import")):
+				print("Resource exists")
+			else:
+				print("Resource does not exist")
+			var resource = ResourceLoader.load(path.rstrip(".import"), "Image")
+			if !resource:
+				print("Failed to load " + path)
+			else:
+				#imageTemp = resource
+				image = resource#ImageTexture.create_from_image(imageTemp)
+		else:
+			image = ImageTexture.create_from_image(Image.load_from_file(path))
 	sprite.set_texture(image)
 	#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
