@@ -13,6 +13,7 @@ config_version=5
 config/name="Z1Simulator"
 run/main_scene="uid://cpd75raqrkglk"
 config/features=PackedStringArray("4.5", "Forward Plus")
+boot_splash/image="uid://bdy05k6xet86k"
 config/icon="res://icon.svg"
 
 [autoload]
