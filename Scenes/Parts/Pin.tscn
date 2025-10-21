@@ -20,15 +20,15 @@ render_priority = 0
 shader = ExtResource("2_ax1co")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_vqpos"]
-top_radius = 0.02
-bottom_radius = 0.02
+top_radius = 0.025
+bottom_radius = 0.025
 height = 0.1
 radial_segments = 8
 rings = 0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ax1co"]
 height = 0.1
-radius = 0.02
+radius = 0.025
 
 [node name="Pin" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
 script = ExtResource("1_ax1co")

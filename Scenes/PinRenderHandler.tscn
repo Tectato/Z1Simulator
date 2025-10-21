@@ -13,8 +13,8 @@ metallic = 1.0
 roughness = 0.1
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_qhqdv"]
-top_radius = 0.02
-bottom_radius = 0.02
+top_radius = 0.025
+bottom_radius = 0.025
 height = 0.1
 radial_segments = 8
 rings = 0

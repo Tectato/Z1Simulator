@@ -12,6 +12,7 @@ var storedStates = [false, false, 0]
 @export var highlightMaterial : Material
 
 var meshIndex = -1
+var diameter = 0.05
 var global = false
 var output = false
 var outputState = false
@@ -133,7 +134,7 @@ func _ready() -> void:
 	set_notify_transform(true)
 
 func getBounds():
-	return [Vector3(-0.02, 0, -0.02), Vector3(0.02, $MeshInstance3D.scale.y * 0.08, 0.02)]
+	return [Vector3(-0.025, 0, -0.025), Vector3(0.025, $MeshInstance3D.scale.y * 0.08, 0.025)]
 
 func setSelected(value):
 	super.setSelected(value)
@@ -185,7 +186,7 @@ func setHighlight(enabled : bool, highlightColor : Color):
 
 func setHeight(value):
 	var effectiveHeight = value if fixed else value - 0.4
-	$MeshInstance3D.scale = Vector3(scale.x,effectiveHeight,scale.z)
+	$MeshInstance3D.scale = Vector3(diameter/0.05,effectiveHeight,diameter/0.05)
 	$MeshInstance3D.position = Vector3.UP * 0.1 * effectiveHeight / 2
 	$Highlight.transform = $MeshInstance3D.transform
 	$Area3D.transform = $MeshInstance3D.transform
@@ -203,6 +204,8 @@ func setOutput(value):
 			indicator = INDICATOR.instantiate()
 			add_child(indicator)
 			indicator.position = Vector3.UP * ($Area3D.scale.y * 0.1 + 0.05)
+			indicator.setDirection(directionality)
+			indicator.setValue(outputState)
 		else:
 			indicator.queue_free()
 			indicator = null
@@ -262,6 +265,7 @@ func updateInteractionCandidates():
 	elif layer:
 		inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
 	
+	var minDiameter = 1.0
 	interactionCandidates.clear()
 	for sheet in inRange:
 		var hole = sheet.getIntersector(global_position)
@@ -269,7 +273,16 @@ func updateInteractionCandidates():
 			interactionCandidates.append(sheet)
 		else:
 			interactionCandidates.append(hole)
+			if hole is PointHole or hole is LongHole:
+				minDiameter = min(minDiameter, hole.radius * 2)
 	interactionCandidates.sort_custom(sortByFixed)
+	if minDiameter > 0.1:
+		minDiameter = 0.05
+	diameter = minDiameter
+	$MeshInstance3D.scale = Vector3(diameter/0.05,$MeshInstance3D.scale.y,diameter/0.05)
+	$Highlight.transform = $MeshInstance3D.transform
+	$Area3D.transform = $MeshInstance3D.transform
+	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 	#updateConstraints()
 
 func updateConstraints():
@@ -280,6 +293,7 @@ func updateConstraints():
 			#return
 
 func delete():
+	beingDeleted = true
 	PinRenderHandler.removeInstance("pin", meshIndex)
 	super.delete()
 	if machine:
