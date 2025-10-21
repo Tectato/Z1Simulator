@@ -608,6 +608,7 @@ size = Vector2i(640, 540)
 ok_button_text = "Open"
 file_mode = 0
 display_mode = 1
+access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface"]

@@ -1,7 +1,19 @@
 extends Node
 
 func _ready() -> void:
-	if OS.get_name() == "Web":
+	#if OS.get_name() == "Web":
+		#var path = OS.get_executable_path()
+		#print("Path: " + path)
+		var arr = DirAccess.get_files_at(".")
+		print("Files:")
+		for file in arr:
+			print(file)
+			if file.ends_with(".png"):
+				var image = Image.load_from_file(file)
+				if image:
+					print("Was able to read image")
+				else:
+					print("Failed to read image")
 		pass
 		# Copy example machines to web user folder
 		#print("Trying to copy machine files")
