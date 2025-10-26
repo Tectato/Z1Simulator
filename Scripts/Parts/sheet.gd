@@ -500,8 +500,8 @@ func addPolygon(segments, isOutline):
 				var displacement = prevSegmentDirOrth.normalized() * radius
 				var curveMidpoint = prevPoint + displacement
 				var curveDir = sign(radius)
-				const curveRes = 2
-				const angleDelta = (PI/2) / curveRes
+				var curveRes = max(1,floor(abs(radius) / 0.015))
+				var angleDelta = (PI/2) / curveRes
 				prevSegmentDir = displacement
 				for i in range(1,curveRes):
 					polygon.push_back(curveMidpoint - displacement.rotated(angleDelta * curveDir * i))
@@ -543,6 +543,7 @@ func projectDown(ray : RayCast3D):
 	#ray.force_raycast_update()
 	ray.clear_exceptions()
 	#var pos = ray.get_collision_point()
+	height = max(height, layer.global_position.y + 0.04)
 	return global_position * Vector3(1,0,1) + Vector3.UP * height
 
 # Cast down from every corner and hole center. Not 100% Exact but should work well enough in most cases

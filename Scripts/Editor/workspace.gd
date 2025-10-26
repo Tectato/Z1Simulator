@@ -46,6 +46,7 @@ var selectedLayer : Layer
 
 func _ready() -> void:
 	Global.workspace = self
+	$Baseplate.setBounds([Vector3(-10,0,-10), Vector3(10,0,10)])
 	createNew()
 	call_deferred("lateReady")
 

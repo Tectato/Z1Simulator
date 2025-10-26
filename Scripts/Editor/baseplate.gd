@@ -4,6 +4,7 @@ extends Node3D
 @onready var box = $MeshInstance3D/Area3D/CollisionShape3D
 
 func _ready() -> void:
+	visibility_changed.connect(visibilityChanged)
 	pass
 	#if get_parent() is Layer:
 		#Global.workspace.intermediatePlateVisChanged.connect(setVisible)
@@ -17,4 +18,8 @@ func setBounds(bounds = []):
 	var extents = bounds[1] - bounds[0]
 	mesh.position = ((bounds[0] - position) + extents/2) * Vector3(1,0,1) + Vector3(0,-0.01,0)
 	mesh.mesh.size = Vector2(extents.x, extents.z)
-	box.shape.size = extents * Vector3(1,0,1) + Vector3.UP * 0.1
+	box.scale = Vector3(extents.x, 1, extents.z)
+	box.disabled = !is_visible_in_tree()
+
+func visibilityChanged():
+	box.disabled = !is_visible_in_tree()
