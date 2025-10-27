@@ -17,7 +17,7 @@ func move():
 	if Simulator.running:
 		return
 	cast()
-	debug3.global_position = get_collision_point()
+	#debug3.global_position = get_collision_point()
 	var dragDelta = get_collision_point() - selector.mouseDragOrigin
 	if selector.selected.size() > 1 or selector.selected[0] is Machine:
 		dragDelta = snapped(dragDelta, Vector3(1,1,1)*Workspace.gridSize/8) * Vector3(1,0,1) + Vector3.UP * dragDelta.y

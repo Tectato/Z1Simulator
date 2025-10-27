@@ -2203,6 +2203,7 @@ visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
 [node name="Debug3" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_86asr")
 
 [node name="TransformGizmo" type="Node3D" parent="." node_paths=PackedStringArray("selector")]

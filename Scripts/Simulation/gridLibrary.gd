@@ -21,10 +21,12 @@ func executeUpdate():
 	toNotify.clear()
 	#print("Updating " + str(toUpdate.keys().size()) + " parts")
 	for part in toUpdate.keys():
+		if part == null: continue
 		unregisterPart(part, false)
 		if part is Sheet and part.heightIndex == 0: continue
 		registerPart(part, false)
 	for part in toUpdate.keys():
+		if part == null: continue
 		part.updateInteractionCandidates()
 	for existingPart in toNotify.keys():
 		if existingPart in toUpdate: continue

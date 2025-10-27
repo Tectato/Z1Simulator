@@ -339,6 +339,7 @@ func paste():
 		newPart.setSelected(true)
 		newPart.setFixed(part.fixed)
 		newPart.global_position = part.global_position
+		newPart.id = part.id
 		mouseRelative.push_back(Vector3(0,0,0))#TODO
 		partDragOrigins.push_back(part.global_position)
 		
@@ -351,8 +352,11 @@ func paste():
 			newPart.pulsing = part.pulsing
 			newPart.setInput(part.input)
 			newPart.inputCheckbox.setValue(part.inputCheckbox.checked)
+			newPart.activateNextCycle = part.activateNextCycle
 		elif newPart is Pin:
-			pass
+			newPart.directionality = part.directionality
+			newPart.outputState = part.outputState
+			newPart.setOutput(part.output)
 	placing = true
 
 func getMidPoint(selection):

@@ -173,6 +173,9 @@ func _process(delta: float) -> void:
 
 func _notification(what):
 	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted and is_visible_in_tree():
+		if getMachine().beingDeleted:
+			SheetLibrary.unregisterUser(self, path)
+			return
 		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func setSelected(value):
@@ -631,6 +634,10 @@ func updateHeight():
 
 func updateInteractionCandidates():
 	if !layer: return
+	if beingDeleted: return
+	if getMachine().beingDeleted:
+		SheetLibrary.unregisterUser(self, path)
+		return
 	var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
 	pinCandidates.clear()
 	pointConstraints.clear()

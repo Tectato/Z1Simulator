@@ -224,6 +224,9 @@ func executeFlip():
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
+		if getMachine().beingDeleted:
+			PinRenderHandler.removeInstance("pin", meshIndex)
+			return
 		PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 
 func snap(srcPos):
@@ -259,6 +262,10 @@ func rotatePart(by):
 		indicator.setDirection(directionality)
 
 func updateInteractionCandidates():
+	if beingDeleted: return
+	if getMachine().beingDeleted:
+		PinRenderHandler.removeInstance("pin", meshIndex)
+		return
 	var inRange = []
 	if machine:
 		inRange = machine.gridLibrary.getIntersectionCandidates(self)
@@ -286,11 +293,10 @@ func updateInteractionCandidates():
 	#updateConstraints()
 
 func updateConstraints():
-	pass
-	#for thing in interactionCandidates:
-		#if thing is PointHole and thing.get_parent().fixed:
-			#setFixed(true)
-			#return
+	for thing in interactionCandidates:
+		if thing is PointHole and thing.get_parent().fixed:
+			setFixed(true, false)
+			return
 
 func delete():
 	beingDeleted = true
