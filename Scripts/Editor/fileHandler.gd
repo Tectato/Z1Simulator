@@ -12,6 +12,8 @@ func extractMachines(path : String):
 				if machine.has("path"):
 					newMachine["machine"] = loadMachineFile(PathHandler.toAbsolutePath(machine["path"]))
 					newMachine["pos_x"] = machine["pos_x"]
+					if machine.has("pos_y"):
+						newMachine["pos_y"] = machine["pos_y"]
 					newMachine["pos_z"] = machine["pos_z"]
 					newMachine["instance"] = true
 					newMachine["path"] = machine["path"]
@@ -29,7 +31,7 @@ func extractMachines(path : String):
 					machine["path"] = path
 					out.append(machine)
 		else:
-			out.append({"machine":source["machines"],"pos_x":0.0,"pos_z":0.0, "instance" : false})
+			out.append({"machine":source["machines"],"pos_x":0.0,"pos_y":0.0,"pos_z":0.0, "instance" : false})
 		
 		if source.has("relations"):
 			out.append({"relations":source["relations"]})
@@ -37,7 +39,7 @@ func extractMachines(path : String):
 			out.append({"sequences":source["sequences"]})
 		return out
 	else:
-		return [{"machine":source,"pos_x":0.0,"pos_z":0.0, "instance" : false}]
+		return [{"machine":source,"pos_x":0.0,"pos_y":0.0,"pos_z":0.0, "instance" : false}]
 
 func loadMachineFile(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -62,6 +64,7 @@ func compile(machines : Array):
 			out.append({
 				"path":PathHandler.toRelativePath(entry.fullPath),
 				"pos_x":entry.global_position.x,
+				"pos_y":entry.global_position.y,
 				"pos_z":entry.global_position.z,
 				"rotation":rotation,
 				"currentStepOverride":entry.clock.getCurrentStep(),
@@ -75,6 +78,7 @@ func compile(machines : Array):
 			out.append({
 				"machine":entry.serialize(),
 				"pos_x":entry.global_position.x,
+				"pos_y":entry.global_position.y,
 				"pos_z":entry.global_position.z,
 				"rotation":rotation,
 				"currentStepOverride":entry.clock.getCurrentStep(),

@@ -287,7 +287,9 @@ func loadSVG(filepath : String):
 	sprite.set_texture(image)
 	#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
-	if cached and cached[0]:
+	if (cached and cached[0]):
+		return
+	if !holes.is_empty():
 		return
 	
 	var rawString = FileAccess.get_file_as_string(path)

@@ -41,8 +41,9 @@ func rename(newID : String):
 
 func setHeight(_value):
 	var maxHeight = 0.1
+	var machineOffset = getMachine().global_position.y
 	for thing in interactionCandidates:
-		maxHeight = max(maxHeight, thing.global_position.y)
+		maxHeight = max(maxHeight, thing.global_position.y - machineOffset)
 	maxHeight *= 10
 	maxHeight += 0.4
 	$MeshInstance3D.scale = Vector3(1,maxHeight,1)
@@ -168,7 +169,7 @@ func updateInActivePos():
 
 func serialize():
 	grabUUID()
-	var rotationY = int(round(rotation.y / (PI/2)))
+	var rotationY = wrapi(int(round(rotation.y / (PI/2))),0,4)
 	inActivePos = targetPos.distance_to(restPos) > Global.workspace.pinTravel/2
 	var output = {
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),

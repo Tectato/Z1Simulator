@@ -298,7 +298,7 @@ func _draw_gizmo() -> void:
 		gizmo.free()
 	var extents = (bounds[1]-bounds[0])
 	var color = Color(1.0,0.5,0.0,0.2) if importedInstance else Color(1.0,0.8,0.0,0.2)
-	gizmo = Gizmo3D.create_box_outline(color, extents, global_position + bounds[0] + extents/2 + Vector3.UP * 5 * global_position.y)
+	gizmo = Gizmo3D.create_box_outline(color, extents, global_position + bounds[0] + extents/2)
 
 func getBounds():
 	var min = Vector3(1,1,1) * 100000
@@ -310,6 +310,9 @@ func getBounds():
 			var offset = thing.position
 			var thingBounds = thing.getBounds()
 			#var extents = thingBounds[1] - thingBounds[0]
+			if thing is Pin:
+				thingBounds[0] = thingBounds[0] * Vector3(1,0,1)
+				thingBounds[1] = thingBounds[1] * Vector3(1,0,1) + Vector3(0,0.1,0)
 			var bMin = thingBounds[0] + offset
 			var bMax = thingBounds[1] + offset
 			min = Vector3(min(min.x,bMin.x),min(min.y,bMin.y),min(min.z,bMin.z))
@@ -355,7 +358,7 @@ func canModify():
 	return true
 
 func getValidMoveDirections():
-	return [true,false,true]
+	return [true,true,true]
 
 func isEmpty():
 	var empty = parts.get_children().is_empty()

@@ -199,7 +199,8 @@ func deserialize(path):
 		if entry.has("uuid"):
 			newMachine.uuid = int(entry["uuid"])
 			uuidManager.registerID(newMachine, newMachine.uuid)
-		newMachine.snap(Vector3(entry["pos_x"], 0, entry["pos_z"]))
+		#newMachine.snap()
+		newMachine.call_deferred("snap", Vector3(entry["pos_x"], entry["pos_y"] if entry.has("pos_y") else 0, entry["pos_z"]))
 		if entry.has("rotation"):
 			newMachine.rotatePart(entry["rotation"]*(PI/2))
 		if entry.has("currentStepOverride"):
