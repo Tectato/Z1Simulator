@@ -27,6 +27,10 @@ enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
 signal resolutionChanged(newRes)
 
+enum Selectability {Both, Sheets, Pins}
+var selectability = Selectability.Both
+signal selectabilityChanged(newSel)
+
 var intermediatePlateVis = false
 signal intermediatePlateVisChanged(newVis)
 
@@ -67,6 +71,11 @@ func setResolution(newRes):
 	if newRes != resolution:
 		resolution = newRes
 		resolutionChanged.emit(newRes)
+
+func setSelectability(newSel):
+	if newSel != selectability:
+		selectability = newSel
+		selectabilityChanged.emit(newSel)
 
 func setIntermediatePlateVis(newVis):
 	if newVis != intermediatePlateVis:

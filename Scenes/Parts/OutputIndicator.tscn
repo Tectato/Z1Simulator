@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://rmakeuwcgr1g"]
+[gd_scene load_steps=10 format=3 uid="uid://rmakeuwcgr1g"]
 
 [ext_resource type="Script" uid="uid://bvxt18whwp0rm" path="res://Scripts/Editor/3DUI/outputCheckbox.gd" id="1_jc0ww"]
 [ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="2_p5nrf"]
-[ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="3_ml58t"]
 [ext_resource type="Texture2D" uid="uid://b2fjioapdugm" path="res://Sprites/outputX.png" id="4_p5nrf"]
 [ext_resource type="Texture2D" uid="uid://dnlmdht4wr7a4" path="res://Sprites/outputY.png" id="5_ml58t"]
 
@@ -62,12 +61,12 @@ script = ExtResource("1_jc0ww")
 [node name="Checkbox" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 sorting_offset = 1.0
+billboard = 1
 double_sided = false
 alpha_cut = 1
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_n0si8")
 animation = &"false"
-script = ExtResource("3_ml58t")
 
 [node name="Directionality" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.05013243, 0)

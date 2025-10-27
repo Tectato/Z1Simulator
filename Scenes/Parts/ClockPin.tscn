@@ -130,6 +130,7 @@ shape = SubResource("BoxShape3D_vjs7e")
 [node name="Sprite" type="AnimatedSprite3D" parent="StepLabel/InputCheckbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
 sorting_offset = 1.0
+billboard = 1
 double_sided = false
 alpha_cut = 1
 texture_filter = 0

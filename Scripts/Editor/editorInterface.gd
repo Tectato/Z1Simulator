@@ -25,6 +25,9 @@ func _ready() -> void:
 func lateReady():
 	editor.selector.newSelection.connect(newSelection)
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
+	Global.workspace.selectabilityChanged.connect(selectabilityChanged)
+	$Toggles/ResolutionBar/Part/Selectability.cycled.connect(Global.workspace.setSelectability)
+	resolutionChanged(Workspace.Resolution.Part)
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -139,14 +142,18 @@ func _on_part_toggled(toggled_on: bool) -> void:
 func resolutionChanged(newRes : Workspace.Resolution):
 	$Toggles/ResolutionBar/Machine.set_pressed_no_signal(false)
 	$Toggles/ResolutionBar/Layer.set_pressed_no_signal(false)
-	$Toggles/ResolutionBar/Part.set_pressed_no_signal(false)
+	$Toggles/ResolutionBar/Part/Main.set_pressed_no_signal(false)
 	match(newRes):
 		Workspace.Resolution.Machine:
 			$Toggles/ResolutionBar/Machine.set_pressed_no_signal(true)
 		Workspace.Resolution.Layer:
 			$Toggles/ResolutionBar/Layer.set_pressed_no_signal(true)
 		Workspace.Resolution.Part:
-			$Toggles/ResolutionBar/Part.set_pressed_no_signal(true)
+			$Toggles/ResolutionBar/Part/Main.set_pressed_no_signal(true)
+	$Toggles/ResolutionBar/Part/Selectability.visible = newRes == Workspace.Resolution.Part
+
+func selectabilityChanged(newSel : Workspace.Selectability):
+	$Toggles/ResolutionBar/Part/Selectability.setIndex(int(newSel))
 
 func _on_renaming_box_text_submitted(new_text: String) -> void:
 	if toRename is Movable or toRename is Machine or toRename is Layer:

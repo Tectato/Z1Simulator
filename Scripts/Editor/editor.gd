@@ -94,6 +94,8 @@ func importSheet(path : String):
 
 func importSheets(paths : PackedStringArray):
 	saved = false
+	if workspace.selectability == Workspace.Selectability.Pins:
+		workspace.setSelectability(Workspace.Selectability.Both)
 	var newSheet
 	for path in paths:
 		newSheet = workspace.importSheet(path)
@@ -102,16 +104,22 @@ func importSheets(paths : PackedStringArray):
 
 func addPin():
 	saved = false
+	if workspace.selectability == Workspace.Selectability.Sheets:
+		workspace.setSelectability(Workspace.Selectability.Both)
 	selector.place(workspace.addPin())
 	previousAction = addPin
 
 func addGlobalPin():
 	saved = false
+	if workspace.selectability == Workspace.Selectability.Sheets:
+		workspace.setSelectability(Workspace.Selectability.Both)
 	selector.place(workspace.addGlobalPin())
 	previousAction = addGlobalPin
 
 func addClockPin():
 	saved = false
+	if workspace.selectability == Workspace.Selectability.Sheets:
+		workspace.setSelectability(Workspace.Selectability.Both)
 	selector.place(workspace.addClockPin())
 	previousAction = addClockPin
 

@@ -25,10 +25,16 @@ signal newSelection(parts)
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
+	Global.workspace.selectabilityChanged.connect(selectabilityChanged)
 
 func resolutionChanged(newRes):
 	deselect()
 	updateMask(newRes)
+
+func selectabilityChanged(_newSel):
+	deselect() #TODO make this smarter, only deselect what isn't covered by new sel
+	ignoreList.clear()
+	updateMask(Global.workspace.resolution)
 
 func updateMask(resolution):
 	match(resolution):
@@ -37,7 +43,13 @@ func updateMask(resolution):
 		Workspace.Resolution.Layer:
 			collision_mask = 0b101000
 		Workspace.Resolution.Part:
-			collision_mask = 0b100011
+			match(Global.workspace.selectability):
+				Workspace.Selectability.Both:
+					collision_mask = 0b100011
+				Workspace.Selectability.Sheets:
+					collision_mask = 0b100001
+				Workspace.Selectability.Pins:
+					collision_mask = 0b100010
 
 func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
