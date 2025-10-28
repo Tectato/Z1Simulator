@@ -104,9 +104,9 @@ func updateLayerPositions():
 		#layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * (height  + layer.offset)
 		if prevLayer:
 			var prevLayerBounds = prevLayer.getBounds()
-			layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * (prevLayerBounds[1].y + prevLayer.position.y + layer.offset)
+			layer.position = layer.position * Vector3(1,0,1) + Vector3.UP * (prevLayerBounds[1].y + prevLayer.position.y + layer.offset)
 		else:
-			layer.global_position = layer.global_position * Vector3(1,0,1) + Vector3.UP * layer.offset
+			layer.position = layer.position * Vector3(1,0,1) + Vector3.UP * layer.offset
 		layer.updateWidgets()
 		layer.updatePosition()
 		#height = height + max(layer.getBounds()[1].y,0.1) + 0.05

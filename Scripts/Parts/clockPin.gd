@@ -34,6 +34,12 @@ func _ready() -> void:
 	PinRenderHandler.setColor("pin", meshIndex, color)
 	set_notify_transform(true)
 
+func _process(delta: float) -> void:
+	var wasMoving = inMotion
+	super._process(delta)
+	if wasMoving and !inMotion:
+		updateInActivePos()
+
 func rename(newID : String):
 	super.rename(newID)
 	$StepLabel/InputCheckbox/IDLabel.text = newID
