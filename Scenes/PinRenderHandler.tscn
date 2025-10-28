@@ -2,15 +2,12 @@
 
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="1_iw2od"]
 [ext_resource type="Script" uid="uid://d1lxtwidrhv45" path="res://Scripts/Parts/pinRendererInit.gd" id="2_qhqdv"]
+[ext_resource type="Material" uid="uid://l2ekkd5symqs" path="res://Assets/PinShadedCompat.tres" id="2_ttsf7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qhqdv"]
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 roughness = 0.48
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iw2od"]
-metallic = 1.0
-roughness = 0.1
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_qhqdv"]
 top_radius = 0.025
@@ -22,7 +19,7 @@ rings = 0
 [node name="PinRenderHandler" type="Node"]
 script = ExtResource("1_iw2od")
 materialFlat = SubResource("StandardMaterial3D_qhqdv")
-materialShaded = SubResource("StandardMaterial3D_iw2od")
+materialShaded = ExtResource("2_ttsf7")
 
 [node name="Initialiser" type="Node" parent="."]
 script = ExtResource("2_qhqdv")

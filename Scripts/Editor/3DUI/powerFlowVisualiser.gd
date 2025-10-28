@@ -135,7 +135,7 @@ func visualizeChain(end : Movable):
 		var sampledColor = lineGradient.sample(float(i)/totalNodes)
 		# TODO: adjust this once sheet shading is fixed
 		if node is Sheet:
-			sampledColor = Color.from_hsv(sampledColor.h, sampledColor.s * 0.4, sampledColor.v * 0.5)
+			sampledColor = Color.from_hsv(sampledColor.h, sampledColor.s * 0.4, sampledColor.v * 0.8)
 		elif node is Pin:
 			sampledColor = Color.from_hsv(sampledColor.h, sampledColor.s * 0.4, sampledColor.v * 0.8)
 		node.setHighlight(true, sampledColor)

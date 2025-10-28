@@ -1,8 +1,21 @@
-[gd_resource type="Environment" format=3 uid="uid://dk7y0ukitmi7n"]
+[gd_resource type="Environment" load_steps=4 format=3 uid="uid://dk7y0ukitmi7n"]
+
+[ext_resource type="Texture2D" uid="uid://cx2xqv8oxwq2m" path="res://Sprites/Environment/aircraft_workshop_01_4k.exr" id="1_e6qwa"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3qeq6"]
+panorama = ExtResource("1_e6qwa")
+energy_multiplier = 2.0
+
+[sub_resource type="Sky" id="Sky_e6qwa"]
+sky_material = SubResource("PanoramaSkyMaterial_3qeq6")
 
 [resource]
+background_mode = 1
+background_color = Color(0.32915837, 0.3291584, 0.3291584, 1)
+sky = SubResource("Sky_e6qwa")
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
+reflected_light_source = 2
 ssao_radius = 0.16
 ssao_intensity = 4.3
 ssao_light_affect = 1.0

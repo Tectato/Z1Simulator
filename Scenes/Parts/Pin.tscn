@@ -1,19 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://b7jvhmxdbxm1d"]
+[gd_scene load_steps=7 format=3 uid="uid://b7jvhmxdbxm1d"]
 
 [ext_resource type="Script" uid="uid://3ryssge2xugi" path="res://Scripts/Parts/pin.gd" id="1_ax1co"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_ax1co"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqpos"]
-albedo_color = Color(0.589096, 0.589096, 0.589096, 1)
-roughness = 0.48
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ax1co"]
-albedo_color = Color(0.099986, 0.099986, 0.099986, 1)
-roughness = 0.38
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ag57m"]
-metallic = 1.0
-roughness = 0.1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ag57m"]
 render_priority = 0
@@ -26,16 +14,16 @@ height = 0.1
 radial_segments = 8
 rings = 0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vqpos"]
+albedo_color = Color(0.589096, 0.589096, 0.589096, 1)
+roughness = 0.48
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ax1co"]
 height = 0.1
 radius = 0.025
 
 [node name="Pin" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
 script = ExtResource("1_ax1co")
-normalMaterial = SubResource("StandardMaterial3D_vqpos")
-staticMaterial = SubResource("StandardMaterial3D_ax1co")
-shadedMaterial = SubResource("StandardMaterial3D_ag57m")
-highlightMaterial = SubResource("ShaderMaterial_ag57m")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 

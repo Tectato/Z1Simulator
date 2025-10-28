@@ -1,15 +1,16 @@
 extends GeometryInstance3D
 
-@export var materialFlat : Material
-@export var materialShaded : Material
+#@export var materialFlat : Material
+#@export var materialShaded : Material
 
 @onready var parent = get_parent()
-const standardColor = Color(0.078, 0.257, 0.71, 1.0)
+#const standardColor = Color(0.078, 0.257, 0.71, 1.0)
 #const standardColor = Color(0.239, 0.411, 0.834, 1.0)
+const standardColor = Color(0.22, 0.518, 0.918, 1.0)
 #const standardColor = Color("3d9ee2ff")
 var markerColor = standardColor
 var currentColor = standardColor
-var fixedFac = 0.5 #0.7
+var fixedFac = 0.7 #0.5
 
 func visModeChanged(mode : Editor.VisMode):
 	updateMaterial()
@@ -19,13 +20,13 @@ func updateMaterial():
 		Editor.VisMode.Monochrome:
 			currentColor = Color(0.58,0.58,0.58)
 			#currentColor = Color(0.7,0.7,0.7)
-			material_override = materialFlat
+			#material_override = materialFlat
 		Editor.VisMode.Colorcoded:
 			currentColor = markerColor
-			material_override = materialFlat
+			#material_override = materialFlat
 		Editor.VisMode.Realistic:
 			currentColor = Color(0.5,0.5,0.5)
-			material_override = materialFlat if parent.selected else materialShaded
+			#material_override = materialFlat if parent.selected else materialShaded
 	if parent.selected:
 		currentColor = currentColor.blend(Color(1.0, 0.4, 0.4, 0.75))
 	if parent.fixed:

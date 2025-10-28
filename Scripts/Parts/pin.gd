@@ -6,11 +6,6 @@ const INDICATOR = preload("res://Scenes/Parts/OutputIndicator.tscn")
 # output, output state, output directionality
 var storedStates = [false, false, 0]
 
-@export var normalMaterial : Material
-@export var staticMaterial : Material
-@export var shadedMaterial : Material
-@export var highlightMaterial : Material
-
 var meshIndex = -1
 var diameter = 0.05
 var global = false

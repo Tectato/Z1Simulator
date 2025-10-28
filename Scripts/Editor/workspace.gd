@@ -19,6 +19,8 @@ var saveDiff = true
 
 @onready var uuidManager = $UUIDManager
 
+@export var compatibility_mode = false
+
 # Select: Select & move things - Manage: Define inputs/outputs, link Machines together
 enum Mode {Select, Manage}
 var editMode = Mode.Select
@@ -65,6 +67,8 @@ func setMode(newMode):
 func visModeChanged(mode : Editor.VisMode):
 	var shaded = mode == Editor.VisMode.Realistic
 	$DirectionalLight3D.shadow_enabled = shaded
+	if compatibility_mode:
+		$DirectionalLight3D.light_energy = 0.3 if shaded else 1.0
 	$WorldEnvironment.environment.ssao_enabled = shaded
 
 func setResolution(newRes):

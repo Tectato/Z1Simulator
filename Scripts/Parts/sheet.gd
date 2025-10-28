@@ -1000,10 +1000,10 @@ func snapRotation():
 
 func setColor(newColor : Color):
 	var adjustedColor = Color(newColor)
-	adjustedColor.s = adjustedColor.s * 0.8
-	#adjustedColor.s = adjustedColor.s * 0.6
-	adjustedColor.v = adjustedColor.v * 0.5
-	#adjustedColor.v = adjustedColor.v * 0.7
+	#adjustedColor.s = adjustedColor.s * 0.8
+	adjustedColor.s = adjustedColor.s * 0.6
+	#adjustedColor.v = adjustedColor.v * 0.5
+	adjustedColor.v = adjustedColor.v * 0.7
 	color = adjustedColor
 	#sprite.set_instance_shader_parameter("partColor", vec3)
 	mesh.setColor(color)

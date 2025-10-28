@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
 [ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
-[ext_resource type="Environment" uid="uid://dr6irue526biy" path="res://Assets/HighQEnv.tres" id="3_jtmtj"]
+[ext_resource type="Environment" uid="uid://dk7y0ukitmi7n" path="res://Assets/LowQEnv.tres" id="3_jtmtj"]
 [ext_resource type="PackedScene" uid="uid://b6256ek8c667t" path="res://Scenes/UUIDManager.tscn" id="4_me6lg"]
 [ext_resource type="Texture2D" uid="uid://djqys18a08smf" path="res://Sprites/arrow.png" id="6_lxv6g"]
 
@@ -11,6 +11,7 @@ viewport_path = NodePath("AxesViewport")
 
 [node name="Workspace" type="Node3D"]
 script = ExtResource("1_lxv6g")
+compatibility_mode = true
 
 [node name="Baseplate" parent="." instance=ExtResource("2_fpxkw")]
 
@@ -23,8 +24,9 @@ directional_shadow_mode = 1
 environment = ExtResource("3_jtmtj")
 
 [node name="Axes" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.009800587, 0)
 axis = 1
+texture_filter = 0
 texture = SubResource("ViewportTexture_jtmtj")
 
 [node name="AxesViewport" type="SubViewport" parent="."]
@@ -34,13 +36,13 @@ canvas_item_default_texture_filter = 0
 [node name="X" type="Line2D" parent="AxesViewport"]
 position = Vector2(256, 256)
 points = PackedVector2Array(0, 0, 256, 0)
-width = 1.0
+width = 2.0
 default_color = Color(1, 0, 0, 1)
 
 [node name="Y" type="Line2D" parent="AxesViewport"]
 position = Vector2(256, 256)
 points = PackedVector2Array(0, 0, 0, 256)
-width = 1.0
+width = 2.0
 default_color = Color(0, 1, 0, 1)
 
 [node name="XLabel" type="Label" parent="AxesViewport"]
