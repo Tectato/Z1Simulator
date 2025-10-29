@@ -255,6 +255,8 @@ func importMachine(src, instance = false, path = "", diff = null):
 		newMachine.deserialize(src) # TODO: check whether machine or project
 	else:
 		newMachine.deserializeFromDict(src)
+	if newMachine.id.length() == 0 and path.length() > 0:
+		newMachine.id = path.get_file().trim_suffix(".json")
 	if diff:
 		newMachine.call_deferred("deserializeDiff", diff)
 	return newMachine
@@ -349,3 +351,49 @@ func vround(a : Vector2, b : Vector2):
 	var aScaled = Vector2(a.x/b.x, a.y/b.y)
 	var aRounded = round(aScaled)
 	return Vector2(aRounded.x * b.x, aRounded.y * b.y)
+
+func exportPaths():
+	var out = {}
+	
+	for machine in machines:
+		if machine.fullPath.length() > 0:
+			var pathArr = machine.fullPath.split("/")
+			insertSingleEntry(out, pathArr)
+		for part in machine.uuidManager.parts.values():
+			if part is Sheet:
+				var pathArr = part.path.split("/")
+				insertSingleEntry(out, pathArr)
+		for layer in machine.layers:
+			if layer.plan:
+				var pathArr = layer.plan.imagePath.split("/")
+				insertSingleEntry(out, pathArr)
+	
+	if !out.is_empty():
+		var path = Global.editor.currentlyLoadedPath
+		path = path.get_base_dir() + "/" + path.get_file().trim_suffix(".json") + "_paths.json"
+		var newFile = FileAccess.open(path, FileAccess.WRITE)
+		if newFile:
+			newFile.store_string(JSON.stringify(out))
+			newFile.close()
+			print("Saved sheet paths at " + path)
+		else:
+			print("Could not write file for project")
+	else:
+		print("No project loaded")
+
+func buildPathDict(arr = [], i = 0):
+	if i < arr.size() - 1:
+		return {arr[i]:buildPathDict(arr, i+1)}
+	return arr[i]
+
+func insertSingleEntry(target = {}, source = []):
+	var workingDict = target
+	for entry in source:
+		if entry.ends_with(".svg") or entry.ends_with(".png") or entry.ends_with(".jpg") or entry.ends_with(".jpeg"):
+			if !workingDict.has(entry):
+				workingDict[entry] = ""
+			workingDict = workingDict[entry]
+		else:
+			if !workingDict.has(entry):
+				workingDict[entry] = {}
+			workingDict = workingDict[entry]

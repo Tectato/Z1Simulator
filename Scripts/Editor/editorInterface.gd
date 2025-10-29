@@ -234,6 +234,8 @@ func _on_edit_lock_toggled(toggled_on: bool) -> void:
 	#for button in $PartPlacers.get_children():
 		#button.disabled = toggled_on
 
-
 func _on_help_id_pressed(id: int) -> void:
 	$HelpWindow.show()
+
+func _on_path_export_pressed() -> void:
+	Global.workspace.exportPaths()

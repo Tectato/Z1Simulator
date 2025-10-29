@@ -39,6 +39,8 @@ func _process(delta: float) -> void:
 			if orthographic:
 				orthographic = false
 				projection = Camera3D.PROJECTION_PERSPECTIVE
+				translate_object_local(Vector3.DOWN * 0.01)
+				updateZoom()
 			var lookDelta = -mouseDelta * Global.lookSensitivity
 			var posRelative = global_position - focusPoint.global_position
 			var posRelativeFlat = posRelative * Vector3(1,0,1)
@@ -63,6 +65,9 @@ func handleOrthoInputs():
 		orthographic = !orthographic
 		if orthographic:
 			rotation_degrees = Vector3(-90,0,0) + Vector3.UP * snappedi(rotation_degrees.y, 90)
+		else:
+			translate_object_local(Vector3.DOWN * 0.01)
+			updateZoom()
 	if Input.is_action_just_pressed("nav_ortho_north"):
 		orthographic = true
 		rotation_degrees = Vector3(-90,0,0)

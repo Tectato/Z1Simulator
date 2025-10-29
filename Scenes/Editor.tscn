@@ -512,7 +512,7 @@ debug2 = NodePath("../Debug2")
 debug3 = NodePath("../Debug3")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint", "debugLabel")]
-transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.499999, -0.707107, -0.353553, 0.612372, 2, 2, 2)
+transform = Transform3D(0.70710695, -0.353553, 0.61237186, 0, 0.8660249, 0.49999925, -0.70710695, -0.353553, 0.61237186, 2, 2, 2)
 current = true
 script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
@@ -1339,6 +1339,14 @@ tooltip_text = "If enabled, saves things like part positions of imported machine
 theme = SubResource("Theme_pd6ol")
 button_pressed = true
 
+[node name="PathExport" type="Button" parent="Camera3D/Interface"]
+visible = false
+layout_mode = 0
+offset_left = 130.0
+offset_right = 237.0
+offset_bottom = 31.0
+text = "Export paths"
+
 [node name="HelpWindow" type="Window" parent="Camera3D/Interface"]
 oversampling_override = 1.0
 initial_position = 1
@@ -1486,6 +1494,17 @@ autowrap_mode = 2
 [node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="Label7" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b][Numpad 5][/b] -> Toggle orthogonal top-down view"
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator8" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="Interface" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
 visible = false
 layout_mode = 2
@@ -1550,6 +1569,35 @@ label_settings = SubResource("LabelSettings_u1ej8")
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Configures which type of elements you interact with. (Parts, Layers, Machines)"
+autowrap_mode = 2
+
+[node name="Masking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer/Control"]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("31_gtbin")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer"]
+layout_mode = 2
+text = "Masking"
+label_settings = SubResource("LabelSettings_u1ej8")
+
+[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "Cycles which types of elements ([color=00C2FF]sheets[/color], [color=00FF97]pins[/color]) are selectable"
+fit_content = true
 autowrap_mode = 2
 
 [node name="VisMode" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
@@ -1711,6 +1759,34 @@ label_settings = SubResource("LabelSettings_msmja")
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Toggles whether the placement grid is shown for all layers."
+autowrap_mode = 2
+
+[node name="Locking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header"]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header/Control"]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("34_jk3a4")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header"]
+layout_mode = 2
+text = "Lock editing"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+text = "If active, prevents you from accidentally moving parts of a finished machine."
 autowrap_mode = 2
 
 [node name="Editing" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
@@ -2449,3 +2525,4 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/Settings" method="_on_sheet_spacing_input_text_submitted"]
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/Settings" method="_on_movement_speed_input_text_submitted"]
 [connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/Settings" method="_on_check_box_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]

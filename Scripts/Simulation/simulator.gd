@@ -3,6 +3,8 @@ extends Node
 const EVENTINDICATOR = preload("res://Scenes/Visualisation/EventIndicator.tscn")
 enum Direction {XP, YP, XN, YN}
 
+@export var showRotationIndicators = false
+
 var currentStep = 3
 var totalStep = 3
 var running = false
@@ -87,6 +89,8 @@ func _on_auto_clock_timeout() -> void:
 	next(false)
 
 func spawnIndicator(origin : Node3D, type : EventIndicator.Type):
+	if type == EventIndicator.Type.Turn and !showRotationIndicators:
+		return
 	var indicator = EVENTINDICATOR.instantiate()
 	add_child(indicator)
 	indicator.global_position = origin.global_position
