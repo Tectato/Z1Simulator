@@ -986,6 +986,7 @@ func getPivot():
 		return null
 
 func rotatePart(by):
+	rotation.y = snappedf(rotation.y, PI/2)
 	super.rotatePart(by)
 	updateRotation()
 
