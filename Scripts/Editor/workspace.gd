@@ -5,6 +5,7 @@ const MACHINE = preload("res://Scenes/Machine.tscn")
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
+const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
 
 const pinTravel = 0.08
 const staticPinRadius = 0.03
@@ -16,15 +17,12 @@ signal sheetSpacingChanged
 var moveSpeed = 1.0
 signal moveSpeedChanged
 var saveDiff = true
+var comments = []
 
 @onready var uuidManager = $UUIDManager
 
 @export var compatibility_mode = false
 
-# Select: Select & move things - Manage: Define inputs/outputs, link Machines together
-enum Mode {Select, Manage}
-var editMode = Mode.Select
-signal modeChanged(newMode)
 enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
 signal resolutionChanged(newRes)
@@ -58,11 +56,6 @@ func _ready() -> void:
 
 func lateReady():
 	Global.editor.visModeChanged.connect(visModeChanged)
-
-func setMode(newMode):
-	if newMode != editMode:
-		modeChanged.emit(newMode)
-	editMode = newMode
 
 func visModeChanged(mode : Editor.VisMode):
 	var shaded = mode == Editor.VisMode.Realistic
@@ -212,7 +205,6 @@ func deserialize(path):
 			pass
 		PathHandler.setProjectDir(projectDirTemp)
 	if !machines.is_empty():
-		setMode(Mode.Select)
 		setResolution(Resolution.Machine)
 		selectedMachine = machines.back()
 		Global.editor.selector.select(selectedMachine.collider)
@@ -263,7 +255,6 @@ func importMachine(src, instance = false, path = "", diff = null):
 
 func importSheet(path):
 	createIfNotExists()
-	setMode(Mode.Select)
 	setResolution(Resolution.Part)
 	var cached = SheetLibrary.query(path)
 	var newSheet
@@ -284,7 +275,6 @@ func duplicateSheet(source, path):
 
 func addPin():
 	createIfNotExists()
-	setMode(Mode.Select)
 	setResolution(Resolution.Part)
 	var newPin = PIN.instantiate()
 	selectedLayer.addPart(newPin)
@@ -293,18 +283,23 @@ func addPin():
 func addGlobalPin():
 	createIfNotExists()
 	setResolution(Resolution.Part)
-	setMode(Mode.Select)
 	var newPin = PIN.instantiate()
 	selectedMachine.addGlobalPin(newPin)
 	return newPin
 
 func addClockPin():
 	createIfNotExists()
-	setMode(Mode.Select)
 	setResolution(Resolution.Part)
 	var newPin = CLOCKPIN.instantiate()
 	selectedMachine.addClockPin(newPin)
 	return newPin
+
+func addComment():
+	setResolution(Resolution.Part)
+	var newComment = COMMENT.instantiate()
+	add_child(newComment)
+	comments.append(newComment)
+	return newComment
 
 func createIfNotExists():
 	if machines.is_empty():

@@ -77,9 +77,6 @@
 [ext_resource type="Texture2D" uid="uid://b3vruo2ckl63" path="res://Sprites/Buttons/SceneTree/hide.png" id="42_3icuf"]
 [ext_resource type="Texture2D" uid="uid://cbgagclwkqade" path="res://Sprites/Buttons/SceneTree/show.png" id="43_1bbve"]
 [ext_resource type="Texture2D" uid="uid://y1aq8vjhau7j" path="res://Sprites/Buttons/SceneTree/hide_lit.png" id="44_8ktkl"]
-[ext_resource type="Texture2D" uid="uid://dtk2p0tybx1m7" path="res://Sprites/Buttons/Parts/staticPin.png" id="46_86asr"]
-[ext_resource type="Texture2D" uid="uid://bligl5dbocjqe" path="res://Sprites/Buttons/Parts/staticPin_active.png" id="47_12riw"]
-[ext_resource type="Texture2D" uid="uid://bphpq6htm6nbr" path="res://Sprites/Buttons/Parts/staticPin_lit.png" id="48_2gkkl"]
 [ext_resource type="Script" uid="uid://cxd3fkwtr80us" path="res://Scripts/Editor/SideWindow.gd" id="51_12riw"]
 [ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
 [ext_resource type="Texture2D" uid="uid://drcn2gkyoxtg4" path="res://Sprites/Buttons/Parts/sheet_locked.png" id="52_v5nsg"]
@@ -104,8 +101,11 @@
 [ext_resource type="Texture2D" uid="uid://c5086h3nigrd7" path="res://Sprites/Buttons/ProgramInterface/add.png" id="77_uima5"]
 [ext_resource type="Texture2D" uid="uid://h0ki0tf2su2a" path="res://Sprites/Buttons/Generic/close.png" id="77_v2xkj"]
 [ext_resource type="Texture2D" uid="uid://c0j0rqw7w7le" path="res://Sprites/Buttons/ProgramInterface/add_lit.png" id="78_gidbq"]
+[ext_resource type="Texture2D" uid="uid://y8nsrc447kmx" path="res://Sprites/Buttons/Parts/comment.png" id="78_qnh42"]
 [ext_resource type="Texture2D" uid="uid://cuww8ivyn1bu7" path="res://Sprites/Buttons/Generic/close_lit.png" id="78_rgbjt"]
+[ext_resource type="Texture2D" uid="uid://bu3bkckauy372" path="res://Sprites/Buttons/Parts/comment_active.png" id="79_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
+[ext_resource type="Texture2D" uid="uid://bdl35a0b55bc6" path="res://Sprites/Buttons/Parts/comment_lit.png" id="80_i1mcn"]
 [ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
 [ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
 [ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
@@ -927,13 +927,12 @@ texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
 texture_disabled = ExtResource("64_ybrqq")
 
-[node name="StaticPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
-visible = false
+[node name="Comment" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
 layout_mode = 2
-tooltip_text = "Place clock pin"
-texture_normal = ExtResource("46_86asr")
-texture_pressed = ExtResource("47_12riw")
-texture_hover = ExtResource("48_2gkkl")
+tooltip_text = "Place comment"
+texture_normal = ExtResource("78_qnh42")
+texture_pressed = ExtResource("79_5ko8x")
+texture_hover = ExtResource("80_i1mcn")
 
 [node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface"]
 own_world_3d = true
@@ -2306,7 +2305,6 @@ visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
 [node name="Debug3" type="MeshInstance3D" parent="."]
-visible = false
 mesh = SubResource("SphereMesh_86asr")
 
 [node name="TransformGizmo" type="Node3D" parent="." node_paths=PackedStringArray("selector")]
@@ -2511,6 +2509,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/LogicPin" to="." method="addPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
+[connection signal="pressed" from="Camera3D/Interface/PartPlacers/Comment" to="." method="addComment"]
 [connection signal="toggled" from="Camera3D/Interface/SideWindow/Hide" to="Camera3D/Interface/SideWindow" method="_on_hide_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
 [connection signal="button_down" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_down"]

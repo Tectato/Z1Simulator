@@ -123,6 +123,11 @@ func addClockPin():
 	selector.place(workspace.addClockPin())
 	previousAction = addClockPin
 
+func addComment():
+	saved = false
+	selector.place(workspace.addComment())
+	previousAction = addComment
+
 func addMachine():
 	workspace.createNew()
 	previousAction = doNothing

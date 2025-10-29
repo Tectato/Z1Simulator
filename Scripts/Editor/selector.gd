@@ -306,7 +306,7 @@ func setSpinGrabpoint():
 		mouseDragOrigin = point
 		mover.initRot(sheet)
 
-func place(part : Movable):
+func place(part : Selectable):
 	select(part.collider)
 	setGrabpoint()
 	var bounds = part.getBounds()

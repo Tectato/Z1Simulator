@@ -4,7 +4,7 @@ extends Camera3D
 @export var debugLabel : Label
 @onready var interface = $Interface
 var mousePos = Vector2(0,0)
-var zoomLevel = 2
+var zoomLevel = 4
 var zoomFactor = 1.1
 var orthographic = false
 
@@ -54,6 +54,7 @@ func _process(delta: float) -> void:
 			look_at(focusPoint.global_position)
 
 func updateZoom():
+	zoomLevel = clampf(zoomLevel, 0.1, 20)
 	var posRelative = global_position - focusPoint.global_position
 	posRelative = posRelative.normalized() * zoomLevel
 	global_position = focusPoint.global_position + posRelative

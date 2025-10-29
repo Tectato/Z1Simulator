@@ -15,6 +15,7 @@ extends Control
 @onready var ModeSelect = $Toggles/ModeBar/Select
 @onready var ModeManage = $Toggles/ModeBar/Manage
 
+const WebRootFolder = "/Machines"
 var toRename : Node
 
 func _ready() -> void:
@@ -28,6 +29,12 @@ func lateReady():
 	Global.workspace.selectabilityChanged.connect(selectabilityChanged)
 	$Toggles/ResolutionBar/Part/Selectability.cycled.connect(Global.workspace.setSelectability)
 	resolutionChanged(Workspace.Resolution.Part)
+	
+	if OS.get_name() == "Web":
+		saveDialog.root_subfolder = WebRootFolder
+		loadProjectDialog.root_subfolder = WebRootFolder
+		importProjectDialog.root_subfolder = WebRootFolder
+		importSheetDialog.root_subfolder = WebRootFolder
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -91,14 +98,6 @@ func _on_edit_id_pressed(id: int) -> void:
 
 func requestSheet():
 	importSheetDialog.popup()
-
-func _on_select_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		Global.workspace.setMode(Workspace.Mode.Select)
-
-func _on_manage_toggled(toggled_on: bool) -> void:
-	if toggled_on:
-		Global.workspace.setMode(Workspace.Mode.Manage)
 
 func _on_import_choice_confirmed() -> void:
 	editor.importProjectInstace()

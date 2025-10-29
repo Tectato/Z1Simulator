@@ -1,0 +1,87 @@
+[gd_scene load_steps=10 format=3 uid="uid://bu5oitkrdecwu"]
+
+[ext_resource type="Script" uid="uid://3tl6s4c33nkv" path="res://Scripts/Editor/3DUI/commentBox.gd" id="1_7o6ib"]
+[ext_resource type="Texture2D" uid="uid://5p1j1tvxbvqy" path="res://Sprites/circle.png" id="1_drlcm"]
+[ext_resource type="Script" uid="uid://dtl50a165cqmj" path="res://Scripts/Editor/3DUI/corner.gd" id="2_lmhax"]
+[ext_resource type="Texture2D" uid="uid://bpefxp0liiw2" path="res://Sprites/circleSmall.png" id="3_oe143"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kx8te"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.6627451, 0, 0.13725491)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7o6ib"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.6627451, 0, 0.24313726)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kx8te"]
+resource_local_to_scene = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_drlcm"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_drlcm"]
+radius = 0.1
+
+[node name="CommentBox" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
+script = ExtResource("1_7o6ib")
+materialNormal = SubResource("StandardMaterial3D_kx8te")
+materialSelected = SubResource("StandardMaterial3D_7o6ib")
+collider = NodePath("Area3D")
+mesh = NodePath("Area3D/MeshInstance3D")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 3
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_kx8te")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
+material_override = SubResource("StandardMaterial3D_kx8te")
+mesh = SubResource("BoxMesh_drlcm")
+skeleton = NodePath("../..")
+
+[node name="CornerA" type="Node3D" parent="." node_paths=PackedStringArray("collider")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, -0.5, -0.5)
+visible = false
+script = ExtResource("2_lmhax")
+spriteUnselected = ExtResource("3_oe143")
+spriteSelected = ExtResource("1_drlcm")
+collider = NodePath("Area3D")
+
+[node name="Area3D" type="Area3D" parent="CornerA"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CornerA/Area3D"]
+shape = SubResource("SphereShape3D_drlcm")
+
+[node name="Sprite3D" type="Sprite3D" parent="CornerA"]
+modulate = Color(1, 0.7176471, 0, 0.78431374)
+billboard = 1
+texture_filter = 0
+texture = ExtResource("3_oe143")
+
+[node name="CornerB" type="Node3D" parent="." node_paths=PackedStringArray("collider")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)
+visible = false
+script = ExtResource("2_lmhax")
+spriteUnselected = ExtResource("3_oe143")
+spriteSelected = ExtResource("1_drlcm")
+collider = NodePath("Area3D")
+
+[node name="Area3D" type="Area3D" parent="CornerB"]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CornerB/Area3D"]
+shape = SubResource("SphereShape3D_drlcm")
+
+[node name="Sprite3D" type="Sprite3D" parent="CornerB"]
+modulate = Color(1, 0.7176471, 0, 0.78431374)
+billboard = 1
+texture_filter = 0
+texture = ExtResource("3_oe143")

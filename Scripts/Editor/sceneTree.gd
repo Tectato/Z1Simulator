@@ -23,7 +23,6 @@ func updateSceneTree():
 func cellSelected():
 	var cell = tree.get_selected()
 	var isMachine = cell.get_parent().get_parent() == null
-	Global.workspace.setMode(Workspace.Mode.Select)
 	if isMachine:
 		Global.workspace.setResolution(Workspace.Resolution.Machine)
 		selector.select(Global.workspace.machines[cell.get_index()].collider)
