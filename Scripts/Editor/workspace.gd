@@ -112,6 +112,8 @@ func clear():
 		machines[0].delete()
 	#Simulator.setStep()
 	interMachineRelations.clear()
+	selectedMachine = null
+	selectedLayer = null
 
 func createNew():
 	var newMachine = MACHINE.instantiate()
@@ -303,6 +305,7 @@ func addClockPin():
 	return newPin
 
 func addComment():
+	createIfNotExists()
 	setResolution(Resolution.Part)
 	var newComment = COMMENT.instantiate()
 	selectedMachine.addComment(newComment)

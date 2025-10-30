@@ -280,6 +280,7 @@ func place():
 	setHeight(0.1)
 
 func updateInteractionCandidates():
+	if beingDeleted: return
 	super.updateInteractionCandidates()
 	setHeight(0.1)
 

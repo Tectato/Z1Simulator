@@ -693,7 +693,7 @@ theme_override_constants/separation = 1
 [node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
 layout_mode = 2
-tooltip_text = "Show placement grid on every layer"
+tooltip_text = "Show comments"
 toggle_mode = true
 button_pressed = true
 texture_normal = ExtResource("11_ue6jr")

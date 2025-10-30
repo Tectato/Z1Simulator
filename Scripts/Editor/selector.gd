@@ -397,7 +397,9 @@ func select(target, shift = false):
 	if target:
 		if not (targetParent is Control3D):
 			ignoreList.append(target)
-		if targetParent.is_visible_in_tree() and (targetParent is Selectable or targetParent is Layer or targetParent is Machine):
+		if (targetParent is Selectable or targetParent is Layer or targetParent is Machine):
+			if targetParent is CommentBox and !Global.workspace.showComments:
+				return
 			targetParent.setSelected(true)
 			selected.append(targetParent)
 			partDragOrigins.append(targetParent.global_position)

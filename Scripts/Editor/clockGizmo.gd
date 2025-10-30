@@ -16,9 +16,10 @@ func _on_frequency_input_editing_toggled(toggled_on: bool) -> void:
 		input.select_all()
 	else:
 		var value = float(input.text.trim_suffix("Hz"))
-		if input.text.is_valid_float() and value <= 4 and value > 0:
+		if input.text.is_valid_float() and value > 0:
+			var clampedValue = clampf(value, 0.1, 4)
+			Simulator.setClockSpeed(clampedValue)
+			input.text = str(clampedValue) + " Hz"
 			priorValue = input.text.trim_suffix(" Hz")
-			Simulator.setClockSpeed(value)
-			input.text = input.text + " Hz"
 		else:
 			input.text = priorValue + " Hz"

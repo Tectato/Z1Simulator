@@ -21,7 +21,7 @@ func getBounds():
 	return [Vector3.ONE * -0.05, Vector3.ONE * 0.05]
 
 func canModify():
-	return !Global.editor.editingLocked
+	return parent.canModify()
 
 func projectDown(ray : RayCast3D):
 	ray.global_position = global_position + Vector3.UP * 0.1

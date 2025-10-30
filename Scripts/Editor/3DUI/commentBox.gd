@@ -84,9 +84,6 @@ func updateBox():
 func getBounds():
 	return bounds
 
-func canModify():
-	return !Global.editor.editingLocked
-
 func projectDown(ray : RayCast3D):
 	var height = (bounds[1]-bounds[0]).y
 	ray.global_position = collider.global_position + Vector3.UP * (height + 0.1)
