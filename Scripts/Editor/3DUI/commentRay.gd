@@ -7,9 +7,22 @@ extends RayCast3D
 @export var debug2 : Node3D
 
 var focusedComment : CommentBox
+var commentsVisible = true
+
+func _ready() -> void:
+	Global.workspace.commentVisChanged.connect(commentVisChanged)
 
 func _process(_delta: float) -> void:
-	cast()
+	if commentsVisible:
+		cast()
+
+func commentVisChanged(newVis):
+	commentsVisible = newVis
+	if !newVis:
+		if focusedComment:
+			focusedComment.setHighlighted(false)
+		focusedComment = null
+		displayBox.hide()
 
 func cast():
 	var hovered = get_viewport().gui_get_hovered_control()

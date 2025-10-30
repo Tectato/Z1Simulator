@@ -397,7 +397,7 @@ func select(target, shift = false):
 	if target:
 		if not (targetParent is Control3D):
 			ignoreList.append(target)
-		if targetParent is Selectable or targetParent is Layer or targetParent is Machine:
+		if targetParent.is_visible_in_tree() and (targetParent is Selectable or targetParent is Layer or targetParent is Machine):
 			targetParent.setSelected(true)
 			selected.append(targetParent)
 			partDragOrigins.append(targetParent.global_position)
@@ -417,8 +417,10 @@ func select(target, shift = false):
 			#print(targetParent.name)
 		else:
 			pass
+			updateMask(Global.workspace.resolution)
 			#print("Not selectable")
 	else:
+		updateMask(Global.workspace.resolution)
 		pass
 		#print("No Hit")
 

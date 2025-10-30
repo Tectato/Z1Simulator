@@ -669,10 +669,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -415.0
+offset_left = -448.0
 offset_top = 1.0
-offset_right = -208.0
-offset_bottom = 17.0
+offset_right = -224.0
+offset_bottom = 34.0
 grow_horizontal = 0
 scale = Vector2(2, 2)
 theme_override_constants/separation = 8
@@ -1262,8 +1262,8 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
+offset_left = -200.0
+offset_right = -160.0
 offset_bottom = 40.0
 grow_horizontal = 2
 
@@ -2562,7 +2562,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]
 [connection signal="files_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheets"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/EditLock" to="Camera3D/Interface" method="_on_edit_lock_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/CommentVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/CommentVis" to="Camera3D/Interface" method="_on_comment_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/IntermediatePlateVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/UnselectedLayerVis" to="Camera3D/Interface" method="_on_unselected_layer_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/FlowVis" to="Camera3D/Interface" method="_on_flow_vis_toggled"]

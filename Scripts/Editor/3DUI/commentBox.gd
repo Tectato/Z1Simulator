@@ -14,6 +14,9 @@ var bounds = [Vector3(-0.5,-0.5,-0.5), Vector3(0.5,0.5,0.5)]
 var initialPlace = false
 var text = "[Select and rename to put comment here]"
 
+func _ready() -> void:
+	Global.workspace.commentVisChanged.connect(commentVisChanged)
+
 func serialize():
 	var out = {
 		"pos":[
@@ -44,6 +47,9 @@ func deserialize(source : Dictionary):
 	cornerB.position = Vector3(float(end[0]),float(end[1]),float(end[2]))
 	updateBox()
 	text = source["text"]
+
+func commentVisChanged(newVis):
+	visible = newVis
 
 func beginPlace():
 	cornerA.position = Vector3(-0.05,-0.05,-0.05)

@@ -43,6 +43,9 @@ signal showPowerFlowChanged(visible)
 var showStaticSheets = true
 signal staticSheetVisChanged(newVis)
 
+var showComments = true
+signal commentVisChanged(newVis)
+
 var machines = []
 var interMachineRelations = {}
 var selectedMachine : Machine
@@ -93,6 +96,11 @@ func setStaticSheetVis(newVis):
 	if newVis != showStaticSheets:
 		showStaticSheets = newVis
 		staticSheetVisChanged.emit(newVis)
+
+func setCommentVis(newVis):
+	if newVis != showComments:
+		showComments = newVis
+		commentVisChanged.emit(newVis)
 
 func clear():
 	uuidManager.clear()

@@ -259,3 +259,6 @@ func _on_comment_text_edit_focus_exited() -> void:
 		toRename.text = commentText.text
 	commentBox.position = Vector2(-100,-100)
 	commentBox.hide()
+
+func _on_comment_vis_toggled(toggled_on: bool) -> void:
+	Global.workspace.setCommentVis(toggled_on)

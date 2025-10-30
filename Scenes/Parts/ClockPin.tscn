@@ -1,7 +1,6 @@
-[gd_scene load_steps=18 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene load_steps=17 format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
-[ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
 [ext_resource type="PackedScene" uid="uid://b1kecxje78rsi" path="res://Scenes/Parts/ClockPinTravelIndicator.tscn" id="3_r5mnu"]
 [ext_resource type="FontFile" uid="uid://kj26sylm4dpl" path="res://Fonts/m5x7.ttf" id="4_r5mnu"]
 [ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="4_rcjpo"]
@@ -9,9 +8,11 @@
 [ext_resource type="Script" uid="uid://yk8dkrm1xab" path="res://Scripts/Editor/3DUI/checkbox3D.gd" id="7_fc7u5"]
 [ext_resource type="Texture2D" uid="uid://bahslyylbuyku" path="res://Sprites/checkboxLock.png" id="8_1a2dp"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1a2dp"]
-render_priority = 0
-shader = ExtResource("2_4euxk")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fc7u5"]
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0.5137255, 0, 0.36078432)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_vinw1"]
 top_radius = 0.02
@@ -73,7 +74,7 @@ mesh = NodePath("MeshInstance3D")
 [node name="Highlight" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 visible = false
-material_overlay = SubResource("ShaderMaterial_1a2dp")
+material_overlay = SubResource("StandardMaterial3D_fc7u5")
 mesh = SubResource("CylinderMesh_vinw1")
 skeleton = NodePath("../MeshInstance3D")
 
