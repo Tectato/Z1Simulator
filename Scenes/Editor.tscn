@@ -1,4 +1,4 @@
-[gd_scene load_steps=189 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=191 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -122,6 +122,7 @@
 [ext_resource type="Texture2D" uid="uid://bs65qo5j0sfmr" path="res://Sprites/Buttons/PlanInterface/Elements/rectangle_active.png" id="108_yjo3m"]
 [ext_resource type="Texture2D" uid="uid://dloyj7xrfjtfc" path="res://Sprites/Buttons/PlanInterface/Elements/line_active.png" id="109_66atf"]
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
+[ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -322,6 +323,9 @@ font_color = Color(0, 1, 0.5921569, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_66atf"]
 font_size = 20
 font_color = Color(0.29803923, 1, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ue6jr"]
+font_size = 20
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -1417,9 +1421,10 @@ script = ExtResource("103_msmja")
 [node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/HelpWindow"]
 offset_right = 601.0
 offset_bottom = 399.0
-current_tab = 0
+current_tab = 3
 
 [node name="Navigation" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -1868,6 +1873,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Label10" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b][Tab][/b] -> Toggle gizmo for moving parts more precisely"
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator9" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
@@ -1968,8 +1984,40 @@ text = "[b][Ctrl][/b] + [b][C][/b] / [b][Ctrl][/b] +[b] [V][/b] -> Copy/paste pa
 fit_content = true
 autowrap_mode = 2
 
+[node name="HSeparator10" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label12" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b][Ctrl][/b] + [b][A][/b] -> If a part is selected, selects all other parts of the first's layer."
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator11" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label13" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b][Ctrl][/b] + [b][I][/b] -> Invert the selection, akin to Ctrl + A."
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator12" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label11" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b][Ctrl][/b] + [b][R][/b] -> Repeat the last \"add part\" action."
+fit_content = true
+autowrap_mode = 2
+
 [node name="Parts" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
@@ -2108,6 +2156,38 @@ custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
 text = "[color=00FF97]Pins[/color] that move automatically in their given activation step. The label above indicates whether they move momentarily (1) or forward in one step and back two steps later (1+3). If set as an [color=D9FF00]input[/color], will only move if the checkbox above has been checked (by clicking or via sequencer)."
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+layout_mode = 2
+
+[node name="Comments" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header"]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header/Control"]
+texture_filter = 1
+position = Vector2(16, 16)
+texture = ExtResource("79_5ko8x")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header"]
+layout_mode = 2
+text = "Comments"
+label_settings = SubResource("LabelSettings_ue6jr")
+
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "Click & drag to place a box. Renaming a comment box ([b][F2][/b]) will make that text appear when hovered over. Useful for labeling sections within a machine."
 fit_content = true
 autowrap_mode = 2
 
@@ -2325,7 +2405,27 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="Baseplates" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][i]Baseplates[/i][/center]
+Using the transformation gizmo to move a [color=00C2FF]sheet[/color] down into the placement grid of its layer will set it to be a \"Baseplate\". [color=00FF97]Pins[/color] will not interact with it, meaning it doesn't need to have holes placed where non-static [color=00FF97]pins[/color] will move."
+fit_content = true
+
+[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Connecting Layers" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][i]Connecting Layers[/i][/center]
+Sometimes movements have to propagate across different layers. Global [color=00FF97]pins[/color] allow this to happen across all layers, but they may intersect sheets or the propagation is only desired across two neighboring layers. In these cases, place a regular [color=00FF97]pin[/color] in the same place in both layers, and connect the two with a [color=FF6A00]link[/color]."
+fit_content = true
+
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Organization" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][i]Keeping things organized[/i][/center]
@@ -2340,15 +2440,16 @@ fit_content = true
 [node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface" groups=["PermitsCameraMove"]]
-visible = false
+[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface" node_paths=PackedStringArray("selector") groups=["PermitsCameraMove"]]
 z_index = 5
 layout_mode = 0
 offset_left = 322.0
 offset_top = 159.0
 offset_right = 551.0
-offset_bottom = 431.0
+offset_bottom = 319.0
 horizontal_scroll_mode = 0
+script = ExtResource("120_ix1yp")
+selector = NodePath("../../SelectionRay")
 
 [node name="Label" type="Label" parent="Camera3D/Interface/CommentDisplay" groups=["PermitsCameraMove"]]
 layout_mode = 2
@@ -2605,3 +2706,4 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/Settings" method="_on_movement_speed_input_text_submitted"]
 [connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/Settings" method="_on_check_box_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
+[connection signal="gui_input" from="Camera3D/Interface/CommentDisplay" to="Camera3D/Interface/CommentDisplay" method="_on_gui_input"]
