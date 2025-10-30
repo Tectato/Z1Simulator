@@ -1,4 +1,4 @@
-[gd_scene load_steps=185 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=189 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -6,15 +6,19 @@
 [ext_resource type="Script" uid="uid://s5h5vbrpbbx1" path="res://Scripts/Editor/selector.gd" id="3_trcuy"]
 [ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
 [ext_resource type="Script" uid="uid://bg6t6is4srjq6" path="res://Scripts/Editor/editorInterface.gd" id="5_brgpd"]
+[ext_resource type="Script" uid="uid://clhwdine20lbk" path="res://Scripts/Editor/3DUI/commentRay.gd" id="6_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c6j8lhvash62a" path="res://Sprites/Buttons/Modes/select_inactive.png" id="6_847jc"]
 [ext_resource type="Texture2D" uid="uid://bewgkcvn3nn6i" path="res://Sprites/Buttons/Modes/select_active.png" id="7_ir51w"]
 [ext_resource type="Texture2D" uid="uid://bppmh3gus1iap" path="res://Sprites/Buttons/Modes/select_lit.png" id="8_fx05v"]
+[ext_resource type="Texture2D" uid="uid://cdujh2rfimo8w" path="res://Sprites/Buttons/Visibility/comments.png" id="11_ue6jr"]
 [ext_resource type="Texture2D" uid="uid://d0pjjqnwdiprb" path="res://Sprites/Buttons/VisModes/monochrome.png" id="12_f0qqp"]
+[ext_resource type="Texture2D" uid="uid://ba37urh1hrp" path="res://Sprites/Buttons/Visibility/comments_active.png" id="12_ix1yp"]
 [ext_resource type="Texture2D" uid="uid://dmnw7b8snx2qp" path="res://Sprites/Buttons/Modes/manage_inactive.png" id="12_jnb0j"]
 [ext_resource type="Texture2D" uid="uid://7iccrbw3qt4k" path="res://Sprites/Buttons/Resolution/machine.png" id="12_r768j"]
 [ext_resource type="Texture2D" uid="uid://bku32rejvvh8q" path="res://Sprites/Buttons/Resolution/machine_active.png" id="13_85c8q"]
 [ext_resource type="Texture2D" uid="uid://bjfsdwf0v20em" path="res://Sprites/Buttons/Modes/manage_active.png" id="13_i66mr"]
 [ext_resource type="Texture2D" uid="uid://bcuus8m7ihcdy" path="res://Sprites/Buttons/VisModes/monochrome_active.png" id="13_ionj3"]
+[ext_resource type="Texture2D" uid="uid://culnl5oykh51" path="res://Sprites/Buttons/Visibility/comments_lit.png" id="13_scrla"]
 [ext_resource type="Texture2D" uid="uid://vqwumundj5ds" path="res://Sprites/Buttons/Modes/manage_lit.png" id="14_1k7u0"]
 [ext_resource type="Texture2D" uid="uid://tkw7s8o31jlp" path="res://Sprites/Buttons/VisModes/monochrome_lit.png" id="14_fy6bq"]
 [ext_resource type="Texture2D" uid="uid://bjq252uwl0s4e" path="res://Sprites/Buttons/Resolution/machine_lit.png" id="14_hujvp"]
@@ -518,6 +522,28 @@ script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
 debugLabel = NodePath("Interface/Label")
 
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea", "transformGizmo")]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
+enabled = false
+collision_mask = 35
+collide_with_areas = true
+script = ExtResource("3_trcuy")
+camera = NodePath("..")
+mover = NodePath("../../MoveRay")
+debugLabel = NodePath("../Interface/Label")
+clickArea = NodePath("../Interface/ClickArea")
+transformGizmo = NodePath("../../TransformGizmo")
+
+[node name="CommentRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "displayBox", "displayText")]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
+enabled = false
+collision_mask = 67
+collide_with_areas = true
+script = ExtResource("6_5ko8x")
+camera = NodePath("..")
+displayBox = NodePath("../Interface/CommentDisplay")
+displayText = NodePath("../Interface/CommentDisplay/Label")
+
 [node name="Interface" type="Control" parent="Camera3D" node_paths=PackedStringArray("editor")]
 layout_mode = 3
 anchors_preset = 15
@@ -663,6 +689,16 @@ texture_hover = ExtResource("35_1opyq")
 [node name="Visibility" type="HBoxContainer" parent="Camera3D/Interface/Toggles"]
 layout_mode = 2
 theme_override_constants/separation = 1
+
+[node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
+texture_filter = 1
+layout_mode = 2
+tooltip_text = "Show placement grid on every layer"
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("11_ue6jr")
+texture_pressed = ExtResource("12_ix1yp")
+texture_hover = ExtResource("13_scrla")
 
 [node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
@@ -1148,6 +1184,7 @@ offset_bottom = 60.0
 text = "1 Hz"
 
 [node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface"]
+visible = false
 layout_mode = 0
 offset_left = -81.0
 offset_top = -49.0
@@ -1162,6 +1199,30 @@ offset_right = 119.0
 offset_bottom = -0.73
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Rename Object"
+
+[node name="SetCommentBox" type="VBoxContainer" parent="Camera3D/Interface"]
+visible = false
+layout_mode = 0
+offset_left = -236.0
+offset_top = -244.0
+offset_right = -40.0
+offset_bottom = -21.0
+
+[node name="Label" type="Label" parent="Camera3D/Interface/SetCommentBox"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Set Comment"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/SetCommentBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="TextEdit" type="TextEdit" parent="Camera3D/Interface/SetCommentBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+wrap_mode = 1
 
 [node name="SaveError" type="Label" parent="Camera3D/Interface"]
 visible = false
@@ -2279,16 +2340,32 @@ fit_content = true
 [node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea", "transformGizmo")]
-enabled = false
-collision_mask = 35
-collide_with_areas = true
-script = ExtResource("3_trcuy")
-camera = NodePath("..")
-mover = NodePath("../../MoveRay")
-debugLabel = NodePath("../Interface/Label")
-clickArea = NodePath("../Interface/ClickArea")
-transformGizmo = NodePath("../../TransformGizmo")
+[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface" groups=["PermitsCameraMove"]]
+visible = false
+z_index = 5
+layout_mode = 0
+offset_left = 322.0
+offset_top = 159.0
+offset_right = 551.0
+offset_bottom = 431.0
+horizontal_scroll_mode = 0
+
+[node name="Label" type="Label" parent="Camera3D/Interface/CommentDisplay" groups=["PermitsCameraMove"]]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/CommentDisplay/Label" groups=["PermitsCameraMove"]]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.43529412)
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
@@ -2305,6 +2382,7 @@ visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
 [node name="Debug3" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("SphereMesh_86asr")
 
 [node name="TransformGizmo" type="Node3D" parent="." node_paths=PackedStringArray("selector")]
@@ -2484,6 +2562,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]
 [connection signal="files_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheets"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/EditLock" to="Camera3D/Interface" method="_on_edit_lock_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/CommentVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/IntermediatePlateVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/UnselectedLayerVis" to="Camera3D/Interface" method="_on_unselected_layer_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/FlowVis" to="Camera3D/Interface" method="_on_flow_vis_toggled"]
@@ -2519,6 +2598,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
 [connection signal="text_submitted" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_text_submitted"]
+[connection signal="focus_exited" from="Camera3D/Interface/SetCommentBox/ScrollContainer/TextEdit" to="Camera3D/Interface" method="_on_comment_text_edit_focus_exited"]
 [connection signal="timeout" from="Camera3D/Interface/SaveError/Timer" to="Camera3D/Interface/SaveError" method="close"]
 [connection signal="pressed" from="Camera3D/Interface/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/Settings" method="_on_close_pressed"]
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/Settings" method="_on_sheet_spacing_input_text_submitted"]

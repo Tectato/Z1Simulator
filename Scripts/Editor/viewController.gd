@@ -14,7 +14,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
-	if hovered != $Interface/ClickArea:
+	if hovered != $Interface/ClickArea and not (hovered and hovered.is_in_group("PermitsCameraMove")):
 		return
 	var newMousePos = interface.get_global_mouse_position()
 	var mouseDelta = (newMousePos - mousePos) * delta

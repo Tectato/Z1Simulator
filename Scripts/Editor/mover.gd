@@ -29,6 +29,7 @@ func move():
 		for otherPart in selector.selected:
 			downcaster.add_exception(otherPart.collider)
 		part.snap(part.projectDown(downcaster))
+	#debug3.global_position = downcaster.global_position
 	#selector.selected.global_position = selector.partDragOrigin + dragDelta
 	#selector.selected.snap(selector.selected.projectDown(downcaster))
 	pass

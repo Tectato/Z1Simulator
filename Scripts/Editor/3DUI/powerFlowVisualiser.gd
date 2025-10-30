@@ -92,7 +92,7 @@ func visualizeChain(end : Movable):
 	var currentNode = source
 	while parentDict.has(currentNode):
 		if chain.has(currentNode):
-			print("Loop in movement")
+			#print("Loop in movement")
 			break
 		chain.append(currentNode)
 		currentNode = parentDict[currentNode]

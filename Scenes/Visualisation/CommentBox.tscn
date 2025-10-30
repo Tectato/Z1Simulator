@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bu5oitkrdecwu"]
+[gd_scene load_steps=11 format=3 uid="uid://bu5oitkrdecwu"]
 
 [ext_resource type="Script" uid="uid://3tl6s4c33nkv" path="res://Scripts/Editor/3DUI/commentBox.gd" id="1_7o6ib"]
 [ext_resource type="Texture2D" uid="uid://5p1j1tvxbvqy" path="res://Sprites/circle.png" id="1_drlcm"]
@@ -8,17 +8,23 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kx8te"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(1, 0.6627451, 0, 0.13725491)
+albedo_color = Color(1, 0.6627451, 0, 0.2509804)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7o6ib"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(1, 0.6627451, 0, 0.24313726)
+albedo_color = Color(1, 0.6627451, 0, 0.5019608)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oe143"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.3137255, 0, 0.5019608)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kx8te"]
 resource_local_to_scene = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_drlcm"]
+resource_local_to_scene = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_drlcm"]
 radius = 0.1
@@ -26,16 +32,19 @@ radius = 0.1
 [node name="CommentBox" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
 script = ExtResource("1_7o6ib")
 materialNormal = SubResource("StandardMaterial3D_kx8te")
-materialSelected = SubResource("StandardMaterial3D_7o6ib")
+materialHighlighted = SubResource("StandardMaterial3D_7o6ib")
+materialSelected = SubResource("StandardMaterial3D_oe143")
 collider = NodePath("Area3D")
 mesh = NodePath("Area3D/MeshInstance3D")
 
 [node name="Area3D" type="Area3D" parent="."]
-collision_layer = 3
+collision_layer = 99
 collision_mask = 0
+monitoring = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("BoxShape3D_kx8te")
+debug_color = Color(0.9515229, 0.22283831, 3.85046e-07, 0.41960785)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
 material_override = SubResource("StandardMaterial3D_kx8te")
@@ -61,6 +70,7 @@ shape = SubResource("SphereShape3D_drlcm")
 [node name="Sprite3D" type="Sprite3D" parent="CornerA"]
 modulate = Color(1, 0.7176471, 0, 0.78431374)
 billboard = 1
+no_depth_test = true
 texture_filter = 0
 texture = ExtResource("3_oe143")
 
@@ -83,5 +93,6 @@ shape = SubResource("SphereShape3D_drlcm")
 [node name="Sprite3D" type="Sprite3D" parent="CornerB"]
 modulate = Color(1, 0.7176471, 0, 0.78431374)
 billboard = 1
+no_depth_test = true
 texture_filter = 0
 texture = ExtResource("3_oe143")

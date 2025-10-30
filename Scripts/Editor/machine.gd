@@ -4,6 +4,7 @@ class_name Machine
 const LAYER = preload("res://Scenes/Parts/Layer.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
+const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
 
 @onready var parts = $Parts
 @onready var gridLibrary = $GridLibrary
@@ -20,6 +21,7 @@ var fullPath = ""
 var layers = []
 var globalPins = []
 var clockPins = []
+var comments = []
 var relations = {}
 var beingDeleted = false
 var colliderUpdateScheduled = false
@@ -140,6 +142,14 @@ func addClockPin(newPin):
 func removeClockPin(pin):
 	clockPins.erase(pin)
 
+func addComment(newComment):
+	comments.append(newComment)
+	$Comments.add_child(newComment)
+	newComment.machine = self
+
+func removeComment(comment):
+	comments.erase(comment)
+
 func serialize(path = null):
 	relations.clear()
 	if path:
@@ -171,6 +181,11 @@ func serialize(path = null):
 	}
 	if !relations.is_empty():
 		output["relations"] = relations.keys()
+	if !comments.is_empty():
+		var commentsOut = []
+		for comment in comments:
+			commentsOut.append(comment.serialize())
+		output["comments"] = commentsOut
 	return output
 
 func deserialize(path : String):
@@ -222,11 +237,12 @@ func deserializeFromDict(source):
 					A.addRelation(Relation.Type.Spring, uuidManager.getPart(int(relation["B"])))
 				"inputLink":
 					A.addRelation(Relation.Type.InputLink, uuidManager.getPart(int(relation["B"])))
-	#elif source.has("uuid"):
-		#uuid = source["uuid"]
-		#Global.workspace.uuidManager.registerID(self, uuid)
-	#else:
-		#Global.workspace.uuidManager.request(self, true)
+	if source.has("comments"):
+		for comment in source["comments"]:
+			var newComment = COMMENT.instantiate()
+			addComment(newComment)
+			newComment.deserialize(comment)
+	
 	var savedStep = 3
 	if source.has("currentStep"):
 		savedStep = source["currentStep"]

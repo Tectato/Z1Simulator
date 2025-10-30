@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene load_steps=18 format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
 [ext_resource type="Shader" uid="uid://dpdeh2xxb66xy" path="res://Shaders/PinHighlight.gdshader" id="2_4euxk"]
@@ -8,14 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="6_vjs7e"]
 [ext_resource type="Script" uid="uid://yk8dkrm1xab" path="res://Scripts/Editor/3DUI/checkbox3D.gd" id="7_fc7u5"]
 [ext_resource type="Texture2D" uid="uid://bahslyylbuyku" path="res://Sprites/checkboxLock.png" id="8_1a2dp"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1a2dp"]
-metallic = 1.0
-roughness = 0.48
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vinw1"]
-metallic = 1.0
-roughness = 0.1
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1a2dp"]
 render_priority = 0
@@ -27,6 +19,10 @@ bottom_radius = 0.02
 height = 0.1
 radial_segments = 8
 rings = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1a2dp"]
+metallic = 1.0
+roughness = 0.48
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_vjs7e"]
 top_radius = 0.02
@@ -71,9 +67,6 @@ radius = 0.02
 
 [node name="ClockPin" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
 script = ExtResource("1_pegep")
-normalMaterial = SubResource("StandardMaterial3D_1a2dp")
-staticMaterial = SubResource("StandardMaterial3D_1a2dp")
-shadedMaterial = SubResource("StandardMaterial3D_vinw1")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 

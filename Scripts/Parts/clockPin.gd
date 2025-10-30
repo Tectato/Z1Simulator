@@ -125,10 +125,23 @@ func setActivateNextCycle(value):
 
 func updateLabel():
 	if pulsing:
-		$StepLabel.text = str(forwardStep+1)
+		#$StepLabel.text = str(forwardStep+1)
+		$StepLabel.text = stepToString(forwardStep)
 	else:
-		$StepLabel.text = str(forwardStep+1) + "+" + str(antiStep+1)
+		#$StepLabel.text = str(forwardStep+1) + "+" + str(antiStep+1)
+		$StepLabel.text = stepToString(forwardStep) + "+" + stepToString(antiStep)
 	inputCheckbox.visible = input
+
+func stepToString(step):
+	match(step):
+		0:
+			return "I"
+		1:
+			return "II"
+		2:
+			return "III"
+		3:
+			return "IV"
 
 func clockCycle(clockStep : int, forwards = true):
 	if selected:

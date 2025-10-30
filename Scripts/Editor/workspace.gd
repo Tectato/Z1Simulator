@@ -297,8 +297,8 @@ func addClockPin():
 func addComment():
 	setResolution(Resolution.Part)
 	var newComment = COMMENT.instantiate()
-	add_child(newComment)
-	comments.append(newComment)
+	selectedMachine.addComment(newComment)
+	newComment.beginPlace()
 	return newComment
 
 func createIfNotExists():

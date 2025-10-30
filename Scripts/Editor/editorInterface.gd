@@ -9,6 +9,8 @@ extends Control
 @onready var saveRequestDialog = $SaveRequest
 @onready var exportMachineDialog = $MachineExportDialog
 @onready var renamingBox = $RenamingBox
+@onready var commentBox = $SetCommentBox
+@onready var commentText = $SetCommentBox/ScrollContainer/TextEdit
 @onready var saveError = $SaveError
 @onready var selectedLabel = $SelectedLabel/Label
 
@@ -44,6 +46,12 @@ func _input(event: InputEvent) -> void:
 				if selected is Movable or selected is Machine or selected is Layer:
 					toRename = selected
 					openRenameBox(selected.id)
+				elif selected is CommentBox:
+					toRename = selected
+					openCommentBox(toRename.text)
+				elif selected.get_parent() is CommentBox:
+					toRename = selected.get_parent()
+					openCommentBox(toRename.text)
 			else:
 				var selectedUIElement = get_viewport().gui_get_focus_owner()
 				if selectedUIElement is Sequence:
@@ -57,6 +65,12 @@ func openRenameBox(currentID):
 	renamingBox.global_position = get_viewport().get_mouse_position()
 	renamingBox.grab_focus()
 	renamingBox.text = currentID
+
+func openCommentBox(currentComment):
+	commentBox.show()
+	commentBox.global_position = get_viewport().get_mouse_position()
+	commentBox.grab_focus()
+	commentText.text = currentComment
 
 func _on_file_id_pressed(id: int) -> void:
 	match(id):
@@ -222,6 +236,7 @@ func newSelection(parts = []):
 	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
 	$MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
 	$MenuBar/Edit.set_item_disabled(1, !oneInstanceMachineSelected)
+	commentBox.hide()
 
 func _on_edit_lock_toggled(toggled_on: bool) -> void:
 	editor.editingLocked = toggled_on
@@ -238,3 +253,9 @@ func _on_help_id_pressed(id: int) -> void:
 
 func _on_path_export_pressed() -> void:
 	Global.workspace.exportPaths()
+
+func _on_comment_text_edit_focus_exited() -> void:
+	if toRename is CommentBox:
+		toRename.text = commentText.text
+	commentBox.position = Vector2(-100,-100)
+	commentBox.hide()

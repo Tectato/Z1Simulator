@@ -60,7 +60,7 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				for part in selected:
 					part.place()
 				placing = false
-				deselect()
+				#deselect()
 			elif !selected.is_empty():
 				setGrabpoint()
 			cast(true, true)
@@ -90,7 +90,7 @@ func exists(item):
 
 func _process(_delta: float) -> void:
 	var hovered = get_viewport().gui_get_hovered_control()
-	if hovered != clickArea:
+	if hovered != clickArea and not (hovered and hovered.is_in_group("PermitsCameraMove")):
 		return
 	var focusElsewhere = get_viewport().gui_get_focus_owner()
 	selected = selected.filter(exists)
@@ -409,6 +409,11 @@ func select(target, shift = false):
 					Global.workspace.selectedLayer = targetParent.layers[0]
 			updateGizmo()
 			newSelection.emit(selected)
+			
+			if selected.size() == 1 and selected[0] is CommentBox:
+				collision_mask = 0b100000
+			else:
+				updateMask(Global.workspace.resolution)
 			#print(targetParent.name)
 		else:
 			pass
