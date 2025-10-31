@@ -684,6 +684,7 @@ theme_override_constants/separation = 8
 [node name="EditLock" type="TextureButton" parent="Camera3D/Interface/Toggles"]
 texture_filter = 1
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Lock scene"
 toggle_mode = true
 texture_normal = ExtResource("33_dacgg")
@@ -697,6 +698,7 @@ theme_override_constants/separation = 1
 [node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Show comments"
 toggle_mode = true
 button_pressed = true
@@ -707,6 +709,7 @@ texture_hover = ExtResource("13_scrla")
 [node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Show placement grid on every layer"
 toggle_mode = true
 texture_normal = ExtResource("56_8faq4")
@@ -716,6 +719,7 @@ texture_hover = ExtResource("58_2pu55")
 [node name="UnselectedLayerVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Hide unfocused layers"
 toggle_mode = true
 texture_normal = ExtResource("33_dcdig")
@@ -725,6 +729,7 @@ texture_hover = ExtResource("35_mugi6")
 [node name="FlowVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Show movement propagation"
 toggle_mode = true
 button_pressed = true
@@ -735,6 +740,7 @@ texture_hover = ExtResource("17_ix4yx")
 [node name="StaticSheetVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
 texture_filter = 1
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Show static sheets"
 toggle_mode = true
 button_pressed = true
@@ -807,6 +813,7 @@ texture = ExtResource("31_gtbin")
 
 [node name="Layer" type="TextureButton" parent="Camera3D/Interface/Toggles/ResolutionBar"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Layers"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_ia0pe")
@@ -817,6 +824,7 @@ texture_hover = ExtResource("17_egdbq")
 
 [node name="Machine" type="TextureButton" parent="Camera3D/Interface/Toggles/ResolutionBar"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Machines"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_ia0pe")
@@ -833,6 +841,7 @@ theme_override_constants/separation = 1
 
 [node name="Monochrome" type="TextureButton" parent="Camera3D/Interface/Toggles/VisModes"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Monochrome"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_f0qqp")
@@ -842,6 +851,7 @@ texture_hover = ExtResource("14_fy6bq")
 
 [node name="Colorcoded" type="TextureButton" parent="Camera3D/Interface/Toggles/VisModes"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Colorcoded"
 toggle_mode = true
 button_pressed = true
@@ -852,6 +862,7 @@ texture_hover = ExtResource("17_e2vqq")
 
 [node name="Realistic" type="TextureButton" parent="Camera3D/Interface/Toggles/VisModes"]
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "Shaded"
 toggle_mode = true
 button_group = SubResource("ButtonGroup_f0qqp")
