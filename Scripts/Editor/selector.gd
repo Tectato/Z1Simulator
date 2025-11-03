@@ -29,27 +29,27 @@ func _ready() -> void:
 
 func resolutionChanged(newRes):
 	deselect()
-	updateMask(newRes)
+	updateMask()
 
 func selectabilityChanged(_newSel):
 	deselect() #TODO make this smarter, only deselect what isn't covered by new sel
 	ignoreList.clear()
-	updateMask(Global.workspace.resolution)
+	updateMask()
 
-func updateMask(resolution):
-	match(resolution):
+func updateMask():
+	match(Global.workspace.resolution):
 		Workspace.Resolution.Machine:
-			collision_mask = 0b110000
+			collision_mask = 0b0110000
 		Workspace.Resolution.Layer:
-			collision_mask = 0b101000
+			collision_mask = 0b0101000
 		Workspace.Resolution.Part:
 			match(Global.workspace.selectability):
 				Workspace.Selectability.Both:
-					collision_mask = 0b100011
+					collision_mask = 0b1100011
 				Workspace.Selectability.Sheets:
-					collision_mask = 0b100001
+					collision_mask = 0b1100001
 				Workspace.Selectability.Pins:
-					collision_mask = 0b100010
+					collision_mask = 0b1100010
 
 func _on_click_area_gui_input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -63,13 +63,13 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 				#deselect()
 			elif !selected.is_empty():
 				setGrabpoint()
-			cast(true, true)
+			cast(false, true, true, true)
 		if event.is_action_released("mouse_left"):
 			clicking = false
 			if clickedButton:
 				clickedButton.release()
 				clickedButton = null
-			elif not placing:
+			if not placing:
 				if dragging:
 					if selected:
 						for part in selected:
@@ -80,7 +80,7 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 					cast(true, false)
 				dragging = false
 		if event.is_action_pressed("mouse_right"):
-			cast(false, false, false)
+			cast(false, true, false, true)
 		if event.is_action_released("mouse_right"):
 			if selected.size() == 1 and selected[0] is Sheet:
 				mover.finishRot()
@@ -93,6 +93,8 @@ func _process(_delta: float) -> void:
 	if hovered != clickArea and not (hovered and hovered.is_in_group("PermitsCameraMove")):
 		return
 	var focusElsewhere = get_viewport().gui_get_focus_owner()
+	if focusElsewhere:
+		focusElsewhere = focusElsewhere != clickArea
 	selected = selected.filter(exists)
 	if !selected.is_empty() and !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
 		if !dragging and !placing:
@@ -185,7 +187,7 @@ func _process(_delta: float) -> void:
 						selected[0].addRelation(Relation.Type.Spring, selected[1])
 					else:
 						selected[0].addRelation(Relation.Type.Link, selected[1])
-		cast(false,true)
+		cast(false,true,true,false)
 	if Input.is_action_just_pressed("paste"):
 		paste()
 	if Input.is_action_just_pressed("toggle_transform_gizmo"):
@@ -200,19 +202,23 @@ func canModify():
 		out = out and part.canModify()
 	return out
 
-func cast(toSelect = true, checkForUI = false, leftClick = true):
+func cast(toSelect = true, checkForUI = false, leftClick = true, clicked = true):
 	var mask = collision_mask
-	if checkForUI:
+	if !leftClick:
+		collision_mask = 0b100010
+	elif checkForUI:
 		collision_mask = 0b100000
-	elif !leftClick:
-		collision_mask = 0b10
 	var mousePos = get_viewport().get_mouse_position()
 	if camera.orthographic:
 		global_position = camera.project_ray_origin(mousePos)
 	else:
 		position = Vector3.ZERO
 	target_position = camera.project_local_ray_normal(mousePos) * 100
+	clear_exceptions()
 	force_raycast_update()
+	while is_colliding() and !get_collider().is_visible_in_tree():
+		add_exception(get_collider())
+		force_raycast_update()
 	collision_mask = mask
 	if checkForUI:
 		if not get_collider() and hoveredButton:
@@ -220,9 +226,9 @@ func cast(toSelect = true, checkForUI = false, leftClick = true):
 			hoveredButton = null
 		
 		if get_collider() and get_collider().get_parent() is Control3D and get_collider().get_parent().is_visible_in_tree():
-			if toSelect:
+			if clicked:
 				clickedButton = get_collider().get_parent()
-				clickedButton.click()
+				clickedButton.click(leftClick)
 				mouseDragOrigin = get_collision_point()
 			else:
 				if hoveredButton:
@@ -232,19 +238,20 @@ func cast(toSelect = true, checkForUI = false, leftClick = true):
 				hoveredButton.setHovered(true)
 			return
 		else:
-			#cast(toSelect, false)
-			return
+			#cast(toSelect, false, leftClick, clicked)
+			#return
+			pass
 	
 	if toSelect:
-		iterate(Input.is_key_pressed(KEY_SHIFT))
+		iterate(Input.is_key_pressed(KEY_SHIFT), checkForUI, true, clicked)
 	elif !leftClick:
-		iterate(Input.is_key_pressed(KEY_SHIFT), false)
-	if !selected.is_empty():
+		iterate(Input.is_key_pressed(KEY_SHIFT), checkForUI, false, clicked)
+	if toSelect and !selected.is_empty():
 		setGrabpoint()
 
-func iterate(shift = false, leftClick = true):
+func iterate(shift, checkForUI, leftClick, clicked):
 	if !leftClick:
-		collision_mask = 0b000010
+		collision_mask = 0b100010
 		force_raycast_update()
 	var target = get_collider()
 	var index = 0
@@ -256,9 +263,9 @@ func iterate(shift = false, leftClick = true):
 		else:
 			ignoreList.clear()
 			if leftClick:
-				select(target, shift)
+				select(target, checkForUI, shift, clicked)
 			else:
-				updateMask(Global.workspace.resolution)
+				updateMask()
 				if target.get_parent() is Pin:
 					target.get_parent().nudge()
 			return
@@ -268,16 +275,16 @@ func iterate(shift = false, leftClick = true):
 	target = get_collider()
 	if target and target.get_parent().is_visible_in_tree():
 		if leftClick:
-			select(target, shift)
+			select(target, checkForUI, shift, clicked)
 		else:
-			updateMask(Global.workspace.resolution)
+			updateMask()
 			if target.get_parent() is Pin:
 				target.get_parent().nudge()
 	else:
 		if leftClick:
-			select(null, shift)
+			select(null, checkForUI, shift, clicked)
 		else:
-			updateMask(Global.workspace.resolution)
+			updateMask()
 
 func setGrabpoint():
 	partDragOrigins.clear()
@@ -309,7 +316,7 @@ func setSpinGrabpoint():
 		mover.initRot(sheet)
 
 func place(part : Selectable):
-	select(part.collider)
+	select(part.collider, false, false)
 	setGrabpoint()
 	var bounds = part.getBounds()
 	var midPoint = (bounds[1]-bounds[0])/2
@@ -317,6 +324,8 @@ func place(part : Selectable):
 	mouseDragOrigin = partDragOrigins[0]
 	placing = true
 	debugLabel.text = str(mouseRelative)
+	#await get_tree().create_timer(0.1).timeout
+	clickArea.call_deferred("grab_focus")
 
 func copy():
 	clipboard = selected.duplicate()
@@ -384,11 +393,11 @@ func getMidPoint(selection):
 		max = Vector3(max(max.x,partMax.x),max(max.y,partMax.y),max(max.z,partMax.z))
 	return min + (max-min)/2
 
-func select(target, shift = false):
+func select(target, checkForUI = false, shift = false, clicked = true):
 	var targetParent
 	if target:
 		targetParent = target.get_parent()
-		if targetParent is Control3D and targetParent.is_visible_in_tree():
+		if clicked and checkForUI and targetParent is Control3D and targetParent.is_visible_in_tree():
 			targetParent.click()
 			clickedButton = targetParent
 			return
@@ -417,14 +426,14 @@ func select(target, shift = false):
 			if selected.size() == 1 and selected[0] is CommentBox:
 				collision_mask = 0b100000
 			else:
-				updateMask(Global.workspace.resolution)
+				updateMask()
 			#print(targetParent.name)
 		else:
 			pass
-			updateMask(Global.workspace.resolution)
+			updateMask()
 			#print("Not selectable")
 	else:
-		updateMask(Global.workspace.resolution)
+		updateMask()
 		pass
 		#print("No Hit")
 

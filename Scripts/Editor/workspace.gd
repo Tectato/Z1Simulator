@@ -361,6 +361,9 @@ func vround(a : Vector2, b : Vector2):
 func exportPaths():
 	var out = {}
 	
+	if Global.editor.currentlyLoadedPath:
+		var pathArr = Global.editor.currentlyLoadedPath.split("/")
+		insertSingleEntry(out, pathArr)
 	for machine in machines:
 		if machine.fullPath.length() > 0:
 			var pathArr = machine.fullPath.split("/")
@@ -395,7 +398,7 @@ func buildPathDict(arr = [], i = 0):
 func insertSingleEntry(target = {}, source = []):
 	var workingDict = target
 	for entry in source:
-		if entry.ends_with(".svg") or entry.ends_with(".png") or entry.ends_with(".jpg") or entry.ends_with(".jpeg"):
+		if entry.ends_with(".svg") or entry.ends_with(".png") or entry.ends_with(".jpg") or entry.ends_with(".jpeg") or entry.ends_with(".json"):
 			if !workingDict.has(entry):
 				workingDict[entry] = ""
 			workingDict = workingDict[entry]

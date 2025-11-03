@@ -1,5 +1,7 @@
 extends Control3D
 
+@export var leftClickable = true
+@export var rightClickable = false
 var stateHistory = []
 var checked = false
 
@@ -17,7 +19,9 @@ func setValueEmit(value):
 	setValue(value)
 	toggled.emit(value)
 
-func click():
+func click(left = true):
+	if left and !leftClickable: return
+	if !left and !rightClickable: return
 	if !$Lock.visible:
 		setValue(!checked)
 		toggled.emit(checked)

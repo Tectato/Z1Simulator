@@ -1,7 +1,7 @@
 extends Node3D
 class_name Control3D
 
-func click():
+func click(left = true):
 	pass
 
 func release():

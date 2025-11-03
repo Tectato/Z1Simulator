@@ -1,10 +1,11 @@
-extends Node3D
+extends Control3D
 class_name OutputCheckbox
 
 enum Directionality { Both, X, Y }
 
 @onready var checkbox = $Checkbox
 @onready var direction = $Directionality
+@onready var parent = get_parent()
 var state = false
 var stateHistory = []
 
@@ -15,6 +16,10 @@ func _ready() -> void:
 func setValue(value : bool):
 	state = value
 	checkbox.play(str(value))
+
+func click(left = true):
+	#if !left:
+	parent.nudge()
 
 func setDirection(dir : Directionality):
 	match(dir):

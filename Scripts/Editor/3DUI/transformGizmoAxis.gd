@@ -38,7 +38,8 @@ func setHovered(value):
 	partA.mesh.material.albedo_color = litColor if value or grabbed else color
 	partB.mesh.material.albedo_color = litColor if value or grabbed else color
 
-func click():
+func click(left = true):
+	if !left: return
 	parentOrigin = parent.global_position
 	grabbed = true
 	setHovered(true)
