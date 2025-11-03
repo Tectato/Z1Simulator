@@ -74,11 +74,11 @@ func setHighlighted(value):
 func updateBox():
 	var A = cornerA.position
 	var B = cornerB.position
-	var cMin = Vector3(min(A.x,B.x),min(A.y,B.y),min(A.z,B.z))
-	var cMax = Vector3(max(A.x,B.x),max(A.y,B.y),max(A.z,B.z))
+	var cMin = Vector3(min(A.x,B.x),min(A.y,B.y),min(A.z,B.z)) - Vector3.ONE * margin/2
+	var cMax = Vector3(max(A.x,B.x),max(A.y,B.y),max(A.z,B.z)) + Vector3.ONE * margin/2
 	bounds = [cMin, cMax]
 	collider.position = (cMax+cMin)/2
-	collisionBox.shape.size = abs(cMax-cMin) + Vector3.ONE * margin
+	collisionBox.shape.size = abs(cMax-cMin)# + Vector3.ONE * margin
 	mesh.mesh.size = collisionBox.shape.size
 
 func getBounds():

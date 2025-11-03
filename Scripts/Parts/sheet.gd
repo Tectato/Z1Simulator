@@ -18,7 +18,7 @@ var pinCandidates = {}
 var pointConstraints = {}
 var linearConstraints = {}
 var heightIndex = 0
-var pivots = {0:[],1:[],2:[],3:[]}
+var pivots = [[],[]]
 var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
 var storedRot = 0.0
 var restRot = 0.0
@@ -165,6 +165,7 @@ func _process(delta: float) -> void:
 		if !inMotion:
 			forces.clear()
 			movedBy.clear()
+			toMove.clear()
 			#blockedThisCycle = -1
 	if !fixed and rotating and !pointConstraints.is_empty():
 		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
@@ -725,7 +726,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 		for pin in moveCandidates:
 			if pin == initiator: continue
 			if canTurn(dir, pin, initiator, chain):
-				pivots[dirID%2] = [pin]
+				#pivots[dirID%2] = [pin]
+				pivots = [[pin],[pin]]
 				break
 		if pivots[dirID%2].size() != 1:
 			return MoveState.Blocked
@@ -754,6 +756,8 @@ func move(dir : Vector2, initiator, chain = []):
 		forces[initiator] = [dir, chain]
 		#if !shouldTurn():
 			#return MoveState.Blocked
+		if selected:
+			pass
 		# Assuming pivots of opposite directions are the same
 		return MoveState.Moved if pivots[dirID%2].size() == 1 and tryTurn(pivots[dirID%2][0], initiator) else MoveState.Blocked
 		

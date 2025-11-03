@@ -2452,20 +2452,22 @@ fit_content = true
 layout_mode = 2
 
 [node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface" node_paths=PackedStringArray("selector") groups=["PermitsCameraMove"]]
+visible = false
 z_index = 5
 layout_mode = 0
 offset_left = 322.0
 offset_top = 159.0
-offset_right = 551.0
-offset_bottom = 319.0
+offset_right = 953.0
+offset_bottom = 438.0
 horizontal_scroll_mode = 0
 script = ExtResource("120_ix1yp")
 selector = NodePath("../../SelectionRay")
 
 [node name="Label" type="Label" parent="Camera3D/Interface/CommentDisplay" groups=["PermitsCameraMove"]]
+custom_minimum_size = Vector2(256, 10)
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 2
+autowrap_mode = 2
 
 [node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/CommentDisplay/Label" groups=["PermitsCameraMove"]]
 z_index = -1
@@ -2477,7 +2479,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color(0, 0, 0, 0.43529412)
+color = Color(0, 0, 0, 0.7058824)
 
 [node name="FocusPoint" type="Node3D" parent="."]
 

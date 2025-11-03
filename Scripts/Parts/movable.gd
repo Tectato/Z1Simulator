@@ -302,6 +302,7 @@ func _process(delta: float) -> void:
 		if !inMotion:
 			movedBy.clear()
 			moved.clear()
+			toMove.clear()
 			#blockedCycle = -1
 
 func delete():

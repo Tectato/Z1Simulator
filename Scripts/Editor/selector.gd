@@ -204,6 +204,8 @@ func cast(toSelect = true, checkForUI = false, leftClick = true):
 	var mask = collision_mask
 	if checkForUI:
 		collision_mask = 0b100000
+	elif !leftClick:
+		collision_mask = 0b10
 	var mousePos = get_viewport().get_mouse_position()
 	if camera.orthographic:
 		global_position = camera.project_ray_origin(mousePos)
