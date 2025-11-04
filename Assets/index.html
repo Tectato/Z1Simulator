@@ -162,64 +162,6 @@ const engine = new Engine(GODOT_CONFIG);
 		initializing = false;
 	}
 
-	/*function* readAllFiles(dir) {
-		const files = fs.readdirSync(dir, { withFileTypes: true });
-
-		for (const file of files) {
-			if (file.isDirectory()) {
-				yield* readAllFiles(path.join(dir, file.name));
-			} else {
-				yield path.join(dir, file.name);
-			}
-		}
-	}*/
-
-	const hardcodedFilepathsBecauseJavaScriptSucksAndWhilePreloadingTheseWorksFineItsNotPossibleToJustIterateOverTheDirectory = [
-		"Addierer/Addierer.json",
-		"Addierer/AA.svg",
-		"Addierer/AB.svg",
-		"Addierer/AE.svg",
-		"Addierer/AG.svg",
-		"Addierer/AP.svg",
-		"Addierer/BA.svg",
-		"Addierer/BB.svg",
-		"Addierer/BC.svg",
-		"Addierer/BF.svg",
-		"Addierer/BF0.svg",
-		"Addierer/BF4.svg",
-		"Addierer/BG.svg",
-		"Addierer/BH.svg",
-		"Addierer/BN.svg",
-		"Addierer/BQ0.svg",
-		"Addierer/BQ1.svg",
-		"Addierer/CF.svg",
-		"Addierer/CG.svg",
-		"Addierer/CJ.svg",
-		"Addierer/CM.svg",
-		"Addierer/CR.svg",
-		"Addierer/CS.svg",
-		"Addierer/CT.svg",
-		"Addierer/CU.svg",
-		"Addierer/CustomLoopbackInput.svg",
-		"Addierer/CV.svg",
-		"Addierer/CW0.svg",
-		"Addierer/CW1.svg",
-		"Addierer/DG.svg",
-		"Addierer/DK.svg",
-		"Addierer/DM.svg",
-		"Addierer/DR.svg",
-		"Addierer/DS.svg",
-		"Addierer/DT.svg",
-		"Addierer/DU.svg",
-		"Addierer/Output.svg",
-		"Addierer/Z0A.svg",
-		"Addierer/ZBC.svg",
-		"Addierer/ZD0.svg",
-		"Addierer/LayerA.png",
-		"Addierer/LayerB.png",
-		"Addierer/LayerC.png"
-	]
-
 	const hardcodedDict = {
 		"Machines": {
 			"Addierer": {
@@ -424,6 +366,55 @@ const engine = new Engine(GODOT_CONFIG);
 					"Waehlwerk_Schichten.json": {},
 					"Waehlwerk_Zellen.json": {}
 				}
+			},
+			"SimpleExamples": {
+				"1_2-.svg": "",
+				"1_2-f.svg": "",
+				"1_3.svg": "",
+				"1_3-.svg": "",
+				"1_4.svg": "",
+				"1_5.svg": "",
+				"1_5f.svg": "",
+				"1_6.svg": "",
+				"1_8.svg": "",
+				"1_9.svg": "",
+				"1_10.svg": "",
+				"1_11.svg": "",
+				"2_1.svg": "",
+				"2_2.svg": "",
+				"2_2f.svg": "",
+				"2_3.svg": "",
+				"2_4.svg": "",
+				"2_5.svg": "",
+				"2_6.svg": "",
+				"2_7.svg": "",
+				"2_8.svg": "",
+				"2_9.svg": "",
+				"2_10.svg": "",
+				"2_11.svg": "",
+				"2_12.svg": "",
+				"2_13.svg": "",
+				"2_14.svg": "",
+				"2_15.svg": "",
+				"2_16.svg": "",
+				"2_17.svg": "",
+				"2_18.svg": "",
+				"2_19.svg": "",
+				"2_20.svg": "",
+				"2_21.svg": "",
+				"2_22.svg": "",
+				"2_23.svg": "",
+				"2_23a.svg": "",
+				"2_24.svg": "",
+				"3_1.svg": "",
+				"3_2.svg": "",
+				"3_3.svg": "",
+				"0_Basics.json": "",
+				"1_Relays.json": "",
+				"2_LogicGates.json": "",
+				"3_Decoder.json": "",
+				"4_Register.json": "",
+				"5_Memory.json": ""
 			}
 		}
 	};
