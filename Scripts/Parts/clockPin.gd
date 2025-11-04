@@ -6,7 +6,7 @@ const INPUTLINK = preload("res://Scenes/Parts/Relations/InputLink.tscn")
 
 @export_range(0,3,1) var forwardStep = 0
 @onready var antiStep = (forwardStep + 2) % 4
-@export var pulsing = false # If false, move forward in step X and back in step X+2. If true, move forward and back in X and don't move in X+2
+@export var pulsing = true # If false, move forward in step X and back in step X+2. If true, move forward and back in X and don't move in X+2
 @export var input = false
 @export var activateNextCycle = false
 var storedInActivePos : bool
