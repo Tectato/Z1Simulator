@@ -1,5 +1,18 @@
 extends Node
 
+const configPath = "user://Z1SimConfig.json"
+
+func _ready() -> void:
+	await get_tree().process_frame
+	if FileAccess.file_exists(configPath):
+		var config = JSON.parse_string(FileAccess.get_file_as_string(configPath))
+		if config.has("tutorial_completed"):
+			Global.editor.setTutorialCompleted(config["tutorial_completed"])
+		else:
+			writeConfig()
+	else:
+		writeConfig()
+
 func extractMachines(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if !source:
@@ -85,3 +98,14 @@ func compile(machines : Array):
 				"uuid":entry.uuid
 			})
 	return out
+
+func writeConfig():
+	var dict = {
+		"tutorial_completed": Global.editor.tutorialDone
+	}
+	var file = FileAccess.open(configPath, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(dict))
+		file.close()
+	else:
+		print("Failed to write config file")

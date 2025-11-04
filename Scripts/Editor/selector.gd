@@ -3,7 +3,6 @@ class_name Selector
 
 @export var camera : Camera3D
 @export var mover : RayCast3D
-@export var debugLabel : Label
 @export var clickArea : Control
 @export var transformGizmo : Node3D
 
@@ -323,7 +322,6 @@ func place(part : Selectable):
 	mouseRelative = [-midPoint]
 	mouseDragOrigin = partDragOrigins[0]
 	placing = true
-	debugLabel.text = str(mouseRelative)
 	#await get_tree().create_timer(0.1).timeout
 	clickArea.call_deferred("grab_focus")
 

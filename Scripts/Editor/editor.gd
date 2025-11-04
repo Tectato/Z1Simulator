@@ -15,6 +15,7 @@ var saved = false
 var previousAction : Callable
 var currentVisMode = VisMode.Colorcoded
 var editingLocked = false
+var tutorialDone = false
 
 enum VisMode { Monochrome, Colorcoded, Realistic }
 
@@ -34,6 +35,9 @@ func _input(event: InputEvent) -> void:
 
 func doNothing():
 	pass
+
+func setTutorialCompleted(value):
+	tutorialDone = value
 
 func newProject():
 	workspace.clear()

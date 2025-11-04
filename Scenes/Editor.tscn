@@ -1,4 +1,4 @@
-[gd_scene load_steps=191 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=194 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -10,6 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://c6j8lhvash62a" path="res://Sprites/Buttons/Modes/select_inactive.png" id="6_847jc"]
 [ext_resource type="Texture2D" uid="uid://bewgkcvn3nn6i" path="res://Sprites/Buttons/Modes/select_active.png" id="7_ir51w"]
 [ext_resource type="Texture2D" uid="uid://bppmh3gus1iap" path="res://Sprites/Buttons/Modes/select_lit.png" id="8_fx05v"]
+[ext_resource type="Texture2D" uid="uid://boeuucukxjcd2" path="res://Sprites/FileSystem/machine.png" id="8_j432o"]
+[ext_resource type="PackedScene" uid="uid://43eaudijn5j7" path="res://Scenes/TutorialNode.tscn" id="8_pyy8l"]
+[ext_resource type="Texture2D" uid="uid://bjukhf5ntj8sq" path="res://Sprites/FileSystem/sheet.png" id="9_j432o"]
 [ext_resource type="Texture2D" uid="uid://cdujh2rfimo8w" path="res://Sprites/Buttons/Visibility/comments.png" id="11_ue6jr"]
 [ext_resource type="Texture2D" uid="uid://d0pjjqnwdiprb" path="res://Sprites/Buttons/VisModes/monochrome.png" id="12_f0qqp"]
 [ext_resource type="Texture2D" uid="uid://ba37urh1hrp" path="res://Sprites/Buttons/Visibility/comments_active.png" id="12_ix1yp"]
@@ -519,14 +522,13 @@ debug1 = NodePath("../Debug1")
 debug2 = NodePath("../Debug2")
 debug3 = NodePath("../Debug3")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint", "debugLabel")]
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint")]
 transform = Transform3D(0.70710695, -0.353553, 0.61237186, 0, 0.8660249, 0.49999925, -0.70710695, -0.353553, 0.61237186, 2, 2, 2)
 current = true
 script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
-debugLabel = NodePath("Interface/Label")
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "debugLabel", "clickArea", "transformGizmo")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "clickArea", "transformGizmo")]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
 enabled = false
 collision_mask = 35
@@ -534,7 +536,6 @@ collide_with_areas = true
 script = ExtResource("3_trcuy")
 camera = NodePath("..")
 mover = NodePath("../../MoveRay")
-debugLabel = NodePath("../Interface/Label")
 clickArea = NodePath("../Interface/ClickArea")
 transformGizmo = NodePath("../../TransformGizmo")
 
@@ -558,18 +559,6 @@ grow_vertical = 2
 script = ExtResource("5_brgpd")
 editor = NodePath("../..")
 
-[node name="Label" type="Label" parent="Camera3D/Interface"]
-visible = false
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -88.0
-offset_right = 129.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 64
-text = "Test"
-
 [node name="ClickArea" type="Control" parent="Camera3D/Interface"]
 layout_mode = 1
 anchors_preset = 15
@@ -578,6 +567,30 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
+
+[node name="Tutorial" type="Control" parent="Camera3D/Interface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TutorialNode" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -148.0
+offset_top = -46.0
+offset_right = -2.5
+offset_bottom = -3.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Welcome! You can skip this tutorial under \"Help\".
+Start by loading a project under File > Load Project."
 
 [node name="MenuBar" type="MenuBar" parent="Camera3D/Interface"]
 layout_mode = 0
@@ -616,14 +629,18 @@ item_1/id = 1
 [node name="Help" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
 auto_translate_mode = 1
 size = Vector2i(121, 143)
-item_count = 1
+item_count = 2
 item_0/text = "Show Help & Tips"
 item_0/id = 0
+item_1/text = "Start Tutorial"
+item_1/id = 1
 
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
 title = "Save Project"
 initial_position = 1
 size = Vector2i(640, 540)
+theme_override_icons/file = ExtResource("8_j432o")
+theme_override_icons/file_thumbnail = ExtResource("8_j432o")
 display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
@@ -642,6 +659,8 @@ auto_translate_mode = 1
 title = "Open a File"
 initial_position = 1
 size = Vector2i(640, 540)
+theme_override_icons/file = ExtResource("8_j432o")
+theme_override_icons/file_thumbnail = ExtResource("8_j432o")
 ok_button_text = "Open"
 file_mode = 0
 display_mode = 1
@@ -653,6 +672,8 @@ auto_translate_mode = 1
 title = "Open a File"
 initial_position = 1
 size = Vector2i(640, 540)
+theme_override_icons/file = ExtResource("8_j432o")
+theme_override_icons/file_thumbnail = ExtResource("8_j432o")
 ok_button_text = "Open"
 file_mode = 0
 display_mode = 1
@@ -664,8 +685,11 @@ auto_translate_mode = 1
 title = "Open File(s)"
 initial_position = 1
 size = Vector2i(640, 540)
+theme_override_icons/file = ExtResource("9_j432o")
+theme_override_icons/file_thumbnail = ExtResource("9_j432o")
 ok_button_text = "Open"
 file_mode = 1
+display_mode = 1
 access = 2
 filters = PackedStringArray("*.svg;Vector Images;sheet.svg")
 
