@@ -14,8 +14,10 @@ func stepTo(id : int):
 	if id < nodes.size():
 		nodes[currentIndex].init()
 		nodes[currentIndex].show()
-	if currentIndex == nodes.size()-1:
-		$EndTimer.start()
+		if currentIndex == nodes.size()-1:
+			nodes[currentIndex].next()
+	else:
+		skip()
 
 func skip():
 	inTutorial = false
@@ -25,7 +27,7 @@ func skip():
 		node.hide()
 	currentIndex = nodes.size()
 	hide()
-	Global.editor.setTutorialCompleted(true)
+	FileHandler.writeConfig()
 
 func start():
 	inTutorial = true

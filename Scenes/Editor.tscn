@@ -702,9 +702,8 @@ text = "That covers the basics!
 Check out [color=#40A000]Help > Show Help & Tips[/color] for more."
 nextIndex = 5
 
-[node name="EndTimer" type="Timer" parent="Camera3D/Interface/Tutorial"]
+[node name="Timer" parent="Camera3D/Interface/Tutorial/4_End" index="3"]
 wait_time = 5.0
-one_shot = true
 
 [node name="MenuBar" type="MenuBar" parent="Camera3D/Interface"]
 layout_mode = 0
@@ -752,9 +751,10 @@ item_1/text = "Start Tutorial"
 item_1/id = 1
 
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
+oversampling_override = 1.0
 title = "Save Project"
 initial_position = 1
-size = Vector2i(640, 540)
+size = Vector2i(640, 450)
 theme_override_icons/file = ExtResource("8_j432o")
 theme_override_icons/file_thumbnail = ExtResource("8_j432o")
 display_mode = 1
@@ -763,18 +763,20 @@ filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="MachineExportDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "EXport Machine"
 initial_position = 1
-size = Vector2i(640, 540)
+size = Vector2i(640, 450)
 display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="LoadProjectDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "Open a File"
 initial_position = 1
-size = Vector2i(640, 540)
+size = Vector2i(640, 450)
 theme_override_icons/file = ExtResource("8_j432o")
 theme_override_icons/file_thumbnail = ExtResource("8_j432o")
 ok_button_text = "Open"
@@ -785,9 +787,10 @@ filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "Open a File"
 initial_position = 1
-size = Vector2i(640, 540)
+size = Vector2i(640, 450)
 theme_override_icons/file = ExtResource("8_j432o")
 theme_override_icons/file_thumbnail = ExtResource("8_j432o")
 ok_button_text = "Open"
@@ -798,9 +801,10 @@ filters = PackedStringArray("*.json;Project File;project.json")
 
 [node name="ImportSheetDialog" type="FileDialog" parent="Camera3D/Interface"]
 auto_translate_mode = 1
+oversampling_override = 1.0
 title = "Open File(s)"
 initial_position = 1
-size = Vector2i(640, 540)
+size = Vector2i(640, 450)
 theme_override_icons/file = ExtResource("9_j432o")
 theme_override_icons/file_thumbnail = ExtResource("9_j432o")
 ok_button_text = "Open"
@@ -2817,7 +2821,6 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
-[connection signal="timeout" from="Camera3D/Interface/Tutorial/EndTimer" to="Camera3D/Interface/Tutorial" method="skip"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Edit" to="Camera3D/Interface" method="_on_edit_id_pressed"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Help" to="Camera3D/Interface" method="_on_help_id_pressed"]
@@ -2876,3 +2879,5 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/Settings" method="_on_check_box_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/CommentDisplay" to="Camera3D/Interface/CommentDisplay" method="_on_gui_input"]
+
+[editable path="Camera3D/Interface/Tutorial/4_End"]

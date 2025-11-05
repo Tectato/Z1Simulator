@@ -41,7 +41,7 @@ func setTutorialCompleted(value):
 	if !tutorialDone:
 		interface.tutorial.start()
 	else:
-		FileHandler.writeConfig()
+		interface.tutorial.skip()
 
 func newProject():
 	workspace.clear()
