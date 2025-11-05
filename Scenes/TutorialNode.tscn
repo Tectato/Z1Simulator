@@ -2,19 +2,20 @@
 
 [ext_resource type="FontFile" uid="uid://kj26sylm4dpl" path="res://Fonts/m5x7.ttf" id="1_4cepn"]
 [ext_resource type="Texture2D" uid="uid://dcewcsuxnu3js" path="res://Sprites/tutorialBox.png" id="1_ummtm"]
+[ext_resource type="Script" uid="uid://c2g15pjlve5hm" path="res://Scripts/Editor/Tutorial/tutorialNode.gd" id="2_xdh4x"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_xdh4x"]
-font = ExtResource("1_4cepn")
-font_color = Color(0, 0, 0, 1)
-
-[node name="Label" type="Label"]
+[node name="TutorialNode" type="RichTextLabel"]
+clip_contents = false
 offset_right = 155.0
 offset_bottom = 55.5
 scale = Vector2(2, 2)
 size_flags_horizontal = 4
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_4cepn")
+bbcode_enabled = true
 text = "Tutorial text"
-label_settings = SubResource("LabelSettings_xdh4x")
 autowrap_mode = 2
+script = ExtResource("2_xdh4x")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
 z_index = -1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=194 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=198 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -9,10 +9,14 @@
 [ext_resource type="Script" uid="uid://clhwdine20lbk" path="res://Scripts/Editor/3DUI/commentRay.gd" id="6_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c6j8lhvash62a" path="res://Sprites/Buttons/Modes/select_inactive.png" id="6_847jc"]
 [ext_resource type="Texture2D" uid="uid://bewgkcvn3nn6i" path="res://Sprites/Buttons/Modes/select_active.png" id="7_ir51w"]
+[ext_resource type="Script" uid="uid://dj3irykcw4cul" path="res://Scripts/Editor/Tutorial/tutorialManager.gd" id="8_bc06v"]
 [ext_resource type="Texture2D" uid="uid://bppmh3gus1iap" path="res://Sprites/Buttons/Modes/select_lit.png" id="8_fx05v"]
 [ext_resource type="Texture2D" uid="uid://boeuucukxjcd2" path="res://Sprites/FileSystem/machine.png" id="8_j432o"]
 [ext_resource type="PackedScene" uid="uid://43eaudijn5j7" path="res://Scenes/TutorialNode.tscn" id="8_pyy8l"]
 [ext_resource type="Texture2D" uid="uid://bjukhf5ntj8sq" path="res://Sprites/FileSystem/sheet.png" id="9_j432o"]
+[ext_resource type="Texture2D" uid="uid://dd33yp08fvgln" path="res://Sprites/9TileArrow.png" id="10_3yata"]
+[ext_resource type="Script" uid="uid://07gb7b4pgjtg" path="res://Scripts/Editor/Tutorial/cameraWatcher.gd" id="11_5adol"]
+[ext_resource type="Script" uid="uid://x73tt0fqci1w" path="res://Scripts/Editor/Tutorial/navigationNode.gd" id="11_cwlo7"]
 [ext_resource type="Texture2D" uid="uid://cdujh2rfimo8w" path="res://Sprites/Buttons/Visibility/comments.png" id="11_ue6jr"]
 [ext_resource type="Texture2D" uid="uid://d0pjjqnwdiprb" path="res://Sprites/Buttons/VisModes/monochrome.png" id="12_f0qqp"]
 [ext_resource type="Texture2D" uid="uid://ba37urh1hrp" path="res://Sprites/Buttons/Visibility/comments_active.png" id="12_ix1yp"]
@@ -568,29 +572,139 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
 
-[node name="Tutorial" type="Control" parent="Camera3D/Interface"]
+[node name="Tutorial" type="Control" parent="Camera3D/Interface" node_paths=PackedStringArray("nodes", "fileMenu", "helpMenu")]
+visible = false
+z_index = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("8_bc06v")
+nodes = [NodePath("0_Welcome"), NodePath("1_Navigation"), NodePath("2_SimControls"), NodePath("3_Resolution"), NodePath("4_End")]
+fileMenu = NodePath("../MenuBar/File")
+helpMenu = NodePath("../MenuBar/Help")
 
-[node name="TutorialNode" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+[node name="0_Welcome" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -148.0
-offset_top = -46.0
-offset_right = -2.5
-offset_bottom = -3.5
+offset_left = -129.0
+offset_top = -72.0
+offset_right = 16.5
+offset_bottom = 3.625
 grow_horizontal = 2
 grow_vertical = 2
-text = "Welcome! You can skip this tutorial under \"Help\".
-Start by loading a project under File > Load Project."
+text = "[center]Welcome![/center]
+Start by loading a project under [color=#40A000]File > Load Project[/color].
+(You can skip this under [color=#40A000]Help > Skip Tutorial[/color])"
+nextIndex = 1
+
+[node name="1_Navigation" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -136.0
+offset_top = -133.0
+offset_right = 19.0
+offset_bottom = -77.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "Rotate the view by holding [color=#40A000][Middle Mouse][/color] or [color=#40A000][Alt][/color]. Hold [color=#40A000][Shift][/color] as well to move the view laterally."
+script = ExtResource("11_cwlo7")
+nextIndex = 2
+
+[node name="CameraWatcher" type="Node" parent="Camera3D/Interface/Tutorial/1_Navigation" node_paths=PackedStringArray("camera")]
+script = ExtResource("11_5adol")
+camera = NodePath("../../../..")
+triggerDistance = 1.0
+
+[node name="2_SimControls" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -440.0
+offset_top = -218.0
+offset_right = -285.0
+offset_bottom = -162.5
+grow_horizontal = 0
+grow_vertical = 0
+text = "Advance the simulation by pressing [color=#40A000][Right Arrow][/color] or clicking this [color=#40A000]Button[/color]."
+nextIndex = 3
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/Tutorial/2_SimControls"]
+modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
+layout_mode = 0
+offset_left = 160.0
+offset_top = 47.0
+offset_right = 204.44702
+offset_bottom = 63.0
+rotation = -5.832883
+texture = ExtResource("10_3yata")
+patch_margin_top = 16
+patch_margin_right = 8
+
+[node name="3_Resolution" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -502.0
+offset_top = 44.0
+offset_right = -347.0
+offset_bottom = 99.5
+grow_horizontal = 0
+text = "Click objects to select them. Configure which types of objects to select up here or by pressing [color=#40A000][1]/[2]/[3][/color]"
+nextIndex = 4
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/Tutorial/3_Resolution"]
+modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
+layout_mode = 0
+offset_left = 160.0
+offset_top = 42.0
+offset_right = 204.44702
+offset_bottom = 58.0
+rotation = -1.5707964
+texture = ExtResource("10_3yata")
+patch_margin_top = 16
+patch_margin_right = 8
+
+[node name="4_End" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -182.0
+offset_top = -124.0
+offset_right = 5.5
+offset_bottom = -79.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "That covers the basics!
+Check out [color=#40A000]Help > Show Help & Tips[/color] for more."
+nextIndex = 5
+
+[node name="EndTimer" type="Timer" parent="Camera3D/Interface/Tutorial"]
+wait_time = 5.0
+one_shot = true
 
 [node name="MenuBar" type="MenuBar" parent="Camera3D/Interface"]
 layout_mode = 0
@@ -623,8 +737,10 @@ size = Vector2i(121, 143)
 item_count = 2
 item_0/text = "Make local copy"
 item_0/id = 0
+item_0/disabled = true
 item_1/text = "Clear Diff"
 item_1/id = 1
+item_1/disabled = true
 
 [node name="Help" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
 auto_translate_mode = 1
@@ -1457,10 +1573,9 @@ script = ExtResource("103_msmja")
 [node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/HelpWindow"]
 offset_right = 601.0
 offset_bottom = 399.0
-current_tab = 3
+current_tab = 0
 
 [node name="Navigation" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -1517,7 +1632,7 @@ layout_mode = 2
 bbcode_enabled = true
 text = "[b][Right click][/b]
 For [color=00FFFF]output pins[/color]: Nudges pin, moving connected [color=008CFF]sheets[/color] along with it. (Requires having a set directionality)
-For [color=008CFF]sheets[/color]: If the sheet has [i]one[/i] [color=00FF97]pin[/color] intersecting a circular hole, right-click and drag to pivot it precisely around that [color=00FF97]pin[/color]."
+For [color=008CFF]sheets[/color]: If the sheet has [i]one[/i] [color=00FF97]pin[/color] intersecting a circular hole, hold right-click and drag to pivot it precisely around that [color=00FF97]pin[/color]."
 fit_content = true
 autowrap_mode = 2
 
@@ -2054,6 +2169,7 @@ fit_content = true
 autowrap_mode = 2
 
 [node name="Parts" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
@@ -2441,6 +2557,16 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Undo" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][i]Fixing mistakes[/i][/center]
+Currently, no Undo has yet been implemented. Be sure to save often! If you make a hard-to-reverse mistake, just reload the current scene with [color=#80F000]File > Reload current Project[/color]"
+fit_content = true
+
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="Baseplates" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
@@ -2691,6 +2817,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
+[connection signal="timeout" from="Camera3D/Interface/Tutorial/EndTimer" to="Camera3D/Interface/Tutorial" method="skip"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Edit" to="Camera3D/Interface" method="_on_edit_id_pressed"]
 [connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Help" to="Camera3D/Interface" method="_on_help_id_pressed"]
@@ -2708,8 +2835,11 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/StaticSheetVis" to="Camera3D/Interface" method="_on_static_sheet_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/ModeBar/Select" to="Camera3D/Interface" method="_on_select_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/ModeBar/Manage" to="Camera3D/Interface" method="_on_manage_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface/Tutorial/3_Resolution" method="next"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface" method="_on_part_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/Toggles/ResolutionBar/Layer" to="Camera3D/Interface/Tutorial/3_Resolution" method="next"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/ResolutionBar/Layer" to="Camera3D/Interface" method="_on_layer_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/Toggles/ResolutionBar/Machine" to="Camera3D/Interface/Tutorial/3_Resolution" method="next"]
 [connection signal="toggled" from="Camera3D/Interface/Toggles/ResolutionBar/Machine" to="Camera3D/Interface" method="_on_machine_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/Toggles/VisModes/Monochrome" to="Camera3D/Interface" method="visModeMonochrome"]
 [connection signal="pressed" from="Camera3D/Interface/Toggles/VisModes/Colorcoded" to="Camera3D/Interface" method="visModeColorcoded"]
@@ -2722,6 +2852,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/SimulationControls/Reset" to="Camera3D/Interface/SimulationControls" method="_on_reset_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/SimulationControls/PrevStep" to="Camera3D/Interface/SimulationControls" method="_on_prev_step_pressed"]
 [connection signal="toggled" from="Camera3D/Interface/SimulationControls/PausePlay" to="Camera3D/Interface/SimulationControls" method="_on_pause_play_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/SimulationControls/NextStep" to="Camera3D/Interface/Tutorial/2_SimControls" method="next"]
 [connection signal="pressed" from="Camera3D/Interface/SimulationControls/NextStep" to="Camera3D/Interface/SimulationControls" method="_on_next_step_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/Sheet" to="Camera3D/Interface" method="requestSheet"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/LogicPin" to="." method="addPin"]

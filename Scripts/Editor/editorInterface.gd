@@ -13,6 +13,7 @@ extends Control
 @onready var commentText = $SetCommentBox/ScrollContainer/TextEdit
 @onready var saveError = $SaveError
 @onready var selectedLabel = $SelectedLabel/Label
+@onready var tutorial = $Tutorial
 
 @onready var ModeSelect = $Toggles/ModeBar/Select
 @onready var ModeManage = $Toggles/ModeBar/Manage
@@ -249,7 +250,14 @@ func _on_edit_lock_toggled(toggled_on: bool) -> void:
 		#button.disabled = toggled_on
 
 func _on_help_id_pressed(id: int) -> void:
-	$HelpWindow.show()
+	match(id):
+		0:
+			$HelpWindow.show()
+		1:
+			if tutorial.inTutorial:
+				tutorial.skip()
+			else:
+				tutorial.start()
 
 func _on_path_export_pressed() -> void:
 	Global.workspace.exportPaths()

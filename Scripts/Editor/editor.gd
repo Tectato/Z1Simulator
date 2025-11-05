@@ -38,6 +38,10 @@ func doNothing():
 
 func setTutorialCompleted(value):
 	tutorialDone = value
+	if !tutorialDone:
+		interface.tutorial.start()
+	else:
+		FileHandler.writeConfig()
 
 func newProject():
 	workspace.clear()
@@ -65,6 +69,8 @@ func save():
 		print("Could not write file for project")
 
 func loadProject(srcPath = ""):
+	if interface.tutorial.inTutorial:
+		interface.tutorial.stepTo(1)
 	workspace.clear()
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	currentlyLoadedPath = path

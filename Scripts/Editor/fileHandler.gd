@@ -8,10 +8,13 @@ func _ready() -> void:
 		var config = JSON.parse_string(FileAccess.get_file_as_string(configPath))
 		if config.has("tutorial_completed"):
 			Global.editor.setTutorialCompleted(config["tutorial_completed"])
+			Global.editor.interface.tutorial.inTutorial = false
 		else:
 			writeConfig()
+			Global.editor.setTutorialCompleted(false)
 	else:
 		writeConfig()
+		Global.editor.setTutorialCompleted(false)
 
 func extractMachines(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
