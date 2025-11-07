@@ -141,6 +141,7 @@ func clearDiff():
 	restPos = position
 	rotation.y = storedRot
 	targetRot = storedRot
+	updateInteractionCandidates()
 
 func _ready():
 	#mesh = debugPolygon
@@ -951,9 +952,10 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 		clockwise = turnDirections[initiator][dirToInt(dir)]
 		toMoveInRotation = toMoveInCWRotation if clockwise else toMoveInCCWRotation
 	else:
+		Simulator.spawnIndicator(pivot.global_position * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Attention)
 		print("Unexpected turn of sheet " + id + " (" + str(uuid) + ")")
 		return
-	Simulator.spawnIndicator(pivot, EventIndicator.Type.Turn)
+	Simulator.spawnIndicator(pivot.global_position * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Turn)
 	rotSpeed = potentialRotSpeed[0 if clockwise else 1]
 	targetRot = potentialTargetRot[0 if clockwise else 1]
 	targetPos = potentialTargetPos[0 if clockwise else 1]

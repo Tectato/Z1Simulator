@@ -112,6 +112,7 @@ func clearDiff():
 	directionality = int(storedStates[2])
 	if indicator:
 		indicator.setDirection(directionality)
+	updateInteractionCandidates()
 
 func _ready() -> void:
 	color = standardColor

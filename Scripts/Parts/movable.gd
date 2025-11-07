@@ -140,7 +140,7 @@ func move(dir : Vector2, initiator, chain = []):
 			else:
 				pass
 	else:
-		Simulator.spawnIndicator(self, EventIndicator.Type.Error)
+		Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
 		print("Unexpected move operation")
 	for relation in relations:
 		if relation == initiator:
@@ -190,7 +190,7 @@ func abortMove(initiator, chain = []):
 		print("Move aborted")
 	inMotion = false
 	targetPos = preMovePos
-	Simulator.spawnIndicator(self, EventIndicator.Type.Blocked)
+	Simulator.spawnIndicator(global_position, EventIndicator.Type.Blocked)
 	#for relation in relations:
 		#if not relation == movedBy: #relation.isBlocking():
 			#relation.abortMove(self)
@@ -254,7 +254,8 @@ func removeRelation(relation : Relation):
 
 func clearRelations():
 	for relation in relations:
-		relation.call_deferred("delete")
+		if relation:
+			relation.call_deferred("delete")
 	relations.clear()
 
 func hasRelation(A, B):

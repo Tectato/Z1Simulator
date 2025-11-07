@@ -16,6 +16,7 @@ var text = "[Select and rename to put comment here]"
 
 func _ready() -> void:
 	Global.workspace.commentVisChanged.connect(commentVisChanged)
+	visible = Global.workspace.showComments
 
 func serialize():
 	var out = {

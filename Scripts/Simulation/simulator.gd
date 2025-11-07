@@ -88,12 +88,12 @@ func setClockSpeed(value):
 func _on_auto_clock_timeout() -> void:
 	next(false)
 
-func spawnIndicator(origin : Node3D, type : EventIndicator.Type):
+func spawnIndicator(originPos : Vector3, type : EventIndicator.Type):
 	if type == EventIndicator.Type.Turn and !showRotationIndicators:
 		return
 	var indicator = EVENTINDICATOR.instantiate()
 	add_child(indicator)
-	indicator.global_position = origin.global_position
+	indicator.global_position = originPos
 	indicator.setType(type)
 
 func _on_cooldown_timeout() -> void:
