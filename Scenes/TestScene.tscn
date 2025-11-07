@@ -1,27 +1,28 @@
-[gd_scene load_steps=16 format=3 uid="uid://bvtgwlrwutvvr"]
+[gd_scene load_steps=17 format=3 uid="uid://bvtgwlrwutvvr"]
 
 [ext_resource type="PackedScene" uid="uid://crobnroqc51y8" path="res://Scenes/Parts/ClockPin.tscn" id="1_8k7wh"]
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_iufkg"]
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="3_0f5h7"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="4_iufkg"]
 [ext_resource type="Shader" uid="uid://dajexqetfnvm" path="res://Shaders/NormalTest.gdshader" id="5_0f5h7"]
-[ext_resource type="Shader" uid="uid://bav24bh8mjwkn" path="res://Shaders/GeometryOutline.gdshader" id="5_qsjrb"]
+[ext_resource type="Shader" uid="uid://do1e3mk50epxh" path="res://Shaders/SheetMesh/CompatBevelMetallic.gdshader" id="5_c264a"]
+[ext_resource type="Shader" uid="uid://elyt8nlbykvd" path="res://Shaders/NormalToAlbedo.gdshader" id="6_6xh1p"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0f5h7"]
 render_priority = 0
 shader = ExtResource("4_iufkg")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5rbs6"]
+render_priority = 0
+shader = ExtResource("5_c264a")
 shader_parameter/outline_color = Color(0, 0, 0, 1)
 shader_parameter/outline_threshold = 0.2
 shader_parameter/bevel_size = 0.125
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6xh1p"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_201fe"]
 render_priority = 0
-shader = ExtResource("5_qsjrb")
-shader_parameter/color = Color(0, 0, 0, 1)
-shader_parameter/thickness = 0.00999999977648
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5rbs6"]
-next_pass = SubResource("ShaderMaterial_6xh1p")
+next_pass = SubResource("ShaderMaterial_5rbs6")
+shader = ExtResource("6_6xh1p")
 
 [sub_resource type="BoxMesh" id="BoxMesh_c264a"]
 size = Vector3(1, 0.02, 1)
@@ -29,9 +30,6 @@ size = Vector3(1, 0.02, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qsjrb"]
 render_priority = 0
 shader = ExtResource("4_iufkg")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/bevel_size = 0.125
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c264a"]
 next_pass = SubResource("ShaderMaterial_qsjrb")
@@ -52,22 +50,18 @@ size = Vector3(5, 5, 5)
 
 [node name="ClockPin" parent="." instance=ExtResource("1_8k7wh")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.3, 0, -1.1)
-pulsing = true
 
 [node name="ClockPin2" parent="." instance=ExtResource("1_8k7wh")]
 transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -0.2, 0, -0.9)
 forwardStep = 1
-pulsing = true
 
 [node name="ClockPin3" parent="." instance=ExtResource("1_8k7wh")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 0, -1)
 forwardStep = 2
-pulsing = true
 
 [node name="ClockPin4" parent="." instance=ExtResource("1_8k7wh")]
 transform = Transform3D(-2.18557e-07, 0, 1, 0, 1, 0, -1, 0, -2.18557e-07, -0.1, 0, -1.2)
 forwardStep = 3
-pulsing = true
 
 [node name="ClockPin5" parent="." instance=ExtResource("1_8k7wh")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.299758, 0, -1.1)
@@ -117,7 +111,7 @@ polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.55949, 1.88813, 0.524549)
-material_override = SubResource("StandardMaterial3D_5rbs6")
+material_override = SubResource("ShaderMaterial_201fe")
 mesh = SubResource("BoxMesh_c264a")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
