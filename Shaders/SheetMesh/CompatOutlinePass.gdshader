@@ -52,13 +52,16 @@ void fragment() {
 	float norm_edge_y = 0.0;
  
 	for (int i = 0; i < 8; i++) {
-		vec2 neighbor_uv = clamp(uv + offset[i] * texel, vec2(0.0), vec2(1.0));
+		vec2 neighbor_uv = clamp(uv + offset[i] * texel * 1.5, vec2(0.0), vec2(1.0));
 
 		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
 		vec3  neighbor_view   = get_view_pos(neighbor_uv, neighbor_depth, inv_proj_m);
 		vec3  neighbor_normal = texture(screen_texture, neighbor_uv).rgb * 2.0 - 1.0;
 
-		float dist = distance(center_view, neighbor_view);
+		//float dist = distance(center_view, neighbor_view);
+		float dist = abs(center_view.z - neighbor_view.z);
+		dist = sqrt(dist);
+		//dist = 1.0-dist;
 		float diff = length(neighbor_normal - center_normal);
 
 		depth_edge_x += dist * sobel_x[i];
@@ -70,6 +73,7 @@ void fragment() {
 
 	float depth_edge = sqrt(depth_edge_x * depth_edge_x + depth_edge_y * depth_edge_y)*10.0;
 	depth_edge = clamp(depth_edge, 0.0, 1.0);
+	depth_edge = smoothstep(0.2,0.4,depth_edge);
 
 	float gradient = sqrt(norm_edge_x * norm_edge_x + norm_edge_y * norm_edge_y);
 	float normal_edge = float(gradient > outline_threshold);
@@ -77,5 +81,5 @@ void fragment() {
 	float combined_edge = max(normal_edge, depth_edge);
 	
 	ALBEDO = vertex_color * max(0.4,(1.0-combined_edge));
-	//ALBEDO = combined_edge * vec3(1,1,1);
+	//ALBEDO = depth_edge * vec3(1,1,1);
 }
