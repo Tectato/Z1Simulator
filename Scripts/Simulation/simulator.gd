@@ -18,6 +18,7 @@ var stepScheduled = false
 var gizmo : Control
 
 signal step
+signal backstep
 signal record
 signal rewind
 
@@ -27,6 +28,7 @@ func _ready() -> void:
 
 func lateReady():
 	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
+	moveSpeedChanged()
 
 func registerClockInstance(instance):
 	clockInstances.append(instance)
@@ -65,6 +67,7 @@ func next(stopClock = true):
 	for instance in clockInstances:
 		instance.clockCycle(currentStep)
 	gizmo.setClockStep(currentStep+1)
+	$MoveComplete.start()
 	$Cooldown.start()
 	call_deferred("callRecord")
 
@@ -102,7 +105,8 @@ func _on_cooldown_timeout() -> void:
 		next($AutoClock.paused)
 
 func moveSpeedChanged():
-	$Cooldown.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed) * 2 + 0.2
+	$MoveComplete.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed)
+	$Cooldown.wait_time = $MoveComplete.wait_time * 2 + $PulsingReset.wait_time * 2
 	#TODO
 	pass
 
@@ -112,4 +116,9 @@ func stepToString(i : int):
 		1: return "II"
 		2: return "III"
 		3: return "IV"
-	
+
+func _on_move_complete_timeout() -> void:
+	$PulsingReset.start()
+
+func _on_pulsing_reset_timeout() -> void:
+	backstep.emit()

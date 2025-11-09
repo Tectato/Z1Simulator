@@ -23,12 +23,11 @@ func _ready() -> void:
 	color = standardColor
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
+	Simulator.backstep.connect(backstep)
 	machine.clock.registerClockPin(self)
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)
 	visModeChanged(Global.editor.currentVisMode)
-	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
-	moveSpeedChanged()
 	meshIndex = PinRenderHandler.addInstance("pin")
 	await get_tree().process_frame
 	PinRenderHandler.setColor("pin", meshIndex, color)
@@ -156,8 +155,6 @@ func clockCycle(clockStep : int, forwards = true):
 		canMove(dir, null)
 		call_deferred("move", dir, null)
 		#move(dir, null)
-		if pulsing:
-			$ResetTimer.start()
 
 func wouldMove(clockStep):
 	return clockStep == forwardStep or (!pulsing and clockStep == antiStep)
@@ -257,7 +254,8 @@ func clearDiff():
 	targetPos = position
 	inActivePos = storedInActivePos
 
-func _on_reset_timer_timeout() -> void:
+func backstep():
+	if !pulsing or !(inActivePos or input and inputCheckbox.checked): return
 	if selected:
 		pass
 	#updateInActivePos()
@@ -342,7 +340,3 @@ func inputCheckboxToggled(value):
 	for relation in relations:
 		if relation is InputLink:
 			relation.toggle(self, value)
-
-func moveSpeedChanged():
-	$ResetTimer.wait_time = Workspace.pinTravel/Global.workspace.moveSpeed + 0.1
-	pass

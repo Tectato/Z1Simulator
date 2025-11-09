@@ -11,5 +11,14 @@ script = ExtResource("1_qmcj1")
 wait_time = 0.2
 one_shot = true
 
+[node name="MoveComplete" type="Timer" parent="."]
+one_shot = true
+
+[node name="PulsingReset" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+
 [connection signal="timeout" from="AutoClock" to="." method="_on_auto_clock_timeout"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
+[connection signal="timeout" from="MoveComplete" to="." method="_on_move_complete_timeout"]
+[connection signal="timeout" from="PulsingReset" to="." method="_on_pulsing_reset_timeout"]

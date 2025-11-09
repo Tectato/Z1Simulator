@@ -89,10 +89,6 @@ mesh = SubResource("CylinderMesh_vjs7e")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001, 0.001, 0.032)
 alpha_cut = 1
 
-[node name="ResetTimer" type="Timer" parent="."]
-wait_time = 0.2
-one_shot = true
-
 [node name="StepLabel" type="Label3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
 sorting_offset = 1.0
@@ -152,5 +148,4 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 shape = SubResource("CylinderShape3D_fc7u5")
 
-[connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]
 [connection signal="toggled" from="StepLabel/InputCheckbox" to="." method="inputCheckboxToggled"]

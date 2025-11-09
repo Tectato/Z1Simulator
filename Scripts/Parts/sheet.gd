@@ -174,11 +174,12 @@ func _process(delta: float) -> void:
 		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func _notification(what):
-	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted and is_visible_in_tree():
+	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
 		if getMachine().beingDeleted:
 			SheetLibrary.unregisterUser(self, path)
 			return
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+		if is_visible_in_tree():
+			SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func setSelected(value):
 	super.setSelected(value)

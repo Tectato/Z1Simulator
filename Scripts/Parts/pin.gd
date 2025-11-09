@@ -223,7 +223,8 @@ func _notification(what: int) -> void:
 		if getMachine().beingDeleted:
 			PinRenderHandler.removeInstance("pin", meshIndex)
 			return
-		PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
+		if is_visible_in_tree():
+			PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 
 func snap(srcPos):
 	#var closestDist = Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, global_position)
