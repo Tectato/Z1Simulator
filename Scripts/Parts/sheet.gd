@@ -21,6 +21,7 @@ var heightIndex = 0
 var pivots = [[],[]]
 var turnInstead = {}#{0:false, 1:false, 2:false, 3:false}
 var storedRot = 0.0
+var previousRot = 0.0
 var restRot = 0.0
 var targetRot = 0.0
 var rotating = false
@@ -93,6 +94,7 @@ func deserialize(source : Dictionary):
 	restRot = rotation.y
 	storedRot = restRot
 	targetRot = restRot
+	previousRot = restRot
 	if source.has("id"):
 		id = source["id"]
 	else:
@@ -141,6 +143,7 @@ func clearDiff():
 	restPos = position
 	rotation.y = storedRot
 	targetRot = storedRot
+	previousRot = storedRot
 	updateInteractionCandidates()
 
 func _ready():
@@ -792,6 +795,7 @@ func rewind():
 	var canRewind = !posHistory.is_empty()
 	super.rewind()
 	if canRewind:
+		previousRot = rotation.y
 		targetRot = rotHistory.pop_front()
 
 # Returns: 0 if can't move, 1 if can move, 2 if we will turn instead
@@ -959,6 +963,9 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 	Simulator.spawnIndicator(pivot.global_position * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Turn)
 	rotSpeed = potentialRotSpeed[0 if clockwise else 1]
 	targetRot = potentialTargetRot[0 if clockwise else 1]
+	if abs(angle_difference(wrapf(targetRot,-PI,PI), wrapf(previousRot,-PI,PI))) < 0.04:
+		targetRot = previousRot # Prevent drift over time from inaccurate angle calculation
+	previousRot = rotation.y
 	targetPos = potentialTargetPos[0 if clockwise else 1]
 	chain.erase(initiator)
 	if initiator.move(dir, self, chain) == MoveState.Moved:
@@ -998,6 +1005,7 @@ func rotatePart(by):
 	updateRotation()
 
 func updateRotation():
+	previousRot = rotation.y
 	targetRot = rotation.y
 
 func snapRotation():
@@ -1040,6 +1048,7 @@ func setupAfterDuplication(source = null):
 		bounds = source.bounds
 		restRot = source.restRot
 		targetRot = source.targetRot
+		previousRot = targetRot
 		$Outline/Polygon.polygon = source.outline.polygon
 		$Outline.position = source.outline.get_parent().position
 		$Sprite3D.position = source.sprite.position

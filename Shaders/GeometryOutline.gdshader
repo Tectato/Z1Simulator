@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode cull_front, unshaded;
+render_mode cull_front, unshaded, shadows_disabled;
 
 uniform vec3 color : source_color = vec3(0,0,0);
 uniform float thickness : hint_range(0.0, 1.0, 0.001) = 0.005;

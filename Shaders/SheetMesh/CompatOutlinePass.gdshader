@@ -4,10 +4,10 @@ render_mode depth_prepass_alpha;
 //const vec3 selectedColor = vec3(1,0.1,0.1);
 uniform sampler2D screen_texture: hint_screen_texture;
 uniform sampler2D depth_texture: hint_depth_texture;
-uniform sampler2D normal_texture: hint_normal_roughness_texture;
 
 //const vec3 outline_color = vec3(0,0,0);
 uniform float outline_threshold = 0.8;
+varying vec3 vertex_color;
 
 const float sobel_x[8] = float[](
         -1.0,  0.0,  1.0,
@@ -31,6 +31,9 @@ vec3 get_view_pos(vec2 uv, float depth, mat4 inv_proj_m){
 	return veiw_pos.xyz /= veiw_pos.w;
 }
 
+void vertex() {
+	vertex_color = COLOR.rgb;
+}
 
 void fragment() {
 	vec2 uv = SCREEN_UV;
@@ -40,7 +43,7 @@ void fragment() {
 
 	float center_depth = texture(depth_texture, uv).r;
 	vec3 center_view = get_view_pos(uv, center_depth, inv_proj_m);
-	vec3 center_normal = texture(normal_texture, uv).rgb * 2.0 - 1.0;
+	vec3 center_normal = texture(screen_texture, uv).rgb * 2.0 - 1.0;
 
 	float depth_edge_x = 0.0;
 	float depth_edge_y = 0.0;
@@ -53,7 +56,7 @@ void fragment() {
 
 		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
 		vec3  neighbor_view   = get_view_pos(neighbor_uv, neighbor_depth, inv_proj_m);
-		vec3  neighbor_normal = texture(normal_texture, neighbor_uv).rgb * 2.0 - 1.0;
+		vec3  neighbor_normal = texture(screen_texture, neighbor_uv).rgb * 2.0 - 1.0;
 
 		float dist = distance(center_view, neighbor_view);
 		float diff = length(neighbor_normal - center_normal);
@@ -73,5 +76,6 @@ void fragment() {
 
 	float combined_edge = max(normal_edge, depth_edge);
 	
-	ALBEDO = screen_color * max(0.2,(1.0-combined_edge));
+	ALBEDO = vertex_color * max(0.4,(1.0-combined_edge));
+	//ALBEDO = combined_edge * vec3(1,1,1);
 }

@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://0bo2bl8wqi7c"]
+
+[ext_resource type="Shader" uid="uid://bav24bh8mjwkn" path="res://Shaders/GeometryOutline.gdshader" id="1_0hlnd"]
+[ext_resource type="Shader" uid="uid://cu8xh58u8f685" path="res://Shaders/SheetMesh/CompatOutlinePass.gdshader" id="1_1jo03"]
+[ext_resource type="Shader" uid="uid://elyt8nlbykvd" path="res://Shaders/NormalToAlbedo.gdshader" id="2_0hlnd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vb4yx"]
+render_priority = 0
+shader = ExtResource("1_0hlnd")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.005
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_th4q3"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_vb4yx")
+shader = ExtResource("1_1jo03")
+shader_parameter/outline_threshold = 0.8
+
+[resource]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_th4q3")
+shader = ExtResource("2_0hlnd")

@@ -27,6 +27,7 @@ func skip():
 		node.hide()
 	currentIndex = nodes.size()
 	hide()
+	Global.editor.tutorialDone = true
 	FileHandler.writeConfig()
 
 func start():
