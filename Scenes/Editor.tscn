@@ -1341,7 +1341,7 @@ offset_left = -139.0
 offset_top = 29.0
 offset_right = -70.4375
 offset_bottom = 60.0
-text = "1 Hz"
+text = "0.25 Hz"
 
 [node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface"]
 visible = false

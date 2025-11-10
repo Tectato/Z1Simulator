@@ -14,6 +14,7 @@ var inputs = []
 var outputs = []
 var history = 0
 var stepScheduled = false
+var maxFrequency = 1.0
 
 var gizmo : Control
 
@@ -107,6 +108,7 @@ func _on_cooldown_timeout() -> void:
 func moveSpeedChanged():
 	$MoveComplete.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed)
 	$Cooldown.wait_time = $MoveComplete.wait_time * 2 + $PulsingReset.wait_time * 2
+	maxFrequency = 1/($Cooldown.wait_time * 4)
 	#TODO
 	pass
 

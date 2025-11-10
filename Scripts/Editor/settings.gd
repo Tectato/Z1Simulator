@@ -1,5 +1,10 @@
 extends Control
 
+@onready var moveSpeedInput = $VBoxContainer/MovementSpeed/MovementSpeedInput
+
+func _ready() -> void:
+	moveSpeedInput.text = str(Global.workspace.moveSpeed)
+
 func _on_close_pressed() -> void:
 	hide()
 

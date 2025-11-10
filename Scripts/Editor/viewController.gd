@@ -57,7 +57,10 @@ func updateZoom():
 	zoomLevel = clampf(zoomLevel, 0.1, 20)
 	var posRelative = global_position - focusPoint.global_position
 	posRelative = posRelative.normalized() * zoomLevel
-	global_position = focusPoint.global_position + posRelative
+	if orthographic:
+		global_position = focusPoint.global_position + Vector3.UP * 10
+	else:
+		global_position = focusPoint.global_position + posRelative
 	focusPoint.scale = Vector3(1,1,1) * zoomLevel
 	size = float(zoomLevel)
 

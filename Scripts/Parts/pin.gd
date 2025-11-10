@@ -280,8 +280,7 @@ func updateInteractionCandidates():
 			if hole is PointHole or hole is LongHole:
 				minDiameter = min(minDiameter, hole.radius * 2)
 	interactionCandidates.sort_custom(sortByFixed)
-	if minDiameter > 0.1:
-		minDiameter = 0.05
+	minDiameter = min(minDiameter, 0.06)
 	diameter = minDiameter
 	$MeshInstance3D.scale = Vector3(diameter/0.05,$MeshInstance3D.scale.y,diameter/0.05)
 	$Highlight.transform = $MeshInstance3D.transform

@@ -14,7 +14,7 @@ const snapDist = 0.02
 const historyLength = 12
 var sheetSpacing = 0.045
 signal sheetSpacingChanged
-var moveSpeed = 1.0
+var moveSpeed = 1.1
 signal moveSpeedChanged
 var saveDiff = true
 var comments = []
