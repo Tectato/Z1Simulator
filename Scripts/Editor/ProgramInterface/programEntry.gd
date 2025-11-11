@@ -130,12 +130,15 @@ func clockStep():
 
 func prepareNextStep():
 	if internalStep+1 >= (cycles.size()-1) * 4:
-		running = false
-		initiated = false
 		internalStep = -1
-		$VBoxContainer/ClockSteps/Start.set_pressed_no_signal(false)
 		for cycle in cycles:
 			cycle.setStep(internalStep)
+		if $VBoxContainer/ClockSteps/Loop.button_pressed:
+			prepareNextStep()
+			return
+		running = false
+		initiated = false
+		$VBoxContainer/ClockSteps/Start.set_pressed_no_signal(false)
 		return
 	for cycle in cycles:
 		cycle.setStep(internalStep)
@@ -152,3 +155,6 @@ func rewind():
 		for entry in pinEntries:
 			entry.pin.inputCheckbox.setValueEmit(false)
 		prepareNextStep()
+
+func _on_loop_toggled(toggled_on: bool) -> void:
+	pass # Replace with function body.

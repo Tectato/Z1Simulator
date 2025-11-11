@@ -220,6 +220,7 @@ func deserialize(path):
 		Global.editor.selector.select(selectedMachine.collider)
 		if !selectedMachine.layers.is_empty():
 			selectedLayer = selectedMachine.layers[0]
+			Global.editor.planInterface.setPlan(selectedLayer.plan)
 	for relation in relations:
 		var AParent = uuidManager.getPart(int(relation["AParent"]))
 		var A = AParent.uuidManager.getPart(int(relation["A"]))
