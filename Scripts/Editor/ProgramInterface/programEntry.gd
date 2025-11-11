@@ -83,12 +83,12 @@ func isEmpty():
 	return pinEntries.is_empty()
 
 func newSelection(parts):
-	if !folded:
-		clean()
-		for part in parts:
-			if part is ClockPin and !hasPin(part) and part.input:
-				addPin(part)
-		if cycles.is_empty(): updateLength()
+	#if !folded:
+	clean()
+	for part in parts:
+		if part is ClockPin and !hasPin(part) and part.input:
+			addPin(part)
+	if cycles.is_empty(): updateLength()
 
 func updateLength():
 	var max = -1

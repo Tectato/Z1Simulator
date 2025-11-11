@@ -796,7 +796,7 @@ func rewind():
 	super.rewind()
 	if canRewind:
 		previousRot = rotation.y
-		targetRot = rotHistory.pop_front()
+		targetRot = rotHistory.pop_back()
 
 # Returns: 0 if can't move, 1 if can move, 2 if we will turn instead
 func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):

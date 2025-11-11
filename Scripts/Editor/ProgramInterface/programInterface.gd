@@ -24,6 +24,7 @@ func addSequence():
 	else:
 		sequences.back().add_sibling(newSequence)
 	sequences.append(newSequence)
+	newSequence.newSelection(Global.editor.selector.selected)
 	return newSequence
 
 func _on_add_pressed() -> void:
