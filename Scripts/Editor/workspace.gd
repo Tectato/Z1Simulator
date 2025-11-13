@@ -18,6 +18,7 @@ var moveSpeed = 1.1
 signal moveSpeedChanged
 var saveDiff = true
 var comments = []
+var brassMode = false
 
 @onready var uuidManager = $UUIDManager
 
@@ -407,3 +408,7 @@ func insertSingleEntry(target = {}, source = []):
 			if !workingDict.has(entry):
 				workingDict[entry] = {}
 			workingDict = workingDict[entry]
+
+func setBrassMode(value):
+	brassMode = value
+	Global.editor.visModeChanged.emit(Global.editor.currentVisMode)

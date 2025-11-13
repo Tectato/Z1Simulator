@@ -25,12 +25,15 @@ func updateMaterial():
 			currentColor = markerColor
 			#material_override = materialFlat
 		Editor.VisMode.Realistic:
-			currentColor = Color(0.5,0.5,0.5)
+			currentColor = Color(0.6, 0.6, 0.6, 1.0)
 			#material_override = materialFlat if parent.selected else materialShaded
 	if parent.selected:
 		currentColor = currentColor.blend(Color(1.0, 0.4, 0.4, 0.75))
 	if parent.fixed:
-		currentColor *= fixedFac
+		if Global.workspace.brassMode and Global.editor.currentVisMode == Editor.VisMode.Realistic:
+			currentColor = Color(0.996, 0.235, 0.0, 1.0) if parent.selected else Color(0.85, 0.629, 0.298, 1.0)
+		else:
+			currentColor *= fixedFac
 	#materialFlat.emission_energy_multiplier = 0.5 if parent.selected else 0.0
 	#materialFlat.albedo_color = currentColor
 	if parent.highlighted: return
