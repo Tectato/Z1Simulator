@@ -181,7 +181,18 @@ func setHighlight(enabled : bool, highlightColor : Color):
 		PinRenderHandler.setColor("pin", meshIndex, color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else standardColor)
 
 func setHeight(value):
-	var effectiveHeight = value if fixed else value - 0.4
+	var effectiveHeight
+	if global:
+		var maxHeight = 0.1
+		var machineOffset = getMachine().global_position.y
+		for thing in interactionCandidates:
+			maxHeight = max(maxHeight, thing.global_position.y - machineOffset)
+		maxHeight *= 10
+		maxHeight += 0.4
+		effectiveHeight = maxHeight
+	else:
+		effectiveHeight = value if fixed else value - 0.4
+		
 	$MeshInstance3D.scale = Vector3(diameter/0.05,effectiveHeight,diameter/0.05)
 	$MeshInstance3D.position = Vector3.UP * 0.1 * effectiveHeight / 2
 	$Highlight.transform = $MeshInstance3D.transform
@@ -189,7 +200,7 @@ func setHeight(value):
 	#$Area3D.scale = Vector3(scale.x,value,scale.z)
 	#$Area3D.position = Vector3.UP * 0.1 * value / 2
 	if output:
-		indicator.position = Vector3.UP * (value * 0.1 + 0.05)
+		indicator.position = Vector3.UP * (effectiveHeight * 0.1 + 0.05)
 
 func setOutput(value):
 	if fixed or value == output:
@@ -249,6 +260,8 @@ func place():
 	#PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
 	if machine:
 		machine.gridLibrary.requestUpdate(self)
+	if global:
+		setHeight(0.1)
 
 func updateInstance():
 	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
@@ -285,6 +298,8 @@ func updateInteractionCandidates():
 	$MeshInstance3D.scale = Vector3(diameter/0.05,$MeshInstance3D.scale.y,diameter/0.05)
 	$Highlight.transform = $MeshInstance3D.transform
 	$Area3D.transform = $MeshInstance3D.transform
+	if global:
+		setHeight(0.1)
 	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 	#updateConstraints()
 

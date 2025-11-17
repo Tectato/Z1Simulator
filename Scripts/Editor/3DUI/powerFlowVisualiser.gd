@@ -2,7 +2,8 @@ extends Node3D
 class_name PowerFlow
 
 @export var lineMaterial : Material
-@export var lineGradient : Gradient
+@export var lineGradientSuccess : Gradient
+@export var lineGradientFail : Gradient
 @export var lineMesh : Mesh
 var gizmos = []
 var chains = []
@@ -38,7 +39,7 @@ func clearGizmos():
 	gizmos.clear()
 	chains.clear()
 
-func visualizeChain(end : Movable):
+func visualizeChain(end : Movable, successful = true):
 	if !Global.workspace.showPowerFlow: return
 	if end is ClockPin: return
 	if visualizedStep != Simulator.totalStep:
@@ -122,7 +123,8 @@ func visualizeChain(end : Movable):
 		#GeometryInstance3D.SHADOW_CASTING_SETTING_OFF,
 		#false,
 		#[lineMaterial])
-	var newGizmo = Line3D.createLine(points, 0.015, lineMesh, lineMaterial, lineGradient)
+	var gradient = lineGradientSuccess if successful else lineGradientFail
+	var newGizmo = Line3D.createLine(points, 0.015, lineMesh, lineMaterial, gradient)
 	end.add_child(newGizmo)
 	#newGizmo.position -= end.global_position
 	newGizmo.global_position = Vector3.ZERO
@@ -132,7 +134,7 @@ func visualizeChain(end : Movable):
 	var totalNodes = chain.size()
 	var i = 0
 	for node in chain:
-		var sampledColor = lineGradient.sample(float(i)/totalNodes)
+		var sampledColor = gradient.sample(float(i)/totalNodes)
 		# TODO: adjust this once sheet shading is fixed
 		if node is Sheet:
 			sampledColor = Color.from_hsv(sampledColor.h, sampledColor.s * 0.4, sampledColor.v * 0.8)

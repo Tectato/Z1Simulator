@@ -160,7 +160,7 @@ func move(dir : Vector2, initiator, chain = []):
 		marker.partMoved(dirID)
 	blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
 	if canMove and selected:
-		schedule(visualizeChain)
+		schedule(visualizeChain, true)
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):
@@ -171,6 +171,7 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 			relation.applyMove(dir, self, chain)
 
 func abortMove(initiator, chain = []):
+	schedule(visualizeChain, false)
 	setToMove = [-1,-1,-1,-1]
 	#if Global.editor.selector.selected.is_empty():
 		#Global.editor.selector.select(collider)
@@ -349,14 +350,14 @@ func setUseColor(value : bool):
 func setupAfterDuplication(source = null):
 	pass
 
-func visualizeChain():
-	Global.editor.powerFlow.visualizeChain(self)
+func visualizeChain(success = true):
+	Global.editor.powerFlow.visualizeChain(self, success)
 
-func schedule(callable : Callable):
+func schedule(callable : Callable, args = []):
 	if scheduled.has(callable): return
 	scheduled[callable] = null
-	call_deferred("execute", callable)
+	call_deferred("execute", callable, args)
 
-func execute(callable : Callable):
+func execute(callable : Callable, args = []):
 	scheduled.erase(callable)
-	callable.call()
+	callable.call(args)
