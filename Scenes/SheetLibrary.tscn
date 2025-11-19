@@ -1,23 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://6qjqjjxchgkh"]
+[gd_scene load_steps=6 format=3 uid="uid://6qjqjjxchgkh"]
 
 [ext_resource type="Script" uid="uid://bfnu2vl3xbceg" path="res://Scripts/Simulation/sheetLibrary.gd" id="1_c1se5"]
 [ext_resource type="Script" uid="uid://dpodqe2t280op" path="res://Scripts/Parts/SheetElements/sheetMeshCompiler.gd" id="2_7bnwt"]
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="3_lqynr"]
 [ext_resource type="Material" uid="uid://0bo2bl8wqi7c" path="res://Assets/SheetColoredCompat.tres" id="4_fsur0"]
-[ext_resource type="Shader" uid="uid://do1e3mk50epxh" path="res://Shaders/SheetMesh/CompatBevelMetallic.gdshader" id="5_fsur0"]
-[ext_resource type="Shader" uid="uid://elyt8nlbykvd" path="res://Shaders/NormalToAlbedo.gdshader" id="6_16t2h"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5rbs6"]
-render_priority = 0
-shader = ExtResource("5_fsur0")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/bevel_size = 0.125
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_opwn6"]
-render_priority = 0
-next_pass = SubResource("ShaderMaterial_5rbs6")
-shader = ExtResource("6_16t2h")
+[ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="5_cpvvm"]
 
 [node name="SheetLibrary" type="Node"]
 script = ExtResource("1_c1se5")
@@ -30,4 +17,4 @@ script = ExtResource("2_7bnwt")
 [node name="RenderHandler" type="Node3D" parent="."]
 script = ExtResource("3_lqynr")
 materialFlat = ExtResource("4_fsur0")
-materialShaded = SubResource("ShaderMaterial_opwn6")
+materialShaded = ExtResource("5_cpvvm")

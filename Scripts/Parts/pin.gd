@@ -186,7 +186,26 @@ func setHeight(value):
 		var maxHeight = 0.1
 		var machineOffset = getMachine().global_position.y
 		for thing in interactionCandidates:
-			maxHeight = max(maxHeight, thing.global_position.y - machineOffset)
+			var partHeight = thing.global_position.y - machineOffset
+			if partHeight < maxHeight: continue
+			var inRange = false or thing is Hole
+			if thing is Sheet:
+				for searchRadius in [0.5, 1.0]:
+					for offset in [
+							Vector3(-1, 0,-1),
+							Vector3(-1, 0, 0),
+							Vector3(-1, 0, 1),
+							Vector3( 1, 0,-1),
+							Vector3( 1, 0, 0),
+							Vector3( 1, 0, 1),
+							Vector3( 0, 0,-1),
+							Vector3( 0, 0, 1)
+						]:
+						inRange = inRange or thing.intersectsOutline(global_position+offset*searchRadius*Global.workspace.pinTravel)
+						if inRange: break
+					if inRange: break
+			if inRange:
+				maxHeight = max(maxHeight, thing.global_position.y - machineOffset)
 		maxHeight *= 10
 		maxHeight += 0.4
 		effectiveHeight = maxHeight
@@ -443,6 +462,9 @@ func getValidMoveDirections():
 
 func nudge():
 	if output and directionality > 0:
+		var cooldown = Simulator.getCooldown()
+		if cooldown > 0:
+			await get_tree().create_timer(cooldown).timeout
 		var dirP
 		var dirN
 		if directionality == 1:

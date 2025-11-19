@@ -105,6 +105,9 @@ func _on_cooldown_timeout() -> void:
 		stepScheduled = false
 		next($AutoClock.paused)
 
+func getCooldown():
+	return $Cooldown.time_left
+
 func moveSpeedChanged():
 	$MoveComplete.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed)
 	$Cooldown.wait_time = $MoveComplete.wait_time * 2 + $PulsingReset.wait_time * 2

@@ -199,7 +199,7 @@ func updateBounds():
 	for part in parts:
 		var partBounds = part.getBounds()
 		if part is Pin:
-			partBounds[1] = partBounds[1] * Vector3(1,0,1) + Vector3.UP * 0.2
+			partBounds[1] = partBounds[1] * Vector3(1,0,1) + Vector3.UP * (0.1 if part.fixed else 0.2)
 		elif part is Sheet and part.heightIndex == 0:
 			partBounds = [partBounds[0]*Vector3(1,0,1), partBounds[1]*Vector3(1,0,1)]
 		var bMin = partBounds[0] + part.position
