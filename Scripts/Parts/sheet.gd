@@ -6,6 +6,7 @@ const LONGHOLE = preload("res://Scenes/Parts/SheetElements/LongHole.tscn")
 const LOGICHOLE = preload("res://Scenes/Parts/SheetElements/LogicHole.tscn")
 const SQUAREHOLE = preload("res://Scenes/Parts/SheetElements/SquareHole.tscn")
 const CUSTOMHOLE = preload("res://Scenes/Parts/SheetElements/CustomHole.tscn")
+const STICKER = preload("res://Scenes/Parts/SheetElements/Sticker.tscn")
 
 const scaleFactor = 0.001
 @onready var sprite = $Sprite3D
@@ -40,6 +41,7 @@ var partOffset : Vector2
 var midPoint : Vector3
 var bounds = []
 var holes = []
+var stickers = []
 var gizmo
 
 var sortTargetPos : Vector3
@@ -324,11 +326,15 @@ func loadSVG(filepath : String):
 	$MeshInstance3D.position = -midPoint + offset - Vector3.UP * 0.02
 	
 	if cached:
+		for sticker in stickers:
+			sticker.position -= midPoint - offset
 		for hole in holes:
 			hole.position -= midPoint - offset
 		return
 	var compilerInstance = SheetLibrary.meshCompiler.prepareInstance(path)
 	compilerInstance.polygon = outline.polygon
+	for sticker in stickers:
+		sticker.position -= midPoint - offset
 	for hole in holes:
 		hole.position -= midPoint - offset
 		var cutout = hole.getCutout()
@@ -364,7 +370,7 @@ func updateBakedMesh():
 	visModeChanged(Global.editor.currentVisMode)
 
 func isValidElement(string : String):
-	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect")
+	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect") or string.contains("image")
 
 func parseElement(part : String):
 	var dict : Dictionary
@@ -450,6 +456,9 @@ func parseElement(part : String):
 				newHole.id = id
 				newHole.name = id
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
+		"image":
+			addSticker(Vector2(float(dict["x"]),float(dict["y"])),Vector2(float(dict["width"]),float(dict["height"])),dict["href"])
+			#addSticker(Vector2(float(dict["x"]),float(dict["y"]))*2,Vector2(float(dict["width"]),float(dict["height"])),dict["href"])
 			pass
 		"svg":
 			var raw = dict["viewBox"].split(" ")
@@ -472,6 +481,17 @@ func addHole(prefab, pos):
 	holes.append(newHole)
 	newHole.position = Vector3(pos.x, 0, pos.y)/1000 + Vector3(partOffset.x,0,partOffset.y)
 	return newHole
+
+func addSticker(pos, size, imagePath):
+	var newSticker = STICKER.instantiate()
+	add_child(newSticker)
+	stickers.append(newSticker)
+	newSticker.position = Vector3(pos.x, 0, pos.y)/1000 + Vector3(partOffset.x,0.005,partOffset.y)
+	var image = Image.load_from_file(path.get_base_dir()+"/"+imagePath)
+	newSticker.texture = ImageTexture.create_from_image(image)
+	var scaleFac = 3 * newSticker.texture.get_width() / (size.x)
+	newSticker.scale = Vector3(scaleFac,1,scaleFac)
+	newSticker.position += Vector3(0,0,1) * newSticker.texture.get_height() / (size.y)
 
 func addPolygon(segments, isOutline):
 	var polygonParent : Node3D
@@ -1069,6 +1089,13 @@ func setupAfterDuplication(source = null):
 			add_child(copy)
 			holes.append(copy)
 			copy.setupAfterDuplication(hole)
+		for sticker in source.stickers:
+			var copy = STICKER.instantiate()
+			add_child(copy)
+			stickers.append(copy)
+			copy.scale = sticker.scale
+			copy.position = sticker.position
+			copy.texture = sticker.texture
 	else:
 		# For some reason duplicating a sheet also duplicates every hole. Sometimes.
 		var toDelete = []

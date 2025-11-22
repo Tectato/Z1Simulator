@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://b80ecyvyjxu82"]
+
+[ext_resource type="Texture2D" uid="uid://5p1j1tvxbvqy" path="res://Sprites/circle.png" id="1_ey622"]
+
+[node name="Sticker" type="Sprite3D"]
+centered = false
+axis = 1
+double_sided = false
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("1_ey622")
