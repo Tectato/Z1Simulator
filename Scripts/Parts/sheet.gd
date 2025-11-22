@@ -489,9 +489,10 @@ func addSticker(pos, size, imagePath):
 	newSticker.position = Vector3(pos.x, 0, pos.y)/1000 + Vector3(partOffset.x,0.005,partOffset.y)
 	var image = Image.load_from_file(path.get_base_dir()+"/"+imagePath)
 	newSticker.texture = ImageTexture.create_from_image(image)
-	var scaleFac = 3 * newSticker.texture.get_width() / (size.x)
+	var scaleFac = (size.x/10) / newSticker.texture.get_width()
 	newSticker.scale = Vector3(scaleFac,1,scaleFac)
-	newSticker.position += Vector3(0,0,1) * newSticker.texture.get_height() / (size.y)
+	var yAdjustment = scaleFac * newSticker.texture.get_height()/100
+	newSticker.position += Vector3(0,0,1) * yAdjustment
 
 func addPolygon(segments, isOutline):
 	var polygonParent : Node3D
