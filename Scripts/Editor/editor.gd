@@ -60,6 +60,7 @@ func saveAs(path : String):
 func save():
 	saved = true
 	PathHandler.setProjectDir(savePath)
+	currentlyLoadedPath = savePath
 	var dict = workspace.serialize(savePath)
 	var newFile = FileAccess.open(savePath, FileAccess.WRITE)
 	if newFile:

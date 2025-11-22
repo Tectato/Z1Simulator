@@ -112,7 +112,7 @@ func move(dir : Vector2, initiator, chain = []):
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
 	movedBy[initiator] = initiator
-	if inMotion or chain.has(self):
+	if chain.has(self):
 		return MoveState.AlreadyMoving
 	
 	moved.clear()
@@ -121,7 +121,10 @@ func move(dir : Vector2, initiator, chain = []):
 	#translate(Vector3(dir.x,0,dir.y))
 	inMotion = true
 	preMovePos = position
-	targetPos = position + Vector3(dir.x,0,dir.y)
+	if inMotion:
+		targetPos = targetPos + Vector3(dir.x,0,dir.y)
+	else:
+		targetPos = position + Vector3(dir.x,0,dir.y)
 	if abs(dir.x) > 0:
 		stateX = !stateX
 	if abs(dir.y) > 0:
