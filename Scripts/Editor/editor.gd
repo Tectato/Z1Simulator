@@ -82,6 +82,8 @@ func loadProject(srcPath = ""):
 	previousAction = doNothing
 	interface.saveDialog.current_dir = path.get_base_dir()
 	interface.saveDialog.current_file = path.get_file()
+	interface.loadProjectDialog.current_dir = path.get_base_dir()
+	interface.loadProjectDialog.current_file = path.get_file()
 	await get_tree().create_timer(0.1).timeout
 	SheetLibrary.cleanUnusedSheets()
 	updateInstancePos.emit()

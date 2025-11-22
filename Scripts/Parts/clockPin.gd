@@ -126,7 +126,12 @@ func setStep(value):
 	forwardStep = wrap(value, 0, 4)
 	antiStep = wrap(value+2, 0, 4)
 	updateLabel()
-	clockCycle(getMachine().clock.getCurrentStep())
+	if !pulsing:
+		#clockCycle(getMachine().clock.getCurrentStep())
+		var currentStep = getMachine().clock.getCurrentStep()
+		var shouldBeActive = currentStep == forwardStep or currentStep == wrap(forwardStep+1,0,4)
+		if canMove(getDirTo(shouldBeActive), self):
+			move(getDirTo(shouldBeActive), self)
 	forwardStepChanged.emit()
 
 func setPulsing(value):
@@ -184,12 +189,10 @@ func getMoveDir(clockStep):
 	updateInActivePos()
 	var toActivePos = clockStep == forwardStep and not (pulsing and inActivePos)
 	if input and clockStep == forwardStep:
-		if inActivePos:
-			#return machine.toGlobalDir(Space.toVec2(-travel).rotated(-rotation.y))
-			return Space.toVec2(-travel).rotated(-rotation.y)
-		else:
-			#return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
-			return Space.toVec2(travel).rotated(-rotation.y)
+		return getDirTo(!inActivePos)
+	return getDirTo(toActivePos)
+
+func getDirTo(toActivePos):
 	if toActivePos and !inActivePos:
 		#return machine.toGlobalDir(Space.toVec2(travel).rotated(-rotation.y))
 		return Space.toVec2(travel).rotated(-rotation.y)
