@@ -148,7 +148,7 @@ func prepareNextStep():
 	pass
 
 func rewind():
-	if running:
+	if running and Simulator.rewinding:
 		internalStep -= 1
 		if internalStep < 0:
 			running = Simulator.currentStep == 3

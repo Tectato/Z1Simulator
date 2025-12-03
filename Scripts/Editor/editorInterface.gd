@@ -18,6 +18,8 @@ extends Control
 @onready var ModeSelect = $Toggles/ModeBar/Select
 @onready var ModeManage = $Toggles/ModeBar/Manage
 
+@onready var debugLabel = $DebugLabel
+
 const WebRootFolder = "/Machines"
 var toRename : Node
 
@@ -38,6 +40,8 @@ func lateReady():
 		loadProjectDialog.root_subfolder = WebRootFolder
 		importProjectDialog.root_subfolder = WebRootFolder
 		importSheetDialog.root_subfolder = WebRootFolder
+		
+		$MenuBar/Edit.set_item_disabled(2, true)
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -110,6 +114,12 @@ func _on_edit_id_pressed(id: int) -> void:
 			editor.localizeMachine()
 		1:
 			editor.clearDiff()
+		2:
+			if !Global.workspace.recording:
+				Global.workspace.startRecording()
+			else:
+				Global.workspace.stopRecording()
+			$MenuBar/Edit.set_item_text(2, "Start recording" if !Global.workspace.recording else "Stop recording")
 
 func requestSheet():
 	importSheetDialog.popup()

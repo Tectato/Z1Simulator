@@ -27,6 +27,7 @@ func _ready() -> void:
 	machine.clock.registerClockPin(self)
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)
+	Global.clearHistory.connect(clearHistory)
 	visModeChanged(Global.editor.currentVisMode)
 	meshIndex = PinRenderHandler.addInstance("pin")
 	await get_tree().process_frame

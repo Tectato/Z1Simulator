@@ -11,7 +11,9 @@ const pinTravel = 0.08
 const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
-const historyLength = 12
+const maxRecordingLength = 80 # 10 cycles
+const standardHistoryLength = 25
+var recording = false
 var sheetSpacing = 0.045
 signal sheetSpacingChanged
 var moveSpeed = 1.1
@@ -412,3 +414,37 @@ func insertSingleEntry(target = {}, source = []):
 func setBrassMode(value):
 	brassMode = value
 	Global.editor.visModeChanged.emit(Global.editor.currentVisMode)
+
+func startRecording():
+	Global.clearHistory.emit()
+	recording = true
+	Global.historyLength = maxRecordingLength
+
+func stopRecording():
+	recording = false
+	Global.historyLength = standardHistoryLength
+	
+	var out = {}
+	
+	if !Global.editor.currentlyLoadedPath:
+		return
+	for machine in machines:
+		var machineEntry = {}
+		for part in machine.uuidManager.parts.values():
+			var compiledHistory = part.compileHistory()
+			if !compiledHistory.is_empty():
+				machineEntry[part.uuid] = compiledHistory
+		out[machine.uuid] = machineEntry
+	
+	if !out.is_empty():
+		var path = Global.editor.currentlyLoadedPath
+		path = path.get_base_dir() + "/" + path.get_file().trim_suffix(".json") + "_recording.json"
+		var newFile = FileAccess.open(path, FileAccess.WRITE)
+		if newFile:
+			newFile.store_string(JSON.stringify(out))
+			newFile.close()
+			print("Saved sequence recording at " + path)
+		else:
+			print("Could not write file for project")
+	else:
+		print("No project loaded")

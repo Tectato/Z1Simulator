@@ -121,6 +121,7 @@ func _ready() -> void:
 	Simulator.record.connect(record)
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.editor.updateInstancePos.connect(updateInstance)
+	Global.clearHistory.connect(clearHistory)
 	visModeChanged(Global.editor.currentVisMode)
 	visibility_changed.connect(visibilityChanged)
 	meshIndex = PinRenderHandler.addInstance("pin")

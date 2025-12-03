@@ -4,6 +4,7 @@ extends Node
 @export var materialShaded : Material
 
 var renderers = {}
+var vacantEntries = {}
 
 var scheduled = {}
 var toAdd = {}
@@ -30,6 +31,7 @@ func initMesh(key : String, mesh : Mesh):
 	#var newRenderer = MULTIMESH.instantiate()
 	add_child(newRenderer)
 	renderers[key] = newRenderer
+	vacantEntries[key] = []
 	var multimesh = MultiMesh.new()
 	multimesh.mesh = mesh
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
@@ -44,17 +46,28 @@ func initMesh(key : String, mesh : Mesh):
 	newRenderer.material_override = materialToUse
 
 func addInstance(key : String):
-	schedule(executeAdd)
-	if toAdd.has(key):
-		toAdd[key] += 1
+	var vacant = getVacant(key)
+	if vacant < 0:
+		schedule(executeAdd)
+		if toAdd.has(key):
+			toAdd[key] += 1
+		else:
+			toAdd[key] = 1
+		return renderers[key].multimesh.instance_count + toAdd[key] - 1
 	else:
-		toAdd[key] = 1
-	return renderers[key].multimesh.instance_count + toAdd[key] - 1
+		return vacant
+
+func getVacant(key):
+	if !vacantEntries[key].is_empty():
+		return vacantEntries[key].pop_front()
+	else:
+		return -1
 
 func executeAdd():
 	#print("Add executed")
 	for key in toAdd.keys():
 		var renderer = renderers[key]
+		
 		var colorBuffer = []
 		var transformBuffer = []
 		var prevCount = renderer.multimesh.instance_count
@@ -86,6 +99,7 @@ func removeInstance(key : String, index : int):
 	# growing the instance count indefinitely
 	if index >= renderers[key].multimesh.instance_count: return
 	renderers[key].multimesh.set_instance_transform(index, Transform3D(Basis.from_scale(Vector3.ZERO),Vector3(0,10,0)))
+	vacantEntries[key].append(index)
 	pass
 	#var transforms = []
 	#for i in range(index + 1, renderer.instance_count):
@@ -98,10 +112,12 @@ func removeRenderer(key):
 	if renderers.has(key):
 		renderers[key].queue_free()
 		renderers.erase(key)
+		vacantEntries.erase(key)
 
 func clearInstances():
 	for key in renderers.keys():
 		renderers[key].multimesh.instance_count = 0
+		vacantEntries[key] = []
 
 func setTransform(key : String, index : int, transform : Transform3D):
 	if index < 0: return

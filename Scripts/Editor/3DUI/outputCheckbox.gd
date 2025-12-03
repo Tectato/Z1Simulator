@@ -34,9 +34,10 @@ func setDirection(dir : Directionality):
 
 func record():
 	stateHistory.push_back(state)
-	if stateHistory.size() > Workspace.historyLength:
+	if stateHistory.size() > Global.historyLength:
 		stateHistory.pop_front()
 
 func rewind():
 	if stateHistory.is_empty(): return
 	setValue(stateHistory.pop_back())
+	parent.outputState = state

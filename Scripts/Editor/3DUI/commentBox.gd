@@ -19,6 +19,8 @@ func _ready() -> void:
 	visible = Global.workspace.showComments
 
 func serialize():
+	var start = bounds[0] + Vector3.ONE * margin/2
+	var end = bounds[1] - Vector3.ONE * margin/2
 	var out = {
 		"pos":[
 			("%0.4f" % position.x).rstrip("0"),
@@ -26,14 +28,14 @@ func serialize():
 			("%0.4f" % position.z).rstrip("0")
 			],
 		"start": [
-			("%0.4f" % bounds[0].x).rstrip("0"),
-			("%0.4f" % bounds[0].y).rstrip("0"),
-			("%0.4f" % bounds[0].z).rstrip("0")
+			("%0.4f" % start.x).rstrip("0"),
+			("%0.4f" % start.y).rstrip("0"),
+			("%0.4f" % start.z).rstrip("0")
 			],
 		"end": [
-			("%0.4f" % bounds[1].x).rstrip("0"),
-			("%0.4f" % bounds[1].y).rstrip("0"),
-			("%0.4f" % bounds[1].z).rstrip("0")
+			("%0.4f" % end.x).rstrip("0"),
+			("%0.4f" % end.y).rstrip("0"),
+			("%0.4f" % end.z).rstrip("0")
 			],
 		"text": text.replace_char("\"".unicode_at(0),"'".unicode_at(0))
 	}

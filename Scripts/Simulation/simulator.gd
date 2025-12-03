@@ -15,6 +15,7 @@ var outputs = []
 var history = 0
 var stepScheduled = false
 var maxFrequency = 1.0
+var rewinding = false
 
 var gizmo : Control
 
@@ -63,7 +64,6 @@ func next(stopClock = true):
 		return
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
-	history = min(history+1, Workspace.historyLength)
 	step.emit()
 	for instance in clockInstances:
 		instance.clockCycle(currentStep)
@@ -73,16 +73,25 @@ func next(stopClock = true):
 	call_deferred("callRecord")
 
 func callRecord():
+	history = min(history+1, Global.historyLength)
+	Global.editor.interface.debugLabel.text = str(history)
 	record.emit()
 
-func prev(stopClock = true):
+func prev(stopClock = true, calledByUser = true):
+	if calledByUser and !rewinding and !$Cooldown.is_stopped(): return
 	if stopClock: stop()
 	if history <= 0: return
-	currentStep = wrapi(currentStep-1,0,4)
-	totalStep -= 1
+	if rewinding:
+		rewinding = false
+	else:
+		currentStep = wrapi(currentStep-1,0,4)
+		totalStep -= 1
+		gizmo.setClockStep(currentStep+1)
+		rewinding = true
+		$MoveComplete.start()
+		$Cooldown.start()
 	history -= 1
-	gizmo.setClockStep(currentStep+1)
-	$Cooldown.start()
+	Global.editor.interface.debugLabel.text = str(history)
 	rewind.emit()
 	pass
 
@@ -126,4 +135,8 @@ func _on_move_complete_timeout() -> void:
 	$PulsingReset.start()
 
 func _on_pulsing_reset_timeout() -> void:
-	backstep.emit()
+	if !rewinding:
+		backstep.emit()
+		call_deferred("callRecord")
+	else:
+		prev(true, false)

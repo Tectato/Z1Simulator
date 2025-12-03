@@ -157,6 +157,7 @@ func _ready():
 	Global.editor.updateInstancePos.connect(updateInstance)
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	Global.workspace.staticSheetVisChanged.connect(staticSheetVisChanged)
+	Global.clearHistory.connect(clearHistory)
 	if path and bounds.is_empty():
 		loadSVG(path)
 	else:
@@ -808,8 +809,9 @@ func move(dir : Vector2, initiator, chain = []):
 
 func record():
 	super.record()
+	if pivots[0].is_empty() and pivots[1].is_empty(): return
 	rotHistory.push_back(rotation.y)
-	if rotHistory.size() > Workspace.historyLength:
+	if rotHistory.size() > Global.historyLength:
 		rotHistory.pop_front()
 
 func rewind():
@@ -818,6 +820,7 @@ func rewind():
 	if canRewind:
 		previousRot = rotation.y
 		targetRot = rotHistory.pop_back()
+		rotating = true
 
 # Returns: 0 if can't move, 1 if can move, 2 if we will turn instead
 func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
@@ -1116,3 +1119,29 @@ func staticSheetVisChanged(newVis):
 	if fixed:
 		visible = newVis
 		visibilityChanged()
+
+func clearHistory():
+	super.clearHistory()
+	rotHistory.clear()
+
+func compileHistory(): #TODO: Encode pivot point
+	if fixed: return {}
+	var out = super.compileHistory()
+	if rotHistory.is_empty(): return out
+	out["rot"] = []
+	var startRot = rotHistory.front()
+	var rotationMod = wrapf(startRot, -PI/2, PI/2)
+	var rotationOut = ("%0.2f" % startRot).rstrip("0")
+	if abs(rotationMod) < 0.01:
+		var quarts = rotation.y/(PI/2.0)
+		rotationOut = str(int(round(quarts))) + "q"
+	out["rot"].append(rotationOut)
+	
+	var prevRot = startRot
+	var currentRot
+	for i in range(1,rotHistory.size()-1):
+		currentRot = rotHistory[i]
+		var rotDiff = currentRot - prevRot
+		out["rot"].append(rotDiff)
+		prevRot = currentRot
+	return out

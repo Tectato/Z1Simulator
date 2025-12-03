@@ -34,7 +34,7 @@ func isLocked():
 
 func record():
 	stateHistory.push_back(checked)
-	if stateHistory.size() > Workspace.historyLength:
+	if stateHistory.size() > Global.historyLength:
 		stateHistory.pop_front()
 
 func rewind():

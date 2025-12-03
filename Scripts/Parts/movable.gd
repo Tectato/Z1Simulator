@@ -39,6 +39,8 @@ var scheduled = {}
 func _ready() -> void:
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
+	if !Global.clearHistory.is_connected(clearHistory):
+		Global.clearHistory.connect(clearHistory)
 	place()
 
 # Diff format: {uuid:{pos_x,pos_z,[part-specific stuff]}}
@@ -208,7 +210,7 @@ func abortMove(initiator, chain = []):
 func record():
 	if fixed: return
 	posHistory.push_back(position)
-	if posHistory.size() > Workspace.historyLength:
+	if posHistory.size() > Global.historyLength:
 		posHistory.pop_front()
 
 func rewind():
@@ -330,10 +332,13 @@ static func sortByFixed(A, B):
 		return PartA.fixed
 	return false
 
-func dirToInt(dir : Vector2):
+func dirToInt(dir : Vector2, allowZero = false):
 	if abs(dir.x) > 0.01:
 		return 1 if dir.x > 0 else 3
 	else:
+		if allowZero:
+			if abs(dir.y) < 0.01:
+				return 5
 		return 0 if dir.y < 0 else 2
 
 func intToDir(id : int):
@@ -364,3 +369,29 @@ func schedule(callable : Callable, args = []):
 func execute(callable : Callable, args = []):
 	scheduled.erase(callable)
 	callable.call(args)
+
+func clearHistory():
+	posHistory.clear()
+
+func compileHistory():
+	if fixed: return {}
+	var out = {"pos":[]}
+	var startPos = posHistory.front()
+	out["pos"].append([
+		("%0.4f" % startPos.x).rstrip("0"),
+		("%0.4f" % startPos.z).rstrip("0")
+	])
+	#out["pos"].append(startPos)
+	var prevPos = startPos
+	var currentPos
+	var nonZeroEntry = false
+	for i in range(1,posHistory.size()-1):
+		currentPos = posHistory[i]
+		var posDiff = currentPos - prevPos
+		out["pos"].append(dirToInt(Space.toVec2(posDiff), true))
+		if !nonZeroEntry:
+			nonZeroEntry = out["pos"].back() != 5
+		prevPos = currentPos
+	if !nonZeroEntry:
+		out = {}
+	return out
