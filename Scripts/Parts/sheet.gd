@@ -809,7 +809,8 @@ func move(dir : Vector2, initiator, chain = []):
 
 func record():
 	super.record()
-	if pivots[0].is_empty() and pivots[1].is_empty(): return
+	#if pivots[0].is_empty() and pivots[1].is_empty(): return
+	if fixed: return
 	rotHistory.push_back(rotation.y)
 	if rotHistory.size() > Global.historyLength:
 		rotHistory.pop_front()
@@ -817,7 +818,7 @@ func record():
 func rewind():
 	var canRewind = !posHistory.is_empty()
 	super.rewind()
-	if canRewind:
+	if canRewind and not (pivots[0].is_empty() and pivots[1].is_empty()):
 		previousRot = rotation.y
 		targetRot = rotHistory.pop_back()
 		rotating = true
@@ -1131,7 +1132,7 @@ func compileHistory(): #TODO: Encode pivot point
 	out["rot"] = []
 	var startRot = rotHistory.front()
 	var rotationMod = wrapf(startRot, -PI/2, PI/2)
-	var rotationOut = ("%0.2f" % startRot).rstrip("0")
+	var rotationOut = ("%0.6f" % startRot).rstrip("0")
 	if abs(rotationMod) < 0.01:
 		var quarts = rotation.y/(PI/2.0)
 		rotationOut = str(int(round(quarts))) + "q"
@@ -1139,9 +1140,14 @@ func compileHistory(): #TODO: Encode pivot point
 	
 	var prevRot = startRot
 	var currentRot
-	for i in range(1,rotHistory.size()-1):
+	var nonZeroEntry = false
+	for i in range(1,rotHistory.size()):
 		currentRot = rotHistory[i]
 		var rotDiff = currentRot - prevRot
-		out["rot"].append(rotDiff)
+		out["rot"].append(("%0.6f" % rotDiff).rstrip("0"))
 		prevRot = currentRot
+		if !nonZeroEntry:
+			nonZeroEntry = abs(rotDiff) > 0
+	if !nonZeroEntry:
+		out.erase("rot")
 	return out

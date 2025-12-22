@@ -2,11 +2,12 @@ shader_type spatial;
 render_mode depth_prepass_alpha;
 
 //const vec3 selectedColor = vec3(1,0.1,0.1);
-uniform sampler2D screen_texture: hint_screen_texture;
+uniform sampler2D screen_texture: hint_screen_texture, repeat_disable, filter_linear_mipmap;
 uniform sampler2D depth_texture: hint_depth_texture;
 
 //const vec3 outline_color = vec3(0,0,0);
 uniform float outline_threshold = 0.8;
+const float size = 1.0;
 varying vec3 vertex_color;
 
 const float sobel_x[8] = float[](
@@ -38,7 +39,7 @@ void vertex() {
 void fragment() {
 	vec2 uv = SCREEN_UV;
 	vec2 texel = 1.0 / vec2(textureSize(depth_texture, 0));
-	vec3 screen_color = texture(screen_texture, uv).rgb;
+	//vec3 screen_color = texture(screen_texture, uv).rgb;
 	mat4 inv_proj_m = INV_PROJECTION_MATRIX;
 
 	float center_depth = texture(depth_texture, uv).r;
@@ -52,7 +53,7 @@ void fragment() {
 	float norm_edge_y = 0.0;
  
 	for (int i = 0; i < 8; i++) {
-		vec2 neighbor_uv = clamp(uv + offset[i] * texel * 1.5, vec2(0.0), vec2(1.0));
+		vec2 neighbor_uv = clamp(uv + offset[i] * texel * size, vec2(0.0), vec2(1.0));
 
 		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
 		vec3  neighbor_view   = get_view_pos(neighbor_uv, neighbor_depth, inv_proj_m);
@@ -77,9 +78,12 @@ void fragment() {
 
 	float gradient = sqrt(norm_edge_x * norm_edge_x + norm_edge_y * norm_edge_y);
 	float normal_edge = float(gradient > outline_threshold);
+	//float normal_edge = smoothstep(0.0,outline_threshold,gradient);
 
 	float combined_edge = max(normal_edge, depth_edge);
 	
 	ALBEDO = vertex_color * max(0.4,(1.0-combined_edge));
-	//ALBEDO = depth_edge * vec3(1,1,1);
+	//ALBEDO = gradient * vec3(1,1,1);
+	//ALBEDO = center_normal;
+	//ALBEDO = vec3(uv.x, uv.y, 0.0);
 }

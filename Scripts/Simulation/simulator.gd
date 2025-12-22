@@ -49,6 +49,9 @@ func stop():
 func reset():
 	$AutoClock.stop()
 	running = false
+	setStep(3)
+	totalStep = 3
+	history = 0
 	pass
 
 func setStep(value = 3):

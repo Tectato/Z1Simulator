@@ -8,6 +8,7 @@ const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
 
 const pinTravel = 0.08
+const pinTravelSquared = pinTravel * pinTravel
 const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
@@ -113,7 +114,7 @@ func clear():
 	PinRenderHandler.clearInstances()
 	while !machines.is_empty():
 		machines[0].delete()
-	#Simulator.setStep()
+	Simulator.reset()
 	interMachineRelations.clear()
 	selectedMachine = null
 	selectedLayer = null
@@ -423,6 +424,7 @@ func startRecording():
 func stopRecording():
 	recording = false
 	Global.historyLength = standardHistoryLength
+	Simulator.callRecord()
 	
 	var out = {}
 	
@@ -438,7 +440,7 @@ func stopRecording():
 	
 	if !out.is_empty():
 		var path = Global.editor.currentlyLoadedPath
-		path = path.get_base_dir() + "/" + path.get_file().trim_suffix(".json") + "_recording.json"
+		path = path.get_base_dir() + "\\" + path.get_file().trim_suffix(".json") + "_recording.json"
 		var newFile = FileAccess.open(path, FileAccess.WRITE)
 		if newFile:
 			newFile.store_string(JSON.stringify(out))
@@ -448,3 +450,5 @@ func stopRecording():
 			print("Could not write file for project")
 	else:
 		print("No project loaded")
+	
+	#Simulator.rewind.emit()

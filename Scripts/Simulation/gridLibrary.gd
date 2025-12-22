@@ -157,11 +157,30 @@ func getIntersectionCandidatesAtCell(pos : Vector2, layer : int, querySheets : b
 	getDict(false, layer)
 	var occupancy = sheetOccupancy if querySheets else pinOccupancy
 	if layer >= 0:
+		# DEBUG
+		#for entry in occupancy[layer].keys():
+			#output.append_array(occupancy[layer][entry])
+		#if !querySheets:
+			#for entry in globalPinOccupancy.keys():
+				#output.append_array(globalPinOccupancy[entry])
+		#return output
+		#
+		
 		if occupancy[layer].has(key):
 			output.append_array(occupancy[layer][key])
 		if not querySheets and globalPinOccupancy.has(key):
 			output.append_array(globalPinOccupancy[key])
 	else:
+		# DEBUG
+		#for dict in occupancy:
+			#for entry in dict:
+				#output.append_array(dict[entry])
+		#if not querySheets:
+			#for entry in globalPinOccupancy:
+				#output.append_array(globalPinOccupancy[entry])
+		#return output
+		#
+		
 		for dict in occupancy:
 			if dict.has(key):
 				output.append_array(dict[key])

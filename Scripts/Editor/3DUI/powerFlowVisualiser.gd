@@ -48,7 +48,6 @@ func visualizeChain(end : Movable, successful = true):
 	#if chains.has(end):
 		#gizmos[end].free()
 	
-	# Travel along chain, X/Z determined by pins, Y by sheets
 	var points = []
 	var prevPoint = null
 	var reachedClockPin = false
@@ -99,6 +98,7 @@ func visualizeChain(end : Movable, successful = true):
 		currentNode = parentDict[currentNode]
 	chain.append(end)
 
+	# Travel along chain, X/Z determined by pins, Y by sheets
 	for part in chain:
 		if reachedClockPin: break
 		if !prevPoint:

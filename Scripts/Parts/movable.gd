@@ -385,12 +385,16 @@ func compileHistory():
 	var prevPos = startPos
 	var currentPos
 	var nonZeroEntry = false
-	for i in range(1,posHistory.size()-1):
+	for i in range(1,posHistory.size()):
 		currentPos = posHistory[i]
 		var posDiff = currentPos - prevPos
-		out["pos"].append(dirToInt(Space.toVec2(posDiff), true))
+		var diffMagnitude = posDiff.length_squared()
+		if diffMagnitude > 0.0 and abs(diffMagnitude - Workspace.pinTravelSquared) > 0.0001:
+			out["pos"].append([("%0.4f" % posDiff.x).rstrip("0"), ("%0.4f" % posDiff.z).rstrip("0")])
+		else:
+			out["pos"].append(dirToInt(Space.toVec2(posDiff), true))
 		if !nonZeroEntry:
-			nonZeroEntry = out["pos"].back() != 5
+			nonZeroEntry = out["pos"].back() is Array or out["pos"].back() != 5
 		prevPos = currentPos
 	if !nonZeroEntry:
 		out = {}
