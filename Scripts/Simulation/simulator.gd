@@ -73,6 +73,7 @@ func next(stopClock = true):
 	gizmo.setClockStep(currentStep+1)
 	$MoveComplete.start()
 	$Cooldown.start()
+	$CrankAudioHandler.playStep(currentStep)
 	call_deferred("callRecord")
 
 func callRecord():

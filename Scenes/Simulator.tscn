@@ -1,6 +1,43 @@
-[gd_scene load_steps=2 format=3 uid="uid://60irrhkktdme"]
+[gd_scene load_steps=15 format=3 uid="uid://60irrhkktdme"]
 
 [ext_resource type="Script" uid="uid://x4dr53ahdfyj" path="res://Scripts/Simulation/simulator.gd" id="1_qmcj1"]
+[ext_resource type="Script" uid="uid://bvmhjmv0er54y" path="res://Scripts/Audio/crankAudioHandler.gd" id="2_5e3sm"]
+[ext_resource type="AudioStream" uid="uid://8yiutruv0is7" path="res://Audio/Mechanical/crank/step1_0.wav" id="4_m8081"]
+[ext_resource type="AudioStream" uid="uid://cxv4n2a31cm07" path="res://Audio/Mechanical/crank/step1_1.wav" id="5_cpqh1"]
+[ext_resource type="AudioStream" uid="uid://bjtuk0wn04thh" path="res://Audio/Mechanical/crank/step2_0.wav" id="5_jt7a6"]
+[ext_resource type="AudioStream" uid="uid://cjgjb6wq75tnn" path="res://Audio/Mechanical/crank/step2_1.wav" id="6_jxq17"]
+[ext_resource type="AudioStream" uid="uid://wyyv8gi6ymsj" path="res://Audio/Mechanical/crank/step3_0.wav" id="7_xwe4j"]
+[ext_resource type="AudioStream" uid="uid://0cjb3ji33830" path="res://Audio/Mechanical/crank/step3_1.wav" id="8_qktqs"]
+[ext_resource type="AudioStream" uid="uid://xcs67rjk06vk" path="res://Audio/Mechanical/crank/step4_0.wav" id="9_ntoq0"]
+[ext_resource type="AudioStream" uid="uid://b6yvry33sw786" path="res://Audio/Mechanical/crank/step4_1.wav" id="10_25ryi"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_xqohv"]
+playback_mode = 1
+random_pitch = 1.01
+streams_count = 2
+stream_0/stream = ExtResource("4_m8081")
+stream_1/stream = ExtResource("5_cpqh1")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_s1xeu"]
+playback_mode = 1
+random_pitch = 1.01
+streams_count = 2
+stream_0/stream = ExtResource("5_jt7a6")
+stream_1/stream = ExtResource("6_jxq17")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_4pfi2"]
+playback_mode = 1
+random_pitch = 1.01
+streams_count = 2
+stream_0/stream = ExtResource("7_xwe4j")
+stream_1/stream = ExtResource("8_qktqs")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_bnoss"]
+playback_mode = 1
+random_pitch = 1.01
+streams_count = 2
+stream_0/stream = ExtResource("9_ntoq0")
+stream_1/stream = ExtResource("10_25ryi")
 
 [node name="Simulator" type="Node"]
 script = ExtResource("1_qmcj1")
@@ -17,6 +54,11 @@ one_shot = true
 [node name="PulsingReset" type="Timer" parent="."]
 wait_time = 0.05
 one_shot = true
+
+[node name="CrankAudioHandler" type="AudioStreamPlayer" parent="."]
+max_polyphony = 2
+script = ExtResource("2_5e3sm")
+steps = Array[AudioStream]([SubResource("AudioStreamRandomizer_xqohv"), SubResource("AudioStreamRandomizer_s1xeu"), SubResource("AudioStreamRandomizer_4pfi2"), SubResource("AudioStreamRandomizer_bnoss")])
 
 [connection signal="timeout" from="AutoClock" to="." method="_on_auto_clock_timeout"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
