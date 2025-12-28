@@ -14,10 +14,10 @@
 [ext_resource type="Texture2D" uid="uid://boeuucukxjcd2" path="res://Sprites/FileSystem/machine.png" id="8_j432o"]
 [ext_resource type="PackedScene" uid="uid://43eaudijn5j7" path="res://Scenes/TutorialNode.tscn" id="8_pyy8l"]
 [ext_resource type="Texture2D" uid="uid://bjukhf5ntj8sq" path="res://Sprites/FileSystem/sheet.png" id="9_j432o"]
-[ext_resource type="Texture2D" uid="uid://dd33yp08fvgln" path="res://Sprites/9TileArrow.png" id="10_3yata"]
 [ext_resource type="Script" uid="uid://07gb7b4pgjtg" path="res://Scripts/Editor/Tutorial/cameraWatcher.gd" id="11_5adol"]
 [ext_resource type="Script" uid="uid://x73tt0fqci1w" path="res://Scripts/Editor/Tutorial/navigationNode.gd" id="11_cwlo7"]
 [ext_resource type="Texture2D" uid="uid://cdujh2rfimo8w" path="res://Sprites/Buttons/Visibility/comments.png" id="11_ue6jr"]
+[ext_resource type="Texture2D" uid="uid://pqpfeq6gkxxb" path="res://Sprites/9TileArrowOutlined.png" id="12_cwlo7"]
 [ext_resource type="Texture2D" uid="uid://d0pjjqnwdiprb" path="res://Sprites/Buttons/VisModes/monochrome.png" id="12_f0qqp"]
 [ext_resource type="Texture2D" uid="uid://ba37urh1hrp" path="res://Sprites/Buttons/Visibility/comments_active.png" id="12_ix1yp"]
 [ext_resource type="Texture2D" uid="uid://dmnw7b8snx2qp" path="res://Sprites/Buttons/Modes/manage_inactive.png" id="12_jnb0j"]
@@ -591,7 +591,6 @@ fileMenu = NodePath("../MenuBar/File")
 helpMenu = NodePath("../MenuBar/Help")
 
 [node name="0_Welcome" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -605,9 +604,12 @@ offset_bottom = 3.625
 grow_horizontal = 2
 grow_vertical = 2
 text = "[center]Welcome![/center]
-Start by loading a project under [color=#40A000]File > Load Project[/color].
+We'll quickly cover some basics to get you started.
 (You can skip this under [color=#40A000]Help > Skip Tutorial[/color])"
 nextIndex = 1
+
+[node name="Timer" parent="Camera3D/Interface/Tutorial/0_Welcome" index="3"]
+wait_time = 6.0
 
 [node name="1_Navigation" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
 visible = false
@@ -657,7 +659,9 @@ offset_top = 47.0
 offset_right = 204.44702
 offset_bottom = 63.0
 rotation = -5.832883
-texture = ExtResource("10_3yata")
+texture = ExtResource("12_cwlo7")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 1
 patch_margin_top = 16
 patch_margin_right = 8
 
@@ -683,7 +687,8 @@ offset_top = 42.0
 offset_right = 204.44702
 offset_bottom = 58.0
 rotation = -1.5707964
-texture = ExtResource("10_3yata")
+texture = ExtResource("12_cwlo7")
+patch_margin_left = 1
 patch_margin_top = 16
 patch_margin_right = 8
 
@@ -701,12 +706,9 @@ offset_right = 5.5
 offset_bottom = -79.5
 grow_horizontal = 2
 grow_vertical = 0
-text = "That covers the basics!
+text = "That's all for now!
 Check out [color=#40A000]Help > Show Help & Tips[/color] for more."
 nextIndex = 5
-
-[node name="Timer" parent="Camera3D/Interface/Tutorial/4_End" index="3"]
-wait_time = 5.0
 
 [node name="MenuBar" type="MenuBar" parent="Camera3D/Interface"]
 layout_mode = 0
@@ -1467,9 +1469,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -184.0
-offset_top = -81.0
+offset_top = -99.0
 offset_right = 184.0
-offset_bottom = 81.0
+offset_bottom = 99.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("77_rgbjt")
@@ -1578,6 +1580,11 @@ text = "Brass static sheets in shaded view"
 layout_mode = 2
 tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
 theme = SubResource("Theme_pd6ol")
+
+[node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/Settings/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Set current scene as default"
 
 [node name="PathExport" type="Button" parent="Camera3D/Interface"]
 visible = false
@@ -2913,7 +2920,9 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/Settings" method="_on_movement_speed_input_text_submitted"]
 [connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/Settings" method="_on_store_diff_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/Settings" method="_on_brass_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/Settings" method="_on_set_default_scene_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/CommentDisplay" to="Camera3D/Interface/CommentDisplay" method="_on_gui_input"]
 
+[editable path="Camera3D/Interface/Tutorial/0_Welcome"]
 [editable path="Camera3D/Interface/Tutorial/4_End"]

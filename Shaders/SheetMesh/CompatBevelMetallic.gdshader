@@ -70,7 +70,8 @@ void fragment() {
 	vec3 norm_avg = center_normal;
  
 	for (int i = 0; i < 8; i++) {
-		vec2 neighbor_uv = clamp(uv + offset[i] * bevel_size * 0.2 * center_depth, vec2(0.0), vec2(1.0));
+		//vec2 neighbor_uv = clamp(uv + offset[i] * bevel_size * 0.2 * center_depth, vec2(0.0), vec2(1.0));
+		vec2 neighbor_uv = clamp(uv + offset[i] * texel, vec2(0.0), vec2(1.0));
 
 		float neighbor_depth  = texture(depth_texture, neighbor_uv).r;
 		vec3  neighbor_normal = texture(normal_texture, neighbor_uv).rgb * 2.0 - 1.0;

@@ -28,7 +28,7 @@ func skip():
 	currentIndex = nodes.size()
 	hide()
 	Global.editor.tutorialDone = true
-	FileHandler.writeConfig()
+	Global.config.saveConfig()
 
 func start():
 	inTutorial = true
@@ -38,6 +38,7 @@ func start():
 		node.hide()
 	currentIndex = 0
 	nodes[currentIndex].show()
+	nodes[currentIndex].next()
 	show()
 
 func setFileMask(masked):

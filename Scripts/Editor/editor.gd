@@ -70,8 +70,8 @@ func save():
 		print("Could not write file for project")
 
 func loadProject(srcPath = ""):
-	if interface.tutorial.inTutorial:
-		interface.tutorial.stepTo(1)
+	#if interface.tutorial.inTutorial:
+		#interface.tutorial.stepTo(1)
 	workspace.clear()
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	currentlyLoadedPath = path

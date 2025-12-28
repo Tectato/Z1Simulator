@@ -4,17 +4,18 @@ const configPath = "user://Z1SimConfig.json"
 
 func _ready() -> void:
 	await get_tree().process_frame
-	if FileAccess.file_exists(configPath):
-		var config = JSON.parse_string(FileAccess.get_file_as_string(configPath))
-		if config.has("tutorial_completed"):
-			Global.editor.setTutorialCompleted(config["tutorial_completed"])
-			#Global.editor.interface.tutorial.inTutorial = config["tutorial_completed"]
-		else:
-			Global.editor.setTutorialCompleted(false)
-			writeConfig()
-	else:
-		Global.editor.setTutorialCompleted(false)
-		writeConfig()
+	Global.config.loadConfig()
+	#if FileAccess.file_exists(configPath):
+		#var config = JSON.parse_string(FileAccess.get_file_as_string(configPath))
+		#if config.has("tutorial_completed"):
+			#Global.editor.setTutorialCompleted(config["tutorial_completed"])
+			##Global.editor.interface.tutorial.inTutorial = config["tutorial_completed"]
+		#else:
+			#Global.editor.setTutorialCompleted(false)
+			#writeConfig()
+	#else:
+		#Global.editor.setTutorialCompleted(false)
+		#writeConfig()
 
 func extractMachines(path : String):
 	var source = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -102,13 +103,13 @@ func compile(machines : Array):
 			})
 	return out
 
-func writeConfig():
-	var dict = {
-		"tutorial_completed": Global.editor.tutorialDone
-	}
-	var file = FileAccess.open(configPath, FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(dict))
-		file.close()
-	else:
-		print("Failed to write config file")
+#func writeConfig():
+	#var dict = {
+		#"tutorial_completed": Global.editor.tutorialDone
+	#}
+	#var file = FileAccess.open(configPath, FileAccess.WRITE)
+	#if file:
+		#file.store_string(JSON.stringify(dict))
+		#file.close()
+	#else:
+		#print("Failed to write config file")
