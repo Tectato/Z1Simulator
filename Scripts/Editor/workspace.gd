@@ -72,7 +72,7 @@ func visModeChanged(mode : Editor.VisMode):
 	$WorldEnvironment.environment.ssao_enabled = shaded
 
 func setResolution(newRes):
-	if newRes != resolution:
+	if newRes != resolution and !Global.editor.loading:
 		resolution = newRes
 		resolutionChanged.emit(newRes)
 

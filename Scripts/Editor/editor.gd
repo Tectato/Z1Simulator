@@ -16,6 +16,7 @@ var previousAction : Callable
 var currentVisMode = VisMode.Colorcoded
 var editingLocked = false
 var tutorialDone = false
+var loading = false
 
 enum VisMode { Monochrome, Colorcoded, Realistic }
 
@@ -70,6 +71,8 @@ func save():
 		print("Could not write file for project")
 
 func loadProject(srcPath = ""):
+	workspace.setResolution(Workspace.Resolution.Part)
+	loading = true
 	#if interface.tutorial.inTutorial:
 		#interface.tutorial.stepTo(1)
 	workspace.clear()
@@ -88,6 +91,7 @@ func loadProject(srcPath = ""):
 	await get_tree().create_timer(0.1).timeout
 	SheetLibrary.cleanUnusedSheets()
 	updateInstancePos.emit()
+	loading = false
 
 func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
