@@ -23,7 +23,10 @@ func serialize():
 		}
 	if part != null:
 		out["part"] = part.uuid
+	var movedDelta = position
+	position = Vector2.ZERO
 	for element in elements:
+		element.position += movedDelta
 		out["shapes"].append(element.serialize())
 	return out
 
@@ -145,3 +148,20 @@ func unlink():
 		part.setUseColor(false)
 		part.marker = null
 	part = null
+
+func setupDuplicate(src : Marker):
+	position = src.position
+	for element in src.elements:
+		var newElement
+		if element is MarkerCircle:
+			newElement = CIRCLE.instantiate()
+		elif element is MarkerLine:
+			newElement = LINE.instantiate()
+		elif element is MarkerRectangle:
+			newElement = RECTANGLE.instantiate()
+		elif element is MarkerStateIndicator:
+			newElement = STATE_INDICATOR.instantiate()
+		add_child(newElement)
+		newElement.setupDuplicate(element)
+		elements.append(newElement)
+		newElement.parent = self

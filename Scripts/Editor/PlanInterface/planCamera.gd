@@ -50,3 +50,12 @@ func newPlan(plan : Plan):
 		currentPlanSprite = plan.sprite
 	else:
 		currentPlanSprite = defaultSprite
+	
+	var viewSize = get_viewport_rect().size
+	var xSmaller = viewSize.x < viewSize.y
+	if xSmaller:
+		zoomFactor = get_viewport_rect().size.x / currentPlanSprite.texture.get_size().x
+	else:
+		zoomFactor = get_viewport_rect().size.y / currentPlanSprite.texture.get_size().y
+	zoomFactor = clampf(zoomFactor, 0.1, 10)
+	zoom = Vector2(1,1) * zoomFactor

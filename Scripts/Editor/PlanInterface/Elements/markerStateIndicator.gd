@@ -61,3 +61,12 @@ func updateSprite():
 
 func updateLabel():
 	$Label.text = "1" if state else "0"
+
+func setupDuplicate(src : MarkerElement):
+	parent = src.parent
+	position = src.position
+	state = src.state
+	direction = src.direction
+	updateLabel()
+	updateSprite()
+	finished = true

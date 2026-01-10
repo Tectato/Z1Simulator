@@ -30,6 +30,7 @@ var brassMode = false
 enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
 signal resolutionChanged(newRes)
+signal updateGlobalPinBounds(floor, height)
 
 enum Selectability {Both, Sheets, Pins}
 var selectability = Selectability.Both
@@ -74,6 +75,7 @@ func visModeChanged(mode : Editor.VisMode):
 func setResolution(newRes):
 	if newRes != resolution and !Global.editor.loading:
 		resolution = newRes
+		updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
 		resolutionChanged.emit(newRes)
 
 func setSelectability(newSel):
@@ -89,6 +91,7 @@ func setIntermediatePlateVis(newVis):
 func setUnselectedLayersHidden(newVis):
 	if newVis != hideUnselectedLayers:
 		hideUnselectedLayers = newVis
+		updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
 		unselectedLayersVisChanged.emit()
 
 func setShowPowerFlow(value):

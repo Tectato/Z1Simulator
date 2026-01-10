@@ -1,4 +1,4 @@
-[gd_scene load_steps=199 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=203 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -117,7 +117,11 @@
 [ext_resource type="Texture2D" uid="uid://bu3bkckauy372" path="res://Sprites/Buttons/Parts/comment_active.png" id="79_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
 [ext_resource type="Texture2D" uid="uid://bdl35a0b55bc6" path="res://Sprites/Buttons/Parts/comment_lit.png" id="80_i1mcn"]
+[ext_resource type="Texture2D" uid="uid://c16k8ibw5hmae" path="res://Sprites/xPos.png" id="94_6kijv"]
+[ext_resource type="Texture2D" uid="uid://bjpuehpmf2sjx" path="res://Sprites/xNeg.png" id="94_cl6md"]
+[ext_resource type="Texture2D" uid="uid://dvr68rxt4v3e5" path="res://Sprites/yNeg.png" id="96_b5fr5"]
 [ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
+[ext_resource type="Texture2D" uid="uid://cg0vwuovwm2py" path="res://Sprites/yPos.png" id="97_u4ilb"]
 [ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
 [ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
 [ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/ProgramInterface/notch.png" id="102_u1ej8"]
@@ -198,14 +202,6 @@ albedo_texture = ExtResource("37_cv1oh")
 texture_filter = 0
 
 [sub_resource type="QuadMesh" id="QuadMesh_v7xow"]
-
-[sub_resource type="InputEventKey" id="InputEventKey_w82wx"]
-device = -1
-keycode = 78
-unicode = 110
-
-[sub_resource type="Shortcut" id="Shortcut_pbycb"]
-events = [SubResource("InputEventKey_w82wx")]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_cv1oh"]
 viewport_path = NodePath("Camera3D/Interface/AxesGizmoViewport")
@@ -300,6 +296,14 @@ animations = [{
 "name": &"default",
 "speed": 2.0
 }]
+
+[sub_resource type="InputEventKey" id="InputEventKey_w82wx"]
+device = -1
+keycode = 78
+unicode = 110
+
+[sub_resource type="Shortcut" id="Shortcut_pbycb"]
+events = [SubResource("InputEventKey_w82wx")]
 
 [sub_resource type="InputEventKey" id="InputEventKey_v5nsg"]
 device = -1
@@ -1152,11 +1156,93 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, -1, 4.37114e-08, 0, 0, 
 material_override = SubResource("StandardMaterial3D_vtcxi")
 mesh = SubResource("QuadMesh_v7xow")
 
+[node name="X-" type="Sprite3D" parent="Camera3D/Interface/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.3, 0, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("94_cl6md")
+
+[node name="X+" type="Sprite3D" parent="Camera3D/Interface/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.3, 0, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("94_6kijv")
+
+[node name="Y-" type="Sprite3D" parent="Camera3D/Interface/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.3, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("96_b5fr5")
+
+[node name="Y+" type="Sprite3D" parent="Camera3D/Interface/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.3, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("97_u4ilb")
+
 [node name="Camera3D" type="Camera3D" parent="Camera3D/Interface/AxesGizmoViewport" node_paths=PackedStringArray("actualCamera")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, -4.37114e-08)
 projection = 1
 script = ExtResource("38_vtcxi")
 actualCamera = NodePath("../../..")
+
+[node name="AxesGizmo" type="Control" parent="Camera3D/Interface"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -1.0
+offset_top = 36.0
+offset_right = -1.0
+offset_bottom = 36.0
+grow_horizontal = 0
+
+[node name="Sprite" type="Sprite2D" parent="Camera3D/Interface/AxesGizmo"]
+position = Vector2(-65, 63)
+texture = SubResource("ViewportTexture_cv1oh")
+
+[node name="ClockGizmo" type="Control" parent="Camera3D/Interface"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -127.0
+offset_right = -64.0
+offset_bottom = -127.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("53_hujvp")
+
+[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/ClockGizmo"]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_jotky")
+animation = &"1"
+autoplay = "default"
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/ClockGizmo"]
+modulate = Color(0, 0, 0, 0.239216)
+z_index = -1
+layout_mode = 0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/ClockGizmo"]
+layout_mode = 0
+offset_left = -139.0
+offset_top = 29.0
+offset_right = -70.4375
+offset_bottom = 60.0
+text = "0.25 Hz"
 
 [node name="SideWindow" type="Control" parent="Camera3D/Interface"]
 texture_filter = 1
@@ -1294,61 +1380,6 @@ scale = Vector2(2, 2)
 texture_normal = ExtResource("57_iv047")
 texture_pressed = ExtResource("58_nb5ba")
 texture_hover = ExtResource("59_pyiqs")
-
-[node name="AxesGizmo" type="Control" parent="Camera3D/Interface"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -1.0
-offset_top = 36.0
-offset_right = -1.0
-offset_bottom = 36.0
-grow_horizontal = 0
-
-[node name="Sprite" type="Sprite2D" parent="Camera3D/Interface/AxesGizmo"]
-position = Vector2(-65, 63)
-texture = SubResource("ViewportTexture_cv1oh")
-
-[node name="ClockGizmo" type="Control" parent="Camera3D/Interface"]
-z_index = 1
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = -127.0
-offset_right = -64.0
-offset_bottom = -127.0
-grow_horizontal = 0
-grow_vertical = 0
-script = ExtResource("53_hujvp")
-
-[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/ClockGizmo"]
-texture_filter = 1
-scale = Vector2(2, 2)
-sprite_frames = SubResource("SpriteFrames_jotky")
-animation = &"1"
-autoplay = "default"
-
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/ClockGizmo"]
-modulate = Color(0, 0, 0, 0.239216)
-z_index = -1
-layout_mode = 0
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-offset_bottom = 64.0
-
-[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/ClockGizmo"]
-layout_mode = 0
-offset_left = -139.0
-offset_top = 29.0
-offset_right = -70.4375
-offset_bottom = 60.0
-text = "0.25 Hz"
 
 [node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface"]
 visible = false
@@ -2904,13 +2935,13 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
 [connection signal="pressed" from="Camera3D/Interface/PartPlacers/Comment" to="." method="addComment"]
+[connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/SideWindow/Hide" to="Camera3D/Interface/SideWindow" method="_on_hide_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
 [connection signal="button_down" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_down"]
 [connection signal="button_up" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_up"]
 [connection signal="button_down" from="Camera3D/Interface/SideWindow/RescaleButton" to="Camera3D/Interface/SideWindow" method="_on_rescale_button_button_down"]
 [connection signal="button_up" from="Camera3D/Interface/SideWindow/RescaleButton" to="Camera3D/Interface/SideWindow" method="_on_rescale_button_button_up"]
-[connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="editing_toggled" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
 [connection signal="text_submitted" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_text_submitted"]
 [connection signal="focus_exited" from="Camera3D/Interface/SetCommentBox/ScrollContainer/TextEdit" to="Camera3D/Interface" method="_on_comment_text_edit_focus_exited"]

@@ -3,6 +3,7 @@ class_name MarkerLine
 
 var previousPoint = Vector2.ZERO
 var width = 10
+@onready var line = $Line2D
 
 func serialize():
 	var out = {
@@ -12,16 +13,17 @@ func serialize():
 	}
 	var posX = position.x
 	var posY = position.y
-	for point in $Line2D.points:
+	for point in line.points:
 		out["points"].append([int(point.x + posX), int(point.y + posY)])
 	return out
 
 func deserialize(src):
+	if !line: line = $Line2D
 	width = src["width"]
-	$Line2D.width = width
-	$Line2D.clear_points()
+	line.width = width
+	line.clear_points()
 	for point in src["points"]:
-		$Line2D.add_point(Vector2(float(point[0]),float(point[1])))
+		line.add_point(Vector2(float(point[0]),float(point[1])))
 	finished = true
 
 func start():
@@ -30,21 +32,21 @@ func start():
 func end():
 	if finished: return
 	super.end()
-	if $Line2D.points.size() < 2:
+	if line.points.size() < 2:
 		delete()
 	else:
-		$Line2D.remove_point($Line2D.points.size()-1)
+		line.remove_point(line.points.size()-1)
 
 func click():
 	var currentMousePos = get_local_mouse_position()
-	if $Line2D.points.size() > 2 and currentMousePos.distance_to(previousPoint) < 5:
+	if line.points.size() > 2 and currentMousePos.distance_to(previousPoint) < 5:
 		end()
 	elif currentMousePos.distance_to(previousPoint) >= 5:
 		previousPoint = currentMousePos
-		$Line2D.add_point(currentMousePos)
+		line.add_point(currentMousePos)
 
 func wasClicked(pos : Vector2):
-	var points = $Line2D.points
+	var points = line.points
 	var posRelative = pos - global_position
 	for i in range(0, points.size() - 1):
 		var closestLinePoint = Geometry2D.get_closest_point_to_segment(posRelative, points[i], points[i+1])
@@ -54,8 +56,16 @@ func wasClicked(pos : Vector2):
 
 func _process(delta: float) -> void:
 	if !finished:
-		$Line2D.points[$Line2D.points.size()-1] = get_local_mouse_position()
+		line.points[line.points.size()-1] = get_local_mouse_position()
 
 func setWidth(value):
 	width = value
-	$Line2D.width = width
+	line.width = width
+
+func setupDuplicate(src : MarkerElement):
+	parent = src.parent
+	position = src.position
+	width = src.width
+	line.points = src.line.points
+	line.width = width
+	finished = true

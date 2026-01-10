@@ -1,4 +1,5 @@
 extends MarkerElement
+class_name MarkerCircle
 
 var mouseStartPos = Vector2.ZERO
 var radius = 100.0
@@ -40,3 +41,10 @@ func _process(delta: float) -> void:
 	if !finished:
 		var mouseDelta = get_global_mouse_position() - mouseStartPos
 		$Polygon2D.scale = Vector2(1,1) * mouseDelta.length()/100
+
+func setupDuplicate(src : MarkerElement):
+	parent = src.parent
+	position = src.position
+	radius = src.radius
+	$Polygon2D.scale = Vector2(1,1) * radius / 100
+	finished = true

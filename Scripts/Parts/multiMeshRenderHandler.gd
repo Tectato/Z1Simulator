@@ -141,6 +141,9 @@ func setColor(key : String, index : int, color : Color):
 		return
 	renderers[key].multimesh.set_instance_color(index, color)
 
+func setAABB(key : String, box : AABB):
+	renderers[key].multimesh.set_custom_aabb(box)
+
 func schedule(callable : Callable):
 	if scheduled.has(callable): return
 	scheduled[callable] = null
