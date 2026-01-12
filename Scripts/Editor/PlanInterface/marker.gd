@@ -8,6 +8,8 @@ const STATE_INDICATOR = preload("res://Scenes/PlanInterface/MarkingElements/Stat
 
 enum ElementType {Line, Rectangle, Circle, StateIndicator}
 
+@export var matSelected : Material
+
 @onready var parent = get_parent()
 var part : Movable
 var selected = false
@@ -77,7 +79,8 @@ func setSelected(value):
 	if selected == value: return
 	selected = value
 	selectionChanged.emit(value)
-	set_instance_shader_parameter("active", value)
+	material = matSelected if selected else null
+	#set_instance_shader_parameter("active", value)
 	if value:
 		parent.selectedMarker = self
 		for element in elements:

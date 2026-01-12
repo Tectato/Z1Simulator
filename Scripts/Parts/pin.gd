@@ -478,12 +478,13 @@ func nudge():
 			await get_tree().create_timer(cooldown).timeout
 		var dirP
 		var dirN
+		var flipOrder = -1 if outputState else 1
 		if directionality == 1:
-			dirP = Vector2(1,0)*Workspace.pinTravel
-			dirN = Vector2(-1,0)*Workspace.pinTravel
+			dirP = Vector2(1,0)*Workspace.pinTravel * flipOrder
+			dirN = Vector2(-1,0)*Workspace.pinTravel * flipOrder
 		else:
-			dirP = Vector2(0,1)*Workspace.pinTravel
-			dirN = Vector2(0,-1)*Workspace.pinTravel
+			dirP = Vector2(0,1)*Workspace.pinTravel * flipOrder
+			dirN = Vector2(0,-1)*Workspace.pinTravel * flipOrder
 		if canMove(dirP, self, []):
 			move(dirP, self, [])
 			return

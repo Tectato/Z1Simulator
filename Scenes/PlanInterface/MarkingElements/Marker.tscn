@@ -10,5 +10,5 @@ shader_parameter/line_colour = Color(0, 0, 0, 1)
 shader_parameter/line_thickness = 3
 
 [node name="Marker" type="CanvasGroup"]
-material = SubResource("ShaderMaterial_ljoqm")
 script = ExtResource("1_pn5ye")
+matSelected = SubResource("ShaderMaterial_ljoqm")

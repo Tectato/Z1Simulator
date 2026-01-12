@@ -1,6 +1,7 @@
 extends Control
 
 @export var editor : Editor
+@export var clickArea : Control
 @onready var saveDialog = $SaveDialog
 @onready var loadProjectDialog = $LoadProjectDialog
 @onready var importProjectDialog = $ImportProjectInstaceDialog
@@ -8,17 +9,17 @@ extends Control
 @onready var importChoiceDialog = $ImportChoice
 @onready var saveRequestDialog = $SaveRequest
 @onready var exportMachineDialog = $MachineExportDialog
-@onready var renamingBox = $RenamingBox
-@onready var commentBox = $SetCommentBox
-@onready var commentText = $SetCommentBox/ScrollContainer/TextEdit
-@onready var saveError = $SaveError
-@onready var selectedLabel = $SelectedLabel/Label
-@onready var tutorial = $Tutorial
+@onready var renamingBox = $VisibilityParent/RenamingBox
+@onready var commentBox = $VisibilityParent/SetCommentBox
+@onready var commentText = $VisibilityParent/SetCommentBox/ScrollContainer/TextEdit
+@onready var saveError = $VisibilityParent/SaveError
+@onready var selectedLabel = $VisibilityParent/SelectedLabel/Label
+@onready var tutorial = $VisibilityParent/Tutorial
 
-@onready var ModeSelect = $Toggles/ModeBar/Select
-@onready var ModeManage = $Toggles/ModeBar/Manage
+@onready var ModeSelect = $VisibilityParent/Toggles/ModeBar/Select
+@onready var ModeManage = $VisibilityParent/Toggles/ModeBar/Manage
 
-@onready var debugLabel = $DebugLabel
+@onready var debugLabel = $VisibilityParent/DebugLabel
 
 const WebRootFolder = "/Machines"
 var toRename : Node
@@ -32,7 +33,7 @@ func lateReady():
 	editor.selector.newSelection.connect(newSelection)
 	Global.workspace.resolutionChanged.connect(resolutionChanged)
 	Global.workspace.selectabilityChanged.connect(selectabilityChanged)
-	$Toggles/ResolutionBar/Part/Selectability.cycled.connect(Global.workspace.setSelectability)
+	$VisibilityParent/Toggles/ResolutionBar/Part/Selectability.cycled.connect(Global.workspace.setSelectability)
 	resolutionChanged(Workspace.Resolution.Part)
 	
 	if OS.get_name() == "Web":
@@ -41,7 +42,7 @@ func lateReady():
 		importProjectDialog.root_subfolder = WebRootFolder
 		importSheetDialog.root_subfolder = WebRootFolder
 		
-		$MenuBar/Edit.set_item_disabled(2, true)
+		$VisibilityParent/MenuBar/Edit.set_item_disabled(2, true)
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -62,7 +63,7 @@ func _input(event: InputEvent) -> void:
 				if selectedUIElement is Sequence:
 					toRename = selectedUIElement
 					openRenameBox(selectedUIElement.id)
-		if event.is_action_pressed("mouse_left") and get_viewport().gui_get_focus_owner() and get_viewport().gui_get_hovered_control() == $ClickArea:
+		if event.is_action_pressed("mouse_left") and get_viewport().gui_get_focus_owner() and get_viewport().gui_get_hovered_control() == clickArea:
 			get_viewport().gui_get_focus_owner().release_focus()
 
 func openRenameBox(currentID):
@@ -106,7 +107,7 @@ func _on_file_id_pressed(id: int) -> void:
 			if editor.currentlyLoadedPath.length() > 0:
 				editor.loadProject(editor.currentlyLoadedPath)
 		8:
-			$Settings.show()
+			$VisibilityParent/Settings.show()
 
 func _on_edit_id_pressed(id: int) -> void:
 	match(id):
@@ -164,20 +165,20 @@ func _on_part_toggled(toggled_on: bool) -> void:
 		Global.workspace.setResolution(Workspace.Resolution.Part)
 
 func resolutionChanged(newRes : Workspace.Resolution):
-	$Toggles/ResolutionBar/Machine.set_pressed_no_signal(false)
-	$Toggles/ResolutionBar/Layer.set_pressed_no_signal(false)
-	$Toggles/ResolutionBar/Part/Main.set_pressed_no_signal(false)
+	$VisibilityParent/Toggles/ResolutionBar/Machine.set_pressed_no_signal(false)
+	$VisibilityParent/Toggles/ResolutionBar/Layer.set_pressed_no_signal(false)
+	$VisibilityParent/Toggles/ResolutionBar/Part/Main.set_pressed_no_signal(false)
 	match(newRes):
 		Workspace.Resolution.Machine:
-			$Toggles/ResolutionBar/Machine.set_pressed_no_signal(true)
+			$VisibilityParent/Toggles/ResolutionBar/Machine.set_pressed_no_signal(true)
 		Workspace.Resolution.Layer:
-			$Toggles/ResolutionBar/Layer.set_pressed_no_signal(true)
+			$VisibilityParent/Toggles/ResolutionBar/Layer.set_pressed_no_signal(true)
 		Workspace.Resolution.Part:
-			$Toggles/ResolutionBar/Part/Main.set_pressed_no_signal(true)
-	$Toggles/ResolutionBar/Part/Selectability.visible = newRes == Workspace.Resolution.Part
+			$VisibilityParent/Toggles/ResolutionBar/Part/Main.set_pressed_no_signal(true)
+	$VisibilityParent/Toggles/ResolutionBar/Part/Selectability.visible = newRes == Workspace.Resolution.Part
 
 func selectabilityChanged(newSel : Workspace.Selectability):
-	$Toggles/ResolutionBar/Part/Selectability.setIndex(int(newSel))
+	$VisibilityParent/Toggles/ResolutionBar/Part/Selectability.setIndex(int(newSel))
 
 func _on_renaming_box_text_submitted(new_text: String) -> void:
 	if toRename is Movable or toRename is Machine or toRename is Layer:
@@ -245,17 +246,17 @@ func visModeShaded() -> void:
 
 func newSelection(parts = []):
 	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
-	$MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
-	$MenuBar/Edit.set_item_disabled(1, !oneInstanceMachineSelected)
+	$VisibilityParent/MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
+	$VisibilityParent/MenuBar/Edit.set_item_disabled(1, !oneInstanceMachineSelected)
 	commentBox.hide()
 
 func _on_edit_lock_toggled(toggled_on: bool) -> void:
 	editor.editingLocked = toggled_on
 	editor.selector.updateGizmo()
 	if toggled_on:
-		$PartPlacers.hide()
+		$VisibilityParent/PartPlacers.hide()
 	else:
-		$PartPlacers.show()
+		$VisibilityParent/PartPlacers.show()
 	#for button in $PartPlacers.get_children():
 		#button.disabled = toggled_on
 
@@ -280,3 +281,6 @@ func _on_comment_text_edit_focus_exited() -> void:
 
 func _on_comment_vis_toggled(toggled_on: bool) -> void:
 	Global.workspace.setCommentVis(toggled_on)
+
+func _on_ui_visibility_toggled(toggled_on: bool) -> void:
+	$VisibilityParent.modulate = Color.WHITE if !toggled_on else Color.TRANSPARENT
