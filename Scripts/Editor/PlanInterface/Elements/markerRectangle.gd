@@ -1,7 +1,9 @@
 extends MarkerElement
+class_name MarkerRectangle
 
 var startPos = Vector2.ZERO
 var endPos = Vector2.ZERO
+@onready var polygon = $Polygon2D
 
 func serialize():
 	var start = position + startPos
@@ -15,10 +17,11 @@ func serialize():
 	}
 
 func deserialize(src):
+	if !polygon: polygon = $Polygon2D
 	position = Vector2(float(src["start_x"]), float(src["start_y"]))
 	startPos = Vector2.ZERO
 	endPos = Vector2(float(src["end_x"]), float(src["end_y"])) - position
-	$Polygon2D.scale = endPos / 100
+	polygon.scale = endPos / 100
 	finished = true
 
 func start():
@@ -49,4 +52,12 @@ func wasClicked(pos : Vector2):
 func _process(delta: float) -> void:
 	if !finished:
 		var mouseDelta = get_local_mouse_position() - startPos
-		$Polygon2D.scale = Vector2(1,1) * mouseDelta/100
+		polygon.scale = Vector2(1,1) * mouseDelta/100
+
+func setupDuplicate(src : MarkerElement):
+	parent = src.parent
+	position = src.position
+	startPos = src.startPos
+	endPos = src.endPos
+	polygon.scale = src.polygon.scale
+	finished = true

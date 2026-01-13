@@ -22,22 +22,23 @@ func stepTo(id : int):
 func skip():
 	inTutorial = false
 	helpMenu.set_item_text(1, "Start Tutorial")
-	setFileMask(false)
+	#setFileMask(false)
 	for node in nodes:
 		node.hide()
 	currentIndex = nodes.size()
 	hide()
 	Global.editor.tutorialDone = true
-	FileHandler.writeConfig()
+	Global.config.saveConfig()
 
 func start():
 	inTutorial = true
 	helpMenu.set_item_text(1, "Skip Tutorial")
-	setFileMask(true)
+	#setFileMask(true)
 	for node in nodes:
 		node.hide()
 	currentIndex = 0
 	nodes[currentIndex].show()
+	nodes[currentIndex].next()
 	show()
 
 func setFileMask(masked):

@@ -1,7 +1,7 @@
 extends Node2D
 class_name MarkerElement
 
-var parent : Marker
+var parent
 var selected = false
 var finished = false
 
@@ -35,3 +35,6 @@ func end():
 
 func delete():
 	parent.removeElement(self)
+
+func setupDuplicate(src : MarkerElement):
+	pass

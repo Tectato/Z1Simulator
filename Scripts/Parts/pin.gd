@@ -9,6 +9,7 @@ var storedStates = [false, false, 0]
 var meshIndex = -1
 var diameter = 0.05
 var global = false
+var verticalScale = 0.2
 var output = false
 var outputState = false
 var flippingOutput = false
@@ -122,6 +123,7 @@ func _ready() -> void:
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.editor.updateInstancePos.connect(updateInstance)
 	Global.clearHistory.connect(clearHistory)
+	Global.workspace.updateGlobalPinBounds.connect(updateHeight)
 	visModeChanged(Global.editor.currentVisMode)
 	visibility_changed.connect(visibilityChanged)
 	meshIndex = PinRenderHandler.addInstance("pin")
@@ -212,15 +214,23 @@ func setHeight(value):
 		effectiveHeight = maxHeight
 	else:
 		effectiveHeight = value if fixed else value - 0.4
-		
-	$MeshInstance3D.scale = Vector3(diameter/0.05,effectiveHeight,diameter/0.05)
-	$MeshInstance3D.position = Vector3.UP * 0.1 * effectiveHeight / 2
-	$Highlight.transform = $MeshInstance3D.transform
-	$Area3D.transform = $MeshInstance3D.transform
+	
+	verticalScale = effectiveHeight
+	updateHeight(0, verticalScale)
 	#$Area3D.scale = Vector3(scale.x,value,scale.z)
 	#$Area3D.position = Vector3.UP * 0.1 * value / 2
+
+func updateHeight(floor : float, height : float):
+	if height < 0 or !global:
+		floor = 0
+		height = verticalScale
+	$MeshInstance3D.scale = Vector3(diameter/0.05,height,diameter/0.05)
+	$MeshInstance3D.position = Vector3.UP * (floor + 0.1 * height / 2)
 	if output:
-		indicator.position = Vector3.UP * (effectiveHeight * 0.1 + 0.05)
+		indicator.position = Vector3.UP * (floor + 0.1 * height + 0.05)
+	$Highlight.transform = $MeshInstance3D.transform
+	$Area3D.transform = $MeshInstance3D.transform
+	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 
 func setOutput(value):
 	if fixed or value == output:
@@ -468,12 +478,13 @@ func nudge():
 			await get_tree().create_timer(cooldown).timeout
 		var dirP
 		var dirN
+		var flipOrder = -1 if outputState else 1
 		if directionality == 1:
-			dirP = Vector2(1,0)*Workspace.pinTravel
-			dirN = Vector2(-1,0)*Workspace.pinTravel
+			dirP = Vector2(1,0)*Workspace.pinTravel * flipOrder
+			dirN = Vector2(-1,0)*Workspace.pinTravel * flipOrder
 		else:
-			dirP = Vector2(0,1)*Workspace.pinTravel
-			dirN = Vector2(0,-1)*Workspace.pinTravel
+			dirP = Vector2(0,1)*Workspace.pinTravel * flipOrder
+			dirN = Vector2(0,-1)*Workspace.pinTravel * flipOrder
 		if canMove(dirP, self, []):
 			move(dirP, self, [])
 			return

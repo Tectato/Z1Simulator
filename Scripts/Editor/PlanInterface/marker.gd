@@ -8,6 +8,8 @@ const STATE_INDICATOR = preload("res://Scenes/PlanInterface/MarkingElements/Stat
 
 enum ElementType {Line, Rectangle, Circle, StateIndicator}
 
+@export var matSelected : Material
+
 @onready var parent = get_parent()
 var part : Movable
 var selected = false
@@ -23,7 +25,10 @@ func serialize():
 		}
 	if part != null:
 		out["part"] = part.uuid
+	var movedDelta = position
+	position = Vector2.ZERO
 	for element in elements:
+		element.position += movedDelta
 		out["shapes"].append(element.serialize())
 	return out
 
@@ -74,7 +79,8 @@ func setSelected(value):
 	if selected == value: return
 	selected = value
 	selectionChanged.emit(value)
-	set_instance_shader_parameter("active", value)
+	material = matSelected if selected else null
+	#set_instance_shader_parameter("active", value)
 	if value:
 		parent.selectedMarker = self
 		for element in elements:
@@ -145,3 +151,20 @@ func unlink():
 		part.setUseColor(false)
 		part.marker = null
 	part = null
+
+func setupDuplicate(src : Marker):
+	position = src.position
+	for element in src.elements:
+		var newElement
+		if element is MarkerCircle:
+			newElement = CIRCLE.instantiate()
+		elif element is MarkerLine:
+			newElement = LINE.instantiate()
+		elif element is MarkerRectangle:
+			newElement = RECTANGLE.instantiate()
+		elif element is MarkerStateIndicator:
+			newElement = STATE_INDICATOR.instantiate()
+		add_child(newElement)
+		newElement.setupDuplicate(element)
+		elements.append(newElement)
+		newElement.parent = self

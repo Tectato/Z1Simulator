@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf40mtgbl3upe"
-path.s3tc="res://.godot/imported/axes.png-b3cb53eebc871ba6404dca9af88ecd70.s3tc.ctex"
+uid="uid://bjpuehpmf2sjx"
+path.s3tc="res://.godot/imported/xNeg.png-733ffc5d44301bf6355ffc21444b9c26.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Sprites/axes.png"
-dest_files=["res://.godot/imported/axes.png-b3cb53eebc871ba6404dca9af88ecd70.s3tc.ctex"]
+source_file="res://Sprites/xNeg.png"
+dest_files=["res://.godot/imported/xNeg.png-733ffc5d44301bf6355ffc21444b9c26.s3tc.ctex"]
 
 [params]
 

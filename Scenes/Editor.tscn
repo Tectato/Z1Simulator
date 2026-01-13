@@ -1,4 +1,4 @@
-[gd_scene load_steps=199 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=208 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -9,15 +9,18 @@
 [ext_resource type="Script" uid="uid://clhwdine20lbk" path="res://Scripts/Editor/3DUI/commentRay.gd" id="6_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c6j8lhvash62a" path="res://Sprites/Buttons/Modes/select_inactive.png" id="6_847jc"]
 [ext_resource type="Texture2D" uid="uid://bewgkcvn3nn6i" path="res://Sprites/Buttons/Modes/select_active.png" id="7_ir51w"]
+[ext_resource type="Texture2D" uid="uid://n8phhn5qacpa" path="res://Sprites/Buttons/Visibility/uiVis.png" id="7_m3vij"]
 [ext_resource type="Script" uid="uid://dj3irykcw4cul" path="res://Scripts/Editor/Tutorial/tutorialManager.gd" id="8_bc06v"]
 [ext_resource type="Texture2D" uid="uid://bppmh3gus1iap" path="res://Sprites/Buttons/Modes/select_lit.png" id="8_fx05v"]
+[ext_resource type="Texture2D" uid="uid://d4bo24s826xly" path="res://Sprites/Buttons/Visibility/uiVis_active.png" id="8_h6sg5"]
 [ext_resource type="Texture2D" uid="uid://boeuucukxjcd2" path="res://Sprites/FileSystem/machine.png" id="8_j432o"]
 [ext_resource type="PackedScene" uid="uid://43eaudijn5j7" path="res://Scenes/TutorialNode.tscn" id="8_pyy8l"]
+[ext_resource type="Texture2D" uid="uid://dss0jh2rtt1cm" path="res://Sprites/Buttons/Visibility/uiVis_lit.png" id="9_1q8bw"]
 [ext_resource type="Texture2D" uid="uid://bjukhf5ntj8sq" path="res://Sprites/FileSystem/sheet.png" id="9_j432o"]
-[ext_resource type="Texture2D" uid="uid://dd33yp08fvgln" path="res://Sprites/9TileArrow.png" id="10_3yata"]
 [ext_resource type="Script" uid="uid://07gb7b4pgjtg" path="res://Scripts/Editor/Tutorial/cameraWatcher.gd" id="11_5adol"]
 [ext_resource type="Script" uid="uid://x73tt0fqci1w" path="res://Scripts/Editor/Tutorial/navigationNode.gd" id="11_cwlo7"]
 [ext_resource type="Texture2D" uid="uid://cdujh2rfimo8w" path="res://Sprites/Buttons/Visibility/comments.png" id="11_ue6jr"]
+[ext_resource type="Texture2D" uid="uid://pqpfeq6gkxxb" path="res://Sprites/9TileArrowOutlined.png" id="12_cwlo7"]
 [ext_resource type="Texture2D" uid="uid://d0pjjqnwdiprb" path="res://Sprites/Buttons/VisModes/monochrome.png" id="12_f0qqp"]
 [ext_resource type="Texture2D" uid="uid://ba37urh1hrp" path="res://Sprites/Buttons/Visibility/comments_active.png" id="12_ix1yp"]
 [ext_resource type="Texture2D" uid="uid://dmnw7b8snx2qp" path="res://Sprites/Buttons/Modes/manage_inactive.png" id="12_jnb0j"]
@@ -117,7 +120,11 @@
 [ext_resource type="Texture2D" uid="uid://bu3bkckauy372" path="res://Sprites/Buttons/Parts/comment_active.png" id="79_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
 [ext_resource type="Texture2D" uid="uid://bdl35a0b55bc6" path="res://Sprites/Buttons/Parts/comment_lit.png" id="80_i1mcn"]
+[ext_resource type="Texture2D" uid="uid://c16k8ibw5hmae" path="res://Sprites/xPos.png" id="94_6kijv"]
+[ext_resource type="Texture2D" uid="uid://bjpuehpmf2sjx" path="res://Sprites/xNeg.png" id="94_cl6md"]
+[ext_resource type="Texture2D" uid="uid://dvr68rxt4v3e5" path="res://Sprites/yNeg.png" id="96_b5fr5"]
 [ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
+[ext_resource type="Texture2D" uid="uid://cg0vwuovwm2py" path="res://Sprites/yPos.png" id="97_u4ilb"]
 [ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
 [ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
 [ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/ProgramInterface/notch.png" id="102_u1ej8"]
@@ -134,6 +141,27 @@
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
 bottom_radius = 0.02
+
+[sub_resource type="LabelSettings" id="LabelSettings_u1ej8"]
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_msmja"]
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_13gmj"]
+font_size = 20
+font_color = Color(0, 0.7607843, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_yjo3m"]
+font_size = 20
+font_color = Color(0, 1, 0.5921569, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_66atf"]
+font_size = 20
+font_color = Color(0.29803923, 1, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ue6jr"]
+font_size = 20
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_crs40"]
 
@@ -199,16 +227,8 @@ texture_filter = 0
 
 [sub_resource type="QuadMesh" id="QuadMesh_v7xow"]
 
-[sub_resource type="InputEventKey" id="InputEventKey_w82wx"]
-device = -1
-keycode = 78
-unicode = 110
-
-[sub_resource type="Shortcut" id="Shortcut_pbycb"]
-events = [SubResource("InputEventKey_w82wx")]
-
 [sub_resource type="ViewportTexture" id="ViewportTexture_cv1oh"]
-viewport_path = NodePath("Camera3D/Interface/AxesGizmoViewport")
+viewport_path = NodePath("Camera3D/Interface/VisibilityParent/AxesGizmoViewport")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hujvp"]
 atlas = ExtResource("52_85c8q")
@@ -301,6 +321,14 @@ animations = [{
 "speed": 2.0
 }]
 
+[sub_resource type="InputEventKey" id="InputEventKey_w82wx"]
+device = -1
+keycode = 78
+unicode = 110
+
+[sub_resource type="Shortcut" id="Shortcut_pbycb"]
+events = [SubResource("InputEventKey_w82wx")]
+
 [sub_resource type="InputEventKey" id="InputEventKey_v5nsg"]
 device = -1
 keycode = 4194305
@@ -313,26 +341,12 @@ CheckBox/icons/checked = ExtResource("100_kkpsg")
 CheckBox/icons/unchecked = ExtResource("101_msmja")
 CheckBox/icons/unchecked_disabled = ExtResource("102_u1ej8")
 
-[sub_resource type="LabelSettings" id="LabelSettings_u1ej8"]
-font_size = 20
+[sub_resource type="InputEventKey" id="InputEventKey_m3vij"]
+device = -1
+keycode = 4194332
 
-[sub_resource type="LabelSettings" id="LabelSettings_msmja"]
-font_size = 20
-
-[sub_resource type="LabelSettings" id="LabelSettings_13gmj"]
-font_size = 20
-font_color = Color(0, 0.7607843, 1, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_yjo3m"]
-font_size = 20
-font_color = Color(0, 1, 0.5921569, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_66atf"]
-font_size = 20
-font_color = Color(0.29803923, 1, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_ue6jr"]
-font_size = 20
+[sub_resource type="Shortcut" id="Shortcut_h6sg5"]
+events = [SubResource("InputEventKey_m3vij")]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
 radius = 0.01
@@ -553,10 +567,10 @@ collision_mask = 67
 collide_with_areas = true
 script = ExtResource("6_5ko8x")
 camera = NodePath("..")
-displayBox = NodePath("../Interface/CommentDisplay")
-displayText = NodePath("../Interface/CommentDisplay/Label")
+displayBox = NodePath("../Interface/VisibilityParent/CommentDisplay")
+displayText = NodePath("../Interface/VisibilityParent/CommentDisplay/Label")
 
-[node name="Interface" type="Control" parent="Camera3D" node_paths=PackedStringArray("editor")]
+[node name="Interface" type="Control" parent="Camera3D" node_paths=PackedStringArray("editor", "clickArea")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -565,6 +579,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5_brgpd")
 editor = NodePath("../..")
+clickArea = NodePath("ClickArea")
 
 [node name="ClickArea" type="Control" parent="Camera3D/Interface"]
 layout_mode = 1
@@ -574,186 +589,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
-
-[node name="Tutorial" type="Control" parent="Camera3D/Interface" node_paths=PackedStringArray("nodes", "fileMenu", "helpMenu")]
-visible = false
-z_index = 3
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("8_bc06v")
-nodes = [NodePath("0_Welcome"), NodePath("1_Navigation"), NodePath("2_SimControls"), NodePath("3_Resolution"), NodePath("4_End")]
-fileMenu = NodePath("../MenuBar/File")
-helpMenu = NodePath("../MenuBar/Help")
-
-[node name="0_Welcome" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -129.0
-offset_top = -72.0
-offset_right = 16.5
-offset_bottom = 3.625
-grow_horizontal = 2
-grow_vertical = 2
-text = "[center]Welcome![/center]
-Start by loading a project under [color=#40A000]File > Load Project[/color].
-(You can skip this under [color=#40A000]Help > Skip Tutorial[/color])"
-nextIndex = 1
-
-[node name="1_Navigation" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
-visible = false
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -136.0
-offset_top = -133.0
-offset_right = 19.0
-offset_bottom = -77.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "Rotate the view by holding [color=#40A000][Middle Mouse][/color] or [color=#40A000][Alt][/color]. Hold [color=#40A000][Shift][/color] as well to move the view laterally."
-script = ExtResource("11_cwlo7")
-nextIndex = 2
-
-[node name="CameraWatcher" type="Node" parent="Camera3D/Interface/Tutorial/1_Navigation" node_paths=PackedStringArray("camera")]
-script = ExtResource("11_5adol")
-camera = NodePath("../../../..")
-triggerDistance = 1.0
-
-[node name="2_SimControls" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -440.0
-offset_top = -218.0
-offset_right = -285.0
-offset_bottom = -162.5
-grow_horizontal = 0
-grow_vertical = 0
-text = "Advance the simulation by pressing [color=#40A000][Right Arrow][/color] or clicking this [color=#40A000]Button[/color]."
-nextIndex = 3
-
-[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/Tutorial/2_SimControls"]
-modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
-layout_mode = 0
-offset_left = 160.0
-offset_top = 47.0
-offset_right = 204.44702
-offset_bottom = 63.0
-rotation = -5.832883
-texture = ExtResource("10_3yata")
-patch_margin_top = 16
-patch_margin_right = 8
-
-[node name="3_Resolution" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -502.0
-offset_top = 44.0
-offset_right = -347.0
-offset_bottom = 99.5
-grow_horizontal = 0
-text = "Click objects to select them. Configure which types of objects to select up here or by pressing [color=#40A000][1]/[2]/[3][/color]"
-nextIndex = 4
-
-[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/Tutorial/3_Resolution"]
-modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
-layout_mode = 0
-offset_left = 160.0
-offset_top = 42.0
-offset_right = 204.44702
-offset_bottom = 58.0
-rotation = -1.5707964
-texture = ExtResource("10_3yata")
-patch_margin_top = 16
-patch_margin_right = 8
-
-[node name="4_End" parent="Camera3D/Interface/Tutorial" instance=ExtResource("8_pyy8l")]
-visible = false
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -182.0
-offset_top = -124.0
-offset_right = 5.5
-offset_bottom = -79.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "That covers the basics!
-Check out [color=#40A000]Help > Show Help & Tips[/color] for more."
-nextIndex = 5
-
-[node name="Timer" parent="Camera3D/Interface/Tutorial/4_End" index="3"]
-wait_time = 5.0
-
-[node name="MenuBar" type="MenuBar" parent="Camera3D/Interface"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="File" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
-size = Vector2i(121, 143)
-item_count = 8
-item_0/text = "New Project"
-item_0/id = 0
-item_1/text = "Save"
-item_1/id = 1
-item_2/text = "Save as..."
-item_2/id = 2
-item_3/text = "Load Project"
-item_3/id = 3
-item_4/text = "Add empty machine"
-item_4/id = 5
-item_5/text = "Import Machine"
-item_5/id = 4
-item_6/text = "Reload current Project"
-item_6/id = 7
-item_7/text = "Settings"
-item_7/id = 8
-
-[node name="Edit" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
-auto_translate_mode = 1
-size = Vector2i(121, 143)
-item_count = 3
-item_0/text = "Make local copy"
-item_0/id = 0
-item_0/disabled = true
-item_1/text = "Clear Diff"
-item_1/id = 1
-item_1/disabled = true
-item_2/text = "Start recording"
-item_2/id = 2
-
-[node name="Help" type="PopupMenu" parent="Camera3D/Interface/MenuBar"]
-auto_translate_mode = 1
-size = Vector2i(121, 143)
-item_count = 2
-item_0/text = "Show Help & Tips"
-item_0/id = 0
-item_1/text = "Start Tutorial"
-item_1/id = 1
 
 [node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
 oversampling_override = 1.0
@@ -818,208 +653,6 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.svg;Vector Images;sheet.svg")
 
-[node name="Toggles" type="HBoxContainer" parent="Camera3D/Interface"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -448.0
-offset_top = 1.0
-offset_right = -224.0
-offset_bottom = 34.0
-grow_horizontal = 0
-scale = Vector2(2, 2)
-theme_override_constants/separation = 8
-
-[node name="EditLock" type="TextureButton" parent="Camera3D/Interface/Toggles"]
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Lock scene"
-toggle_mode = true
-texture_normal = ExtResource("33_dacgg")
-texture_pressed = ExtResource("34_jk3a4")
-texture_hover = ExtResource("35_1opyq")
-
-[node name="Visibility" type="HBoxContainer" parent="Camera3D/Interface/Toggles"]
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Show comments"
-toggle_mode = true
-button_pressed = true
-texture_normal = ExtResource("11_ue6jr")
-texture_pressed = ExtResource("12_ix1yp")
-texture_hover = ExtResource("13_scrla")
-
-[node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Show placement grid on every layer"
-toggle_mode = true
-texture_normal = ExtResource("56_8faq4")
-texture_pressed = ExtResource("57_ia0pe")
-texture_hover = ExtResource("58_2pu55")
-
-[node name="UnselectedLayerVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Hide unfocused layers"
-toggle_mode = true
-texture_normal = ExtResource("33_dcdig")
-texture_pressed = ExtResource("34_obh6b")
-texture_hover = ExtResource("35_mugi6")
-
-[node name="FlowVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Show movement propagation"
-toggle_mode = true
-button_pressed = true
-texture_normal = ExtResource("15_u04rf")
-texture_pressed = ExtResource("16_o5g20")
-texture_hover = ExtResource("17_ix4yx")
-
-[node name="StaticSheetVis" type="TextureButton" parent="Camera3D/Interface/Toggles/Visibility"]
-texture_filter = 1
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Show static sheets"
-toggle_mode = true
-button_pressed = true
-texture_normal = ExtResource("18_uhjy1")
-texture_pressed = ExtResource("19_qikgm")
-texture_hover = ExtResource("20_cyt7j")
-
-[node name="ModeBar" type="HBoxContainer" parent="Camera3D/Interface/Toggles"]
-visible = false
-texture_filter = 1
-layout_direction = 2
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="Select" type="TextureButton" parent="Camera3D/Interface/Toggles/ModeBar"]
-layout_mode = 2
-tooltip_text = "Select and move"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_crs40")
-texture_normal = ExtResource("6_847jc")
-texture_pressed = ExtResource("7_ir51w")
-texture_hover = ExtResource("8_fx05v")
-
-[node name="Manage" type="TextureButton" parent="Camera3D/Interface/Toggles/ModeBar"]
-layout_mode = 2
-tooltip_text = "Configure"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_crs40")
-texture_normal = ExtResource("12_jnb0j")
-texture_pressed = ExtResource("13_i66mr")
-texture_hover = ExtResource("14_1k7u0")
-
-[node name="ResolutionBar" type="HBoxContainer" parent="Camera3D/Interface/Toggles"]
-texture_filter = 1
-layout_direction = 2
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="Part" type="VBoxContainer" parent="Camera3D/Interface/Toggles/ResolutionBar"]
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="Main" type="TextureButton" parent="Camera3D/Interface/Toggles/ResolutionBar/Part"]
-layout_mode = 2
-tooltip_text = "Parts"
-toggle_mode = true
-button_pressed = true
-button_group = SubResource("ButtonGroup_ia0pe")
-shortcut = SubResource("Shortcut_egdbq")
-texture_normal = ExtResource("18_mtfo3")
-texture_pressed = ExtResource("19_8faq4")
-texture_hover = ExtResource("20_xccxh")
-
-[node name="Selectability" type="Button" parent="Camera3D/Interface/Toggles/ResolutionBar/Part"]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-tooltip_text = "Mask selection (No mask)"
-theme_override_styles/focus = SubResource("StyleBoxEmpty_qnh42")
-flat = true
-icon_alignment = 1
-script = ExtResource("30_66atf")
-textures = Array[Texture2D]([ExtResource("31_gtbin"), ExtResource("32_qnh42"), ExtResource("33_5ko8x")])
-tooltips = Array[String](["Mask selection (No mask)", "Mask selection (Only sheets)", "Mask selection (Only pins)"])
-
-[node name="TextureRect" type="TextureRect" parent="Camera3D/Interface/Toggles/ResolutionBar/Part/Selectability"]
-layout_mode = 0
-offset_right = 16.0
-offset_bottom = 16.0
-texture = ExtResource("31_gtbin")
-
-[node name="Layer" type="TextureButton" parent="Camera3D/Interface/Toggles/ResolutionBar"]
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Layers"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_ia0pe")
-shortcut = SubResource("Shortcut_w82wx")
-texture_normal = ExtResource("15_w82wx")
-texture_pressed = ExtResource("16_pbycb")
-texture_hover = ExtResource("17_egdbq")
-
-[node name="Machine" type="TextureButton" parent="Camera3D/Interface/Toggles/ResolutionBar"]
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Machines"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_ia0pe")
-shortcut = SubResource("Shortcut_85c8q")
-texture_normal = ExtResource("12_r768j")
-texture_pressed = ExtResource("13_85c8q")
-texture_hover = ExtResource("14_hujvp")
-
-[node name="VisModes" type="HBoxContainer" parent="Camera3D/Interface/Toggles"]
-texture_filter = 1
-layout_direction = 2
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="Monochrome" type="TextureButton" parent="Camera3D/Interface/Toggles/VisModes"]
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Monochrome"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_f0qqp")
-texture_normal = ExtResource("12_f0qqp")
-texture_pressed = ExtResource("13_ionj3")
-texture_hover = ExtResource("14_fy6bq")
-
-[node name="Colorcoded" type="TextureButton" parent="Camera3D/Interface/Toggles/VisModes"]
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Colorcoded"
-toggle_mode = true
-button_pressed = true
-button_group = SubResource("ButtonGroup_f0qqp")
-texture_normal = ExtResource("15_v2xkj")
-texture_pressed = ExtResource("16_rgbjt")
-texture_hover = ExtResource("17_e2vqq")
-
-[node name="Realistic" type="TextureButton" parent="Camera3D/Interface/Toggles/VisModes"]
-layout_mode = 2
-size_flags_vertical = 0
-tooltip_text = "Shaded"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_f0qqp")
-texture_normal = ExtResource("18_1g2hs")
-texture_pressed = ExtResource("19_dacgg")
-texture_hover = ExtResource("20_jk3a4")
-
 [node name="ImportChoice" type="ConfirmationDialog" parent="Camera3D/Interface"]
 initial_position = 1
 size = Vector2i(412, 100)
@@ -1032,560 +665,6 @@ initial_position = 1
 ok_button_text = "Yes"
 dialog_text = "Save current project?"
 cancel_button_text = "No"
-
-[node name="SimulationControls" type="HBoxContainer" parent="Camera3D/Interface"]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -192.0
-offset_top = -64.0
-offset_right = -96.0
-offset_bottom = -32.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(2, 2)
-theme_override_constants/separation = 0
-script = ExtResource("15_df5t7")
-
-[node name="Reset" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
-visible = false
-layout_mode = 2
-tooltip_text = "Reset"
-texture_normal = ExtResource("15_pswvd")
-texture_pressed = ExtResource("16_df5t7")
-texture_hover = ExtResource("17_pux46")
-
-[node name="PrevStep" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
-layout_mode = 2
-tooltip_text = "Previous step"
-shortcut = SubResource("Shortcut_pux46")
-texture_normal = ExtResource("15_jnb0j")
-texture_pressed = ExtResource("16_i66mr")
-texture_hover = ExtResource("17_1k7u0")
-
-[node name="PausePlay" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
-layout_mode = 2
-tooltip_text = "Pause/Play Simulation"
-toggle_mode = true
-shortcut = SubResource("Shortcut_pqyk3")
-texture_normal = ExtResource("18_m0sft")
-texture_pressed = ExtResource("23_df5t7")
-texture_hover = ExtResource("20_7v7kd")
-
-[node name="NextStep" type="TextureButton" parent="Camera3D/Interface/SimulationControls"]
-layout_mode = 2
-tooltip_text = "Next step"
-shortcut = SubResource("Shortcut_6cyjk")
-texture_normal = ExtResource("21_pswvd")
-texture_pressed = ExtResource("22_df5t7")
-texture_hover = ExtResource("23_pux46")
-
-[node name="PartPlacers" type="VBoxContainer" parent="Camera3D/Interface"]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -164.0
-offset_right = 32.0
-grow_vertical = 2
-scale = Vector2(2, 2)
-theme_override_constants/separation = 1
-
-[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
-layout_mode = 2
-tooltip_text = "Import sheet"
-texture_normal = ExtResource("28_v7xow")
-texture_pressed = ExtResource("29_cv1oh")
-texture_hover = ExtResource("30_vtcxi")
-texture_disabled = ExtResource("52_v5nsg")
-
-[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
-layout_mode = 2
-tooltip_text = "Place logic pin (Local to layer)"
-texture_normal = ExtResource("31_y3ns8")
-texture_pressed = ExtResource("32_625ua")
-texture_hover = ExtResource("33_2ery0")
-texture_disabled = ExtResource("56_81ubf")
-
-[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
-layout_mode = 2
-tooltip_text = "Place global logic pin (Across all layers)"
-texture_normal = ExtResource("34_2ery0")
-texture_pressed = ExtResource("35_syg30")
-texture_hover = ExtResource("36_n4fht")
-texture_disabled = ExtResource("60_36n1v")
-
-[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
-layout_mode = 2
-tooltip_text = "Place clock pin"
-texture_normal = ExtResource("34_syg30")
-texture_pressed = ExtResource("35_n4fht")
-texture_hover = ExtResource("36_3icuf")
-texture_disabled = ExtResource("64_ybrqq")
-
-[node name="Comment" type="TextureButton" parent="Camera3D/Interface/PartPlacers"]
-layout_mode = 2
-tooltip_text = "Place comment"
-texture_normal = ExtResource("78_qnh42")
-texture_pressed = ExtResource("79_5ko8x")
-texture_hover = ExtResource("80_i1mcn")
-
-[node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface"]
-own_world_3d = true
-transparent_bg = true
-size = Vector2i(128, 128)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/Interface/AxesGizmoViewport"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_vtcxi")
-mesh = SubResource("QuadMesh_v7xow")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Camera3D/Interface/AxesGizmoViewport"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, -1, 4.37114e-08, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_vtcxi")
-mesh = SubResource("QuadMesh_v7xow")
-
-[node name="Camera3D" type="Camera3D" parent="Camera3D/Interface/AxesGizmoViewport" node_paths=PackedStringArray("actualCamera")]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, -4.37114e-08)
-projection = 1
-script = ExtResource("38_vtcxi")
-actualCamera = NodePath("../../..")
-
-[node name="SideWindow" type="Control" parent="Camera3D/Interface"]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -304.0
-offset_top = -153.0
-offset_bottom = 153.0
-grow_horizontal = 0
-grow_vertical = 2
-script = ExtResource("51_12riw")
-
-[node name="Hide" type="TextureButton" parent="Camera3D/Interface/SideWindow"]
-layout_mode = 0
-offset_left = -32.0
-offset_right = -16.0
-offset_bottom = 16.0
-scale = Vector2(2, 2)
-toggle_mode = true
-button_pressed = true
-shortcut = SubResource("Shortcut_pbycb")
-texture_normal = ExtResource("42_3icuf")
-texture_pressed = ExtResource("43_1bbve")
-texture_hover = ExtResource("44_8ktkl")
-
-[node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/SideWindow"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-current_tab = 1
-
-[node name="Scene" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
-visible = false
-layout_mode = 2
-script = ExtResource("42_1bbve")
-selector = NodePath("../../../../SelectionRay")
-metadata/_tab_index = 0
-
-[node name="Tree" type="Tree" parent="Camera3D/Interface/SideWindow/TabContainer/Scene"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-hide_root = true
-
-[node name="Plan" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
-layout_mode = 2
-metadata/_tab_index = 1
-
-[node name="PlanInterface" parent="Camera3D/Interface/SideWindow/TabContainer/Plan" instance=ExtResource("56_nb5ba")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Sequencer" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer"]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-script = ExtResource("76_uima5")
-
-[node name="First" type="Control" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
-layout_mode = 2
-
-[node name="Add" type="TextureButton" parent="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
-layout_mode = 2
-size_flags_horizontal = 4
-tooltip_text = "Add new sequence"
-texture_normal = ExtResource("77_uima5")
-texture_pressed = ExtResource("78_gidbq")
-texture_hover = ExtResource("78_gidbq")
-
-[node name="MoveButton" type="Button" parent="Camera3D/Interface/SideWindow"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -82.0
-offset_bottom = 31.0
-grow_horizontal = 0
-
-[node name="NinePatchRect" type="NinePatchRect" parent="Camera3D/Interface/SideWindow/MoveButton"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -41.0
-offset_bottom = -15.5
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(2, 2)
-texture = ExtResource("56_2gkkl")
-region_rect = Rect2(0, 0, 32, 16)
-patch_margin_left = 10
-patch_margin_top = 6
-patch_margin_right = 10
-patch_margin_bottom = 6
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="RescaleButton" type="TextureButton" parent="Camera3D/Interface/SideWindow"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = -8.0
-offset_top = -8.0
-grow_vertical = 0
-scale = Vector2(2, 2)
-texture_normal = ExtResource("57_iv047")
-texture_pressed = ExtResource("58_nb5ba")
-texture_hover = ExtResource("59_pyiqs")
-
-[node name="AxesGizmo" type="Control" parent="Camera3D/Interface"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -1.0
-offset_top = 36.0
-offset_right = -1.0
-offset_bottom = 36.0
-grow_horizontal = 0
-
-[node name="Sprite" type="Sprite2D" parent="Camera3D/Interface/AxesGizmo"]
-position = Vector2(-65, 63)
-texture = SubResource("ViewportTexture_cv1oh")
-
-[node name="ClockGizmo" type="Control" parent="Camera3D/Interface"]
-z_index = 1
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = -127.0
-offset_right = -64.0
-offset_bottom = -127.0
-grow_horizontal = 0
-grow_vertical = 0
-script = ExtResource("53_hujvp")
-
-[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/ClockGizmo"]
-texture_filter = 1
-scale = Vector2(2, 2)
-sprite_frames = SubResource("SpriteFrames_jotky")
-animation = &"1"
-autoplay = "default"
-
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/ClockGizmo"]
-modulate = Color(0, 0, 0, 0.239216)
-z_index = -1
-layout_mode = 0
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-offset_bottom = 64.0
-
-[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/ClockGizmo"]
-layout_mode = 0
-offset_left = -139.0
-offset_top = 29.0
-offset_right = -70.4375
-offset_bottom = 60.0
-text = "0.25 Hz"
-
-[node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface"]
-visible = false
-layout_mode = 0
-offset_left = -81.0
-offset_top = -49.0
-offset_right = -12.4375
-offset_bottom = -18.0
-expand_to_text_length = true
-
-[node name="Label" type="Label" parent="Camera3D/Interface/RenamingBox"]
-layout_mode = 0
-offset_top = -23.73
-offset_right = 119.0
-offset_bottom = -0.73
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Rename Object"
-
-[node name="SetCommentBox" type="VBoxContainer" parent="Camera3D/Interface"]
-visible = false
-layout_mode = 0
-offset_left = -236.0
-offset_top = -244.0
-offset_right = -40.0
-offset_bottom = -21.0
-
-[node name="Label" type="Label" parent="Camera3D/Interface/SetCommentBox"]
-layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Set Comment"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/SetCommentBox"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="TextEdit" type="TextEdit" parent="Camera3D/Interface/SetCommentBox/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-wrap_mode = 1
-
-[node name="SaveError" type="Label" parent="Camera3D/Interface"]
-visible = false
-z_index = 1
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -81.0
-offset_top = -24.5
-offset_right = 81.0
-offset_bottom = 24.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "Saving only possible in clock step IV"
-autowrap_mode = 2
-script = ExtResource("54_w82wx")
-
-[node name="Timer" type="Timer" parent="Camera3D/Interface/SaveError"]
-wait_time = 3.0
-one_shot = true
-
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/SaveError"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.564706)
-
-[node name="SelectedLabel" type="Control" parent="Camera3D/Interface"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -200.0
-offset_right = -160.0
-offset_bottom = 40.0
-grow_horizontal = 2
-
-[node name="Label" type="Label" parent="Camera3D/Interface/SelectedLabel"]
-z_index = 1
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Sheet"
-
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/SelectedLabel/Label"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.388235)
-
-[node name="FPSLabel" type="Label" parent="Camera3D/Interface"]
-layout_mode = 0
-offset_top = 35.0
-offset_right = 40.0
-offset_bottom = 58.0
-text = "60"
-script = ExtResource("55_mtfo3")
-
-[node name="Settings" type="Control" parent="Camera3D/Interface"]
-visible = false
-z_index = 1
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -184.0
-offset_top = -81.0
-offset_right = 184.0
-offset_bottom = 81.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("77_rgbjt")
-
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/Settings"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.72549)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/Settings"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_right = -6.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/Settings/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Camera3D/Interface/Settings/VBoxContainer/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Settings"
-
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/Settings/VBoxContainer/Header/Label"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.244776, 0.244776, 0.244776, 0.72549)
-
-[node name="Close" type="TextureButton" parent="Camera3D/Interface/Settings/VBoxContainer/Header"]
-texture_filter = 1
-layout_mode = 2
-shortcut = SubResource("Shortcut_81ubf")
-texture_normal = ExtResource("77_v2xkj")
-texture_pressed = ExtResource("78_rgbjt")
-texture_hover = ExtResource("79_e2vqq")
-
-[node name="SheetSpacing" type="HBoxContainer" parent="Camera3D/Interface/Settings/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="Camera3D/Interface/Settings/VBoxContainer/SheetSpacing"]
-layout_mode = 2
-text = "Sheet spacing"
-
-[node name="SheetSpacingInput" type="LineEdit" parent="Camera3D/Interface/Settings/VBoxContainer/SheetSpacing"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "0.045"
-emoji_menu_enabled = false
-
-[node name="MovementSpeed" type="HBoxContainer" parent="Camera3D/Interface/Settings/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed"]
-layout_mode = 2
-text = "Move speed"
-
-[node name="MovementSpeedInput" type="LineEdit" parent="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "1.0"
-emoji_menu_enabled = false
-
-[node name="Store diff" type="HBoxContainer" parent="Camera3D/Interface/Settings/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="Camera3D/Interface/Settings/VBoxContainer/Store diff"]
-layout_mode = 2
-tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
-mouse_filter = 1
-text = "Store diff of imported machines"
-
-[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/Settings/VBoxContainer/Store diff"]
-layout_mode = 2
-tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
-theme = SubResource("Theme_pd6ol")
-button_pressed = true
-
-[node name="Brass" type="HBoxContainer" parent="Camera3D/Interface/Settings/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="Camera3D/Interface/Settings/VBoxContainer/Brass"]
-layout_mode = 2
-tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
-mouse_filter = 1
-text = "Brass static sheets in shaded view"
-
-[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/Settings/VBoxContainer/Brass"]
-layout_mode = 2
-tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
-theme = SubResource("Theme_pd6ol")
-
-[node name="PathExport" type="Button" parent="Camera3D/Interface"]
-visible = false
-layout_mode = 0
-offset_left = 130.0
-offset_right = 237.0
-offset_bottom = 31.0
-text = "Export paths"
 
 [node name="HelpWindow" type="Window" parent="Camera3D/Interface"]
 oversampling_override = 1.0
@@ -2626,7 +1705,986 @@ fit_content = true
 [node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface" node_paths=PackedStringArray("selector") groups=["PermitsCameraMove"]]
+[node name="VisibilityParent" type="Control" parent="Camera3D/Interface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Tutorial" type="Control" parent="Camera3D/Interface/VisibilityParent" node_paths=PackedStringArray("nodes", "fileMenu", "helpMenu")]
+visible = false
+z_index = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("8_bc06v")
+nodes = [NodePath("0_Welcome"), NodePath("1_Navigation"), NodePath("2_SimControls"), NodePath("3_Resolution"), NodePath("4_End")]
+fileMenu = NodePath("../MenuBar/File")
+helpMenu = NodePath("../MenuBar/Help")
+
+[node name="0_Welcome" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.0
+offset_top = -72.0
+offset_right = 16.5
+offset_bottom = 3.625
+grow_horizontal = 2
+grow_vertical = 2
+text = "[center]Welcome![/center]
+We'll quickly cover some basics to get you started.
+(You can skip this under [color=#40A000]Help > Skip Tutorial[/color])"
+nextIndex = 1
+
+[node name="Timer" parent="Camera3D/Interface/VisibilityParent/Tutorial/0_Welcome" index="3"]
+wait_time = 6.0
+
+[node name="1_Navigation" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -136.0
+offset_top = -133.0
+offset_right = 19.0
+offset_bottom = -77.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "Rotate the view by holding [color=#40A000][Middle Mouse][/color] or [color=#40A000][Alt][/color]. Hold [color=#40A000][Shift][/color] as well to move the view laterally."
+script = ExtResource("11_cwlo7")
+nextIndex = 2
+
+[node name="CameraWatcher" type="Node" parent="Camera3D/Interface/VisibilityParent/Tutorial/1_Navigation" node_paths=PackedStringArray("camera")]
+script = ExtResource("11_5adol")
+camera = NodePath("../../../../..")
+triggerDistance = 1.0
+
+[node name="2_SimControls" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -440.0
+offset_top = -218.0
+offset_right = -285.0
+offset_bottom = -162.5
+grow_horizontal = 0
+grow_vertical = 0
+text = "Advance the simulation by pressing [color=#40A000][Right Arrow][/color] or clicking this [color=#40A000]Button[/color]."
+nextIndex = 3
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/Tutorial/2_SimControls"]
+modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
+layout_mode = 0
+offset_left = 160.0
+offset_top = 47.0
+offset_right = 204.44702
+offset_bottom = 63.0
+rotation = -5.832883
+texture = ExtResource("12_cwlo7")
+region_rect = Rect2(0, 0, 16, 16)
+patch_margin_left = 1
+patch_margin_top = 16
+patch_margin_right = 8
+
+[node name="3_Resolution" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -502.0
+offset_top = 44.0
+offset_right = -347.0
+offset_bottom = 99.5
+grow_horizontal = 0
+text = "Click objects to select them. Configure which types of objects to select up here or by pressing [color=#40A000][1]/[2]/[3][/color]"
+nextIndex = 4
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution"]
+modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
+layout_mode = 0
+offset_left = 160.0
+offset_top = 42.0
+offset_right = 204.44702
+offset_bottom = 58.0
+rotation = -1.5707964
+texture = ExtResource("12_cwlo7")
+patch_margin_left = 1
+patch_margin_top = 16
+patch_margin_right = 8
+
+[node name="4_End" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -182.0
+offset_top = -124.0
+offset_right = 5.5
+offset_bottom = -79.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "That's all for now!
+Check out [color=#40A000]Help > Show Help & Tips[/color] for more."
+nextIndex = 5
+
+[node name="MenuBar" type="MenuBar" parent="Camera3D/Interface/VisibilityParent"]
+layout_mode = 0
+offset_right = 125.0
+offset_bottom = 40.0
+
+[node name="File" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar"]
+size = Vector2i(121, 143)
+item_count = 8
+item_0/text = "New Project"
+item_0/id = 0
+item_1/text = "Save"
+item_1/id = 1
+item_2/text = "Save as..."
+item_2/id = 2
+item_3/text = "Load Project"
+item_3/id = 3
+item_4/text = "Add empty machine"
+item_4/id = 5
+item_5/text = "Import Machine"
+item_5/id = 4
+item_6/text = "Reload current Project"
+item_6/id = 7
+item_7/text = "Settings"
+item_7/id = 8
+
+[node name="Edit" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar"]
+auto_translate_mode = 1
+size = Vector2i(121, 143)
+item_count = 3
+item_0/text = "Make local copy"
+item_0/id = 0
+item_0/disabled = true
+item_1/text = "Clear Diff"
+item_1/id = 1
+item_1/disabled = true
+item_2/text = "Start recording"
+item_2/id = 2
+
+[node name="Help" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar"]
+auto_translate_mode = 1
+size = Vector2i(121, 143)
+item_count = 2
+item_0/text = "Show Help & Tips"
+item_0/id = 0
+item_1/text = "Start Tutorial"
+item_1/id = 1
+
+[node name="Toggles" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -448.0
+offset_top = 1.0
+offset_right = -224.0
+offset_bottom = 34.0
+grow_horizontal = 0
+scale = Vector2(2, 2)
+theme_override_constants/separation = 8
+
+[node name="EditLock" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Lock scene"
+toggle_mode = true
+texture_normal = ExtResource("33_dacgg")
+texture_pressed = ExtResource("34_jk3a4")
+texture_hover = ExtResource("35_1opyq")
+
+[node name="Visibility" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Show comments"
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("11_ue6jr")
+texture_pressed = ExtResource("12_ix1yp")
+texture_hover = ExtResource("13_scrla")
+
+[node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Show placement grid on every layer"
+toggle_mode = true
+texture_normal = ExtResource("56_8faq4")
+texture_pressed = ExtResource("57_ia0pe")
+texture_hover = ExtResource("58_2pu55")
+
+[node name="UnselectedLayerVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Hide unfocused layers"
+toggle_mode = true
+texture_normal = ExtResource("33_dcdig")
+texture_pressed = ExtResource("34_obh6b")
+texture_hover = ExtResource("35_mugi6")
+
+[node name="FlowVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Show movement propagation"
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("15_u04rf")
+texture_pressed = ExtResource("16_o5g20")
+texture_hover = ExtResource("17_ix4yx")
+
+[node name="StaticSheetVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Show static sheets"
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("18_uhjy1")
+texture_pressed = ExtResource("19_qikgm")
+texture_hover = ExtResource("20_cyt7j")
+
+[node name="ModeBar" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+visible = false
+texture_filter = 1
+layout_direction = 2
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Select" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ModeBar"]
+layout_mode = 2
+tooltip_text = "Select and move"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_crs40")
+texture_normal = ExtResource("6_847jc")
+texture_pressed = ExtResource("7_ir51w")
+texture_hover = ExtResource("8_fx05v")
+
+[node name="Manage" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ModeBar"]
+layout_mode = 2
+tooltip_text = "Configure"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_crs40")
+texture_normal = ExtResource("12_jnb0j")
+texture_pressed = ExtResource("13_i66mr")
+texture_hover = ExtResource("14_1k7u0")
+
+[node name="ResolutionBar" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+texture_filter = 1
+layout_direction = 2
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Part" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Main" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part"]
+layout_mode = 2
+tooltip_text = "Parts"
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_ia0pe")
+shortcut = SubResource("Shortcut_egdbq")
+texture_normal = ExtResource("18_mtfo3")
+texture_pressed = ExtResource("19_8faq4")
+texture_hover = ExtResource("20_xccxh")
+
+[node name="Selectability" type="Button" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+tooltip_text = "Mask selection (No mask)"
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qnh42")
+flat = true
+icon_alignment = 1
+script = ExtResource("30_66atf")
+textures = Array[Texture2D]([ExtResource("31_gtbin"), ExtResource("32_qnh42"), ExtResource("33_5ko8x")])
+tooltips = Array[String](["Mask selection (No mask)", "Mask selection (Only sheets)", "Mask selection (Only pins)"])
+
+[node name="TextureRect" type="TextureRect" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Selectability"]
+layout_mode = 0
+offset_right = 16.0
+offset_bottom = 16.0
+texture = ExtResource("31_gtbin")
+
+[node name="Layer" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Layers"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ia0pe")
+shortcut = SubResource("Shortcut_w82wx")
+texture_normal = ExtResource("15_w82wx")
+texture_pressed = ExtResource("16_pbycb")
+texture_hover = ExtResource("17_egdbq")
+
+[node name="Machine" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Machines"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ia0pe")
+shortcut = SubResource("Shortcut_85c8q")
+texture_normal = ExtResource("12_r768j")
+texture_pressed = ExtResource("13_85c8q")
+texture_hover = ExtResource("14_hujvp")
+
+[node name="VisModes" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+texture_filter = 1
+layout_direction = 2
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Monochrome" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Monochrome"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_f0qqp")
+texture_normal = ExtResource("12_f0qqp")
+texture_pressed = ExtResource("13_ionj3")
+texture_hover = ExtResource("14_fy6bq")
+
+[node name="Colorcoded" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Colorcoded"
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_f0qqp")
+texture_normal = ExtResource("15_v2xkj")
+texture_pressed = ExtResource("16_rgbjt")
+texture_hover = ExtResource("17_e2vqq")
+
+[node name="Realistic" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes"]
+layout_mode = 2
+size_flags_vertical = 0
+tooltip_text = "Shaded"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_f0qqp")
+texture_normal = ExtResource("18_1g2hs")
+texture_pressed = ExtResource("19_dacgg")
+texture_hover = ExtResource("20_jk3a4")
+
+[node name="SimulationControls" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -192.0
+offset_top = -64.0
+offset_right = -96.0
+offset_bottom = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(2, 2)
+theme_override_constants/separation = 0
+script = ExtResource("15_df5t7")
+
+[node name="Reset" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+visible = false
+layout_mode = 2
+tooltip_text = "Reset"
+texture_normal = ExtResource("15_pswvd")
+texture_pressed = ExtResource("16_df5t7")
+texture_hover = ExtResource("17_pux46")
+
+[node name="PrevStep" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+layout_mode = 2
+tooltip_text = "Previous step"
+shortcut = SubResource("Shortcut_pux46")
+texture_normal = ExtResource("15_jnb0j")
+texture_pressed = ExtResource("16_i66mr")
+texture_hover = ExtResource("17_1k7u0")
+
+[node name="PausePlay" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+layout_mode = 2
+tooltip_text = "Pause/Play Simulation"
+toggle_mode = true
+shortcut = SubResource("Shortcut_pqyk3")
+texture_normal = ExtResource("18_m0sft")
+texture_pressed = ExtResource("23_df5t7")
+texture_hover = ExtResource("20_7v7kd")
+
+[node name="NextStep" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+layout_mode = 2
+tooltip_text = "Next step"
+shortcut = SubResource("Shortcut_6cyjk")
+texture_normal = ExtResource("21_pswvd")
+texture_pressed = ExtResource("22_df5t7")
+texture_hover = ExtResource("23_pux46")
+
+[node name="PartPlacers" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -164.0
+offset_right = 32.0
+grow_vertical = 2
+scale = Vector2(2, 2)
+theme_override_constants/separation = 1
+
+[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Import sheet"
+texture_normal = ExtResource("28_v7xow")
+texture_pressed = ExtResource("29_cv1oh")
+texture_hover = ExtResource("30_vtcxi")
+texture_disabled = ExtResource("52_v5nsg")
+
+[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place logic pin (Local to layer)"
+texture_normal = ExtResource("31_y3ns8")
+texture_pressed = ExtResource("32_625ua")
+texture_hover = ExtResource("33_2ery0")
+texture_disabled = ExtResource("56_81ubf")
+
+[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place global logic pin (Across all layers)"
+texture_normal = ExtResource("34_2ery0")
+texture_pressed = ExtResource("35_syg30")
+texture_hover = ExtResource("36_n4fht")
+texture_disabled = ExtResource("60_36n1v")
+
+[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place clock pin"
+texture_normal = ExtResource("34_syg30")
+texture_pressed = ExtResource("35_n4fht")
+texture_hover = ExtResource("36_3icuf")
+texture_disabled = ExtResource("64_ybrqq")
+
+[node name="Comment" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+layout_mode = 2
+tooltip_text = "Place comment"
+texture_normal = ExtResource("78_qnh42")
+texture_pressed = ExtResource("79_5ko8x")
+texture_hover = ExtResource("80_i1mcn")
+
+[node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent"]
+own_world_3d = true
+transparent_bg = true
+size = Vector2i(128, 128)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_vtcxi")
+mesh = SubResource("QuadMesh_v7xow")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, -1, 4.37114e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_vtcxi")
+mesh = SubResource("QuadMesh_v7xow")
+
+[node name="X-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.3, 0, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("94_cl6md")
+
+[node name="X+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.3, 0, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("94_6kijv")
+
+[node name="Y-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.3, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("96_b5fr5")
+
+[node name="Y+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.3, 0)
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("97_u4ilb")
+
+[node name="Camera3D" type="Camera3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport" node_paths=PackedStringArray("actualCamera")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, -4.37114e-08)
+projection = 1
+script = ExtResource("38_vtcxi")
+actualCamera = NodePath("../../../..")
+
+[node name="AxesGizmo" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -1.0
+offset_top = 36.0
+offset_right = -1.0
+offset_bottom = 36.0
+grow_horizontal = 0
+
+[node name="Sprite" type="Sprite2D" parent="Camera3D/Interface/VisibilityParent/AxesGizmo"]
+position = Vector2(-65, 63)
+texture = SubResource("ViewportTexture_cv1oh")
+
+[node name="ClockGizmo" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -127.0
+offset_right = -64.0
+offset_bottom = -127.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("53_hujvp")
+
+[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/VisibilityParent/ClockGizmo"]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_jotky")
+animation = &"1"
+autoplay = "default"
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ClockGizmo"]
+modulate = Color(0, 0, 0, 0.239216)
+z_index = -1
+layout_mode = 0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/ClockGizmo"]
+layout_mode = 0
+offset_left = -139.0
+offset_top = 29.0
+offset_right = -70.4375
+offset_bottom = 60.0
+text = "0.25 Hz"
+
+[node name="SideWindow" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -304.0
+offset_top = -153.0
+offset_bottom = 153.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("51_12riw")
+
+[node name="Hide" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+layout_mode = 0
+offset_left = -32.0
+offset_right = -16.0
+offset_bottom = 16.0
+scale = Vector2(2, 2)
+toggle_mode = true
+button_pressed = true
+shortcut = SubResource("Shortcut_pbycb")
+texture_normal = ExtResource("42_3icuf")
+texture_pressed = ExtResource("43_1bbve")
+texture_hover = ExtResource("44_8ktkl")
+
+[node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 1
+
+[node name="Scene" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
+visible = false
+layout_mode = 2
+script = ExtResource("42_1bbve")
+selector = NodePath("../../../../../SelectionRay")
+metadata/_tab_index = 0
+
+[node name="Tree" type="Tree" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Scene"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+hide_root = true
+
+[node name="Plan" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="PlanInterface" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Plan" instance=ExtResource("56_nb5ba")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sequencer" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("76_uima5")
+
+[node name="First" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
+layout_mode = 2
+
+[node name="Add" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Add new sequence"
+texture_normal = ExtResource("77_uima5")
+texture_pressed = ExtResource("78_gidbq")
+texture_hover = ExtResource("78_gidbq")
+
+[node name="MoveButton" type="Button" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -82.0
+offset_bottom = 31.0
+grow_horizontal = 0
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -41.0
+offset_bottom = -15.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+texture = ExtResource("56_2gkkl")
+region_rect = Rect2(0, 0, 32, 16)
+patch_margin_left = 10
+patch_margin_top = 6
+patch_margin_right = 10
+patch_margin_bottom = 6
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="RescaleButton" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+grow_vertical = 0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("57_iv047")
+texture_pressed = ExtResource("58_nb5ba")
+texture_hover = ExtResource("59_pyiqs")
+
+[node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface/VisibilityParent"]
+visible = false
+layout_mode = 0
+offset_left = -81.0
+offset_top = -49.0
+offset_right = -12.4375
+offset_bottom = -18.0
+expand_to_text_length = true
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/RenamingBox"]
+layout_mode = 0
+offset_top = -23.73
+offset_right = 119.0
+offset_bottom = -0.73
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Rename Object"
+
+[node name="SetCommentBox" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+visible = false
+layout_mode = 0
+offset_left = -236.0
+offset_top = -244.0
+offset_right = -40.0
+offset_bottom = -21.0
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/SetCommentBox"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Set Comment"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SetCommentBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="TextEdit" type="TextEdit" parent="Camera3D/Interface/VisibilityParent/SetCommentBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+wrap_mode = 1
+
+[node name="SaveError" type="Label" parent="Camera3D/Interface/VisibilityParent"]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.0
+offset_top = -24.5
+offset_right = 81.0
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Saving only possible in clock step IV"
+autowrap_mode = 2
+script = ExtResource("54_w82wx")
+
+[node name="Timer" type="Timer" parent="Camera3D/Interface/VisibilityParent/SaveError"]
+wait_time = 3.0
+one_shot = true
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/SaveError"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.564706)
+
+[node name="SelectedLabel" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_right = -160.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/SelectedLabel"]
+z_index = 1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Sheet"
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/SelectedLabel/Label"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.388235)
+
+[node name="FPSLabel" type="Label" parent="Camera3D/Interface/VisibilityParent"]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 40.0
+offset_bottom = 58.0
+text = "60"
+script = ExtResource("55_mtfo3")
+
+[node name="Settings" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -184.0
+offset_top = -99.0
+offset_right = 184.0
+offset_bottom = 99.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("77_rgbjt")
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/Settings"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.72549)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_right = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Settings"
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Label"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.244776, 0.244776, 0.244776, 0.72549)
+
+[node name="Close" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header"]
+texture_filter = 1
+layout_mode = 2
+shortcut = SubResource("Shortcut_81ubf")
+texture_normal = ExtResource("77_v2xkj")
+texture_pressed = ExtResource("78_rgbjt")
+texture_hover = ExtResource("79_e2vqq")
+
+[node name="SheetSpacing" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing"]
+layout_mode = 2
+text = "Sheet spacing"
+
+[node name="SheetSpacingInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0.045"
+emoji_menu_enabled = false
+
+[node name="MovementSpeed" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed"]
+layout_mode = 2
+text = "Move speed"
+
+[node name="MovementSpeedInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1.0"
+emoji_menu_enabled = false
+
+[node name="Store diff" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff"]
+layout_mode = 2
+tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
+mouse_filter = 1
+text = "Store diff of imported machines"
+
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff"]
+layout_mode = 2
+tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
+theme = SubResource("Theme_pd6ol")
+button_pressed = true
+
+[node name="Brass" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass"]
+layout_mode = 2
+tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
+mouse_filter = 1
+text = "Brass static sheets in shaded view"
+
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass"]
+layout_mode = 2
+tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
+theme = SubResource("Theme_pd6ol")
+
+[node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Set current scene as default"
+
+[node name="PathExport" type="Button" parent="Camera3D/Interface/VisibilityParent"]
+visible = false
+layout_mode = 0
+offset_left = 130.0
+offset_right = 237.0
+offset_bottom = 31.0
+text = "Export paths"
+
+[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent" node_paths=PackedStringArray("selector") groups=["PermitsCameraMove"]]
 visible = false
 z_index = 5
 layout_mode = 0
@@ -2636,15 +2694,15 @@ offset_right = 953.0
 offset_bottom = 438.0
 horizontal_scroll_mode = 0
 script = ExtResource("120_ix1yp")
-selector = NodePath("../../SelectionRay")
+selector = NodePath("../../../SelectionRay")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/CommentDisplay" groups=["PermitsCameraMove"]]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/CommentDisplay" groups=["PermitsCameraMove"]]
 custom_minimum_size = Vector2(256, 10)
 layout_mode = 2
 size_flags_vertical = 2
 autowrap_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/CommentDisplay/Label" groups=["PermitsCameraMove"]]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/CommentDisplay/Label" groups=["PermitsCameraMove"]]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2656,7 +2714,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0, 0, 0, 0.7058824)
 
-[node name="DebugLabel" type="Label" parent="Camera3D/Interface"]
+[node name="DebugLabel" type="Label" parent="Camera3D/Interface/VisibilityParent"]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -2669,6 +2727,22 @@ offset_top = -23.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="UIVisibility" type="TextureButton" parent="Camera3D"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_right = 16.0
+offset_bottom = -16.0
+grow_vertical = 0
+scale = Vector2(2, 2)
+tooltip_text = "Hide UI"
+toggle_mode = true
+shortcut = SubResource("Shortcut_h6sg5")
+texture_normal = ExtResource("7_m3vij")
+texture_pressed = ExtResource("8_h6sg5")
+texture_hover = ExtResource("9_1q8bw")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
@@ -2856,64 +2930,67 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="mouse_entered" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseEntered"]
 [connection signal="mouse_exited" from="Camera3D/Interface" to="Camera3D/Interface" method="mouseExited"]
 [connection signal="gui_input" from="Camera3D/Interface/ClickArea" to="Camera3D/SelectionRay" method="_on_click_area_gui_input"]
-[connection signal="id_pressed" from="Camera3D/Interface/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
-[connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Edit" to="Camera3D/Interface" method="_on_edit_id_pressed"]
-[connection signal="id_pressed" from="Camera3D/Interface/MenuBar/Help" to="Camera3D/Interface" method="_on_help_id_pressed"]
 [connection signal="file_selected" from="Camera3D/Interface/SaveDialog" to="." method="saveAs"]
 [connection signal="file_selected" from="Camera3D/Interface/MachineExportDialog" to="." method="_on_machine_export_dialog_file_selected"]
 [connection signal="file_selected" from="Camera3D/Interface/LoadProjectDialog" to="." method="_on_load_project_dialog_file_selected"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportProjectInstaceDialog" to="." method="importProjectInstace"]
 [connection signal="file_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheet"]
 [connection signal="files_selected" from="Camera3D/Interface/ImportSheetDialog" to="." method="importSheets"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/EditLock" to="Camera3D/Interface" method="_on_edit_lock_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/CommentVis" to="Camera3D/Interface" method="_on_comment_vis_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/IntermediatePlateVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/UnselectedLayerVis" to="Camera3D/Interface" method="_on_unselected_layer_vis_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/FlowVis" to="Camera3D/Interface" method="_on_flow_vis_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/Visibility/StaticSheetVis" to="Camera3D/Interface" method="_on_static_sheet_vis_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/ModeBar/Select" to="Camera3D/Interface" method="_on_select_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/ModeBar/Manage" to="Camera3D/Interface" method="_on_manage_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface/Tutorial/3_Resolution" method="next"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface" method="_on_part_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/Toggles/ResolutionBar/Layer" to="Camera3D/Interface/Tutorial/3_Resolution" method="next"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/ResolutionBar/Layer" to="Camera3D/Interface" method="_on_layer_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/Toggles/ResolutionBar/Machine" to="Camera3D/Interface/Tutorial/3_Resolution" method="next"]
-[connection signal="toggled" from="Camera3D/Interface/Toggles/ResolutionBar/Machine" to="Camera3D/Interface" method="_on_machine_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/Toggles/VisModes/Monochrome" to="Camera3D/Interface" method="visModeMonochrome"]
-[connection signal="pressed" from="Camera3D/Interface/Toggles/VisModes/Colorcoded" to="Camera3D/Interface" method="visModeColorcoded"]
-[connection signal="pressed" from="Camera3D/Interface/Toggles/VisModes/Realistic" to="Camera3D/Interface" method="visModeShaded"]
 [connection signal="canceled" from="Camera3D/Interface/ImportChoice" to="Camera3D/Interface" method="_on_import_choice_canceled"]
 [connection signal="confirmed" from="Camera3D/Interface/ImportChoice" to="Camera3D/Interface" method="_on_import_choice_confirmed"]
 [connection signal="canceled" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_canceled"]
 [connection signal="confirmed" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_confirmed"]
 [connection signal="custom_action" from="Camera3D/Interface/SaveRequest" to="Camera3D/Interface" method="_on_save_request_custom_action"]
-[connection signal="pressed" from="Camera3D/Interface/SimulationControls/Reset" to="Camera3D/Interface/SimulationControls" method="_on_reset_pressed"]
-[connection signal="pressed" from="Camera3D/Interface/SimulationControls/PrevStep" to="Camera3D/Interface/SimulationControls" method="_on_prev_step_pressed"]
-[connection signal="toggled" from="Camera3D/Interface/SimulationControls/PausePlay" to="Camera3D/Interface/SimulationControls" method="_on_pause_play_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/SimulationControls/NextStep" to="Camera3D/Interface/Tutorial/2_SimControls" method="next"]
-[connection signal="pressed" from="Camera3D/Interface/SimulationControls/NextStep" to="Camera3D/Interface/SimulationControls" method="_on_next_step_pressed"]
-[connection signal="pressed" from="Camera3D/Interface/PartPlacers/Sheet" to="Camera3D/Interface" method="requestSheet"]
-[connection signal="pressed" from="Camera3D/Interface/PartPlacers/LogicPin" to="." method="addPin"]
-[connection signal="pressed" from="Camera3D/Interface/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
-[connection signal="pressed" from="Camera3D/Interface/PartPlacers/ClockPin" to="." method="addClockPin"]
-[connection signal="pressed" from="Camera3D/Interface/PartPlacers/Comment" to="." method="addComment"]
-[connection signal="toggled" from="Camera3D/Interface/SideWindow/Hide" to="Camera3D/Interface/SideWindow" method="_on_hide_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
-[connection signal="button_down" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_down"]
-[connection signal="button_up" from="Camera3D/Interface/SideWindow/MoveButton" to="Camera3D/Interface/SideWindow" method="_on_move_button_button_up"]
-[connection signal="button_down" from="Camera3D/Interface/SideWindow/RescaleButton" to="Camera3D/Interface/SideWindow" method="_on_rescale_button_button_down"]
-[connection signal="button_up" from="Camera3D/Interface/SideWindow/RescaleButton" to="Camera3D/Interface/SideWindow" method="_on_rescale_button_button_up"]
-[connection signal="editing_toggled" from="Camera3D/Interface/ClockGizmo/FrequencyInput" to="Camera3D/Interface/ClockGizmo" method="_on_frequency_input_editing_toggled"]
-[connection signal="editing_toggled" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
-[connection signal="text_submitted" from="Camera3D/Interface/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_text_submitted"]
-[connection signal="focus_exited" from="Camera3D/Interface/SetCommentBox/ScrollContainer/TextEdit" to="Camera3D/Interface" method="_on_comment_text_edit_focus_exited"]
-[connection signal="timeout" from="Camera3D/Interface/SaveError/Timer" to="Camera3D/Interface/SaveError" method="close"]
-[connection signal="pressed" from="Camera3D/Interface/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/Settings" method="_on_close_pressed"]
-[connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/Settings" method="_on_sheet_spacing_input_text_submitted"]
-[connection signal="text_submitted" from="Camera3D/Interface/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/Settings" method="_on_movement_speed_input_text_submitted"]
-[connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/Settings" method="_on_store_diff_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/Settings" method="_on_brass_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
-[connection signal="gui_input" from="Camera3D/Interface/CommentDisplay" to="Camera3D/Interface/CommentDisplay" method="_on_gui_input"]
+[connection signal="id_pressed" from="Camera3D/Interface/VisibilityParent/MenuBar/File" to="Camera3D/Interface" method="_on_file_id_pressed"]
+[connection signal="id_pressed" from="Camera3D/Interface/VisibilityParent/MenuBar/Edit" to="Camera3D/Interface" method="_on_edit_id_pressed"]
+[connection signal="id_pressed" from="Camera3D/Interface/VisibilityParent/MenuBar/Help" to="Camera3D/Interface" method="_on_help_id_pressed"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/EditLock" to="Camera3D/Interface" method="_on_edit_lock_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/CommentVis" to="Camera3D/Interface" method="_on_comment_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/IntermediatePlateVis" to="Camera3D/Interface" method="_on_intermediate_plate_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/UnselectedLayerVis" to="Camera3D/Interface" method="_on_unselected_layer_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/FlowVis" to="Camera3D/Interface" method="_on_flow_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/StaticSheetVis" to="Camera3D/Interface" method="_on_static_sheet_vis_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ModeBar/Select" to="Camera3D/Interface" method="_on_select_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ModeBar/Manage" to="Camera3D/Interface" method="_on_manage_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution" method="next"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface" method="_on_part_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Layer" to="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution" method="next"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Layer" to="Camera3D/Interface" method="_on_layer_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Machine" to="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution" method="next"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Machine" to="Camera3D/Interface" method="_on_machine_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/VisModes/Monochrome" to="Camera3D/Interface" method="visModeMonochrome"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/VisModes/Colorcoded" to="Camera3D/Interface" method="visModeColorcoded"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/VisModes/Realistic" to="Camera3D/Interface" method="visModeShaded"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SimulationControls/Reset" to="Camera3D/Interface/VisibilityParent/SimulationControls" method="_on_reset_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SimulationControls/PrevStep" to="Camera3D/Interface/VisibilityParent/SimulationControls" method="_on_prev_step_pressed"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/SimulationControls/PausePlay" to="Camera3D/Interface/VisibilityParent/SimulationControls" method="_on_pause_play_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SimulationControls/NextStep" to="Camera3D/Interface/VisibilityParent/Tutorial/2_SimControls" method="next"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SimulationControls/NextStep" to="Camera3D/Interface/VisibilityParent/SimulationControls" method="_on_next_step_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Sheet" to="Camera3D/Interface" method="requestSheet"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/LogicPin" to="." method="addPin"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/GlobalPin" to="." method="addGlobalPin"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/ClockPin" to="." method="addClockPin"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Comment" to="." method="addComment"]
+[connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/ClockGizmo/FrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_editing_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/SideWindow/Hide" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_hide_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
+[connection signal="button_down" from="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_move_button_button_down"]
+[connection signal="button_up" from="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_move_button_button_up"]
+[connection signal="button_down" from="Camera3D/Interface/VisibilityParent/SideWindow/RescaleButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_rescale_button_button_down"]
+[connection signal="button_up" from="Camera3D/Interface/VisibilityParent/SideWindow/RescaleButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_rescale_button_button_up"]
+[connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
+[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_text_submitted"]
+[connection signal="focus_exited" from="Camera3D/Interface/VisibilityParent/SetCommentBox/ScrollContainer/TextEdit" to="Camera3D/Interface" method="_on_comment_text_edit_focus_exited"]
+[connection signal="timeout" from="Camera3D/Interface/VisibilityParent/SaveError/Timer" to="Camera3D/Interface/VisibilityParent/SaveError" method="close"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_close_pressed"]
+[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_input_text_submitted"]
+[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_movement_speed_input_text_submitted"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_store_diff_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_brass_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
+[connection signal="gui_input" from="Camera3D/Interface/VisibilityParent/CommentDisplay" to="Camera3D/Interface/VisibilityParent/CommentDisplay" method="_on_gui_input"]
+[connection signal="toggled" from="Camera3D/UIVisibility" to="Camera3D/Interface" method="_on_ui_visibility_toggled"]
 
-[editable path="Camera3D/Interface/Tutorial/4_End"]
+[editable path="Camera3D/Interface/VisibilityParent/Tutorial/0_Welcome"]
+[editable path="Camera3D/Interface/VisibilityParent/Tutorial/4_End"]

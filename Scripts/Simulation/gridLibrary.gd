@@ -13,6 +13,8 @@ var toNotify = {}
 func requestUpdate(part : Movable):
 	var notScheduled = toUpdate.is_empty()
 	toUpdate[part] = null
+	#executeUpdate()
+	#return
 	if notScheduled:
 		await get_tree().create_timer(0.2).timeout
 		call_deferred("executeUpdate")

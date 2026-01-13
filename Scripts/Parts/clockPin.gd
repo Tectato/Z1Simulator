@@ -28,6 +28,7 @@ func _ready() -> void:
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.clearHistory.connect(clearHistory)
+	Global.workspace.updateGlobalPinBounds.connect(updateHeight)
 	visModeChanged(Global.editor.currentVisMode)
 	meshIndex = PinRenderHandler.addInstance("pin")
 	await get_tree().process_frame
@@ -71,13 +72,27 @@ func setHeight(_value):
 			maxHeight = max(maxHeight, thing.global_position.y - machineOffset)
 	maxHeight *= 10
 	maxHeight += 0.4
-	$MeshInstance3D.scale = Vector3(1,maxHeight,1)
-	$MeshInstance3D.position = Vector3(0,maxHeight/20,0)
+	#$MeshInstance3D.scale = Vector3(1,maxHeight,1)
+	#$MeshInstance3D.position = Vector3(0,maxHeight/20,0)
+	#$Highlight.transform = $MeshInstance3D.transform
+	#collider.scale = Vector3(1,maxHeight,1)
+	#collider.position = Vector3(0,maxHeight/20,0)
+	#$StepLabel.position = Vector3.UP * (maxHeight*0.1 + 0.15)
+	verticalScale = maxHeight
+	updateHeight(0, verticalScale)
+
+func updateHeight(floor : float, height : float):
+	if height < 0:
+		floor = 0
+		height = verticalScale
+	$MeshInstance3D.scale = Vector3(diameter/0.05,height,diameter/0.05)
+	$MeshInstance3D.position = Vector3.UP * (floor + 0.1 * height / 2)
+	if output:
+		indicator.position = Vector3.UP * (floor + 0.1 * height + 0.05)
 	$Highlight.transform = $MeshInstance3D.transform
+	$Area3D.transform = $MeshInstance3D.transform
+	$StepLabel.position = Vector3.UP * (floor + 0.1 * height + 0.15)
 	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
-	collider.scale = Vector3(1,maxHeight,1)
-	collider.position = Vector3(0,maxHeight/20,0)
-	$StepLabel.position = Vector3.UP * (maxHeight*0.1 + 0.15)
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if not chain.is_empty():

@@ -2,6 +2,7 @@ extends Node
 
 @export var materialFlat : Material
 @export var materialShaded : Material
+@export var debug : MeshInstance3D
 
 var renderers = {}
 var vacantEntries = {}
@@ -14,6 +15,7 @@ var toTransform = {}
 func _ready() -> void:
 	await get_tree().process_frame
 	Global.editor.visModeChanged.connect(visModeChanged)
+	#Global.workspace.updateAABBs.connect(updateAABB)
 
 func visModeChanged(visMode : Editor.VisMode):
 	var materialToUse
@@ -140,6 +142,26 @@ func setColor(key : String, index : int, color : Color):
 			toColor[key] = {index : color}
 		return
 	renderers[key].multimesh.set_instance_color(index, color)
+
+func setAABB(box : AABB):
+	for key in renderers:
+		renderers[key].multimesh.set_custom_aabb(box)
+
+func updateAABB():
+	var gMin = Vector3.ONE * 1000
+	var gMax = Vector3.ONE * -1000
+	for machine in Global.workspace.machines:
+		var bounds = machine.getBounds()
+		var offset = machine.position
+		var mMin = bounds[0] + offset
+		var mMax = bounds[1] + offset
+		gMin = Vector3(min(gMin.x,mMin.x),min(gMin.y,mMin.y),min(gMin.z,mMin.z))
+		gMax = Vector3(max(gMax.x,mMax.x),max(gMax.y,mMax.y),max(gMax.z,mMax.z))
+	gMin -= Vector3.ONE * 20
+	gMax += Vector3.ONE * 20
+	setAABB(AABB((gMin+gMax)/2, gMax-gMin))
+	debug.position = (gMin+gMax)/2
+	debug.mesh.size = gMax-gMin
 
 func schedule(callable : Callable):
 	if scheduled.has(callable): return

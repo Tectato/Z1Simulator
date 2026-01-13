@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://csnajmxciys5y"]
+[gd_scene load_steps=8 format=3 uid="uid://csnajmxciys5y"]
 
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="1_iw2od"]
 [ext_resource type="Script" uid="uid://d1lxtwidrhv45" path="res://Scripts/Parts/pinRendererInit.gd" id="2_qhqdv"]
@@ -16,11 +16,25 @@ height = 0.1
 radial_segments = 8
 rings = 0
 
-[node name="PinRenderHandler" type="Node"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ttsf7"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.39215687)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ttsf7"]
+material = SubResource("StandardMaterial3D_ttsf7")
+
+[node name="PinRenderHandler" type="Node3D" node_paths=PackedStringArray("debug")]
 script = ExtResource("1_iw2od")
 materialFlat = SubResource("StandardMaterial3D_qhqdv")
 materialShaded = ExtResource("2_ttsf7")
+debug = NodePath("Node3D")
 
-[node name="Initialiser" type="Node" parent="."]
+[node name="Initialiser" type="Node" parent="." node_paths=PackedStringArray("debug")]
 script = ExtResource("2_qhqdv")
 mesh = SubResource("CylinderMesh_qhqdv")
+debug = NodePath("../Node3D")
+
+[node name="Node3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_ttsf7")

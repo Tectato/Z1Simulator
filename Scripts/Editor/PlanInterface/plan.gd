@@ -48,11 +48,15 @@ func deserialize(src):
 
 func addElement(type : Marker.ElementType):
 	if !selectedMarker:
-		selectedMarker = MARKER.instantiate()
-		selectedMarker.call_deferred("setSelected", true)
-		add_child(selectedMarker)
-		markers.append(selectedMarker)
+		addMarker()
 	return selectedMarker.addElement(type)
+
+func addMarker():
+	selectedMarker = MARKER.instantiate()
+	selectedMarker.call_deferred("setSelected", true)
+	add_child(selectedMarker)
+	markers.append(selectedMarker)
+	return selectedMarker
 
 func getMarker(pos):
 	for marker in markers:

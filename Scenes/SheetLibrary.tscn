@@ -1,10 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://6qjqjjxchgkh"]
+[gd_scene load_steps=8 format=3 uid="uid://6qjqjjxchgkh"]
 
 [ext_resource type="Script" uid="uid://bfnu2vl3xbceg" path="res://Scripts/Simulation/sheetLibrary.gd" id="1_c1se5"]
 [ext_resource type="Script" uid="uid://dpodqe2t280op" path="res://Scripts/Parts/SheetElements/sheetMeshCompiler.gd" id="2_7bnwt"]
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="3_lqynr"]
 [ext_resource type="Material" uid="uid://0bo2bl8wqi7c" path="res://Assets/SheetColoredCompat.tres" id="4_fsur0"]
 [ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="5_cpvvm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ttsf7"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.39215687)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cpvvm"]
+material = SubResource("StandardMaterial3D_ttsf7")
 
 [node name="SheetLibrary" type="Node"]
 script = ExtResource("1_c1se5")
@@ -14,7 +22,12 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 visible = false
 script = ExtResource("2_7bnwt")
 
-[node name="RenderHandler" type="Node3D" parent="."]
+[node name="RenderHandler" type="Node3D" parent="." node_paths=PackedStringArray("debug")]
 script = ExtResource("3_lqynr")
 materialFlat = ExtResource("4_fsur0")
 materialShaded = ExtResource("5_cpvvm")
+debug = NodePath("Node3D")
+
+[node name="Node3D" type="MeshInstance3D" parent="RenderHandler"]
+visible = false
+mesh = SubResource("BoxMesh_cpvvm")

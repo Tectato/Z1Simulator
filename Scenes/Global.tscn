@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://c40gqlrrngoyn"]
+[gd_scene load_steps=3 format=3 uid="uid://c40gqlrrngoyn"]
 
 [ext_resource type="Script" uid="uid://b8l7lfwwv83a" path="res://Scripts/global.gd" id="1_6yl2a"]
+[ext_resource type="Script" uid="uid://cuidw8frm3ean" path="res://Scripts/config.gd" id="2_uavi6"]
 
 [node name="Global" type="Node"]
 script = ExtResource("1_6yl2a")
+
+[node name="Config" type="Node" parent="."]
+script = ExtResource("2_uavi6")

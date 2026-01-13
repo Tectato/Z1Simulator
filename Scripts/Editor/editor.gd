@@ -4,9 +4,9 @@ class_name Editor
 @onready var interface = $Camera3D/Interface
 @onready var workspace = $Workspace
 @onready var selector = $Camera3D/SelectionRay
-@onready var tree = $Camera3D/Interface/SideWindow/TabContainer/Scene
-@onready var planInterface = $Camera3D/Interface/SideWindow/TabContainer/Plan/PlanInterface
-@onready var programInterface = $Camera3D/Interface/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface
+@onready var tree = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Scene
+@onready var planInterface = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Plan/PlanInterface
+@onready var programInterface = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface
 @onready var powerFlow = $PowerFlowVis
 var tempProjectPath = ""
 var currentlyLoadedPath = ""
@@ -16,6 +16,7 @@ var previousAction : Callable
 var currentVisMode = VisMode.Colorcoded
 var editingLocked = false
 var tutorialDone = false
+var loading = false
 
 enum VisMode { Monochrome, Colorcoded, Realistic }
 
@@ -70,8 +71,10 @@ func save():
 		print("Could not write file for project")
 
 func loadProject(srcPath = ""):
-	if interface.tutorial.inTutorial:
-		interface.tutorial.stepTo(1)
+	workspace.setResolution(Workspace.Resolution.Part)
+	loading = true
+	#if interface.tutorial.inTutorial:
+		#interface.tutorial.stepTo(1)
 	workspace.clear()
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	currentlyLoadedPath = path
@@ -88,6 +91,7 @@ func loadProject(srcPath = ""):
 	await get_tree().create_timer(0.1).timeout
 	SheetLibrary.cleanUnusedSheets()
 	updateInstancePos.emit()
+	loading = false
 
 func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
