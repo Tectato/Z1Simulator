@@ -307,6 +307,7 @@ func executeColliderUpdate():
 		pin.setHeight(max(extents.y*10,1))
 	if gizmo:
 		_draw_gizmo()
+	Global.workspace.updateAABBs.emit()
 
 func _draw_gizmo() -> void:
 	var bounds = getBounds()

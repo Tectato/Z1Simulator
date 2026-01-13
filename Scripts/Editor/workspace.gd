@@ -51,6 +51,8 @@ signal staticSheetVisChanged(newVis)
 var showComments = true
 signal commentVisChanged(newVis)
 
+signal updateAABBs
+
 var machines = []
 var interMachineRelations = {}
 var selectedMachine : Machine

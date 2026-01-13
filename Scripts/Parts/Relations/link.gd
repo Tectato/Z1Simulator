@@ -26,12 +26,17 @@ func applyMove(dir : Vector2, initiator, chain = []):
 	return moved
 
 func delete():
-	A.removeRelation(self)
-	B.removeRelation(self)
+	#if A:
+		#A.removeRelation(self)
+	#if B:
+		#B.removeRelation(self)
 	super.delete()
 
 func updatePos():
 	#global_position = A.global_position
+	if !A or !B:
+		delete()
+		return
 	if A.global_position.distance_squared_to(B.global_position) > 0.001:
 		$LineVis.rotation_degrees = Vector3(0,0,0)
 		var diff = (B.global_position-A.global_position)
