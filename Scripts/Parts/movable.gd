@@ -166,6 +166,7 @@ func move(dir : Vector2, initiator, chain = []):
 	blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
 	if canMove and selected:
 		schedule(visualizeChain, true)
+	Simulator.partsMoved += 1
 	return MoveState.Moved if canMove else MoveState.Blocked
 
 func propagateNonblockingRelations(dir : Vector2, chain = []):
@@ -217,6 +218,8 @@ func rewind():
 	if fixed: return
 	if posHistory.is_empty(): return
 	targetPos = posHistory.pop_back()
+	if targetPos != position:
+		Simulator.partsMoved += 1
 	inMotion = true
 
 func addRelation(type : Relation.Type, other : Selectable):

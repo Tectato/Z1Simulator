@@ -1,0 +1,19 @@
+[gd_scene load_steps=7 format=3 uid="uid://s13q1wj1kv7x"]
+
+[ext_resource type="Script" uid="uid://bvmhjmv0er54y" path="res://Scripts/Audio/randomizedAudioHandler.gd" id="1_57lr1"]
+[ext_resource type="AudioStream" uid="uid://cle2ytrw7xw0n" path="res://Audio/Mechanical/slide/slide_single_v2_0.wav" id="2_qsmaj"]
+[ext_resource type="AudioStream" uid="uid://dtrutx50qcwgc" path="res://Audio/Mechanical/slide/slide_single_v2_1.wav" id="3_vqlqq"]
+[ext_resource type="AudioStream" uid="uid://cgbjyun8mq0qw" path="res://Audio/Mechanical/slide/slide_single_v2_2.wav" id="4_1plpa"]
+[ext_resource type="AudioStream" uid="uid://00cf5xcbkio" path="res://Audio/Mechanical/slide/slide_single_v2_3.wav" id="5_qvo40"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_tr2xy"]
+random_pitch = 1.01
+streams_count = 4
+stream_0/stream = ExtResource("2_qsmaj")
+stream_1/stream = ExtResource("3_vqlqq")
+stream_2/stream = ExtResource("4_1plpa")
+stream_3/stream = ExtResource("5_qvo40")
+
+[node name="SheetSoundHandler" type="AudioStreamPlayer"]
+script = ExtResource("1_57lr1")
+steps = Array[AudioStream]([SubResource("AudioStreamRandomizer_tr2xy"), SubResource("AudioStreamRandomizer_tr2xy"), SubResource("AudioStreamRandomizer_tr2xy"), SubResource("AudioStreamRandomizer_tr2xy")])

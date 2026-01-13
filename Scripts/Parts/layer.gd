@@ -4,6 +4,7 @@ class_name Layer
 const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
+const AUDIOHANDLER = preload("res://Scenes/SheetSoundHandler.tscn")
 
 @onready var collider = $BoundingBox
 @onready var bb = $BoundingBox/CollisionShape3D
@@ -23,6 +24,7 @@ var gizmo : Gizmo
 var bounds = []
 var colliderUpdateScheduled = false
 var selected = false
+var audioHandler = null
 
 func _ready() -> void:
 	Global.workspace.resolutionChanged.connect(resolutionChanged)

@@ -4,6 +4,7 @@ const EVENTINDICATOR = preload("res://Scenes/Visualisation/EventIndicator.tscn")
 enum Direction {XP, YP, XN, YN}
 
 @export var showRotationIndicators = false
+@onready var sheetAudioHandler = $SheetAudioHandler
 
 var currentStep = 3
 var totalStep = 3
@@ -16,6 +17,7 @@ var history = 0
 var stepScheduled = false
 var maxFrequency = 1.0
 var rewinding = false
+var partsMoved = 0
 
 var gizmo : Control
 
@@ -65,6 +67,7 @@ func next(stopClock = true):
 			return
 		stepScheduled = true
 		return
+	partsMoved = 0
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
 	step.emit()
@@ -78,7 +81,7 @@ func next(stopClock = true):
 
 func callRecord():
 	history = min(history+1, Global.historyLength)
-	Global.editor.interface.debugLabel.text = str(history)
+	#Global.editor.interface.debugLabel.text = str(history)
 	record.emit()
 
 func prev(stopClock = true, calledByUser = true):
@@ -95,7 +98,8 @@ func prev(stopClock = true, calledByUser = true):
 		$MoveComplete.start()
 		$Cooldown.start()
 	history -= 1
-	Global.editor.interface.debugLabel.text = str(history)
+	#Global.editor.interface.debugLabel.text = str(history)
+	partsMoved = 0
 	rewind.emit()
 	pass
 
