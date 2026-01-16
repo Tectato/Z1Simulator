@@ -12,12 +12,9 @@ extends Control
 @onready var renamingBox = $VisibilityParent/RenamingBox
 @onready var commentBox = $VisibilityParent/SetCommentBox
 @onready var commentText = $VisibilityParent/SetCommentBox/ScrollContainer/TextEdit
-@onready var saveError = $VisibilityParent/SaveError
+@onready var errorBox = $VisibilityParent/ErrorBox
 @onready var selectedLabel = $VisibilityParent/SelectedLabel/Label
 @onready var tutorial = $VisibilityParent/Tutorial
-
-@onready var ModeSelect = $VisibilityParent/Toggles/ModeBar/Select
-@onready var ModeManage = $VisibilityParent/Toggles/ModeBar/Manage
 
 @onready var debugLabel = $VisibilityParent/DebugLabel
 
@@ -78,6 +75,10 @@ func openCommentBox(currentComment):
 	commentBox.grab_focus()
 	commentText.text = currentComment
 
+func showError(msg):
+	errorBox.text = msg
+	errorBox.popup()
+
 func _on_file_id_pressed(id: int) -> void:
 	match(id):
 		0:
@@ -87,7 +88,7 @@ func _on_file_id_pressed(id: int) -> void:
 				if Simulator.currentStep == 3:
 					editor.save()
 				else:
-					saveError.popup()
+					showError("Saving only possible in clock step IV")
 			else:
 				saveDialog.popup()
 		2:
@@ -141,7 +142,7 @@ func _on_save_request_confirmed() -> void:
 			editor.save()
 			editor.loadProject()
 		else:
-			saveError.popup()
+			showError("Saving only possible in clock step IV")
 	else:
 		saveDialog.popup()
 

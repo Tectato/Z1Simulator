@@ -115,6 +115,7 @@ func clear():
 	uuidManager.clear()
 	Global.editor.selector.deselect()
 	Global.editor.programInterface.clear()
+	Global.editor.valueInterface.clear()
 	SheetLibrary.renderHandler.clearInstances()
 	PinRenderHandler.clearInstances()
 	while !machines.is_empty():
@@ -182,6 +183,9 @@ func serialize(_path : String):
 	var sequences = Global.editor.programInterface.serialize()
 	if !sequences.is_empty():
 		output["sequences"] = sequences
+	var values = Global.editor.valueInterface.serialize()
+	if !values.is_empty():
+		output["values"] = values
 	return output
 
 func deserialize(path):
@@ -199,12 +203,16 @@ func deserialize(path):
 	var projectDirTemp = PathHandler.projectDir + "a.json"
 	var relations = []
 	var sequences = []
+	var values = {}
 	for entry in machinesDict:
 		if entry.has("relations"): # Relations entry
 			relations.append_array(entry["relations"])
 			continue
 		if entry.has("sequences"): # Relations entry
 			sequences.append_array(entry["sequences"])
+			continue
+		if entry.has("values"):
+			values.merge(entry["values"])
 			continue
 		var machinePath = ""
 		if entry["instance"]:
@@ -242,6 +250,8 @@ func deserialize(path):
 				A.addRelation(Relation.Type.Spring, B)
 	if !sequences.is_empty():
 		Global.editor.programInterface.call_deferred("deserialize", sequences)
+	if !values.is_empty():
+		Global.editor.valueInterface.call_deferred("deserialize", values)
 	
 func exportMachine(_path):
 	pass

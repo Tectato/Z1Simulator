@@ -1,4 +1,4 @@
-[gd_scene load_steps=208 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=202 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -7,11 +7,8 @@
 [ext_resource type="Script" uid="uid://kbaeibw07mff" path="res://Scripts/Editor/mover.gd" id="4_6ykgs"]
 [ext_resource type="Script" uid="uid://bg6t6is4srjq6" path="res://Scripts/Editor/editorInterface.gd" id="5_brgpd"]
 [ext_resource type="Script" uid="uid://clhwdine20lbk" path="res://Scripts/Editor/3DUI/commentRay.gd" id="6_5ko8x"]
-[ext_resource type="Texture2D" uid="uid://c6j8lhvash62a" path="res://Sprites/Buttons/Modes/select_inactive.png" id="6_847jc"]
-[ext_resource type="Texture2D" uid="uid://bewgkcvn3nn6i" path="res://Sprites/Buttons/Modes/select_active.png" id="7_ir51w"]
 [ext_resource type="Texture2D" uid="uid://n8phhn5qacpa" path="res://Sprites/Buttons/Visibility/uiVis.png" id="7_m3vij"]
 [ext_resource type="Script" uid="uid://dj3irykcw4cul" path="res://Scripts/Editor/Tutorial/tutorialManager.gd" id="8_bc06v"]
-[ext_resource type="Texture2D" uid="uid://bppmh3gus1iap" path="res://Sprites/Buttons/Modes/select_lit.png" id="8_fx05v"]
 [ext_resource type="Texture2D" uid="uid://d4bo24s826xly" path="res://Sprites/Buttons/Visibility/uiVis_active.png" id="8_h6sg5"]
 [ext_resource type="Texture2D" uid="uid://boeuucukxjcd2" path="res://Sprites/FileSystem/machine.png" id="8_j432o"]
 [ext_resource type="PackedScene" uid="uid://43eaudijn5j7" path="res://Scenes/TutorialNode.tscn" id="8_pyy8l"]
@@ -23,13 +20,10 @@
 [ext_resource type="Texture2D" uid="uid://pqpfeq6gkxxb" path="res://Sprites/9TileArrowOutlined.png" id="12_cwlo7"]
 [ext_resource type="Texture2D" uid="uid://d0pjjqnwdiprb" path="res://Sprites/Buttons/VisModes/monochrome.png" id="12_f0qqp"]
 [ext_resource type="Texture2D" uid="uid://ba37urh1hrp" path="res://Sprites/Buttons/Visibility/comments_active.png" id="12_ix1yp"]
-[ext_resource type="Texture2D" uid="uid://dmnw7b8snx2qp" path="res://Sprites/Buttons/Modes/manage_inactive.png" id="12_jnb0j"]
 [ext_resource type="Texture2D" uid="uid://7iccrbw3qt4k" path="res://Sprites/Buttons/Resolution/machine.png" id="12_r768j"]
 [ext_resource type="Texture2D" uid="uid://bku32rejvvh8q" path="res://Sprites/Buttons/Resolution/machine_active.png" id="13_85c8q"]
-[ext_resource type="Texture2D" uid="uid://bjfsdwf0v20em" path="res://Sprites/Buttons/Modes/manage_active.png" id="13_i66mr"]
 [ext_resource type="Texture2D" uid="uid://bcuus8m7ihcdy" path="res://Sprites/Buttons/VisModes/monochrome_active.png" id="13_ionj3"]
 [ext_resource type="Texture2D" uid="uid://culnl5oykh51" path="res://Sprites/Buttons/Visibility/comments_lit.png" id="13_scrla"]
-[ext_resource type="Texture2D" uid="uid://vqwumundj5ds" path="res://Sprites/Buttons/Modes/manage_lit.png" id="14_1k7u0"]
 [ext_resource type="Texture2D" uid="uid://tkw7s8o31jlp" path="res://Sprites/Buttons/VisModes/monochrome_lit.png" id="14_fy6bq"]
 [ext_resource type="Texture2D" uid="uid://bjq252uwl0s4e" path="res://Sprites/Buttons/Resolution/machine_lit.png" id="14_hujvp"]
 [ext_resource type="Script" uid="uid://udlbwpk5xf3g" path="res://Scripts/Editor/simulationControls.gd" id="15_df5t7"]
@@ -136,6 +130,7 @@
 [ext_resource type="Texture2D" uid="uid://bs65qo5j0sfmr" path="res://Sprites/Buttons/PlanInterface/Elements/rectangle_active.png" id="108_yjo3m"]
 [ext_resource type="Texture2D" uid="uid://dloyj7xrfjtfc" path="res://Sprites/Buttons/PlanInterface/Elements/line_active.png" id="109_66atf"]
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
+[ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
@@ -162,8 +157,6 @@ font_color = Color(0.29803923, 1, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_ue6jr"]
 font_size = 20
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_crs40"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_ia0pe"]
 
@@ -1976,31 +1969,6 @@ texture_normal = ExtResource("18_uhjy1")
 texture_pressed = ExtResource("19_qikgm")
 texture_hover = ExtResource("20_cyt7j")
 
-[node name="ModeBar" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
-visible = false
-texture_filter = 1
-layout_direction = 2
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="Select" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ModeBar"]
-layout_mode = 2
-tooltip_text = "Select and move"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_crs40")
-texture_normal = ExtResource("6_847jc")
-texture_pressed = ExtResource("7_ir51w")
-texture_hover = ExtResource("8_fx05v")
-
-[node name="Manage" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ModeBar"]
-layout_mode = 2
-tooltip_text = "Configure"
-toggle_mode = true
-button_group = SubResource("ButtonGroup_crs40")
-texture_normal = ExtResource("12_jnb0j")
-texture_pressed = ExtResource("13_i66mr")
-texture_hover = ExtResource("14_1k7u0")
-
 [node name="ResolutionBar" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
 texture_filter = 1
 layout_direction = 2
@@ -2338,7 +2306,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 1
+current_tab = 3
 
 [node name="Scene" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
 visible = false
@@ -2357,6 +2325,7 @@ grow_vertical = 2
 hide_root = true
 
 [node name="Plan" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -2398,6 +2367,21 @@ tooltip_text = "Add new sequence"
 texture_normal = ExtResource("77_uima5")
 texture_pressed = ExtResource("78_gidbq")
 texture_hover = ExtResource("78_gidbq")
+
+[node name="Values" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ValueInterface" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values/ScrollContainer" instance=ExtResource("118_h6sg5")]
+layout_mode = 2
 
 [node name="MoveButton" type="Button" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
 layout_mode = 1
@@ -2481,7 +2465,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 wrap_mode = 1
 
-[node name="SaveError" type="Label" parent="Camera3D/Interface/VisibilityParent"]
+[node name="ErrorBox" type="Label" parent="Camera3D/Interface/VisibilityParent"]
 visible = false
 z_index = 1
 layout_mode = 1
@@ -2490,9 +2474,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -81.0
+offset_left = -150.0
 offset_top = -24.5
-offset_right = 81.0
+offset_right = 150.0
 offset_bottom = 24.5
 grow_horizontal = 2
 grow_vertical = 2
@@ -2500,11 +2484,11 @@ text = "Saving only possible in clock step IV"
 autowrap_mode = 2
 script = ExtResource("54_w82wx")
 
-[node name="Timer" type="Timer" parent="Camera3D/Interface/VisibilityParent/SaveError"]
+[node name="Timer" type="Timer" parent="Camera3D/Interface/VisibilityParent/ErrorBox"]
 wait_time = 3.0
 one_shot = true
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/SaveError"]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ErrorBox"]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2950,8 +2934,6 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/UnselectedLayerVis" to="Camera3D/Interface" method="_on_unselected_layer_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/FlowVis" to="Camera3D/Interface" method="_on_flow_vis_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/Visibility/StaticSheetVis" to="Camera3D/Interface" method="_on_static_sheet_vis_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ModeBar/Select" to="Camera3D/Interface" method="_on_select_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ModeBar/Manage" to="Camera3D/Interface" method="_on_manage_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution" method="next"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Main" to="Camera3D/Interface" method="_on_part_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Layer" to="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution" method="next"]
@@ -2981,7 +2963,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_editing_toggled"]
 [connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/RenamingBox" to="Camera3D/Interface" method="_on_renaming_box_text_submitted"]
 [connection signal="focus_exited" from="Camera3D/Interface/VisibilityParent/SetCommentBox/ScrollContainer/TextEdit" to="Camera3D/Interface" method="_on_comment_text_edit_focus_exited"]
-[connection signal="timeout" from="Camera3D/Interface/VisibilityParent/SaveError/Timer" to="Camera3D/Interface/VisibilityParent/SaveError" method="close"]
+[connection signal="timeout" from="Camera3D/Interface/VisibilityParent/ErrorBox/Timer" to="Camera3D/Interface/VisibilityParent/ErrorBox" method="close"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_close_pressed"]
 [connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_input_text_submitted"]
 [connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_movement_speed_input_text_submitted"]
