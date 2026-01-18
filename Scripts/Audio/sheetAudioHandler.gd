@@ -24,10 +24,11 @@ func initStep():
 func step():
 	var numPlayers = int(clamp(parent.partsMoved / 30, 1, players.size()))
 	if parent.partsMoved < 1: return
-	Global.editor.interface.debugLabel.text = str(parent.partsMoved) + " -> " + str(numPlayers)
-	setVolume(clamp(numPlayers/100,0.1,1.0))
+	setVolume(clamp(parent.partsMoved/400.0,0.05,1.0) * 1.0)
+	Global.editor.interface.debugLabel.text = str(parent.partsMoved) + " -> " + str(numPlayers) + ", " + str(volume)
 	for i in range(numPlayers):
 		var player = players[i]
+		#player.volume_linear = volume / numPlayers
 		player.stream = steps[parent.currentStep]
 		await get_tree().create_timer(randf()*0.0125).timeout
 		player.play()
