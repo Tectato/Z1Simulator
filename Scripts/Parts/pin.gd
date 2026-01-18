@@ -17,6 +17,8 @@ var indicator : Node3D
 var directionality = 0 # 0 = Both, 1 = X, 2 = Y
 const standardColor = Color("969696")
 
+signal stateChanged(pin)
+
 func serialize():
 	grabUUID()
 	var output = {
@@ -258,6 +260,7 @@ func executeFlip():
 	flippingOutput = false
 	outputState = !outputState
 	indicator.setValue(outputState)
+	stateChanged.emit(self)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:

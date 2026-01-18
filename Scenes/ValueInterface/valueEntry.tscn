@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://dtekup3i5vj8j"]
+
+[ext_resource type="Script" uid="uid://bg7lhim085uf0" path="res://Scripts/Editor/ValueInterface/valueEntry.gd" id="1_ddg0g"]
+[ext_resource type="Texture2D" uid="uid://bi0ks6nyku41a" path="res://Sprites/Buttons/Generic/delete.png" id="3_w7yd7"]
+[ext_resource type="Texture2D" uid="uid://cow8rpggsfal1" path="res://Sprites/Buttons/Generic/delete_lit.png" id="4_pyvho"]
+[ext_resource type="Texture2D" uid="uid://cad1fg2jl0ihg" path="res://Sprites/Buttons/Generic/delete_active.png" id="5_bpm0s"]
+
+[node name="ValueEntry" type="VBoxContainer"]
+script = ExtResource("1_ddg0g")
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ID" type="LineEdit" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Value"
+placeholder_text = "Value name"
+
+[node name="Delete" type="TextureButton" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete"
+texture_normal = ExtResource("3_w7yd7")
+texture_pressed = ExtResource("4_pyvho")
+texture_hover = ExtResource("5_bpm0s")
+
+[node name="Value" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VSeparator2" type="VSeparator" parent="Value"]
+layout_mode = 2
+
+[node name="Dec" type="LineEdit" parent="Value"]
+layout_mode = 2
+text = "0"
+
+[node name="Bin" type="HBoxContainer" parent="Value"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="VSeparator3" type="VSeparator" parent="Value/Bin"]
+layout_mode = 2
+
+[connection signal="pressed" from="Header/Delete" to="." method="_on_delete_pressed"]
+[connection signal="editing_toggled" from="Value/Dec" to="." method="_on_dec_editing_toggled"]
