@@ -15,6 +15,7 @@ var travel = Vector3(0,0,1) * Global.workspace.pinTravel #.rotated(Vector3.UP,-r
 var travelIndicator : Node3D
 @onready var tempTravelIndicator = $ClockPinTravelIndicator
 @onready var inputCheckbox = $StepLabel/InputCheckbox
+@onready var stepLabel = $StepLabel
 
 signal forwardStepChanged
 signal pulsingChanged
@@ -29,6 +30,9 @@ func _ready() -> void:
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.clearHistory.connect(clearHistory)
 	Global.workspace.updateGlobalPinBounds.connect(updateHeight)
+	Global.workspace.worldUIVisChanged.connect(set3DUIVis)
+	stepLabel.visible = Global.workspace.show3DUI
+	#travelIndicator.visible = stepLabel.visible
 	visModeChanged(Global.editor.currentVisMode)
 	meshIndex = PinRenderHandler.addInstance("pin")
 	await get_tree().process_frame
@@ -45,6 +49,10 @@ func rename(newID : String):
 	super.rename(newID)
 	$StepLabel/InputCheckbox/IDLabel.text = newID
 	$StepLabel/InputCheckbox/IDLabel.visible = newID.length() > 0
+
+func set3DUIVis(newVis):
+	stepLabel.visible = newVis
+	if travelIndicator: travelIndicator.visible = newVis
 
 func setHeight(_value):
 	var maxHeight = 0.1
@@ -309,6 +317,7 @@ func place():
 		get_parent().add_child(travelIndicator)
 		travelIndicator.position = position + Vector3.UP * 0.001
 		travelIndicator.rotation = rotation
+		travelIndicator.visible = stepLabel.visible
 	updatePositions()
 	if machine:
 		machine.gridLibrary.requestUpdate(self)

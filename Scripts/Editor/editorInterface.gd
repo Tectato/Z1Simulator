@@ -285,3 +285,6 @@ func _on_comment_vis_toggled(toggled_on: bool) -> void:
 
 func _on_ui_visibility_toggled(toggled_on: bool) -> void:
 	$VisibilityParent.modulate = Color.WHITE if !toggled_on else Color.TRANSPARENT
+
+func _on_3dui_visibility_toggled(toggled_on: bool) -> void:
+	Global.workspace.set3DUIVis(!toggled_on)
