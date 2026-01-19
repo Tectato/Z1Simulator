@@ -30,7 +30,7 @@ func step():
 		var player = players[i]
 		#player.volume_linear = volume / numPlayers
 		player.stream = steps[parent.currentStep]
-		await get_tree().create_timer(randf()*0.0125).timeout
+		await get_tree().create_timer(randf()*0.00625).timeout
 		player.play()
 
 func playSingle():
