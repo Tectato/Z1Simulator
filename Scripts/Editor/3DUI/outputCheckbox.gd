@@ -12,10 +12,14 @@ var stateHistory = []
 func _ready() -> void:
 	Simulator.record.connect(record)
 	Simulator.rewind.connect(rewind)
+	Global.workspace.worldUIVisChanged.connect(set3DUIVisible)
 
 func setValue(value : bool):
 	state = value
 	checkbox.play(str(value))
+
+func set3DUIVisible(newVis):
+	visible = newVis
 
 func click(left = true):
 	#if !left:

@@ -51,6 +51,9 @@ signal staticSheetVisChanged(newVis)
 var showComments = true
 signal commentVisChanged(newVis)
 
+var show3DUI = true
+signal worldUIVisChanged(newVis)
+
 signal updateAABBs
 
 var machines = []
@@ -110,6 +113,11 @@ func setCommentVis(newVis):
 	if newVis != showComments:
 		showComments = newVis
 		commentVisChanged.emit(newVis)
+
+func set3DUIVis(newVis):
+	if newVis != show3DUI:
+		show3DUI = newVis
+		worldUIVisChanged.emit(newVis)
 
 func clear():
 	uuidManager.clear()

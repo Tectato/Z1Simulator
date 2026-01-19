@@ -1,4 +1,4 @@
-[gd_scene load_steps=204 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=209 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -132,7 +132,10 @@
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
 [ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
+[ext_resource type="Texture2D" uid="uid://b08jemc6cnm77" path="res://Sprites/Buttons/Visibility/3DuiVis.png" id="130_00thf"]
 [ext_resource type="Texture2D" uid="uid://c5tmslgldndiv" path="res://Sprites/focusPoint.png" id="130_4ptxc"]
+[ext_resource type="Texture2D" uid="uid://cymmm53jl7m6l" path="res://Sprites/Buttons/Visibility/3DuiVis_active.png" id="131_m3vij"]
+[ext_resource type="Texture2D" uid="uid://cu34evtygw5ml" path="res://Sprites/Buttons/Visibility/3DuiVis_lit.png" id="132_h6sg5"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -335,8 +338,16 @@ CheckBox/icons/checked = ExtResource("100_kkpsg")
 CheckBox/icons/unchecked = ExtResource("101_msmja")
 CheckBox/icons/unchecked_disabled = ExtResource("102_u1ej8")
 
+[sub_resource type="InputEventKey" id="InputEventKey_00thf"]
+device = -1
+keycode = 4194332
+
+[sub_resource type="Shortcut" id="Shortcut_m3vij"]
+events = [SubResource("InputEventKey_00thf")]
+
 [sub_resource type="InputEventKey" id="InputEventKey_m3vij"]
 device = -1
+shift_pressed = true
 keycode = 4194332
 
 [sub_resource type="Shortcut" id="Shortcut_h6sg5"]
@@ -2729,10 +2740,27 @@ grow_vertical = 0
 scale = Vector2(2, 2)
 tooltip_text = "Hide UI"
 toggle_mode = true
-shortcut = SubResource("Shortcut_h6sg5")
+shortcut = SubResource("Shortcut_m3vij")
 texture_normal = ExtResource("7_m3vij")
 texture_pressed = ExtResource("8_h6sg5")
 texture_hover = ExtResource("9_1q8bw")
+
+[node name="3DUIVisibility" type="TextureButton" parent="Camera3D"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -32.0
+offset_right = 48.0
+offset_bottom = -16.0
+grow_vertical = 0
+scale = Vector2(2, 2)
+tooltip_text = "Hide 3D UI"
+toggle_mode = true
+shortcut = SubResource("Shortcut_h6sg5")
+texture_normal = ExtResource("130_00thf")
+texture_pressed = ExtResource("131_m3vij")
+texture_hover = ExtResource("132_h6sg5")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
@@ -3002,6 +3030,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/VisibilityParent/CommentDisplay" to="Camera3D/Interface/VisibilityParent/CommentDisplay" method="_on_gui_input"]
 [connection signal="toggled" from="Camera3D/UIVisibility" to="Camera3D/Interface" method="_on_ui_visibility_toggled"]
+[connection signal="toggled" from="Camera3D/3DUIVisibility" to="Camera3D/Interface" method="_on_3dui_visibility_toggled"]
 
 [editable path="Camera3D/Interface/VisibilityParent/Tutorial/0_Welcome"]
 [editable path="Camera3D/Interface/VisibilityParent/Tutorial/4_End"]
