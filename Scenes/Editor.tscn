@@ -1,4 +1,4 @@
-[gd_scene load_steps=202 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene load_steps=204 format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -132,6 +132,7 @@
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
 [ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
+[ext_resource type="Texture2D" uid="uid://c5tmslgldndiv" path="res://Sprites/focusPoint.png" id="130_4ptxc"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -342,10 +343,17 @@ keycode = 4194332
 events = [SubResource("InputEventKey_m3vij")]
 
 [sub_resource type="SphereMesh" id="SphereMesh_0hhuw"]
-radius = 0.01
-height = 0.02
+radius = 0.005
+height = 0.01
 radial_segments = 8
 rings = 16
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cl6md"]
+top_radius = 0.001
+bottom_radius = 0.001
+height = 0.02
+radial_segments = 6
+rings = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6ykgs"]
 albedo_color = Color(1, 0, 0, 1)
@@ -2279,7 +2287,7 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -304.0
+offset_left = -379.0
 offset_top = -153.0
 offset_bottom = 153.0
 grow_horizontal = 0
@@ -2306,10 +2314,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 3
+current_tab = 0
 
 [node name="Scene" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
-visible = false
 layout_mode = 2
 script = ExtResource("42_1bbve")
 selector = NodePath("../../../../../SelectionRay")
@@ -2369,6 +2376,7 @@ texture_pressed = ExtResource("78_gidbq")
 texture_hover = ExtResource("78_gidbq")
 
 [node name="Values" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
@@ -2646,13 +2654,11 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass"]
 layout_mode = 2
-tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
 mouse_filter = 1
 text = "Brass static sheets in shaded view"
 
 [node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass"]
 layout_mode = 2
-tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
 theme = SubResource("Theme_pd6ol")
 
 [node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
@@ -2730,8 +2736,31 @@ texture_hover = ExtResource("9_1q8bw")
 
 [node name="FocusPoint" type="Node3D" parent="."]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="FocusPoint"]
+[node name="center" type="MeshInstance3D" parent="FocusPoint"]
+visible = false
 mesh = SubResource("SphereMesh_0hhuw")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="FocusPoint"]
+visible = false
+mesh = SubResource("CylinderMesh_cl6md")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="FocusPoint"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+mesh = SubResource("CylinderMesh_cl6md")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="FocusPoint"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+visible = false
+mesh = SubResource("CylinderMesh_cl6md")
+
+[node name="Sprite3D" type="Sprite3D" parent="FocusPoint"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+billboard = 1
+fixed_size = true
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("130_4ptxc")
 
 [node name="Debug1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02645, 0)
