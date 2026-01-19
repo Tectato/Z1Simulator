@@ -53,6 +53,20 @@ func _process(delta: float) -> void:
 			global_position = focusPoint.global_position + posRelative
 			look_at(focusPoint.global_position)
 
+func _input(event: InputEvent) -> void:
+	if event.is_echo(): return
+	if event.is_action_pressed("nav_focus"):
+		var center = Vector3.ZERO
+		if !Global.editor.selector.selected.is_empty():
+			for thing in Global.editor.selector.selected:
+				center += thing.global_position
+			center /= Global.editor.selector.selected.size()
+		var diff = center - focusPoint.global_position
+		focusPoint.global_position += diff
+		global_position += diff
+	if event.is_action_pressed("nav_orbit"): focusPoint.visible = true
+	elif event.is_action_released("nav_orbit"): focusPoint.visible = false
+
 func updateZoom():
 	zoomLevel = clampf(zoomLevel, 0.1, 20)
 	var posRelative = global_position - focusPoint.global_position
@@ -61,7 +75,7 @@ func updateZoom():
 		global_position = focusPoint.global_position + Vector3.UP * 10
 	else:
 		global_position = focusPoint.global_position + posRelative
-	focusPoint.scale = Vector3(1,1,1) * zoomLevel
+	#focusPoint.scale = Vector3(1,1,1) * zoomLevel
 	size = float(zoomLevel)
 
 func handleOrthoInputs():
