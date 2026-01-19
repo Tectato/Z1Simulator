@@ -1,6 +1,7 @@
 extends Control
 
 @onready var moveSpeedInput = $VBoxContainer/MovementSpeed/MovementSpeedInput
+@onready var volumeSlider = $VBoxContainer/Volume/HSlider
 
 func _ready() -> void:
 	moveSpeedInput.text = str(Global.workspace.moveSpeed)
@@ -28,3 +29,6 @@ func _on_set_default_scene_pressed() -> void:
 	Global.config.values["default_scene"] = Global.editor.currentlyLoadedPath
 	Global.editor.interface.debugLabel.text = Global.editor.currentlyLoadedPath
 	Global.config.saveConfig()
+
+func _on_h_slider_drag_ended(value_changed: bool) -> void:
+	Global.workspace.setVolume(volumeSlider.value)

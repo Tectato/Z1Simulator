@@ -5,8 +5,18 @@ extends AudioStreamPlayer
 @onready var playerA = $PlayerA
 @onready var playerB = $PlayerB
 var A = true
+@onready var startVolume = volume_linear
 
 func _ready() -> void:
+	playerA.volume_db = volume_db
+	playerB.volume_db = volume_db
+	call_deferred("lateReady")
+
+func lateReady():
+	Global.workspace.volumeChanged.connect(volumeChanged)
+
+func volumeChanged(newVal):
+	volume_linear = startVolume * newVal
 	playerA.volume_db = volume_db
 	playerB.volume_db = volume_db
 

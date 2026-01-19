@@ -24,8 +24,8 @@ func initStep():
 func step():
 	var numPlayers = int(clamp(parent.partsMoved / 30, 1, players.size()))
 	if parent.partsMoved < 1: return
-	setVolume(clamp(parent.partsMoved/400.0,0.05,1.0) * 1.0)
-	Global.editor.interface.debugLabel.text = str(parent.partsMoved) + " -> " + str(numPlayers) + ", " + str(volume)
+	setVolume(clamp(parent.partsMoved/400.0,0.05,1.0) * Global.workspace.maxVolume)
+	#Global.editor.interface.debugLabel.text = str(parent.partsMoved) + " -> " + str(numPlayers) + ", " + str(volume)
 	for i in range(numPlayers):
 		var player = players[i]
 		#player.volume_linear = volume / numPlayers

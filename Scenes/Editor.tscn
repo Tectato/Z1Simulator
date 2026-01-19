@@ -2562,9 +2562,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -184.0
-offset_top = -99.0
+offset_top = -113.0
 offset_right = 184.0
-offset_bottom = 99.0
+offset_bottom = 113.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("77_rgbjt")
@@ -2642,6 +2642,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "1.0"
 emoji_menu_enabled = false
+
+[node name="Volume" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume"]
+layout_mode = 2
+text = "Volume"
+
+[node name="HSlider" type="HSlider" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.05
+value = 1.0
 
 [node name="Store diff" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
 layout_mode = 2
@@ -3024,6 +3038,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_close_pressed"]
 [connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_input_text_submitted"]
 [connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_movement_speed_input_text_submitted"]
+[connection signal="drag_ended" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume/HSlider" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_h_slider_drag_ended"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_store_diff_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_brass_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]
