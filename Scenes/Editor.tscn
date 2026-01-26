@@ -1,4 +1,4 @@
-[gd_scene load_steps=209 format=3 uid="uid://cpd75raqrkglk"]
+[gd_scene format=3 uid="uid://cpd75raqrkglk"]
 
 [ext_resource type="PackedScene" uid="uid://sbi6ilpar4vc" path="res://Scenes/Workspace.tscn" id="1_0lbib"]
 [ext_resource type="Script" uid="uid://c5l685cuhvoht" path="res://Scripts/Editor/editor.gd" id="1_5v8xv"]
@@ -524,12 +524,12 @@ height = 1.0
 radial_segments = 8
 rings = 0
 
-[node name="Editor" type="Node3D"]
+[node name="Editor" type="Node3D" unique_id=127700094]
 script = ExtResource("1_5v8xv")
 
-[node name="Workspace" parent="." instance=ExtResource("1_0lbib")]
+[node name="Workspace" parent="." unique_id=46790878 instance=ExtResource("1_0lbib")]
 
-[node name="Downcaster" type="RayCast3D" parent="."]
+[node name="Downcaster" type="RayCast3D" parent="." unique_id=1941910624]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 enabled = false
 target_position = Vector3(0, -10, 0)
@@ -537,12 +537,12 @@ collision_mask = 5
 collide_with_areas = true
 collide_with_bodies = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Downcaster"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Downcaster" unique_id=367285919]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 visible = false
 mesh = SubResource("CylinderMesh_r768j")
 
-[node name="MoveRay" type="RayCast3D" parent="." node_paths=PackedStringArray("selector", "downcaster", "debug1", "debug2", "debug3")]
+[node name="MoveRay" type="RayCast3D" parent="." unique_id=1759709724 node_paths=PackedStringArray("selector", "downcaster", "debug1", "debug2", "debug3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 2)
 enabled = false
 exclude_parent = false
@@ -555,13 +555,13 @@ debug1 = NodePath("../Debug1")
 debug2 = NodePath("../Debug2")
 debug3 = NodePath("../Debug3")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("focusPoint")]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1428789793 node_paths=PackedStringArray("focusPoint")]
 transform = Transform3D(0.70710695, -0.353553, 0.61237186, 0, 0.8660249, 0.49999925, -0.70710695, -0.353553, 0.61237186, 2, 2, 2)
 current = true
 script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "mover", "clickArea", "transformGizmo")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" unique_id=399789399 node_paths=PackedStringArray("camera", "mover", "clickArea", "transformGizmo")]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
 enabled = false
 collision_mask = 35
@@ -572,7 +572,7 @@ mover = NodePath("../../MoveRay")
 clickArea = NodePath("../Interface/ClickArea")
 transformGizmo = NodePath("../../TransformGizmo")
 
-[node name="CommentRay" type="RayCast3D" parent="Camera3D" node_paths=PackedStringArray("camera", "displayBox", "displayText")]
+[node name="CommentRay" type="RayCast3D" parent="Camera3D" unique_id=825949964 node_paths=PackedStringArray("camera", "displayBox", "displayText")]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
 enabled = false
 collision_mask = 67
@@ -582,7 +582,7 @@ camera = NodePath("..")
 displayBox = NodePath("../Interface/VisibilityParent/CommentDisplay")
 displayText = NodePath("../Interface/VisibilityParent/CommentDisplay/Label")
 
-[node name="Interface" type="Control" parent="Camera3D" node_paths=PackedStringArray("editor", "clickArea")]
+[node name="Interface" type="Control" parent="Camera3D" unique_id=433639141 node_paths=PackedStringArray("editor", "clickArea")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -593,7 +593,7 @@ script = ExtResource("5_brgpd")
 editor = NodePath("../..")
 clickArea = NodePath("ClickArea")
 
-[node name="ClickArea" type="Control" parent="Camera3D/Interface"]
+[node name="ClickArea" type="Control" parent="Camera3D/Interface" unique_id=1430764123]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -602,7 +602,7 @@ grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
 
-[node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface"]
+[node name="SaveDialog" type="FileDialog" parent="Camera3D/Interface" unique_id=178021183]
 oversampling_override = 1.0
 title = "Save Project"
 initial_position = 1
@@ -613,7 +613,7 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
-[node name="MachineExportDialog" type="FileDialog" parent="Camera3D/Interface"]
+[node name="MachineExportDialog" type="FileDialog" parent="Camera3D/Interface" unique_id=839739679]
 auto_translate_mode = 1
 oversampling_override = 1.0
 title = "EXport Machine"
@@ -623,7 +623,7 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
-[node name="LoadProjectDialog" type="FileDialog" parent="Camera3D/Interface"]
+[node name="LoadProjectDialog" type="FileDialog" parent="Camera3D/Interface" unique_id=1797365606]
 auto_translate_mode = 1
 oversampling_override = 1.0
 title = "Open a File"
@@ -637,7 +637,7 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
-[node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface"]
+[node name="ImportProjectInstaceDialog" type="FileDialog" parent="Camera3D/Interface" unique_id=1071003532]
 auto_translate_mode = 1
 oversampling_override = 1.0
 title = "Open a File"
@@ -651,7 +651,7 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.json;Project File;project.json")
 
-[node name="ImportSheetDialog" type="FileDialog" parent="Camera3D/Interface"]
+[node name="ImportSheetDialog" type="FileDialog" parent="Camera3D/Interface" unique_id=1088619444]
 auto_translate_mode = 1
 oversampling_override = 1.0
 title = "Open File(s)"
@@ -665,36 +665,36 @@ display_mode = 1
 access = 2
 filters = PackedStringArray("*.svg;Vector Images;sheet.svg")
 
-[node name="ImportChoice" type="ConfirmationDialog" parent="Camera3D/Interface"]
+[node name="ImportChoice" type="ConfirmationDialog" parent="Camera3D/Interface" unique_id=2005592390]
 initial_position = 1
 size = Vector2i(412, 100)
 ok_button_text = "Import into current Project"
 dialog_text = "Add or load Machine"
 cancel_button_text = "Load as Project"
 
-[node name="SaveRequest" type="ConfirmationDialog" parent="Camera3D/Interface"]
+[node name="SaveRequest" type="ConfirmationDialog" parent="Camera3D/Interface" unique_id=392708393]
 initial_position = 1
 ok_button_text = "Yes"
 dialog_text = "Save current project?"
 cancel_button_text = "No"
 
-[node name="HelpWindow" type="Window" parent="Camera3D/Interface"]
+[node name="HelpWindow" type="Window" parent="Camera3D/Interface" unique_id=1228020896]
 oversampling_override = 1.0
 initial_position = 1
 size = Vector2i(600, 400)
 visible = false
 script = ExtResource("103_msmja")
 
-[node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/HelpWindow"]
+[node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/HelpWindow" unique_id=1683496639]
 offset_right = 601.0
 offset_bottom = 399.0
 current_tab = 0
 
-[node name="Navigation" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+[node name="Navigation" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=1832206245]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation" unique_id=2004125835]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -703,12 +703,12 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer" unique_id=303743704]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Orbit" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Orbit" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=166518391]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -716,10 +716,10 @@ text = "[b][Middle mouse / Alt][/b] -> Orbit around focus point"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1254304270]
 layout_mode = 2
 
-[node name="Move view" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Move view" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=464722840]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -727,10 +727,10 @@ text = "[b][Middle mouse / Alt][/b] + [b][Shift][/b] -> Move focus point"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1186618400]
 layout_mode = 2
 
-[node name="Select & move" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Select & move" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1982252936]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -738,10 +738,10 @@ text = "[b][Left click][/b] -> Select element. Drag to move"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator6" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator6" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=242496704]
 layout_mode = 2
 
-[node name="Right click" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Right click" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1606066992]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -751,10 +751,10 @@ For [color=008CFF]sheets[/color]: If the sheet has [i]one[/i] [color=00FF97]pin[
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator7" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator7" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=205092946]
 layout_mode = 2
 
-[node name="Zoom" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Zoom" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=422022917]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -762,10 +762,10 @@ text = "[b][Scroll][/b] -> Increase/Decrease distance to focus point"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=311106422]
 layout_mode = 2
 
-[node name="Side window" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Side window" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1061314513]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -773,48 +773,48 @@ text = "[b][N][/b] -> Toggle side window"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=129075270]
 layout_mode = 2
 
-[node name="Clock controls" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Clock controls" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=721235263]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls" unique_id=1090438899]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer" unique_id=698177939]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control" unique_id=76009872]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("15_jnb0j")
 
-[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
+[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer" unique_id=1137136479]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control2"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control2" unique_id=1825871215]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("18_m0sft")
 
-[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
+[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer" unique_id=1376277712]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control3"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control3" unique_id=1016251560]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("21_pswvd")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer" unique_id=956841727]
 layout_mode = 2
 text = "Clock controls"
 label_settings = SubResource("LabelSettings_u1ej8")
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls"]
+[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls" unique_id=2119936509]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -822,10 +822,10 @@ text = "Press these buttons or [b][Left arrow][/b] / [b][Space][/b] / [b][Right 
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1783100062]
 layout_mode = 2
 
-[node name="Orth view" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Orth view" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=53714462]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -833,15 +833,15 @@ text = "[b][Numpad 5][/b] -> Toggle orthogonal top-down view"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator8" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="HSeparator8" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer" unique_id=1091299475]
 layout_mode = 2
 
-[node name="Interface" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+[node name="Interface" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=1296673931]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface" unique_id=1823669646]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -850,80 +850,80 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer" unique_id=1583574856]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Resolution" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="Resolution" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=32833291]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution" unique_id=741723542]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer" unique_id=935347087]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer/Control" unique_id=296107685]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("19_8faq4")
 
-[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer"]
+[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer" unique_id=99948349]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer/Control2"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer/Control2" unique_id=914353733]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("16_pbycb")
 
-[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer"]
+[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer" unique_id=561032830]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer/Control3"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer/Control3" unique_id=1641504245]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("13_85c8q")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution/HBoxContainer" unique_id=1542956973]
 layout_mode = 2
 text = "Resolution"
 label_settings = SubResource("LabelSettings_u1ej8")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Resolution" unique_id=57541871]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Configures which type of elements you interact with. (Parts, Layers, Machines)"
 autowrap_mode = 2
 
-[node name="Masking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="Masking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=345016703]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking" unique_id=691455403]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer" unique_id=2090742334]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer/Control" unique_id=577375619]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("31_gtbin")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking/HBoxContainer" unique_id=100474725]
 layout_mode = 2
 text = "Masking"
 label_settings = SubResource("LabelSettings_u1ej8")
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking"]
+[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Masking" unique_id=1196589751]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -931,76 +931,76 @@ text = "Cycles which types of elements ([color=00C2FF]sheets[/color], [color=00F
 fit_content = true
 autowrap_mode = 2
 
-[node name="VisMode" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="VisMode" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=156324870]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode" unique_id=1777600074]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer" unique_id=269159591]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer/Control" unique_id=77824974]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("13_ionj3")
 
-[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer"]
+[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer" unique_id=1701076631]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer/Control2"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer/Control2" unique_id=1673779551]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("16_rgbjt")
 
-[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer"]
+[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer" unique_id=956405986]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer/Control3"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer/Control3" unique_id=837437717]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("19_dacgg")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode/HBoxContainer" unique_id=1281421921]
 layout_mode = 2
 text = "Visualisation mode"
 label_settings = SubResource("LabelSettings_u1ej8")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/VisMode" unique_id=2046689]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Sets the render mode."
 autowrap_mode = 2
 
-[node name="StaticVis" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="StaticVis" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=259675048]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis" unique_id=1621241439]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header" unique_id=1205443070]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header/Control" unique_id=1595266645]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("19_qikgm")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header" unique_id=970953025]
 layout_mode = 2
 text = "Show static sheets"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis" unique_id=889432850]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1008,124 +1008,124 @@ text = "Toggles visibility of static [color=00C2FF]sheets[/color]."
 fit_content = true
 autowrap_mode = 2
 
-[node name="PowerFlow" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="PowerFlow" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=349087389]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow" unique_id=353779123]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header" unique_id=133547846]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header/Control" unique_id=780675308]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("16_o5g20")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header" unique_id=994798065]
 layout_mode = 2
 text = "Show movement propagation"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow"]
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow" unique_id=468691938]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "If enabled, whenever a selected part moves, the chain of parts that led to its movement will be shown."
 autowrap_mode = 2
 
-[node name="UnselectedLayers" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="UnselectedLayers" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=729463276]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers" unique_id=1773682173]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header" unique_id=1656129544]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header/Control" unique_id=1839388631]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("33_dcdig")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header" unique_id=67897579]
 layout_mode = 2
 text = "Show unselected layers"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers"]
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers" unique_id=160625015]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Toggles whether unselected layers and machines are visible when resolution is set to Part"
 autowrap_mode = 2
 
-[node name="Baseplates" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="Baseplates" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=273636376]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=361772686]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header" unique_id=374285065]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header/Control" unique_id=2110186007]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("56_8faq4")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header" unique_id=39344335]
 layout_mode = 2
 text = "Show placement grids"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates"]
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=1395792706]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Toggles whether the placement grid is shown for all layers."
 autowrap_mode = 2
 
-[node name="Locking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer"]
+[node name="Locking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=112886820]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking" unique_id=106843931]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header" unique_id=2013125296]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header/Control" unique_id=1931545888]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("34_jk3a4")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header" unique_id=501387044]
 layout_mode = 2
 text = "Lock editing"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking"]
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking" unique_id=1313921408]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "If active, prevents you from accidentally moving parts of a finished machine."
 autowrap_mode = 2
 
-[node name="Editing" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+[node name="Editing" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=576482778]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing" unique_id=2122864498]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1134,12 +1134,12 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer" unique_id=54952443]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label10" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label10" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1250147960]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1147,10 +1147,10 @@ text = "[b][Tab][/b] -> Toggle gizmo for moving parts more precisely"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator9" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator9" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1316229483]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1864331233]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1159,10 +1159,10 @@ For [color=00FFFF]output pins[/color]: configures directionality"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=661584949]
 layout_mode = 2
 
-[node name="Label5" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label5" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1633374216]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1173,10 +1173,10 @@ For [color=FF3E00]springs[/color]: toggles tension state"
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1861132186]
 layout_mode = 2
 
-[node name="Label6" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label6" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=65495952]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1184,10 +1184,10 @@ text = "[b][O][/b] -> Toggle [color=00FF97]pin[/color] being an [color=00FFFF]ou
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1737268460]
 layout_mode = 2
 
-[node name="Label7" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label7" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1270422743]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1195,10 +1195,10 @@ text = "[b][I][/b] -> Toggle [color=4CFF00]clock pin[/color] being an [color=D9F
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator6" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator6" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=2123108300]
 layout_mode = 2
 
-[node name="Label8" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label8" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1687499517]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1206,10 +1206,10 @@ text = "[b][Q][/b] / [b][E][/b] -> Cycle activation step of [color=4CFF00]clock 
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator7" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator7" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1927533104]
 layout_mode = 2
 
-[node name="Label2" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=762401847]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1219,30 +1219,30 @@ text = "[b][J][/b] -> [color=FF6A00]Links[/color] two parts together to move as 
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1754108374]
 layout_mode = 2
 
-[node name="Label9" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label9" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=2006966084]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
 text = "[b][F2][/b] -> Rename selected element."
 autowrap_mode = 2
 
-[node name="HSeparator8" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator8" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1400616359]
 layout_mode = 2
 
-[node name="Label3" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label3" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=572007530]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
 text = "[b][X / Delete][/b] -> Delete selected elements."
 autowrap_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=259347454]
 layout_mode = 2
 
-[node name="Label4" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label4" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1834992532]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1250,10 +1250,10 @@ text = "[b][Ctrl][/b] + [b][C][/b] / [b][Ctrl][/b] +[b] [V][/b] -> Copy/paste pa
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator10" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator10" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1784934859]
 layout_mode = 2
 
-[node name="Label12" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label12" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=510895082]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1261,10 +1261,10 @@ text = "[b][Ctrl][/b] + [b][A][/b] -> If a part is selected, selects all other p
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator11" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator11" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=936063452]
 layout_mode = 2
 
-[node name="Label13" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label13" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=444442695]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1272,10 +1272,10 @@ text = "[b][Ctrl][/b] + [b][I][/b] -> Invert the selection, akin to Ctrl + A."
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator12" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="HSeparator12" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1024762385]
 layout_mode = 2
 
-[node name="Label11" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer"]
+[node name="Label11" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=991772089]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1283,12 +1283,12 @@ text = "[b][Ctrl][/b] + [b][R][/b] -> Repeat the last \"add part\" action."
 fit_content = true
 autowrap_mode = 2
 
-[node name="Parts" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+[node name="Parts" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=1478646205]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts" unique_id=853183133]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1297,32 +1297,32 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="List" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer"]
+[node name="List" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer" unique_id=67273617]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Sheets" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="Sheets" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=165303518]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets" unique_id=1020152240]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets/Header" unique_id=1476425864]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets/Header/Control" unique_id=94610159]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("29_cv1oh")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets/Header" unique_id=772383820]
 layout_mode = 2
 text = "Sheets"
 label_settings = SubResource("LabelSettings_13gmj")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Sheets" unique_id=1696543718]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1330,31 +1330,31 @@ text = "Imported from SVG images created through SVGEditor. Can also be added to
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=1131206562]
 layout_mode = 2
 
-[node name="Pins" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="Pins" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=144551311]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins" unique_id=1816714782]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins/Header" unique_id=1907807115]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins/Header/Control" unique_id=1234200429]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("32_625ua")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins/Header" unique_id=1502978285]
 layout_mode = 2
 text = "Pins"
 label_settings = SubResource("LabelSettings_yjo3m")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Pins" unique_id=1258694735]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1362,31 +1362,31 @@ text = "Basic pins, only act within the layer they're part of. Interact with [co
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=1740171967]
 layout_mode = 2
 
-[node name="Global pins" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="Global pins" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=902142106]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins" unique_id=996819715]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins/Header" unique_id=93215403]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins/Header/Control" unique_id=1834413564]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("35_syg30")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins/Header" unique_id=1595417231]
 layout_mode = 2
 text = "Global pins"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Global pins" unique_id=454336497]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1394,31 +1394,31 @@ text = "Identical to regular [color=00FF97]pins[/color], but act across all laye
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=1121893985]
 layout_mode = 2
 
-[node name="Clock pins" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="Clock pins" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=913293059]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins" unique_id=282260381]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins/Header" unique_id=10259812]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins/Header/Control" unique_id=364744433]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("35_n4fht")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins/Header" unique_id=1316303385]
 layout_mode = 2
 text = "Clock pins"
 label_settings = SubResource("LabelSettings_66atf")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Clock pins" unique_id=2140199968]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1426,31 +1426,31 @@ text = "[color=00FF97]Pins[/color] that move automatically in their given activa
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=2115147469]
 layout_mode = 2
 
-[node name="Comments" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List"]
+[node name="Comments" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=720680863]
 layout_mode = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments" unique_id=1105825357]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header" unique_id=1346672005]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header/Control" unique_id=747830983]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("79_5ko8x")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments/Header" unique_id=126537605]
 layout_mode = 2
 text = "Comments"
 label_settings = SubResource("LabelSettings_ue6jr")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Comments" unique_id=2083490760]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1458,12 +1458,12 @@ text = "Click & drag to place a box. Renaming a comment box ([b][F2][/b]) will m
 fit_content = true
 autowrap_mode = 2
 
-[node name="Side Window" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+[node name="Side Window" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=435546433]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window" unique_id=1755162734]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1472,160 +1472,160 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="List" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer"]
+[node name="List" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer" unique_id=2098938364]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Scene" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="Scene" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=667887611]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Scene"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Scene" unique_id=261701545]
 layout_mode = 2
 text = "Scene"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Scene"]
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Scene" unique_id=250242929]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Shows a tree view of machines in the scene and their layers. Clicking on entries selects them in the scene."
 autowrap_mode = 2
 
-[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=814294256]
 layout_mode = 2
 
-[node name="Plan" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="Plan" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=1491716713]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=1156755087]
 layout_mode = 2
 text = "Plan"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=415559027]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 text = "Allows for importing logic diagrams for each layer of a machine by drag & dropping an image while a layer is selected or being edited."
 autowrap_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=919230784]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer" unique_id=1719401444]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer/Control" unique_id=2105675730]
 position = Vector2(16, 16)
 texture = ExtResource("104_vrjel")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer" unique_id=136187882]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Selector - Used to select markers. Right-click to set the color of all selected markers. (Hold shift to select multiple)"
 autowrap_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=1534177014]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer2"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer2" unique_id=121245727]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer2/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer2/Control" unique_id=1395311958]
 position = Vector2(16, 16)
 texture = ExtResource("105_gsma0")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer2"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer2" unique_id=1358409322]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Editor - Allows placing elements of the 4 types at the top of the window. If an existing marker was selected, it will be edited. Otherwise, a new one is created and assigned a random color. Click & drag elements to move them."
 autowrap_mode = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=179587369]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer3"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer3" unique_id=106539242]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer3/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer3/Control" unique_id=810978589]
 position = Vector2(16, 16)
 texture = ExtResource("106_6x1oi")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer3"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer3" unique_id=1002447709]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Link - If both a marker and a part in the 3D scene are selected, clicking this will link the two, making the 3D part take on the marker's color in colorcoded mode."
 autowrap_mode = 2
 
-[node name="Label2" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="Label2" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=1364022137]
 layout_mode = 2
 text = "Marker elements:"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=1939701020]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4" unique_id=1575420829]
 custom_minimum_size = Vector2(64, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4/Control" unique_id=656948409]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("107_13gmj")
 
-[node name="Sprite2D2" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4/Control"]
+[node name="Sprite2D2" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4/Control" unique_id=16946306]
 texture_filter = 1
 position = Vector2(48, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("108_yjo3m")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer4" unique_id=423616459]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Circle / Rectangle. Click and drag to place"
 autowrap_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=86575692]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer5"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer5" unique_id=61561231]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer5/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer5/Control" unique_id=958063446]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("109_66atf")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer5"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer5" unique_id=1352365605]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Line. Left click to add points, right click to finish"
 autowrap_mode = 2
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan" unique_id=203245192]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer6"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer6" unique_id=794148355]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer6/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer6/Control" unique_id=648375390]
 texture_filter = 1
 position = Vector2(16, 16)
 scale = Vector2(2, 2)
 texture = ExtResource("110_gtbin")
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer6"]
+[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Plan/HBoxContainer6" unique_id=176069613]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1634,18 +1634,18 @@ text = "State label. Dynamically displays state of linked part. [b][R][/b] to ch
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=858704256]
 layout_mode = 2
 
-[node name="Sequencer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="Sequencer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=1367730967]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Sequencer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Sequencer" unique_id=1337474965]
 layout_mode = 2
 text = "Sequencer"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Sequencer"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Sequencer" unique_id=1751929321]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1654,18 +1654,18 @@ Click the play button next to the sequence's name to start it. (Clock steps are 
 fit_content = true
 autowrap_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=1141612241]
 layout_mode = 2
 
-[node name="Values" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+[node name="Values" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=2080832006]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Values"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Values" unique_id=1480698474]
 layout_mode = 2
 text = "Values"
 label_settings = SubResource("LabelSettings_msmja")
 
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Values"]
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Values" unique_id=269425395]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1674,12 +1674,12 @@ To create an entry, select the desired [color=00FFFF]output pins[/color] in the 
 fit_content = true
 autowrap_mode = 2
 
-[node name="Tips" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer"]
+[node name="Tips" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=516215332]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips" unique_id=175354607]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1688,41 +1688,41 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer" unique_id=447494873]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Undo" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="Undo" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=680001952]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][i]Fixing mistakes[/i][/center]
 Currently, no Undo has yet been implemented. Be sure to save often! If you make a hard-to-reverse mistake, just reload the current scene with [color=#80F000]File > Reload current Project[/color]"
 fit_content = true
 
-[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=47055049]
 layout_mode = 2
 
-[node name="Baseplates" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="Baseplates" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=1664954887]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][i]Baseplates[/i][/center]
 Using the transformation gizmo to move a [color=00C2FF]sheet[/color] down into the placement grid of its layer will set it to be a \"Baseplate\". [color=00FF97]Pins[/color] will not interact with it, meaning it doesn't need to have holes placed where non-static [color=00FF97]pins[/color] will move."
 fit_content = true
 
-[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=1820618426]
 layout_mode = 2
 
-[node name="Connecting Layers" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="Connecting Layers" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=1672251395]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][i]Connecting Layers[/i][/center]
 Sometimes movements have to propagate across different layers. Global [color=00FF97]pins[/color] allow this to happen across all layers, but they may intersect sheets or the propagation is only desired across two neighboring layers. In these cases, place a regular [color=00FF97]pin[/color] in the same place in both layers, and connect the two with a [color=FF6A00]link[/color]."
 fit_content = true
 
-[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=1345065729]
 layout_mode = 2
 
-[node name="Organization" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="Organization" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=578943764]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][i]Keeping things organized[/i][/center]
@@ -1734,10 +1734,10 @@ Edit>Clear Diff can be used to reset a machine instance to its original state.
 Note: At this time, importing projects that contain multiple machines will not work well."
 fit_content = true
 
-[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Tips/ScrollContainer/VBoxContainer" unique_id=1308077754]
 layout_mode = 2
 
-[node name="VisibilityParent" type="Control" parent="Camera3D/Interface"]
+[node name="VisibilityParent" type="Control" parent="Camera3D/Interface" unique_id=2051913010]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1746,7 +1746,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Tutorial" type="Control" parent="Camera3D/Interface/VisibilityParent" node_paths=PackedStringArray("nodes", "fileMenu", "helpMenu")]
+[node name="Tutorial" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=792537786 node_paths=PackedStringArray("nodes", "fileMenu", "helpMenu")]
 visible = false
 z_index = 3
 layout_mode = 1
@@ -1761,7 +1761,7 @@ nodes = [NodePath("0_Welcome"), NodePath("1_Navigation"), NodePath("2_SimControl
 fileMenu = NodePath("../MenuBar/File")
 helpMenu = NodePath("../MenuBar/Help")
 
-[node name="0_Welcome" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+[node name="0_Welcome" parent="Camera3D/Interface/VisibilityParent/Tutorial" unique_id=998775440 instance=ExtResource("8_pyy8l")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1779,10 +1779,10 @@ We'll quickly cover some basics to get you started.
 (You can skip this under [color=#40A000]Help > Skip Tutorial[/color])"
 nextIndex = 1
 
-[node name="Timer" parent="Camera3D/Interface/VisibilityParent/Tutorial/0_Welcome" index="3"]
+[node name="Timer" parent="Camera3D/Interface/VisibilityParent/Tutorial/0_Welcome" index="4"]
 wait_time = 6.0
 
-[node name="1_Navigation" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+[node name="1_Navigation" parent="Camera3D/Interface/VisibilityParent/Tutorial" unique_id=277168658 instance=ExtResource("8_pyy8l")]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -1800,12 +1800,12 @@ text = "Rotate the view by holding [color=#40A000][Middle Mouse][/color] or [col
 script = ExtResource("11_cwlo7")
 nextIndex = 2
 
-[node name="CameraWatcher" type="Node" parent="Camera3D/Interface/VisibilityParent/Tutorial/1_Navigation" node_paths=PackedStringArray("camera")]
+[node name="CameraWatcher" type="Node" parent="Camera3D/Interface/VisibilityParent/Tutorial/1_Navigation" unique_id=386522836 node_paths=PackedStringArray("camera")]
 script = ExtResource("11_5adol")
 camera = NodePath("../../../../..")
 triggerDistance = 1.0
 
-[node name="2_SimControls" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+[node name="2_SimControls" parent="Camera3D/Interface/VisibilityParent/Tutorial" unique_id=1375180298 instance=ExtResource("8_pyy8l")]
 visible = false
 layout_mode = 1
 anchors_preset = 3
@@ -1822,7 +1822,7 @@ grow_vertical = 0
 text = "Advance the simulation by pressing [color=#40A000][Right Arrow][/color] or clicking this [color=#40A000]Button[/color]."
 nextIndex = 3
 
-[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/Tutorial/2_SimControls"]
+[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/Tutorial/2_SimControls" unique_id=2118866001]
 modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
 layout_mode = 0
 offset_left = 160.0
@@ -1836,7 +1836,7 @@ patch_margin_left = 1
 patch_margin_top = 16
 patch_margin_right = 8
 
-[node name="3_Resolution" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+[node name="3_Resolution" parent="Camera3D/Interface/VisibilityParent/Tutorial" unique_id=1679493696 instance=ExtResource("8_pyy8l")]
 visible = false
 layout_mode = 1
 anchors_preset = 1
@@ -1850,7 +1850,7 @@ grow_horizontal = 0
 text = "Click objects to select them. Configure which types of objects to select up here or by pressing [color=#40A000][1]/[2]/[3][/color]"
 nextIndex = 4
 
-[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution"]
+[node name="NinePatchRect2" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/Tutorial/3_Resolution" unique_id=1596110060]
 modulate = Color(0.39090326, 0.9395331, 3.85046e-07, 1)
 layout_mode = 0
 offset_left = 160.0
@@ -1863,7 +1863,7 @@ patch_margin_left = 1
 patch_margin_top = 16
 patch_margin_right = 8
 
-[node name="4_End" parent="Camera3D/Interface/VisibilityParent/Tutorial" instance=ExtResource("8_pyy8l")]
+[node name="4_End" parent="Camera3D/Interface/VisibilityParent/Tutorial" unique_id=1592036057 instance=ExtResource("8_pyy8l")]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -1881,12 +1881,12 @@ text = "That's all for now!
 Check out [color=#40A000]Help > Show Help & Tips[/color] for more."
 nextIndex = 5
 
-[node name="MenuBar" type="MenuBar" parent="Camera3D/Interface/VisibilityParent"]
+[node name="MenuBar" type="MenuBar" parent="Camera3D/Interface/VisibilityParent" unique_id=1032632304]
 layout_mode = 0
 offset_right = 125.0
 offset_bottom = 40.0
 
-[node name="File" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar"]
+[node name="File" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar" unique_id=924937566]
 size = Vector2i(121, 143)
 item_count = 8
 item_0/text = "New Project"
@@ -1906,7 +1906,7 @@ item_6/id = 7
 item_7/text = "Settings"
 item_7/id = 8
 
-[node name="Edit" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar"]
+[node name="Edit" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar" unique_id=1773781467]
 auto_translate_mode = 1
 size = Vector2i(121, 143)
 item_count = 3
@@ -1919,7 +1919,7 @@ item_1/disabled = true
 item_2/text = "Start recording"
 item_2/id = 2
 
-[node name="Help" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar"]
+[node name="Help" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar" unique_id=217690394]
 auto_translate_mode = 1
 size = Vector2i(121, 143)
 item_count = 2
@@ -1928,7 +1928,7 @@ item_0/id = 0
 item_1/text = "Start Tutorial"
 item_1/id = 1
 
-[node name="Toggles" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+[node name="Toggles" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=978849834]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -1941,7 +1941,7 @@ grow_horizontal = 0
 scale = Vector2(2, 2)
 theme_override_constants/separation = 8
 
-[node name="EditLock" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+[node name="EditLock" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles" unique_id=2029615584]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -1951,11 +1951,11 @@ texture_normal = ExtResource("33_dacgg")
 texture_pressed = ExtResource("34_jk3a4")
 texture_hover = ExtResource("35_1opyq")
 
-[node name="Visibility" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+[node name="Visibility" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles" unique_id=543395801]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+[node name="CommentVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility" unique_id=1005575238]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -1966,7 +1966,7 @@ texture_normal = ExtResource("11_ue6jr")
 texture_pressed = ExtResource("12_ix1yp")
 texture_hover = ExtResource("13_scrla")
 
-[node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+[node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility" unique_id=466238351]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -1976,7 +1976,7 @@ texture_normal = ExtResource("56_8faq4")
 texture_pressed = ExtResource("57_ia0pe")
 texture_hover = ExtResource("58_2pu55")
 
-[node name="UnselectedLayerVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+[node name="UnselectedLayerVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility" unique_id=333946411]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -1986,7 +1986,7 @@ texture_normal = ExtResource("33_dcdig")
 texture_pressed = ExtResource("34_obh6b")
 texture_hover = ExtResource("35_mugi6")
 
-[node name="FlowVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+[node name="FlowVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility" unique_id=1436633195]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -1997,7 +1997,7 @@ texture_normal = ExtResource("15_u04rf")
 texture_pressed = ExtResource("16_o5g20")
 texture_hover = ExtResource("17_ix4yx")
 
-[node name="StaticSheetVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility"]
+[node name="StaticSheetVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility" unique_id=672781620]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
@@ -2008,17 +2008,17 @@ texture_normal = ExtResource("18_uhjy1")
 texture_pressed = ExtResource("19_qikgm")
 texture_hover = ExtResource("20_cyt7j")
 
-[node name="ResolutionBar" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+[node name="ResolutionBar" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles" unique_id=952032418]
 texture_filter = 1
 layout_direction = 2
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Part" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar"]
+[node name="Part" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar" unique_id=1871560153]
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Main" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part"]
+[node name="Main" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part" unique_id=171816420]
 layout_mode = 2
 tooltip_text = "Parts"
 toggle_mode = true
@@ -2029,7 +2029,7 @@ texture_normal = ExtResource("18_mtfo3")
 texture_pressed = ExtResource("19_8faq4")
 texture_hover = ExtResource("20_xccxh")
 
-[node name="Selectability" type="Button" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part"]
+[node name="Selectability" type="Button" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part" unique_id=1866791018]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 tooltip_text = "Mask selection (No mask)"
@@ -2040,13 +2040,13 @@ script = ExtResource("30_66atf")
 textures = Array[Texture2D]([ExtResource("31_gtbin"), ExtResource("32_qnh42"), ExtResource("33_5ko8x")])
 tooltips = Array[String](["Mask selection (No mask)", "Mask selection (Only sheets)", "Mask selection (Only pins)"])
 
-[node name="TextureRect" type="TextureRect" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Selectability"]
+[node name="TextureRect" type="TextureRect" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar/Part/Selectability" unique_id=573041868]
 layout_mode = 0
 offset_right = 16.0
 offset_bottom = 16.0
 texture = ExtResource("31_gtbin")
 
-[node name="Layer" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar"]
+[node name="Layer" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar" unique_id=1571679760]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Layers"
@@ -2057,7 +2057,7 @@ texture_normal = ExtResource("15_w82wx")
 texture_pressed = ExtResource("16_pbycb")
 texture_hover = ExtResource("17_egdbq")
 
-[node name="Machine" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar"]
+[node name="Machine" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/ResolutionBar" unique_id=1036754871]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Machines"
@@ -2068,13 +2068,13 @@ texture_normal = ExtResource("12_r768j")
 texture_pressed = ExtResource("13_85c8q")
 texture_hover = ExtResource("14_hujvp")
 
-[node name="VisModes" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles"]
+[node name="VisModes" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Toggles" unique_id=1553818235]
 texture_filter = 1
 layout_direction = 2
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Monochrome" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes"]
+[node name="Monochrome" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes" unique_id=741076624]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Monochrome"
@@ -2084,7 +2084,7 @@ texture_normal = ExtResource("12_f0qqp")
 texture_pressed = ExtResource("13_ionj3")
 texture_hover = ExtResource("14_fy6bq")
 
-[node name="Colorcoded" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes"]
+[node name="Colorcoded" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes" unique_id=1678911121]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Colorcoded"
@@ -2095,7 +2095,7 @@ texture_normal = ExtResource("15_v2xkj")
 texture_pressed = ExtResource("16_rgbjt")
 texture_hover = ExtResource("17_e2vqq")
 
-[node name="Realistic" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes"]
+[node name="Realistic" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/VisModes" unique_id=2008446705]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Shaded"
@@ -2105,7 +2105,7 @@ texture_normal = ExtResource("18_1g2hs")
 texture_pressed = ExtResource("19_dacgg")
 texture_hover = ExtResource("20_jk3a4")
 
-[node name="SimulationControls" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+[node name="SimulationControls" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=1088087099]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 3
@@ -2123,7 +2123,7 @@ scale = Vector2(2, 2)
 theme_override_constants/separation = 0
 script = ExtResource("15_df5t7")
 
-[node name="Reset" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+[node name="Reset" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls" unique_id=647140891]
 visible = false
 layout_mode = 2
 tooltip_text = "Reset"
@@ -2131,7 +2131,7 @@ texture_normal = ExtResource("15_pswvd")
 texture_pressed = ExtResource("16_df5t7")
 texture_hover = ExtResource("17_pux46")
 
-[node name="PrevStep" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+[node name="PrevStep" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls" unique_id=628013881]
 layout_mode = 2
 tooltip_text = "Previous step"
 shortcut = SubResource("Shortcut_pux46")
@@ -2139,7 +2139,7 @@ texture_normal = ExtResource("15_jnb0j")
 texture_pressed = ExtResource("16_i66mr")
 texture_hover = ExtResource("17_1k7u0")
 
-[node name="PausePlay" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+[node name="PausePlay" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls" unique_id=1052035384]
 layout_mode = 2
 tooltip_text = "Pause/Play Simulation"
 toggle_mode = true
@@ -2148,7 +2148,7 @@ texture_normal = ExtResource("18_m0sft")
 texture_pressed = ExtResource("23_df5t7")
 texture_hover = ExtResource("20_7v7kd")
 
-[node name="NextStep" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls"]
+[node name="NextStep" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SimulationControls" unique_id=2047934255]
 layout_mode = 2
 tooltip_text = "Next step"
 shortcut = SubResource("Shortcut_6cyjk")
@@ -2156,7 +2156,7 @@ texture_normal = ExtResource("21_pswvd")
 texture_pressed = ExtResource("22_df5t7")
 texture_hover = ExtResource("23_pux46")
 
-[node name="PartPlacers" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+[node name="PartPlacers" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=2061252750]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 4
@@ -2168,7 +2168,7 @@ grow_vertical = 2
 scale = Vector2(2, 2)
 theme_override_constants/separation = 1
 
-[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=989161027]
 layout_mode = 2
 tooltip_text = "Import sheet"
 texture_normal = ExtResource("28_v7xow")
@@ -2176,7 +2176,7 @@ texture_pressed = ExtResource("29_cv1oh")
 texture_hover = ExtResource("30_vtcxi")
 texture_disabled = ExtResource("52_v5nsg")
 
-[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=1157993856]
 layout_mode = 2
 tooltip_text = "Place logic pin (Local to layer)"
 texture_normal = ExtResource("31_y3ns8")
@@ -2184,7 +2184,7 @@ texture_pressed = ExtResource("32_625ua")
 texture_hover = ExtResource("33_2ery0")
 texture_disabled = ExtResource("56_81ubf")
 
-[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=2140756488]
 layout_mode = 2
 tooltip_text = "Place global logic pin (Across all layers)"
 texture_normal = ExtResource("34_2ery0")
@@ -2192,7 +2192,7 @@ texture_pressed = ExtResource("35_syg30")
 texture_hover = ExtResource("36_n4fht")
 texture_disabled = ExtResource("60_36n1v")
 
-[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=506366694]
 layout_mode = 2
 tooltip_text = "Place clock pin"
 texture_normal = ExtResource("34_syg30")
@@ -2200,63 +2200,63 @@ texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
 texture_disabled = ExtResource("64_ybrqq")
 
-[node name="Comment" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers"]
+[node name="Comment" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=446700626]
 layout_mode = 2
 tooltip_text = "Place comment"
 texture_normal = ExtResource("78_qnh42")
 texture_pressed = ExtResource("79_5ko8x")
 texture_hover = ExtResource("80_i1mcn")
 
-[node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent"]
+[node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent" unique_id=2065483624]
 own_world_3d = true
 transparent_bg = true
 size = Vector2i(128, 128)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport" unique_id=1329444950]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_vtcxi")
 mesh = SubResource("QuadMesh_v7xow")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport" unique_id=160134042]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, -1, 4.37114e-08, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_vtcxi")
 mesh = SubResource("QuadMesh_v7xow")
 
-[node name="X-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+[node name="X-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=1260891713]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.3, 0, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("94_cl6md")
 
-[node name="X+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+[node name="X+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=567404350]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.3, 0, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("94_6kijv")
 
-[node name="Y-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+[node name="Y-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=1360530971]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.3, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("96_b5fr5")
 
-[node name="Y+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2"]
+[node name="Y+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=1751287884]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.3, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("97_u4ilb")
 
-[node name="Camera3D" type="Camera3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport" node_paths=PackedStringArray("actualCamera")]
+[node name="Camera3D" type="Camera3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport" unique_id=152934948 node_paths=PackedStringArray("actualCamera")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, -4.37114e-08)
 projection = 1
 script = ExtResource("38_vtcxi")
 actualCamera = NodePath("../../../..")
 
-[node name="AxesGizmo" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+[node name="AxesGizmo" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=687783217]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -2267,11 +2267,11 @@ offset_right = -1.0
 offset_bottom = 36.0
 grow_horizontal = 0
 
-[node name="Sprite" type="Sprite2D" parent="Camera3D/Interface/VisibilityParent/AxesGizmo"]
+[node name="Sprite" type="Sprite2D" parent="Camera3D/Interface/VisibilityParent/AxesGizmo" unique_id=140733381]
 position = Vector2(-65, 63)
 texture = SubResource("ViewportTexture_cv1oh")
 
-[node name="ClockGizmo" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+[node name="ClockGizmo" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=1031748291]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -2286,14 +2286,14 @@ grow_horizontal = 0
 grow_vertical = 0
 script = ExtResource("53_hujvp")
 
-[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/VisibilityParent/ClockGizmo"]
+[node name="Clock" type="AnimatedSprite2D" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=183500306]
 texture_filter = 1
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_jotky")
 animation = &"1"
 autoplay = "default"
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ClockGizmo"]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=1609369512]
 modulate = Color(0, 0, 0, 0.239216)
 z_index = -1
 layout_mode = 0
@@ -2302,7 +2302,7 @@ offset_top = -64.0
 offset_right = 64.0
 offset_bottom = 64.0
 
-[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/ClockGizmo"]
+[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=367292931]
 layout_mode = 0
 offset_left = -139.0
 offset_top = 29.0
@@ -2310,7 +2310,7 @@ offset_right = -70.4375
 offset_bottom = 60.0
 text = "0.25 Hz"
 
-[node name="SideWindow" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+[node name="SideWindow" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=935138777]
 texture_filter = 1
 layout_mode = 1
 anchors_preset = 6
@@ -2325,7 +2325,7 @@ grow_horizontal = 0
 grow_vertical = 2
 script = ExtResource("51_12riw")
 
-[node name="Hide" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+[node name="Hide" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow" unique_id=89678453]
 layout_mode = 0
 offset_left = -32.0
 offset_right = -16.0
@@ -2338,7 +2338,7 @@ texture_normal = ExtResource("42_3icuf")
 texture_pressed = ExtResource("43_1bbve")
 texture_hover = ExtResource("44_8ktkl")
 
-[node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+[node name="TabContainer" type="TabContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow" unique_id=673934899]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2347,13 +2347,13 @@ grow_horizontal = 2
 grow_vertical = 2
 current_tab = 0
 
-[node name="Scene" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" node_paths=PackedStringArray("selector")]
+[node name="Scene" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=818079262 node_paths=PackedStringArray("selector")]
 layout_mode = 2
 script = ExtResource("42_1bbve")
 selector = NodePath("../../../../../SelectionRay")
 metadata/_tab_index = 0
 
-[node name="Tree" type="Tree" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Scene"]
+[node name="Tree" type="Tree" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Scene" unique_id=15656126]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2362,12 +2362,12 @@ grow_horizontal = 2
 grow_vertical = 2
 hide_root = true
 
-[node name="Plan" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+[node name="Plan" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=2098454085]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="PlanInterface" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Plan" instance=ExtResource("56_nb5ba")]
+[node name="PlanInterface" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Plan" unique_id=91485306 instance=ExtResource("56_nb5ba")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2377,12 +2377,12 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Sequencer" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+[node name="Sequencer" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=1422343894]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer" unique_id=1922896854]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2390,15 +2390,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer"]
+[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer" unique_id=159724309]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("76_uima5")
 
-[node name="First" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
+[node name="First" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" unique_id=994186572]
 layout_mode = 2
 
-[node name="Add" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface"]
+[node name="Add" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" unique_id=1343947724]
 layout_mode = 2
 size_flags_horizontal = 4
 tooltip_text = "Add new sequence"
@@ -2406,12 +2406,12 @@ texture_normal = ExtResource("77_uima5")
 texture_pressed = ExtResource("78_gidbq")
 texture_hover = ExtResource("78_gidbq")
 
-[node name="Values" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer"]
+[node name="Values" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=1548467709]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values" unique_id=1436319273]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2419,10 +2419,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ValueInterface" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values/ScrollContainer" instance=ExtResource("118_h6sg5")]
+[node name="ValueInterface" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values/ScrollContainer" unique_id=2070116067 instance=ExtResource("118_h6sg5")]
 layout_mode = 2
 
-[node name="MoveButton" type="Button" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+[node name="MoveButton" type="Button" parent="Camera3D/Interface/VisibilityParent/SideWindow" unique_id=1003797173]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -2431,7 +2431,7 @@ offset_left = -82.0
 offset_bottom = 31.0
 grow_horizontal = 0
 
-[node name="NinePatchRect" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton"]
+[node name="NinePatchRect" type="NinePatchRect" parent="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton" unique_id=272400370]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2450,7 +2450,7 @@ patch_margin_bottom = 6
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="RescaleButton" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow"]
+[node name="RescaleButton" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow" unique_id=557777128]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -2463,7 +2463,7 @@ texture_normal = ExtResource("57_iv047")
 texture_pressed = ExtResource("58_nb5ba")
 texture_hover = ExtResource("59_pyiqs")
 
-[node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface/VisibilityParent"]
+[node name="RenamingBox" type="LineEdit" parent="Camera3D/Interface/VisibilityParent" unique_id=850273421]
 visible = false
 layout_mode = 0
 offset_left = -81.0
@@ -2472,7 +2472,7 @@ offset_right = -12.4375
 offset_bottom = -18.0
 expand_to_text_length = true
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/RenamingBox"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/RenamingBox" unique_id=404624203]
 layout_mode = 0
 offset_top = -23.73
 offset_right = 119.0
@@ -2480,7 +2480,7 @@ offset_bottom = -0.73
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Rename Object"
 
-[node name="SetCommentBox" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent"]
+[node name="SetCommentBox" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=1517297528]
 visible = false
 layout_mode = 0
 offset_left = -236.0
@@ -2488,23 +2488,23 @@ offset_top = -244.0
 offset_right = -40.0
 offset_bottom = -21.0
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/SetCommentBox"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/SetCommentBox" unique_id=1952261200]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Set Comment"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SetCommentBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SetCommentBox" unique_id=698423535]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="TextEdit" type="TextEdit" parent="Camera3D/Interface/VisibilityParent/SetCommentBox/ScrollContainer"]
+[node name="TextEdit" type="TextEdit" parent="Camera3D/Interface/VisibilityParent/SetCommentBox/ScrollContainer" unique_id=940396312]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 wrap_mode = 1
 
-[node name="ErrorBox" type="Label" parent="Camera3D/Interface/VisibilityParent"]
+[node name="ErrorBox" type="Label" parent="Camera3D/Interface/VisibilityParent" unique_id=779208977]
 visible = false
 z_index = 1
 layout_mode = 1
@@ -2523,11 +2523,11 @@ text = "Saving only possible in clock step IV"
 autowrap_mode = 2
 script = ExtResource("54_w82wx")
 
-[node name="Timer" type="Timer" parent="Camera3D/Interface/VisibilityParent/ErrorBox"]
+[node name="Timer" type="Timer" parent="Camera3D/Interface/VisibilityParent/ErrorBox" unique_id=2060054836]
 wait_time = 3.0
 one_shot = true
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ErrorBox"]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ErrorBox" unique_id=1434367551]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2537,7 +2537,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.564706)
 
-[node name="SelectedLabel" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+[node name="SelectedLabel" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=924849296]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -2547,14 +2547,14 @@ offset_right = -160.0
 offset_bottom = 40.0
 grow_horizontal = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/SelectedLabel"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/SelectedLabel" unique_id=457600319]
 z_index = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 text = "Sheet"
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/SelectedLabel/Label"]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/SelectedLabel/Label" unique_id=679492623]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2564,7 +2564,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.388235)
 
-[node name="FPSLabel" type="Label" parent="Camera3D/Interface/VisibilityParent"]
+[node name="FPSLabel" type="Label" parent="Camera3D/Interface/VisibilityParent" unique_id=1499305072]
 layout_mode = 0
 offset_top = 35.0
 offset_right = 40.0
@@ -2572,7 +2572,7 @@ offset_bottom = 58.0
 text = "60"
 script = ExtResource("55_mtfo3")
 
-[node name="Settings" type="Control" parent="Camera3D/Interface/VisibilityParent"]
+[node name="Settings" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=811693106]
 visible = false
 z_index = 1
 layout_mode = 1
@@ -2589,7 +2589,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("77_rgbjt")
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/Settings"]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/Settings" unique_id=1353728694]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2599,7 +2599,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.72549)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings" unique_id=1317451711]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -2609,15 +2609,15 @@ offset_right = -6.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=94112734]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header" unique_id=1010594567]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Settings"
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Label"]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Label" unique_id=1016662548]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2627,7 +2627,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.244776, 0.244776, 0.244776, 0.72549)
 
-[node name="Close" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header"]
+[node name="Close" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header" unique_id=1419303583]
 texture_filter = 1
 layout_mode = 2
 shortcut = SubResource("Shortcut_81ubf")
@@ -2635,83 +2635,83 @@ texture_normal = ExtResource("77_v2xkj")
 texture_pressed = ExtResource("78_rgbjt")
 texture_hover = ExtResource("79_e2vqq")
 
-[node name="SheetSpacing" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="SheetSpacing" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1672999161]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=1267942413]
 layout_mode = 2
 text = "Sheet spacing"
 
-[node name="SheetSpacingInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing"]
+[node name="SheetSpacingInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=536586903]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "0.045"
 emoji_menu_enabled = false
 
-[node name="MovementSpeed" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="MovementSpeed" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1400123631]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=16719909]
 layout_mode = 2
 text = "Move speed"
 
-[node name="MovementSpeedInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed"]
+[node name="MovementSpeedInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=184227329]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "1.0"
 emoji_menu_enabled = false
 
-[node name="Volume" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="Volume" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=618240631]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume" unique_id=683358037]
 layout_mode = 2
 text = "Volume"
 
-[node name="HSlider" type="HSlider" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume"]
+[node name="HSlider" type="HSlider" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume" unique_id=1901176571]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 2.0
 step = 0.05
 value = 1.0
 
-[node name="Store diff" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="Store diff" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1395505938]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff" unique_id=1181879498]
 layout_mode = 2
 tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
 mouse_filter = 1
 text = "Store diff of imported machines"
 
-[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff"]
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff" unique_id=1881209592]
 layout_mode = 2
 tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
 theme = SubResource("Theme_pd6ol")
 button_pressed = true
 
-[node name="Brass" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="Brass" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=2040293791]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass"]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=217922308]
 layout_mode = 2
 mouse_filter = 1
 text = "Brass static sheets in shaded view"
 
-[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass"]
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=911802341]
 layout_mode = 2
 theme = SubResource("Theme_pd6ol")
 
-[node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer"]
+[node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1428938694]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Set current scene as default"
 
-[node name="PathExport" type="Button" parent="Camera3D/Interface/VisibilityParent"]
+[node name="PathExport" type="Button" parent="Camera3D/Interface/VisibilityParent" unique_id=1548884114]
 visible = false
 layout_mode = 0
 offset_left = 130.0
@@ -2719,7 +2719,7 @@ offset_right = 237.0
 offset_bottom = 31.0
 text = "Export paths"
 
-[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent" node_paths=PackedStringArray("selector") groups=["PermitsCameraMove"]]
+[node name="CommentDisplay" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=376609235 node_paths=PackedStringArray("selector") groups=["PermitsCameraMove"]]
 visible = false
 z_index = 5
 layout_mode = 0
@@ -2731,13 +2731,13 @@ horizontal_scroll_mode = 0
 script = ExtResource("120_ix1yp")
 selector = NodePath("../../../SelectionRay")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/CommentDisplay" groups=["PermitsCameraMove"]]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/CommentDisplay" unique_id=1519614537 groups=["PermitsCameraMove"]]
 custom_minimum_size = Vector2(256, 10)
 layout_mode = 2
 size_flags_vertical = 2
 autowrap_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/CommentDisplay/Label" groups=["PermitsCameraMove"]]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/CommentDisplay/Label" unique_id=1069159825 groups=["PermitsCameraMove"]]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2749,7 +2749,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0, 0, 0, 0.7058824)
 
-[node name="DebugLabel" type="Label" parent="Camera3D/Interface/VisibilityParent"]
+[node name="DebugLabel" type="Label" parent="Camera3D/Interface/VisibilityParent" unique_id=1588013141]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -2763,7 +2764,7 @@ grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
 
-[node name="UIVisibility" type="TextureButton" parent="Camera3D"]
+[node name="UIVisibility" type="TextureButton" parent="Camera3D" unique_id=463810253]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -2779,7 +2780,7 @@ texture_normal = ExtResource("7_m3vij")
 texture_pressed = ExtResource("8_h6sg5")
 texture_hover = ExtResource("9_1q8bw")
 
-[node name="3DUIVisibility" type="TextureButton" parent="Camera3D"]
+[node name="3DUIVisibility" type="TextureButton" parent="Camera3D" unique_id=877989622]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -2796,28 +2797,28 @@ texture_normal = ExtResource("130_00thf")
 texture_pressed = ExtResource("131_m3vij")
 texture_hover = ExtResource("132_h6sg5")
 
-[node name="FocusPoint" type="Node3D" parent="."]
+[node name="FocusPoint" type="Node3D" parent="." unique_id=1115117108]
 visible = false
 
-[node name="center" type="MeshInstance3D" parent="FocusPoint"]
+[node name="center" type="MeshInstance3D" parent="FocusPoint" unique_id=723165490]
 visible = false
 mesh = SubResource("SphereMesh_0hhuw")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="FocusPoint"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="FocusPoint" unique_id=398254163]
 visible = false
 mesh = SubResource("CylinderMesh_cl6md")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="FocusPoint"]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="FocusPoint" unique_id=1582431547]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 visible = false
 mesh = SubResource("CylinderMesh_cl6md")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="FocusPoint"]
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="FocusPoint" unique_id=2021893932]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 visible = false
 mesh = SubResource("CylinderMesh_cl6md")
 
-[node name="Sprite3D" type="Sprite3D" parent="FocusPoint"]
+[node name="Sprite3D" type="Sprite3D" parent="FocusPoint" unique_id=828052372]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
 billboard = 1
 fixed_size = true
@@ -2825,25 +2826,25 @@ alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("130_4ptxc")
 
-[node name="Debug1" type="MeshInstance3D" parent="."]
+[node name="Debug1" type="MeshInstance3D" parent="." unique_id=197573721]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.02645, 0)
 visible = false
 mesh = SubResource("SphereMesh_dfuwn")
 
-[node name="Debug2" type="MeshInstance3D" parent="."]
+[node name="Debug2" type="MeshInstance3D" parent="." unique_id=1587271987]
 visible = false
 mesh = SubResource("SphereMesh_brgpd")
 
-[node name="Debug3" type="MeshInstance3D" parent="."]
+[node name="Debug3" type="MeshInstance3D" parent="." unique_id=546951681]
 visible = false
 mesh = SubResource("SphereMesh_86asr")
 
-[node name="TransformGizmo" type="Node3D" parent="." node_paths=PackedStringArray("selector")]
+[node name="TransformGizmo" type="Node3D" parent="." unique_id=1232489494 node_paths=PackedStringArray("selector")]
 visible = false
 script = ExtResource("56_egdbq")
 selector = NodePath("../Camera3D/SelectionRay")
 
-[node name="X" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+[node name="X" type="Node3D" parent="TransformGizmo" unique_id=703634530 node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.25, 0, 0)
 script = ExtResource("56_pbycb")
 modifyX = true
@@ -2851,24 +2852,24 @@ partA = NodePath("Axis")
 partB = NodePath("Cap")
 debugPoint = NodePath("../../Debug2")
 
-[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/X"]
+[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/X" unique_id=1129255708]
 mesh = SubResource("CylinderMesh_egdbq")
 
-[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/X"]
+[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/X" unique_id=1280839819]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.300186, 0)
 mesh = SubResource("CylinderMesh_8faq4")
 skeleton = NodePath("../..")
 
-[node name="Area3D" type="Area3D" parent="TransformGizmo/X"]
+[node name="Area3D" type="Area3D" parent="TransformGizmo/X" unique_id=1898668840]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/X/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/X/Area3D" unique_id=2013329277]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("CylinderShape3D_w82wx")
 
-[node name="Y" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+[node name="Y" type="Node3D" parent="TransformGizmo" unique_id=1265799437 node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.25)
 script = ExtResource("56_pbycb")
 modifyY = true
@@ -2876,24 +2877,24 @@ partA = NodePath("Axis")
 partB = NodePath("Cap")
 debugPoint = NodePath("../../Debug2")
 
-[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/Y"]
+[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/Y" unique_id=779873038]
 mesh = SubResource("CylinderMesh_jotky")
 
-[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/Y"]
+[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/Y" unique_id=1135804589]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.300186, 0)
 mesh = SubResource("CylinderMesh_12riw")
 skeleton = NodePath("../..")
 
-[node name="Area3D" type="Area3D" parent="TransformGizmo/Y"]
+[node name="Area3D" type="Area3D" parent="TransformGizmo/Y" unique_id=1108946524]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/Y/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/Y/Area3D" unique_id=1108394478]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("CylinderShape3D_w82wx")
 
-[node name="Z" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+[node name="Z" type="Node3D" parent="TransformGizmo" unique_id=1484271492 node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 script = ExtResource("56_pbycb")
 modifyZ = true
@@ -2901,24 +2902,24 @@ partA = NodePath("Axis")
 partB = NodePath("Cap")
 debugPoint = NodePath("../../Debug2")
 
-[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/Z"]
+[node name="Axis" type="MeshInstance3D" parent="TransformGizmo/Z" unique_id=775729012]
 mesh = SubResource("CylinderMesh_w82wx")
 
-[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/Z"]
+[node name="Cap" type="MeshInstance3D" parent="TransformGizmo/Z" unique_id=1014736600]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.300186, 0)
 mesh = SubResource("CylinderMesh_pbycb")
 skeleton = NodePath("../..")
 
-[node name="Area3D" type="Area3D" parent="TransformGizmo/Z"]
+[node name="Area3D" type="Area3D" parent="TransformGizmo/Z" unique_id=1391983933]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/Z/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/Z/Area3D" unique_id=1255817120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("CylinderShape3D_w82wx")
 
-[node name="NotX" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+[node name="NotX" type="Node3D" parent="TransformGizmo" unique_id=2070007502 node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("56_pbycb")
 modifyY = true
@@ -2927,24 +2928,24 @@ partA = NodePath("Quad1")
 partB = NodePath("Quad2")
 debugPoint = NodePath("../../Debug2")
 
-[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotX"]
+[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotX" unique_id=1994856776]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
 mesh = SubResource("QuadMesh_egdbq")
 
-[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotX"]
+[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotX" unique_id=46020386]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.2, 0, 0.2)
 mesh = SubResource("QuadMesh_egdbq")
 
-[node name="Area3D" type="Area3D" parent="TransformGizmo/NotX"]
+[node name="Area3D" type="Area3D" parent="TransformGizmo/NotX" unique_id=1659575568]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotX/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotX/Area3D" unique_id=468660895]
 shape = SubResource("BoxShape3D_mtfo3")
 
-[node name="NotY" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+[node name="NotY" type="Node3D" parent="TransformGizmo" unique_id=1488753143 node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(-1, -8.74228e-08, 0, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 0, 0, 0)
 script = ExtResource("56_pbycb")
 modifyX = true
@@ -2953,24 +2954,24 @@ partA = NodePath("Quad1")
 partB = NodePath("Quad2")
 debugPoint = NodePath("../../Debug2")
 
-[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotY"]
+[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotY" unique_id=1345827972]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
 mesh = SubResource("QuadMesh_mtfo3")
 
-[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotY"]
+[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotY" unique_id=1262563291]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.2, 0, 0.2)
 mesh = SubResource("QuadMesh_mtfo3")
 
-[node name="Area3D" type="Area3D" parent="TransformGizmo/NotY"]
+[node name="Area3D" type="Area3D" parent="TransformGizmo/NotY" unique_id=2010897469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotY/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotY/Area3D" unique_id=144271803]
 shape = SubResource("BoxShape3D_mtfo3")
 
-[node name="NotZ" type="Node3D" parent="TransformGizmo" node_paths=PackedStringArray("partA", "partB", "debugPoint")]
+[node name="NotZ" type="Node3D" parent="TransformGizmo" unique_id=1430194471 node_paths=PackedStringArray("partA", "partB", "debugPoint")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("56_pbycb")
 modifyX = true
@@ -2979,24 +2980,24 @@ partA = NodePath("Quad1")
 partB = NodePath("Quad2")
 debugPoint = NodePath("../../Debug2")
 
-[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotZ"]
+[node name="Quad1" type="MeshInstance3D" parent="TransformGizmo/NotZ" unique_id=886944976]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
 mesh = SubResource("QuadMesh_8faq4")
 
-[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotZ"]
+[node name="Quad2" type="MeshInstance3D" parent="TransformGizmo/NotZ" unique_id=1571166446]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, -0.2, 0, 0.2)
 mesh = SubResource("QuadMesh_8faq4")
 
-[node name="Area3D" type="Area3D" parent="TransformGizmo/NotZ"]
+[node name="Area3D" type="Area3D" parent="TransformGizmo/NotZ" unique_id=1349483437]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0, 0.2)
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotZ/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TransformGizmo/NotZ/Area3D" unique_id=195943508]
 shape = SubResource("BoxShape3D_mtfo3")
 
-[node name="PowerFlowVis" type="Node3D" parent="."]
+[node name="PowerFlowVis" type="Node3D" parent="." unique_id=1068537487]
 script = ExtResource("97_obh6b")
 lineMaterial = SubResource("StandardMaterial3D_obh6b")
 lineGradientSuccess = SubResource("Gradient_cwlo7")
