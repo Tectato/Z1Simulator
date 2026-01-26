@@ -59,6 +59,7 @@ func setStep(value = 3):
 	gizmo.setClockStep(currentStep+1)
 
 func next(stopClock = true):
+	if Global.editor.loading: return
 	if stopClock: stop()
 	if !$Cooldown.is_stopped():
 		if stepScheduled:

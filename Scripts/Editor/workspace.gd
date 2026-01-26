@@ -12,8 +12,8 @@ const pinTravelSquared = pinTravel * pinTravel
 const staticPinRadius = 0.03
 const gridSize = 0.3
 const snapDist = 0.02
-const maxRecordingLength = 80 # 10 cycles
-const standardHistoryLength = 25
+const maxRecordingLength = 122 # 15 cycles + buffer
+const standardHistoryLength = 26 # 3 cycles
 var recording = false
 var sheetSpacing = 0.045
 signal sheetSpacingChanged

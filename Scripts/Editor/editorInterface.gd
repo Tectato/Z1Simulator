@@ -19,6 +19,7 @@ extends Control
 @onready var debugLabel = $VisibilityParent/DebugLabel
 
 const WebRootFolder = "/Machines"
+var webFoldersSet = false
 var toRename : Node
 
 func _ready() -> void:
@@ -32,14 +33,23 @@ func lateReady():
 	Global.workspace.selectabilityChanged.connect(selectabilityChanged)
 	$VisibilityParent/Toggles/ResolutionBar/Part/Selectability.cycled.connect(Global.workspace.setSelectability)
 	resolutionChanged(Workspace.Resolution.Part)
+
+func webSetup():
+	if OS.get_name() != "Web": return
+	if webFoldersSet: return
+	saveDialog.root_subfolder = WebRootFolder
+	loadProjectDialog.root_subfolder = WebRootFolder
+	importProjectDialog.root_subfolder = WebRootFolder
+	importSheetDialog.root_subfolder = WebRootFolder
 	
-	if OS.get_name() == "Web":
-		saveDialog.root_subfolder = WebRootFolder
-		loadProjectDialog.root_subfolder = WebRootFolder
-		importProjectDialog.root_subfolder = WebRootFolder
-		importSheetDialog.root_subfolder = WebRootFolder
-		
-		$VisibilityParent/MenuBar/Edit.set_item_disabled(2, true)
+	saveDialog.current_dir = WebRootFolder
+	loadProjectDialog.current_dir = WebRootFolder
+	importProjectDialog.current_dir = WebRootFolder
+	importSheetDialog.current_dir = WebRootFolder
+	
+	$VisibilityParent/MenuBar/Edit.set_item_disabled(2, true)
+	$VisibilityParent/Toggles/EditLock.button_pressed = true
+	webFoldersSet = true
 
 func _input(event: InputEvent) -> void:
 	if !event.is_echo():
@@ -121,7 +131,7 @@ func _on_edit_id_pressed(id: int) -> void:
 				Global.workspace.startRecording()
 			else:
 				Global.workspace.stopRecording()
-			$MenuBar/Edit.set_item_text(2, "Start recording" if !Global.workspace.recording else "Stop recording")
+			$VisibilityParent/MenuBar/Edit.set_item_text(2, "Start recording" if !Global.workspace.recording else "Stop recording")
 
 func requestSheet():
 	importSheetDialog.popup()

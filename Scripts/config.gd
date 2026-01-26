@@ -4,7 +4,7 @@ var configPath = "user://Z1SimConfig.json"
 
 var values = {
 	"tutorial_completed" : false,
-	"default_scene" : "/Machines/Adder/Adder.json"
+	"default_scene" : "Machines/Adder/Adder.json"
 }
 
 func loadConfig():
@@ -20,6 +20,7 @@ func loadConfig():
 		if config:
 			for key in config.keys():
 				values[key] = config[key]
+		#Global.editor.interface.debugLabel.text = "Loaded config. Content:\n" + FileAccess.get_file_as_string(configPath)
 	#else:
 		#Global.editor.interface.debugLabel.text = "Could not find config"
 	

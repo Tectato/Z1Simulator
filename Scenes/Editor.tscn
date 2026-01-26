@@ -708,7 +708,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Orbit" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -719,7 +719,7 @@ autowrap_mode = 2
 [node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label2" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Move view" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -730,7 +730,7 @@ autowrap_mode = 2
 [node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label5" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Select & move" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -741,7 +741,7 @@ autowrap_mode = 2
 [node name="HSeparator6" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label6" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Right click" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -754,7 +754,7 @@ autowrap_mode = 2
 [node name="HSeparator7" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Zoom" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -765,7 +765,7 @@ autowrap_mode = 2
 [node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label4" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Side window" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -776,45 +776,45 @@ autowrap_mode = 2
 [node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Clock controls" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls"]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control"]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("15_jnb0j")
 
-[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control2" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control2"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control2"]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("18_m0sft")
 
-[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control3" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer/Control3"]
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer/Control3"]
 texture_filter = 1
 position = Vector2(16, 16)
 texture = ExtResource("21_pswvd")
 
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls/HBoxContainer"]
 layout_mode = 2
 text = "Clock controls"
 label_settings = SubResource("LabelSettings_u1ej8")
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/VBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer/Clock controls"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -825,7 +825,7 @@ autowrap_mode = 2
 [node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label7" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
+[node name="Orth view" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Navigation/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1651,6 +1651,26 @@ layout_mode = 2
 bbcode_enabled = true
 text = "Interface for defining sequences of [color=D9FF00]input clock pin[/color] activations. Click the [b]+[/b] button to add a new sequence. Selecing an [color=D9FF00]input clock pin[/color] makes an entry for it appear, with checkboxes to define which cycle it should activate in.
 Click the play button next to the sequence's name to start it. (Clock steps are still controlled via normal means)"
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+layout_mode = 2
+
+[node name="Values" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Values"]
+layout_mode = 2
+text = "Values"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Values"]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "Shows groups of [color=00FFFF]output pins[/color] as values in decimal and binary. Both representations can be edited and the other and corresponding [color=00FFFF]pins[/color] will reflect the change.
+To create an entry, select the desired [color=00FFFF]output pins[/color] in the 3D scene from least significant bit to highest while holding shift, then press the [b]+[/b] button."
 fit_content = true
 autowrap_mode = 2
 
@@ -2763,6 +2783,7 @@ texture_pressed = ExtResource("131_m3vij")
 texture_hover = ExtResource("132_h6sg5")
 
 [node name="FocusPoint" type="Node3D" parent="."]
+visible = false
 
 [node name="center" type="MeshInstance3D" parent="FocusPoint"]
 visible = false

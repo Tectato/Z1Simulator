@@ -1,13 +1,51 @@
-[gd_scene load_steps=7 format=3 uid="uid://sbi6ilpar4vc"]
+[gd_scene load_steps=17 format=3 uid="uid://sbi6ilpar4vc"]
 
 [ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
 [ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
 [ext_resource type="Environment" uid="uid://dk7y0ukitmi7n" path="res://Assets/LowQEnv.tres" id="3_jtmtj"]
 [ext_resource type="PackedScene" uid="uid://b6256ek8c667t" path="res://Scenes/UUIDManager.tscn" id="4_me6lg"]
+[ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="6_fpxkw"]
 [ext_resource type="Texture2D" uid="uid://djqys18a08smf" path="res://Sprites/arrow.png" id="6_lxv6g"]
+[ext_resource type="Script" uid="uid://l2hka2qi4ps4" path="res://Scripts/Editor/shaderPrep.gd" id="6_w0wfr"]
+[ext_resource type="Shader" uid="uid://bi2w6t8vmi1w0" path="res://Shaders/SheetBasic.gdshader" id="7_lxv6g"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_jtmtj"]
 viewport_path = NodePath("AxesViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lxv6g"]
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(1, 0.5137255, 0, 0.36078432)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jtmtj"]
+material = SubResource("StandardMaterial3D_lxv6g")
+size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w0wfr"]
+material = ExtResource("6_fpxkw")
+size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w0wfr"]
+render_priority = 0
+shader = ExtResource("7_lxv6g")
+shader_parameter/thickness = 0.02
+
+[sub_resource type="BoxMesh" id="BoxMesh_puuh0"]
+material = SubResource("ShaderMaterial_w0wfr")
+size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_puuh0"]
+render_priority = 50
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 0.8745098)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rrjwu"]
+material = SubResource("StandardMaterial3D_puuh0")
+size = Vector3(0.05, 0.05, 0.05)
 
 [node name="Workspace" type="Node3D"]
 script = ExtResource("1_lxv6g")
@@ -71,3 +109,23 @@ rotation = 1.5708
 texture = ExtResource("6_lxv6g")
 
 [node name="UUIDManager" parent="." instance=ExtResource("4_me6lg")]
+
+[node name="ShaderPrep" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35878378, 0)
+visible = false
+script = ExtResource("6_w0wfr")
+
+[node name="PinHighlight" type="MeshInstance3D" parent="ShaderPrep"]
+mesh = SubResource("BoxMesh_jtmtj")
+
+[node name="SheetMetallic" type="MeshInstance3D" parent="ShaderPrep"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13501018, 0, 0)
+mesh = SubResource("BoxMesh_w0wfr")
+
+[node name="SheetHighlight" type="MeshInstance3D" parent="ShaderPrep"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28247687, 0, 0)
+mesh = SubResource("BoxMesh_puuh0")
+
+[node name="PowerFlow" type="MeshInstance3D" parent="ShaderPrep"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43804374, 0, 0)
+mesh = SubResource("BoxMesh_rrjwu")
