@@ -490,9 +490,11 @@ func nudge():
 			dirN = Vector2(0,-1)*Workspace.pinTravel * flipOrder
 		if canMove(dirP, self, []):
 			move(dirP, self, [])
+			Simulator.sheetAudioHandler.playSingle()
 			return
 		if canMove(dirN, self, []):
 			move(dirN, self, [])
+			Simulator.sheetAudioHandler.playSingle()
 			return
 	pass
 

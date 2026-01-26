@@ -22,6 +22,8 @@ signal moveSpeedChanged
 var saveDiff = true
 var comments = []
 var brassMode = false
+var maxVolume = 1.0
+signal volumeChanged(newVal)
 
 @onready var uuidManager = $UUIDManager
 
@@ -118,6 +120,11 @@ func set3DUIVis(newVis):
 	if newVis != show3DUI:
 		show3DUI = newVis
 		worldUIVisChanged.emit(newVis)
+
+func setVolume(newVal):
+	if newVal != maxVolume:
+		maxVolume = newVal
+		volumeChanged.emit(newVal)
 
 func clear():
 	uuidManager.clear()
