@@ -1,4 +1,4 @@
-[gd_resource type="Environment" load_steps=4 format=3 uid="uid://dk7y0ukitmi7n"]
+[gd_resource type="Environment" format=3 uid="uid://dk7y0ukitmi7n"]
 
 [ext_resource type="Texture2D" uid="uid://cx2xqv8oxwq2m" path="res://Sprites/Environment/aircraft_workshop_01_4k.exr" id="1_e6qwa"]
 

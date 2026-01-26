@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://cocxpgshc4gnj"]
+[gd_scene format=3 uid="uid://cocxpgshc4gnj"]
 
 [ext_resource type="Script" uid="uid://ddrowubkywssq" path="res://Scripts/Editor/PlanInterface/planInterface.gd" id="1_kik28"]
 [ext_resource type="Texture2D" uid="uid://x2lcxptdunwi" path="res://Sprites/Buttons/PlanInterface/selector.png" id="1_mlyfr"]
@@ -51,14 +51,14 @@ events = [SubResource("InputEventKey_y6pxa")]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_reknm"]
 
-[node name="PlanInterface" type="Control"]
+[node name="PlanInterface" type="Control" unique_id=553118305]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 300.0
 offset_bottom = 300.0
 script = ExtResource("1_kik28")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=2090063999]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -67,22 +67,22 @@ grow_horizontal = 2
 grow_vertical = 2
 stretch = true
 
-[node name="2DView" type="SubViewport" parent="SubViewportContainer"]
+[node name="2DView" type="SubViewport" parent="SubViewportContainer" unique_id=1202297061]
 handle_input_locally = false
 size = Vector2i(300, 300)
 render_target_update_mode = 4
 
-[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/2DView" node_paths=PackedStringArray("planInterface", "currentPlanSprite", "defaultSprite")]
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/2DView" unique_id=1269225171 node_paths=PackedStringArray("planInterface", "currentPlanSprite", "defaultSprite")]
 script = ExtResource("8_8flaj")
 planInterface = NodePath("../../..")
 currentPlanSprite = NodePath("../Sprite2D")
 defaultSprite = NodePath("../Sprite2D")
 
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/2DView"]
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/2DView" unique_id=39581397]
 texture_filter = 1
 texture = ExtResource("3_ixu5w")
 
-[node name="NonUIInteractionArea" type="Control" parent="."]
+[node name="NonUIInteractionArea" type="Control" parent="." unique_id=815529120]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,7 +91,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_o8jo1")
 
-[node name="ToolButtons" type="VBoxContainer" parent="."]
+[node name="ToolButtons" type="VBoxContainer" parent="." unique_id=1733845031]
 z_index = 2
 layout_mode = 0
 anchor_top = 0.5
@@ -101,7 +101,7 @@ offset_right = 32.0
 offset_bottom = 34.0
 grow_vertical = 2
 
-[node name="Selector" type="TextureButton" parent="ToolButtons"]
+[node name="Selector" type="TextureButton" parent="ToolButtons" unique_id=911520991]
 texture_filter = 1
 layout_mode = 2
 toggle_mode = true
@@ -112,7 +112,7 @@ texture_normal = ExtResource("1_mlyfr")
 texture_pressed = ExtResource("2_kik28")
 texture_hover = ExtResource("3_o6mp8")
 
-[node name="Editor" type="TextureButton" parent="ToolButtons"]
+[node name="Editor" type="TextureButton" parent="ToolButtons" unique_id=1753744255]
 texture_filter = 1
 layout_mode = 2
 toggle_mode = true
@@ -122,7 +122,7 @@ texture_normal = ExtResource("4_8flaj")
 texture_pressed = ExtResource("5_4hopk")
 texture_hover = ExtResource("6_w6ukv")
 
-[node name="Elements" type="HBoxContainer" parent="."]
+[node name="Elements" type="HBoxContainer" parent="." unique_id=1164234668]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -134,7 +134,7 @@ grow_horizontal = 2
 scale = Vector2(2, 2)
 theme_override_constants/separation = 1
 
-[node name="Line" type="TextureButton" parent="Elements"]
+[node name="Line" type="TextureButton" parent="Elements" unique_id=1435247283]
 texture_filter = 1
 layout_mode = 2
 tooltip_text = "Line"
@@ -145,7 +145,7 @@ texture_normal = ExtResource("10_6beup")
 texture_pressed = ExtResource("11_ibd3a")
 texture_hover = ExtResource("12_tl25v")
 
-[node name="Rectangle" type="TextureButton" parent="Elements"]
+[node name="Rectangle" type="TextureButton" parent="Elements" unique_id=1228241343]
 texture_filter = 1
 layout_mode = 2
 tooltip_text = "Rectangle"
@@ -155,7 +155,7 @@ texture_normal = ExtResource("13_reknm")
 texture_pressed = ExtResource("14_igf7w")
 texture_hover = ExtResource("15_l0c6k")
 
-[node name="Circle" type="TextureButton" parent="Elements"]
+[node name="Circle" type="TextureButton" parent="Elements" unique_id=1998536636]
 texture_filter = 1
 layout_mode = 2
 tooltip_text = "Circle"
@@ -165,7 +165,7 @@ texture_normal = ExtResource("16_o8jo1")
 texture_pressed = ExtResource("17_pasjj")
 texture_hover = ExtResource("18_wodlt")
 
-[node name="StateIndicator" type="TextureButton" parent="Elements"]
+[node name="StateIndicator" type="TextureButton" parent="Elements" unique_id=902093255]
 texture_filter = 1
 layout_mode = 2
 tooltip_text = "State Indicator"
@@ -175,18 +175,18 @@ texture_normal = ExtResource("20_vqsom")
 texture_pressed = ExtResource("21_kyo7v")
 texture_hover = ExtResource("22_tnj58")
 
-[node name="Tools" type="Node2D" parent="."]
+[node name="Tools" type="Node2D" parent="." unique_id=71462102]
 
-[node name="Selector" type="Node2D" parent="Tools" node_paths=PackedStringArray("linkButton", "unlinkButton", "colorPicker")]
+[node name="Selector" type="Node2D" parent="Tools" unique_id=572931266 node_paths=PackedStringArray("linkButton", "unlinkButton", "colorPicker")]
 script = ExtResource("19_l0c6k")
 linkButton = NodePath("../../Link")
 unlinkButton = NodePath("../../Unlink")
 colorPicker = NodePath("../../ColorPicker")
 
-[node name="Editor" type="Node2D" parent="Tools"]
+[node name="Editor" type="Node2D" parent="Tools" unique_id=691940225]
 script = ExtResource("20_o8jo1")
 
-[node name="Link" type="TextureButton" parent="."]
+[node name="Link" type="TextureButton" parent="." unique_id=657304693]
 visible = false
 texture_filter = 1
 layout_mode = 1
@@ -197,7 +197,7 @@ texture_normal = ExtResource("22_le1aj")
 texture_pressed = ExtResource("23_p5888")
 texture_hover = ExtResource("24_wbcty")
 
-[node name="Unlink" type="TextureButton" parent="."]
+[node name="Unlink" type="TextureButton" parent="." unique_id=664033048]
 visible = false
 texture_filter = 1
 layout_mode = 1
@@ -208,7 +208,7 @@ texture_normal = ExtResource("25_ixu5w")
 texture_pressed = ExtResource("26_8f2kt")
 texture_hover = ExtResource("27_y6pxa")
 
-[node name="PartID" type="Label" parent="Unlink"]
+[node name="PartID" type="Label" parent="Unlink" unique_id=1663867194]
 z_index = 1
 layout_mode = 1
 anchors_preset = 4
@@ -221,7 +221,7 @@ offset_bottom = 12.0
 grow_vertical = 2
 text = "Part ID"
 
-[node name="ColorRect" type="ColorRect" parent="Unlink/PartID"]
+[node name="ColorRect" type="ColorRect" parent="Unlink/PartID" unique_id=1774268852]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -231,7 +231,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.490196)
 
-[node name="ColorPicker" type="ColorPicker" parent="."]
+[node name="ColorPicker" type="ColorPicker" parent="." unique_id=902117555]
 visible = false
 z_index = 1
 layout_mode = 0
@@ -241,7 +241,7 @@ edit_alpha = false
 can_add_swatches = false
 presets_visible = false
 
-[node name="ReplacePlanPopup" type="ConfirmationDialog" parent="."]
+[node name="ReplacePlanPopup" type="ConfirmationDialog" parent="." unique_id=1312787895]
 initial_position = 1
 dialog_text = "Replace current plan?"
 

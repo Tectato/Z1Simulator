@@ -38,5 +38,6 @@ func step():
 	setA = !setA
 
 func playSingle():
+	setVolume(0.1)
 	players[0].stream = steps.pick_random()
 	players[0].play()

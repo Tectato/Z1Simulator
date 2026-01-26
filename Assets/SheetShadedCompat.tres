@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://01c4w4t3fels"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://01c4w4t3fels"]
 
 [ext_resource type="Shader" uid="uid://do1e3mk50epxh" path="res://Shaders/SheetMesh/CompatBevelMetallic.gdshader" id="1_16qq5"]
 [ext_resource type="Shader" uid="uid://elyt8nlbykvd" path="res://Shaders/NormalToAlbedo.gdshader" id="2_rcwep"]
