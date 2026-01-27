@@ -27,7 +27,7 @@ shader_parameter/thickness = 0.02
 [sub_resource type="BoxMesh" id="BoxMesh_puuh0"]
 size = Vector3(0.05, 0.05, 0.05)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k50x4"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f7yrp"]
 resource_local_to_scene = true
 render_priority = 4
 shader = ExtResource("11_ruixb")
@@ -133,7 +133,7 @@ script = null
 
 [node name="Sprite3D" parent="ShaderPrep/Sheet" index="0"]
 visible = true
-material_overlay = SubResource("ShaderMaterial_k50x4")
+material_overlay = SubResource("ShaderMaterial_f7yrp")
 
 [node name="PowerFlow" type="MeshInstance3D" parent="ShaderPrep" unique_id=285898234]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43804374, 0, 0)

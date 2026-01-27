@@ -100,6 +100,15 @@ func _process(_delta: float) -> void:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if clicking and dist > 5:
 				dragging = true
+				var soundsPlayed = 0
+				for thing in selected:
+					if thing is Pin:
+						Simulator.partAudioHandler.pick(true)
+						soundsPlayed |= 1
+					if thing is Sheet:
+						Simulator.partAudioHandler.pick(false)
+						soundsPlayed |= 2
+					if soundsPlayed > 2: break
 		if (dragging or placing) and not selected[0] is Layer and canModify():
 			mover.move()
 	if !selected.is_empty() and !focusElsewhere:

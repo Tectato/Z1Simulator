@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://60irrhkktdme"]
+[gd_scene format=3 uid="uid://60irrhkktdme"]
 
 [ext_resource type="Script" uid="uid://x4dr53ahdfyj" path="res://Scripts/Simulation/simulator.gd" id="1_qmcj1"]
 [ext_resource type="Script" uid="uid://bvmhjmv0er54y" path="res://Scripts/Audio/randomizedAudioHandler.gd" id="2_5e3sm"]
@@ -19,6 +19,14 @@
 [ext_resource type="AudioStream" uid="uid://c4bhbi81h38f" path="res://Audio/Mechanical/slide/slide_single_v6_5.wav" id="17_6oy5x"]
 [ext_resource type="AudioStream" uid="uid://d1rj6en1js27b" path="res://Audio/Mechanical/slide/slide_single_v6_6.wav" id="18_1sspr"]
 [ext_resource type="AudioStream" uid="uid://wts0gwmrmfqm" path="res://Audio/Mechanical/slide/slide_single_v6_7.wav" id="19_cab6e"]
+[ext_resource type="Script" uid="uid://du4shovjcbuve" path="res://Scripts/Audio/partAudioHandler.gd" id="20_4cdfv"]
+[ext_resource type="AudioStream" uid="uid://ck7tt5p4vbqhg" path="res://Audio/Mechanical/handle/pick_0.wav" id="21_e4t5r"]
+[ext_resource type="AudioStream" uid="uid://ddl77n3ehokyv" path="res://Audio/Mechanical/handle/pick_1.wav" id="22_le4m1"]
+[ext_resource type="AudioStream" uid="uid://dx2vb7ike02cn" path="res://Audio/Mechanical/handle/pick_2.wav" id="23_vwkio"]
+[ext_resource type="AudioStream" uid="uid://c7jjp6plk7vsv" path="res://Audio/Mechanical/handle/place_0.wav" id="24_nwhrd"]
+[ext_resource type="AudioStream" uid="uid://dgyy04fabjahp" path="res://Audio/Mechanical/handle/place_1.wav" id="25_bon0l"]
+[ext_resource type="AudioStream" uid="uid://b10m88ugnuxig" path="res://Audio/Mechanical/handle/place_2.wav" id="26_6i37c"]
+[ext_resource type="AudioStream" uid="uid://dn355bmrysdpr" path="res://Audio/Mechanical/handle/place_3.wav" id="27_t5qoe"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_xqohv"]
 playback_mode = 1
@@ -66,52 +74,76 @@ stream_1/stream = ExtResource("17_6oy5x")
 stream_2/stream = ExtResource("18_1sspr")
 stream_3/stream = ExtResource("19_cab6e")
 
-[node name="Simulator" type="Node"]
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_btb0j"]
+streams_count = 3
+stream_0/stream = ExtResource("21_e4t5r")
+stream_1/stream = ExtResource("22_le4m1")
+stream_2/stream = ExtResource("23_vwkio")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_wbhrm"]
+streams_count = 4
+stream_0/stream = ExtResource("24_nwhrd")
+stream_1/stream = ExtResource("25_bon0l")
+stream_2/stream = ExtResource("26_6i37c")
+stream_3/stream = ExtResource("27_t5qoe")
+
+[node name="Simulator" type="Node" unique_id=363927135]
 script = ExtResource("1_qmcj1")
 
-[node name="AutoClock" type="Timer" parent="."]
+[node name="AutoClock" type="Timer" parent="." unique_id=569703211]
 
-[node name="Cooldown" type="Timer" parent="."]
+[node name="Cooldown" type="Timer" parent="." unique_id=36392888]
 wait_time = 0.2
 one_shot = true
 
-[node name="MoveComplete" type="Timer" parent="."]
+[node name="MoveComplete" type="Timer" parent="." unique_id=320871119]
 one_shot = true
 
-[node name="PulsingReset" type="Timer" parent="."]
+[node name="PulsingReset" type="Timer" parent="." unique_id=861367045]
 wait_time = 0.05
 one_shot = true
 
-[node name="CrankAudioHandler" type="AudioStreamPlayer" parent="."]
+[node name="CrankAudioHandler" type="AudioStreamPlayer" parent="." unique_id=428581104]
 volume_db = -13.248
 max_polyphony = 4
 bus = &"Crank"
 script = ExtResource("2_5e3sm")
 steps = Array[AudioStream]([SubResource("AudioStreamRandomizer_xqohv"), SubResource("AudioStreamRandomizer_s1xeu"), SubResource("AudioStreamRandomizer_4pfi2"), SubResource("AudioStreamRandomizer_bnoss")])
 
-[node name="PlayerA" type="AudioStreamPlayer" parent="CrankAudioHandler"]
+[node name="PlayerA" type="AudioStreamPlayer" parent="CrankAudioHandler" unique_id=340099577]
 
-[node name="PlayerB" type="AudioStreamPlayer" parent="CrankAudioHandler"]
+[node name="PlayerB" type="AudioStreamPlayer" parent="CrankAudioHandler" unique_id=1671079653]
 
-[node name="SheetAudioHandler" type="AudioStreamPlayer" parent="."]
+[node name="SheetAudioHandler" type="AudioStreamPlayer" parent="." unique_id=1539572598]
 script = ExtResource("11_jxq17")
 steps = Array[AudioStream]([SubResource("AudioStreamRandomizer_4cdfv"), SubResource("AudioStreamRandomizer_niw6a"), SubResource("AudioStreamRandomizer_4cdfv"), SubResource("AudioStreamRandomizer_niw6a")])
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="SheetAudioHandler"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="SheetAudioHandler" unique_id=94076524]
 max_polyphony = 2
 bus = &"SheetSlide"
 
-[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="SheetAudioHandler"]
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="SheetAudioHandler" unique_id=763841172]
 max_polyphony = 2
 bus = &"SheetSlide"
 
-[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="SheetAudioHandler"]
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="SheetAudioHandler" unique_id=608620786]
 max_polyphony = 2
 bus = &"SheetSlide"
 
-[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="SheetAudioHandler"]
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="SheetAudioHandler" unique_id=279157441]
 max_polyphony = 2
 bus = &"SheetSlide"
+
+[node name="PartAudioHandler" type="Node" parent="." unique_id=339794101 node_paths=PackedStringArray("pickPlayer", "placePlayer")]
+script = ExtResource("20_4cdfv")
+pickPlayer = NodePath("Pick")
+placePlayer = NodePath("Place")
+
+[node name="Pick" type="AudioStreamPlayer" parent="PartAudioHandler" unique_id=1907216518]
+stream = SubResource("AudioStreamRandomizer_btb0j")
+
+[node name="Place" type="AudioStreamPlayer" parent="PartAudioHandler" unique_id=504386399]
+stream = SubResource("AudioStreamRandomizer_wbhrm")
 
 [connection signal="timeout" from="AutoClock" to="." method="_on_auto_clock_timeout"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]

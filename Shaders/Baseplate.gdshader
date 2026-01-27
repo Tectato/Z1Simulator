@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode depth_prepass_alpha;
+//render_mode depth_prepass_alpha;
 
 uniform sampler2D albedo : source_color, filter_nearest;
 const float scale = 3.333;

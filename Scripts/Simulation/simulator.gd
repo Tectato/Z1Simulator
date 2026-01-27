@@ -5,6 +5,7 @@ enum Direction {XP, YP, XN, YN}
 
 @export var showRotationIndicators = false
 @onready var sheetAudioHandler = $SheetAudioHandler
+@onready var partAudioHandler = $PartAudioHandler
 
 var currentStep = 3
 var totalStep = 3

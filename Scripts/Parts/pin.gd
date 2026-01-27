@@ -295,6 +295,8 @@ func place():
 		machine.gridLibrary.requestUpdate(self)
 	if global:
 		setHeight(0.1)
+	if !Global.editor.loading:
+		Simulator.partAudioHandler.place(true)
 
 func updateInstance():
 	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)

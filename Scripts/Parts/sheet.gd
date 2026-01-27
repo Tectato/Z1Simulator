@@ -647,6 +647,8 @@ func place():
 	if holes.is_empty():
 		await get_tree().process_frame
 	super.place()
+	if !Global.editor.loading:
+		Simulator.partAudioHandler.place(false)
 	call_deferred("updateConstraints")
 	#if !path.is_empty():
 		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)

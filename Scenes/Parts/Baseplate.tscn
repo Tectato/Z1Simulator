@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3mp481i5xfq"]
+[gd_scene format=3 uid="uid://b3mp481i5xfq"]
 
 [ext_resource type="Script" uid="uid://b3soq26vwpgto" path="res://Scripts/Editor/baseplate.gd" id="1_3p2xn"]
 [ext_resource type="Shader" uid="uid://b6laiy3d8ygyk" path="res://Shaders/Baseplate.gdshader" id="1_83lyt"]
@@ -17,19 +17,19 @@ size = Vector2(8, 8)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ax0fx"]
 size = Vector3(1, 0.1, 1)
 
-[node name="Baseplate" type="Node3D"]
+[node name="Baseplate" type="Node3D" unique_id=2067660797]
 script = ExtResource("1_3p2xn")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=758005601]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
 material_override = SubResource("ShaderMaterial_3p2xn")
 mesh = SubResource("PlaneMesh_frs87")
 
-[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
+[node name="Area3D" type="Area3D" parent="MeshInstance3D" unique_id=566743125]
 collision_layer = 4
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D" unique_id=645561287]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
 shape = SubResource("BoxShape3D_ax0fx")
