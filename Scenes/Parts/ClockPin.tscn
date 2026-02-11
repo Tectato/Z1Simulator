@@ -1,9 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://crobnroqc51y8"]
+[gd_scene format=3 uid="uid://crobnroqc51y8"]
 
 [ext_resource type="Script" uid="uid://dsreet8ioxm0c" path="res://Scripts/Parts/clockPin.gd" id="1_pegep"]
 [ext_resource type="FontFile" uid="uid://c6hv3oj38le0" path="res://Fonts/DigitalPixel-Regular.otf" id="3_1a2dp"]
 [ext_resource type="PackedScene" uid="uid://b1kecxje78rsi" path="res://Scenes/Parts/ClockPinTravelIndicator.tscn" id="3_r5mnu"]
-[ext_resource type="FontFile" uid="uid://kj26sylm4dpl" path="res://Fonts/m5x7.ttf" id="4_r5mnu"]
 [ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="4_rcjpo"]
 [ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="6_vjs7e"]
 [ext_resource type="Script" uid="uid://yk8dkrm1xab" path="res://Scripts/Editor/3DUI/checkbox3D.gd" id="7_fc7u5"]
@@ -67,29 +66,29 @@ animations = [{
 height = 0.1
 radius = 0.02
 
-[node name="ClockPin" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
+[node name="ClockPin" type="Node3D" unique_id=975049629 node_paths=PackedStringArray("collider", "mesh")]
 script = ExtResource("1_pegep")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 
-[node name="Highlight" type="MeshInstance3D" parent="."]
+[node name="Highlight" type="MeshInstance3D" parent="." unique_id=188523162]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 visible = false
 material_overlay = SubResource("StandardMaterial3D_fc7u5")
 mesh = SubResource("CylinderMesh_vinw1")
 skeleton = NodePath("../MeshInstance3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1919908814]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_1a2dp")
 mesh = SubResource("CylinderMesh_vjs7e")
 
-[node name="ClockPinTravelIndicator" parent="." instance=ExtResource("3_r5mnu")]
+[node name="ClockPinTravelIndicator" parent="." unique_id=174717611 instance=ExtResource("3_r5mnu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.001, 0.001, 0.032)
 alpha_cut = 1
 
-[node name="StepLabel" type="Label3D" parent="."]
+[node name="StepLabel" type="Label3D" parent="." unique_id=252175799]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
 sorting_offset = 1.0
 double_sided = false
@@ -99,28 +98,28 @@ font = ExtResource("3_1a2dp")
 font_size = 10
 script = ExtResource("4_rcjpo")
 
-[node name="InputCheckbox" type="Node3D" parent="StepLabel"]
+[node name="InputCheckbox" type="Node3D" parent="StepLabel" unique_id=1063962137]
 visible = false
 script = ExtResource("7_fc7u5")
 rightClickable = true
 
-[node name="IDLabel" type="Label3D" parent="StepLabel/InputCheckbox"]
+[node name="IDLabel" type="Label3D" parent="StepLabel/InputCheckbox" unique_id=1527625030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33411968, 0)
 sorting_offset = 1.0
 double_sided = false
 alpha_cut = 1
-font = ExtResource("4_r5mnu")
+font_size = 24
 
-[node name="Area3D" type="Area3D" parent="StepLabel/InputCheckbox"]
+[node name="Area3D" type="Area3D" parent="StepLabel/InputCheckbox" unique_id=742387711]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StepLabel/InputCheckbox/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StepLabel/InputCheckbox/Area3D" unique_id=1111376999]
 shape = SubResource("SphereShape3D_1a2dp")
 
-[node name="Sprite" type="AnimatedSprite3D" parent="StepLabel/InputCheckbox"]
+[node name="Sprite" type="AnimatedSprite3D" parent="StepLabel/InputCheckbox" unique_id=226039291]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.160205, 0)
 sorting_offset = 1.0
 billboard = 1
@@ -131,7 +130,7 @@ sprite_frames = SubResource("SpriteFrames_vinw1")
 animation = &"false"
 autoplay = "false"
 
-[node name="Lock" type="Sprite3D" parent="StepLabel/InputCheckbox"]
+[node name="Lock" type="Sprite3D" parent="StepLabel/InputCheckbox" unique_id=492330044]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0.007)
 visible = false
 sorting_offset = 1.0
@@ -140,12 +139,12 @@ alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("8_1a2dp")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=92209534]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=626628020]
 shape = SubResource("CylinderShape3D_fc7u5")
 
 [connection signal="toggled" from="StepLabel/InputCheckbox" to="." method="inputCheckboxToggled"]

@@ -504,4 +504,4 @@ func visibilityChanged():
 	if is_visible_in_tree():
 		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
 	else:
-		PinRenderHandler.setTransform("pin", meshIndex, Transform3D(Basis(Quaternion(0,0,0,0)),Vector3.ZERO))
+		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform.scaled(Vector3.ZERO))

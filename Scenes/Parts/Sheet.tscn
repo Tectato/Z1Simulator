@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b2845uayksbce"]
+[gd_scene format=3 uid="uid://b2845uayksbce"]
 
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="2_k6d36"]
 [ext_resource type="Shader" uid="uid://bi2w6t8vmi1w0" path="res://Shaders/SheetBasic.gdshader" id="2_wkhiy"]
@@ -13,12 +13,12 @@ shader_parameter/thickness = 0.02
 
 [sub_resource type="PlaceholderMesh" id="PlaceholderMesh_wkhiy"]
 
-[node name="Sheet" type="Node3D" node_paths=PackedStringArray("debugPoint", "collider")]
+[node name="Sheet" type="Node3D" unique_id=1093484506 node_paths=PackedStringArray("debugPoint", "collider")]
 script = ExtResource("3_k6d36")
 debugPoint = NodePath("MeshInstance3D")
 collider = NodePath("Outline")
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=248117127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.351, 0.001, 0.246)
 visible = false
 material_override = SubResource("ShaderMaterial_4tf48")
@@ -28,16 +28,16 @@ pixel_size = 0.001
 axis = 1
 texture = ExtResource("2_k6d36")
 
-[node name="Outline" type="Area3D" parent="."]
+[node name="Outline" type="Area3D" parent="." unique_id=746080616]
 collision_mask = 0
 monitoring = false
 
-[node name="Polygon" type="CollisionPolygon3D" parent="Outline"]
+[node name="Polygon" type="CollisionPolygon3D" parent="Outline" unique_id=1282312100]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
 depth = 0.05
 polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=605997075]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("PlaceholderMesh_wkhiy")
 script = ExtResource("8_wkhiy")

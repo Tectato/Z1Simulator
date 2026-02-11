@@ -36,7 +36,6 @@ var rotSpeed = 2.0
 var rotHistory = []
 var forces = {}
 var movedPins = {}
-#var linearConstraints = {} # TODO
 var partOffset : Vector2
 var midPoint : Vector3
 var bounds = []
@@ -104,14 +103,6 @@ func deserialize(source : Dictionary):
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
-	#if source.has("relations"):
-		#for dict in source["relations"]:
-			#match(dict["type"]):
-				#"link":
-					#var other = dict["A"]
-					#if other == self:
-						#other = dict["B"]
-					#addRelation(Relation.Type.Link, other)
 	if bounds.is_empty():
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	place()
@@ -201,11 +192,6 @@ func setFixed(value, _propagate = true):
 		mesh.updateMaterial()
 		visible = Global.workspace.showStaticSheets
 		visibilityChanged()
-		#mesh.set_instance_shader_parameter("fixed", value)
-		#if propagate:
-			#for hole in pinCandidates:
-				#for pin in pinCandidates[hole]:
-					#pin.updateConstraints()
 
 func visModeChanged(mode : Editor.VisMode):
 	mesh.visModeChanged(mode)
@@ -226,28 +212,11 @@ func updateConstraints():
 					if fixedPoints > 1:
 						setFixed(true)
 						return
-		#if hole is LongHole:
-			#for pin in pinCandidates[hole]:
-				#var newRelation = addRelation(Relation.Type.LinearConstraint, pin)
-				#if newRelation:
-					#newRelation.dir = hole.getGlobalDir()
 	if heightIndex == 0:
 		setFixed(true)
 	for relation in relations:
 		if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
 			relation.call_deferred("delete")
-	#var canMoveXP = checkMove(Vector2(1,0) * Global.workspace.pinTravel,self)
-	#var canMoveXN = checkMove(Vector2(-1,0) * Global.workspace.pinTravel,self)
-	#var canMoveYP = checkMove(Vector2(0,1) * Global.workspace.pinTravel,self)
-	#var canMoveYN = checkMove(Vector2(0,-1) * Global.workspace.pinTravel,self)
-	#if !canMoveXP and !canMoveXN:
-		#var newRelation = addRelation(Relation.Type.LinearConstraint, getMachine().frame)
-		#if newRelation:
-			#newRelation.dir = Vector2(1,0)
-	#if !canMoveYP and !canMoveYN:
-		#var newRelation = addRelation(Relation.Type.LinearConstraint, getMachine().frame)
-		#if newRelation:
-			#newRelation.dir = Vector2(0,1)
 	
 
 func getBounds():
@@ -279,20 +248,7 @@ func loadSVG(filepath : String):
 			updateBakedMesh()
 		#return
 	else:
-		if path.ends_with(".import"):
-			var imageTemp = Image.new()
-			if ResourceLoader.exists(path.rstrip(".import")):
-				print("Resource exists")
-			else:
-				print("Resource does not exist")
-			var resource = ResourceLoader.load(path.rstrip(".import"), "Image")
-			if !resource:
-				print("Failed to load " + path)
-			else:
-				#imageTemp = resource
-				image = resource#ImageTexture.create_from_image(imageTemp)
-		else:
-			image = ImageTexture.create_from_image(Image.load_from_file(path))
+		image = ImageTexture.create_from_image(Image.load_from_file(path))
 	sprite.set_texture(image)
 	#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
@@ -1116,7 +1072,7 @@ func visibilityChanged():
 	if is_visible_in_tree():
 		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 	else:
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, Transform3D(Basis(Quaternion(0,0,0,0)),Vector3.ZERO))
+		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform.scaled(Vector3.ZERO))
 
 func staticSheetVisChanged(newVis):
 	if fixed:

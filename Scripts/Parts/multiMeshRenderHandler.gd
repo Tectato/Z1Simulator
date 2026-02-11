@@ -100,7 +100,8 @@ func removeInstance(key : String, index : int):
 	# TODO: Add list of freed indices so we can replace deleted spots instead of
 	# growing the instance count indefinitely
 	if index >= renderers[key].multimesh.instance_count: return
-	renderers[key].multimesh.set_instance_transform(index, Transform3D(Basis.from_scale(Vector3.ZERO),Vector3(0,10,0)))
+	var currentTransform = renderers[key].multimesh.get_instance_transform(index)
+	renderers[key].multimesh.set_instance_transform(index, currentTransform.scaled(Vector3.ZERO))
 	vacantEntries[key].append(index)
 	pass
 	#var transforms = []

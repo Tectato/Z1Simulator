@@ -2223,28 +2223,28 @@ material_override = SubResource("StandardMaterial3D_vtcxi")
 mesh = SubResource("QuadMesh_v7xow")
 
 [node name="X-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=1260891713]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.3, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("94_cl6md")
 
 [node name="X+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=567404350]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.3, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("94_6kijv")
 
 [node name="Y-" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=1360530971]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("96_b5fr5")
 
 [node name="Y+" type="Sprite3D" parent="Camera3D/Interface/VisibilityParent/AxesGizmoViewport/MeshInstance3D2" unique_id=1751287884]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -0.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
 billboard = 1
 alpha_cut = 1
 texture_filter = 0
