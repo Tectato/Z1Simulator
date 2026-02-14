@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cqswj2miwa5s"]
+
+[ext_resource type="Script" uid="uid://da61gfnahgae6" path="res://Scripts/Parts/bakedSheet.gd" id="1_ohomg"]
+
+[node name="BakedSheet" type="Node3D" unique_id=1681315760]
+script = ExtResource("1_ohomg")
