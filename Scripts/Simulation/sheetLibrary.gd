@@ -4,10 +4,15 @@ var spriteDict = {}
 var polygonDict = {}
 var meshDict = {}
 var users = {}
-@onready var meshCompiler = $MeshCompiler
+@onready var meshCompiler = $SheetCompiler
 @onready var renderHandler = $RenderHandler
 
 func query(path : String):
+	if !meshCompiler.hasSheet(path):
+		var newSheet = meshCompiler.getSheetData(path)
+		newSheet.meshReady.connect(registerMesh)
+		return newSheet
+	return meshCompiler.getSheetData(path)
 	if spriteDict.has(path):
 		while !users[path].is_empty() and !users[path].front():
 			users[path].remove_at(0)
@@ -37,6 +42,7 @@ func registerMesh(path : String, mesh : ArrayMesh):
 	for user in users[path]:
 		user.meshIndex = renderHandler.addInstance(path)
 		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
+		user.mesh.updateMaterial()
 
 func registerUser(user : Sheet, path : String):
 	if users.has(path):

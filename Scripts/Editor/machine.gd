@@ -230,13 +230,14 @@ func deserializeFromDict(source):
 		#Global.workspace.uuidManager.registerID(self, uuid)
 		for relation in source["relations"]:
 			var A = uuidManager.getPart(int(relation["A"]))
+			var B = uuidManager.getPart(int(relation["B"]))
 			match relation.type:
 				"link":
-					A.addRelation(Relation.Type.Link, uuidManager.getPart(int(relation["B"])))
+					A.addRelation(Relation.Type.Link, B)
 				"spring":
-					A.addRelation(Relation.Type.Spring, uuidManager.getPart(int(relation["B"])))
+					A.addRelation(Relation.Type.Spring, B)
 				"inputLink":
-					A.addRelation(Relation.Type.InputLink, uuidManager.getPart(int(relation["B"])))
+					A.addRelation(Relation.Type.InputLink, B)
 	if source.has("comments"):
 		for comment in source["comments"]:
 			var newComment = COMMENT.instantiate()

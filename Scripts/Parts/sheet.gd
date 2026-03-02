@@ -1,14 +1,8 @@
 extends Movable
 class_name Sheet
 
-const POINTHOLE = preload("res://Scenes/Parts/SheetElements/PointHole.tscn")
-const LONGHOLE = preload("res://Scenes/Parts/SheetElements/LongHole.tscn")
-const LOGICHOLE = preload("res://Scenes/Parts/SheetElements/LogicHole.tscn")
-const SQUAREHOLE = preload("res://Scenes/Parts/SheetElements/SquareHole.tscn")
-const CUSTOMHOLE = preload("res://Scenes/Parts/SheetElements/CustomHole.tscn")
-const STICKER = preload("res://Scenes/Parts/SheetElements/Sticker.tscn")
 
-const scaleFactor = 0.001
+
 @onready var sprite = $Sprite3D
 @onready var hitbox = $Outline/Polygon
 #@onready var debugPolygon = $CSGPolygon3D
@@ -35,13 +29,13 @@ var rotHistory = []
 var forces = {}
 var movedPins = {}
 var gizmo
-var bakedSheet : BakedSheet
+var sheetData : SheetData
 
 var sortTargetPos : Vector3
 
 func serialize():
 	grabUUID()
-	var relativePath = PathHandler.toRelativePath(path)
+	var relativePath = PathHandler.toRelativePath(sheetData.path)
 	#var rotationPos = rotation.y + 2.0*PI
 	var rotationMod = wrapf(rotation_degrees.y, -45, 45)
 	var rotationOut = ("%0.2f" % rotation_degrees.y).rstrip("0")
@@ -93,11 +87,11 @@ func deserialize(source : Dictionary):
 	if source.has("id"):
 		id = source["id"]
 	else:
-		id = path.get_file().trim_suffix(".svg")
+		id = source["file"].trim_suffix(".svg")
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
-	if bounds.is_empty():
+	if !sheetData:
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	place()
 	if source.has("static"):
@@ -134,7 +128,15 @@ func clearDiff():
 	updateInteractionCandidates()
 
 func loadSVG(path : String):
-	pass
+	sheetData = SheetLibrary.query(PathHandler.toAbsolutePath(path))
+	postParseSetup()
+	SheetLibrary.registerUser(self, sheetData.path)
+
+func postParseSetup():
+	sprite.texture = sheetData.spriteTex
+	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
+	sprite.position = -sheetData.midPoint + Space.toVec3(sheetData.partOffset) + Vector3.UP * 0.001
+	hitbox.polygon = sheetData.polygon
 
 func _ready():
 	#mesh = debugPolygon
@@ -146,11 +148,11 @@ func _ready():
 	Global.workspace.sheetSpacingChanged.connect(updateHeight)
 	Global.workspace.staticSheetVisChanged.connect(staticSheetVisChanged)
 	Global.clearHistory.connect(clearHistory)
-	if path and bounds.is_empty():
-		loadSVG(path)
-	else:
-		#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
-		sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
+	#if path and !sheetData:
+		#loadSVG(path)
+	#else:
+		##sprite.material_override.set_shader_parameter("albedo", sprite.texture)
+		#sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	super._ready()
 
 func _process(delta: float) -> void:
@@ -170,10 +172,10 @@ func _process(delta: float) -> void:
 func _notification(what):
 	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
 		if getMachine().beingDeleted:
-			SheetLibrary.unregisterUser(self, path)
+			SheetLibrary.unregisterUser(self, sheetData.path)
 			return
 		if is_visible_in_tree():
-			SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+			SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform)
 
 func setSelected(value):
 	super.setSelected(value)
@@ -217,9 +219,9 @@ func updateConstraints():
 	
 
 func getBounds():
-	if bounds.size() > 0:
-		var A = bounds[0].rotated(Vector3.UP,rotation.y)
-		var B = bounds[1].rotated(Vector3.UP,rotation.y)
+	if sheetData and sheetData.bounds.size() > 0:
+		var A = sheetData.bounds[0].rotated(Vector3.UP,rotation.y)
+		var B = sheetData.bounds[1].rotated(Vector3.UP,rotation.y)
 		var min = Vector3(min(A.x,B.x),min(A.y,B.y),min(A.z,B.z))
 		var max = Vector3(max(A.x,B.x),max(A.y,B.y),max(A.z,B.z))
 		return [min, max]
@@ -238,14 +240,14 @@ func _draw_gizmo() -> void:
 
 #TODO
 func snap(srcPos):
-	if holes.size() < 1:
+	if sheetData.holes.size() < 1:
 		return super.snap(srcPos)
 	#var srcPos2D = Vector2(srcPos.x,srcPos.z)
 	#var snapped = snapped(srcPos2D, Vector2(Workspace.gridSize/8,Workspace.gridSize/8))
 	#global_position = Vector3(snapped.x,srcPos.y,snapped.y)
 	var candidates = []
-	for hole in holes:
-		candidates.append(hole.getSnapPosDiff(srcPos))
+	for hole in sheetData.holes:
+		candidates.append(hole.getSnapPosDiff(srcPos)) #TODO transform adjustment
 	candidates.sort_custom(sortByLength3D)
 	if candidates[0].length() < Workspace.snapDist:
 		global_position = srcPos + candidates[0]
@@ -269,15 +271,15 @@ func projectDown(ray : RayCast3D):
 # Cast down from every corner and hole center. Not 100% Exact but should work well enough in most cases
 func castPoints(ray : RayCast3D):
 	var highestY = -100
-	for point in outline.polygon:
-		var absolutePoint = (Vector3(point.x,0,point.y) * $Outline.global_transform.affine_inverse())
+	for point in sheetData.polygon: # TODO: transform adjustment
+		var absolutePoint = (Vector3(point.x,0,point.y) * global_transform.affine_inverse())
 		ray.global_position = absolutePoint + Vector3.UP
 		ray.force_raycast_update()
 		while ray.get_collider() and !ray.get_collider().is_visible_in_tree():
 			ray.add_exception(ray.get_collider())
 			ray.force_raycast_update()
 		highestY = max(highestY, ray.get_collision_point().y)
-	for hole in holes:
+	for hole in sheetData.holes:
 		if not hole is CustomHole:
 			ray.global_position = hole.global_position + Vector3.UP
 			ray.force_raycast_update()
@@ -298,31 +300,31 @@ func sortByDistance(a : Vector3, b : Vector3):
 
 func intersects(pos : Vector3):
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
-	var posRelative = pos * $Outline.global_transform
+	var posRelative = pos * global_transform
 	debugPoint.global_position = posRelative
 	#var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
 	var withinOutline = intersectsOutline(pos)
 	if !withinOutline:
 		return false
 	var withinHole = false
-	for hole in holes:
+	for hole in sheetData.holes: #TODO transform
 		posRelative = pos * hole.global_transform
 		withinHole = withinHole or hole.checkPos(posRelative)
 	return withinOutline and not withinHole
 
 func intersectsOutline(pos : Vector3):
 	#var posRelative = outline.to_local(pos)
-	var posRelative = pos * $Outline.global_transform
-	var intersects = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	var posRelative = pos * $Outline.global_transform #TODO transform
+	var intersects = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
 	return intersects
 
 func getIntersector(pos : Vector3):
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * $Outline.global_transform
-	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
+	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
 	if !withinOutline:
 		return null
-	for hole in holes:
+	for hole in sheetData.holes:
 		posRelative = pos * hole.global_transform
 		if hole.checkPos(posRelative):
 			return hole
@@ -331,7 +333,7 @@ func getIntersector(pos : Vector3):
 
 func place():
 	heightIndex = int(max(0,roundf(position.y / Global.workspace.sheetSpacing)))
-	if holes.is_empty():
+	if !sheetData:
 		await get_tree().process_frame
 	super.place()
 	if !Global.editor.loading:
@@ -346,7 +348,7 @@ func place():
 
 func updateInstance():
 	if is_visible_in_tree():
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform)
 
 func updateHeight():
 	position = position * Vector3(1,0,1) + Vector3.UP * heightIndex * Global.workspace.sheetSpacing
@@ -355,7 +357,7 @@ func updateInteractionCandidates():
 	if !layer: return
 	if beingDeleted: return
 	if getMachine().beingDeleted:
-		SheetLibrary.unregisterUser(self, path)
+		SheetLibrary.unregisterUser(self, sheetData.path)
 		return
 	var inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
 	pinCandidates.clear()
@@ -701,7 +703,7 @@ func abortMove(initiator, chain = []):
 
 func delete():
 	beingDeleted = true
-	SheetLibrary.unregisterUser(self, path)
+	SheetLibrary.unregisterUser(self, sheetData.path)
 	super.delete()
 
 func hasPivot():
@@ -755,55 +757,56 @@ func setHighlight(enabled : bool, highlightColor : Color):
 		mesh.setHighlight(null)
 
 func setupAfterDuplication(source = null):
-	if holes.is_empty():
-		if source == null:
-			print("Invalid sheet duplication call")
-			return
-		bounds = source.bounds
-		restRot = source.restRot
-		targetRot = source.targetRot
-		previousRot = targetRot
-		$Outline/Polygon.polygon = source.outline.polygon
-		$Outline.position = source.outline.get_parent().position
-		$Sprite3D.position = source.sprite.position
-		$MeshInstance3D.position = source.mesh.position
-		for hole in source.holes:
-			var copy
-			match hole.type:
-				Hole.HoleType.Point:
-					copy = POINTHOLE.instantiate()
-				Hole.HoleType.Long:
-					copy = LONGHOLE.instantiate()
-				Hole.HoleType.Logic:
-					copy = LOGICHOLE.instantiate()
-				Hole.HoleType.Square:
-					copy = SQUAREHOLE.instantiate()
-				Hole.HoleType.Custom:
-					copy = CUSTOMHOLE.instantiate()
-			add_child(copy)
-			holes.append(copy)
-			copy.setupAfterDuplication(hole)
-		for sticker in source.stickers:
-			var copy = STICKER.instantiate()
-			add_child(copy)
-			stickers.append(copy)
-			copy.scale = sticker.scale
-			copy.position = sticker.position
-			copy.texture = sticker.texture
-	else:
-		# For some reason duplicating a sheet also duplicates every hole. Sometimes.
-		var toDelete = []
-		for thing in get_children():
-			if thing is Hole and not thing in holes:
-				toDelete.append(thing)
-		for thing in toDelete:
-			thing.queue_free()
+	pass
+	#if holes.is_empty():
+		#if source == null:
+			#print("Invalid sheet duplication call")
+			#return
+		#bounds = source.bounds
+		#restRot = source.restRot
+		#targetRot = source.targetRot
+		#previousRot = targetRot
+		#$Outline/Polygon.polygon = source.outline.polygon
+		#$Outline.position = source.outline.get_parent().position
+		#$Sprite3D.position = source.sprite.position
+		#$MeshInstance3D.position = source.mesh.position
+		#for hole in source.holes:
+			#var copy
+			#match hole.type:
+				#Hole.HoleType.Point:
+					#copy = POINTHOLE.instantiate()
+				#Hole.HoleType.Long:
+					#copy = LONGHOLE.instantiate()
+				#Hole.HoleType.Logic:
+					#copy = LOGICHOLE.instantiate()
+				#Hole.HoleType.Square:
+					#copy = SQUAREHOLE.instantiate()
+				#Hole.HoleType.Custom:
+					#copy = CUSTOMHOLE.instantiate()
+			#add_child(copy)
+			#holes.append(copy)
+			#copy.setupAfterDuplication(hole)
+		#for sticker in source.stickers:
+			#var copy = STICKER.instantiate()
+			#add_child(copy)
+			#stickers.append(copy)
+			#copy.scale = sticker.scale
+			#copy.position = sticker.position
+			#copy.texture = sticker.texture
+	#else:
+		## For some reason duplicating a sheet also duplicates every hole. Sometimes.
+		#var toDelete = []
+		#for thing in get_children():
+			#if thing is Hole and not thing in holes:
+				#toDelete.append(thing)
+		#for thing in toDelete:
+			#thing.queue_free()
 
 func visibilityChanged():
 	if is_visible_in_tree():
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform)
 	else:
-		SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform.scaled(Vector3.ZERO))
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.scaled(Vector3.ZERO))
 
 func staticSheetVisChanged(newVis):
 	if fixed:

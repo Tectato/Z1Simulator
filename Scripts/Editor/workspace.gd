@@ -303,12 +303,12 @@ func importSheet(path):
 	setResolution(Resolution.Part)
 	var cached = SheetLibrary.query(path)
 	var newSheet
-	if cached:
-		#newSheet = cached[0].duplicateCustom()
-		newSheet = duplicateSheet(cached[0], path)
-	else:
-		newSheet = SHEET.instantiate()
-		newSheet.call_deferred("loadSVG",path)
+	#if cached:
+		##newSheet = cached[0].duplicateCustom()
+		#newSheet = duplicateSheet(cached[0], path)
+	#else:
+	newSheet = SHEET.instantiate()
+	newSheet.call_deferred("loadSVG",path)
 	selectedLayer.addPart(newSheet)
 	return newSheet
 

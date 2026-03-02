@@ -1,5 +1,5 @@
 [gd_scene format=3 uid="uid://t7bmewyr0tue"]
 
-[node name="RectCutout" type="CSGBox3D"]
+[node name="RectCutout" type="CSGBox3D" unique_id=782337594]
 operation = 2
 size = Vector3(1, 0.2, 1)

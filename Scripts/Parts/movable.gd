@@ -330,6 +330,7 @@ func setFixed(value, _propagate = true):
 static func sortByFixed(A, B):
 	var PartA = A if A is Movable else A.get_parent()
 	var PartB = B if B is Movable else B.get_parent()
+	if !(PartA is Movable and PartB is Movable): return false # TODO temporary
 	if PartA.fixed == PartB.fixed: return false
 	if PartA is Movable:
 		return PartA.fixed

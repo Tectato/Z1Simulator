@@ -327,6 +327,7 @@ func place(part : Selectable):
 	select(part.collider, false, false)
 	setGrabpoint()
 	var bounds = part.getBounds()
+	if !bounds: bounds = [part.global_position, part.global_position]
 	var midPoint = (bounds[1]-bounds[0])/2
 	mouseRelative = [-midPoint]
 	mouseDragOrigin = partDragOrigins[0]

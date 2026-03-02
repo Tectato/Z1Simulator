@@ -41,7 +41,7 @@ func updateMaterial():
 
 func setMeshColor(color : Color):
 	if parent.meshIndex >= 0:
-		SheetLibrary.renderHandler.setColor(parent.path, parent.meshIndex, color)
+		SheetLibrary.renderHandler.setColor(parent.sheetData.path, parent.meshIndex, color)
 
 func updateParams():
 	pass

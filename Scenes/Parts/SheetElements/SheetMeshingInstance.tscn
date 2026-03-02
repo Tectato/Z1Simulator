@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://btqgslwg0lc5r"]
 
-[node name="SheetMeshingInstance" type="CSGPolygon3D"]
+[ext_resource type="Script" uid="uid://bld8jeq4x8uf6" path="res://Scripts/Parts/SheetElements/sheetData.gd" id="1_ibi2r"]
+
+[node name="SheetMeshingInstance" type="CSGPolygon3D" unique_id=1282852365]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 calculate_tangents = false
 depth = 0.02
+script = ExtResource("1_ibi2r")

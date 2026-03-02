@@ -90,14 +90,14 @@ func deserialize(source : Dictionary):
 	for sheet in sheets:
 		#Check if sheet has been deserialized already and copy that instead
 		var imagePath = PathHandler.toAbsolutePath(sheet["file"])
-		var cached = SheetLibrary.query(imagePath)
+		#var cached = SheetLibrary.query(imagePath)
 		var newPart
-		if cached and cached[0]:
-			newPart = Global.workspace.duplicateSheet(cached[0], imagePath)
-			#newPart = cached[0].duplicateCustom()
-			#cached[0].get_parent().remove_child(newPart)
-		else:
-			newPart = SHEET.instantiate()
+		#if cached and cached[0]:
+			#newPart = Global.workspace.duplicateSheet(cached[0], imagePath)
+			##newPart = cached[0].duplicateCustom()
+			##cached[0].get_parent().remove_child(newPart)
+		#else:
+		newPart = SHEET.instantiate()
 		addPart(newPart)
 		newPart.deserialize(sheet)
 	for pin in pins:

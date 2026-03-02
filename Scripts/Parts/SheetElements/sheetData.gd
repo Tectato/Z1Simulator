@@ -1,63 +1,61 @@
-extends Node3D
-class_name SheetCompiler
+extends CSGPolygon3D
+class_name SheetData
 
-const MESHINGINSTANCE = preload("res://Scenes/Parts/SheetElements/SheetMeshingInstance.tscn")
-const BAKEDSHEET = preload("res://Scenes/Parts/BakedSheet.tscn")
-var instances = {}
+const POINTHOLE = preload("res://Scenes/Parts/SheetElements/PointHole.tscn")
+const LONGHOLE = preload("res://Scenes/Parts/SheetElements/LongHole.tscn")
+const LOGICHOLE = preload("res://Scenes/Parts/SheetElements/LogicHole.tscn")
+const SQUAREHOLE = preload("res://Scenes/Parts/SheetElements/SquareHole.tscn")
+const CUSTOMHOLE = preload("res://Scenes/Parts/SheetElements/CustomHole.tscn")
+const STICKER = preload("res://Scenes/Parts/SheetElements/Sticker.tscn")
 
-func prepareInstance(path : String):
-	if instances.has(path): return
-	var instance = MESHINGINSTANCE.instantiate()
-	add_child(instance)
-	instances[path] = instance
-	return instance
+const scaleFactor = 0.001
+var partOffset : Vector2
+var midPoint : Vector3
+var bounds = []
+var holes = []
+var stickers = []
+var clipZones = []
+var spriteTex : Texture2D
+var path = ""
+var bakedMesh : Mesh
 
-func compileMesh(path : String):
-	await get_tree().process_frame
-	var bakedMesh = instances[path].bake_static_mesh()
-	SheetLibrary.registerMesh(path, bakedMesh)
-	instances[path].call_deferred("queue_free")
-	instances.erase(path)
+signal dataParsed()
+signal meshReady(path : String, mesh : Mesh)
 
 func loadSVG(filepath : String):
 	path = filepath
 	if name.length() == 0:
 		name = path.get_file().trim_suffix(".import").trim_suffix(".svg") 
-	#if path.is_absolute_path():
-		#path = ProjectSettings.localize_path(path)
-	var cached = SheetLibrary.query(path)
-	var image
-	if cached:
-		SheetLibrary.registerUser(self, path)
-		image = cached[1]
-		outline.polygon = cached[2]
-		#debugPolygon.polygon = cached[2]
-		if cached[3] == null:
-			call_deferred("updateBakedMesh")
-		else:
-			updateBakedMesh()
+	#var cached = SheetLibrary.query(path)
+	#var image
+	#if cached:
+		#SheetLibrary.registerUser(self, path)
+		#image = cached[1]
+		#outline.polygon = cached[2]
+		#if cached[3] == null:
+			#call_deferred("updateBakedMesh")
+		#else:
+			#updateBakedMesh()
+	#else:
+	spriteTex = ImageTexture.create_from_image(Image.load_from_file(path))
+	#sprite.set_texture(image)
+	#TODO sheet -> sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
+	#if (cached and cached[0]):
 		#return
-	else:
-		image = ImageTexture.create_from_image(Image.load_from_file(path))
-	sprite.set_texture(image)
-	#sprite.material_override.set_shader_parameter("albedo", sprite.texture)
-	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
-	if (cached and cached[0]):
-		return
-	if !holes.is_empty():
-		return
+	#if !holes.is_empty():
+		#return
 	
 	var rawString = FileAccess.get_file_as_string(path)
 	var elements = rawString.split("\n")
 	for element in elements:
 		parseElement(element)
-	var size = sprite.texture.get_size()/100.0
-	#bounds = [-size.x/20 + partOffset.x,-0.05,-size.y/20 + partOffset.y,size.x/20 + partOffset.x,0.05,size.y/20 + partOffset.y]
-	
+	var size = spriteTex.get_size()/100.0
+
 	var min = Vector2(1000,1000)
 	var max = Vector2(-1000,-1000)
-	for point in outline.polygon:
-		var pointMod = point + Vector2(outline.position.x,outline.position.z) + partOffset
+	for point in polygon:
+		#var pointMod = point + Vector2(outline.position.x,outline.position.z) + partOffset
+		var pointMod = point + partOffset
 		min = Vector2(min(min.x,pointMod.x),min(min.y,pointMod.y))
 		max = Vector2(max(max.x,pointMod.x),max(max.y,pointMod.y))
 	
@@ -66,55 +64,48 @@ func loadSVG(filepath : String):
 	
 	midPoint = (Vector3(min.x,0,min.y) + Vector3(max.x,0,max.y))/2
 	var offset = Vector3(partOffset.x,0,partOffset.y)
-	#midPoint = Vector3(size.x/20, 0, -size.y/20)
-	$Sprite3D.position = -midPoint + offset + Vector3.UP * 0.001
-	$Outline.position = -midPoint + offset
-	#debugPolygon.position = -midPoint + offset - Vector3.UP * 0.02
-	$MeshInstance3D.position = -midPoint + offset - Vector3.UP * 0.02
+	# TODO
+	#$Sprite3D.position = -midPoint + offset + Vector3.UP * 0.001
+	#$Outline.position = -midPoint + offset
+	#$MeshInstance3D.position = -midPoint + offset - Vector3.UP * 0.02
+	for i in range(polygon.size()):
+		polygon[i] = polygon[i] + Space.toVec2(-midPoint + offset)
 	
-	if cached:
-		for sticker in stickers:
-			sticker.position -= midPoint - offset
-		for hole in holes:
-			hole.position -= midPoint - offset
-		return
-	var compilerInstance = SheetLibrary.meshCompiler.prepareInstance(path)
-	compilerInstance.polygon = outline.polygon
+	#if cached:
+		#for sticker in stickers:
+			#sticker.position -= midPoint - offset
+		#for hole in holes:
+			#hole.position -= midPoint - offset
+		#return
 	for sticker in stickers:
 		sticker.position -= midPoint - offset
 	for hole in holes:
 		hole.position -= midPoint - offset
 		var cutout = hole.getCutout()
-		#hole.cutout.visible = false
-		#hole.remove_child(cutout)
-		compilerInstance.add_child(cutout)
-		cutout.position = (cutout.position + hole.position + midPoint - offset).rotated(Vector3.RIGHT, -PI/2)
+		add_child(cutout)
+		cutout.position = (cutout.position + hole.position).rotated(Vector3.RIGHT, -PI/2)
 		cutout.rotate_y(hole.rotation.y)
 		cutout.rotate_x(-PI/2)
-		#cutout.rotation = cutout.rotation + hole.rotation - Vector3.RIGHT * PI/2
-	#debugPoint.position = midPoint
 	
 	
-	SheetLibrary.registerSprite(self, path, image, outline.polygon)
-	SheetLibrary.meshCompiler.compile(path)
-	#await get_tree().process_frame
-	#var bakedMesh = debugPolygon.bake_static_mesh()
-	#SheetLibrary.registerMesh(path, bakedMesh)
+	#SheetLibrary.registerSprite(self, path, image, outline.polygon)
+	#SheetLibrary.meshCompiler.compile(path)
+	dataParsed.emit()
 	call_deferred("updateBakedMesh")
-	#_draw_gizmo()
-	#visModeChanged(Global.editor.currentVisMode)
 
 func updateBakedMesh():
-	var cached = SheetLibrary.query(path)
-	if cached[3] == null:
-		await get_tree().process_frame
-		call_deferred("updateBakedMesh")
-		return
-	mesh = $MeshInstance3D
-	mesh.visible = false
-	#debugPolygon.queue_free()
-	$MeshInstance3D.mesh = cached[3]
-	visModeChanged(Global.editor.currentVisMode)
+	await get_tree().process_frame
+	bakedMesh = bake_static_mesh()
+	meshReady.emit(path, bakedMesh)
+	#var cached = SheetLibrary.query(path)
+	#if cached[3] == null:
+		#await get_tree().process_frame
+		#call_deferred("updateBakedMesh")
+		#return
+	#mesh = $MeshInstance3D
+	#mesh.visible = false
+	#$MeshInstance3D.mesh = cached[3]
+	#visModeChanged(Global.editor.currentVisMode)
 
 func isValidElement(string : String):
 	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect") or string.contains("image")
@@ -203,6 +194,12 @@ func parseElement(part : String):
 				newHole.id = id
 				newHole.name = id
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
+			if id.contains("zone"):
+				#var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
+				#newHole.setEdgeLength(float(dict["edgeLength"])/1000)
+				#newHole.id = id
+				#newHole.name = id
+				pass
 		"image":
 			addSticker(Vector2(float(dict["x"]),float(dict["y"])),Vector2(float(dict["width"]),float(dict["height"])),dict["href"])
 			#addSticker(Vector2(float(dict["x"]),float(dict["y"]))*2,Vector2(float(dict["width"]),float(dict["height"])),dict["href"])
@@ -233,21 +230,21 @@ func addSticker(pos, size, imagePath):
 
 func addPolygon(segments, isOutline):
 	var polygonParent : Node3D
-	var polygon : PackedVector2Array
+	var polygonData : PackedVector2Array
 	var hole
 	if isOutline:
-		if outline.polygon.size() > 3:
-			return
-		polygon = outline.polygon
-		polygonParent = outline
+		#if polygon.size() > 3:
+			#return
+		polygonData = polygon
+		polygonParent = self
 	else:
 		hole = CUSTOMHOLE.instantiate()
 		add_child(hole)
 		hole.position = Vector3.ZERO
-		polygon = hole.polygonArea.polygon
+		polygonData = hole.polygonArea.polygon
 		polygonParent = hole.polygonArea
 		holes.append(hole)
-	polygon.clear()
+	polygonData.clear()
 	var prevPoint : Vector2
 	var prevSegmentDir : Vector2
 	for segment in segments:
@@ -259,7 +256,7 @@ func addPolygon(segments, isOutline):
 			newPoint = Vector2(float(numbers[5]), float(numbers[6])) * scaleFactor + partOffset
 		
 		if numbers.size() <= 2:
-			polygon.push_back(newPoint)
+			polygonData.push_back(newPoint)
 			if prevPoint:
 				prevSegmentDir = newPoint - prevPoint
 		else:
@@ -273,14 +270,14 @@ func addPolygon(segments, isOutline):
 				var angleDelta = (PI/2) / curveRes
 				prevSegmentDir = displacement
 				for i in range(1,curveRes):
-					polygon.push_back(curveMidpoint - displacement.rotated(angleDelta * curveDir * i))
+					polygonData.push_back(curveMidpoint - displacement.rotated(angleDelta * curveDir * i))
 			else:
 				print("Malformed sheet data (Outline begins with arc)")
-			polygon.push_back(newPoint)
+			polygonData.push_back(newPoint)
 		prevPoint = newPoint
 	#if isOutline:
 		#debugPolygon.polygon = polygon
-	polygonParent.polygon = polygon
+	polygonParent.polygon = polygonData
 	#if not isOutline:
 		#hole.debugPolygon.polygon = polygon
 	return hole

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://6qjqjjxchgkh"]
 
 [ext_resource type="Script" uid="uid://bfnu2vl3xbceg" path="res://Scripts/Simulation/sheetLibrary.gd" id="1_c1se5"]
-[ext_resource type="Script" uid="uid://dpodqe2t280op" path="res://Scripts/Parts/SheetElements/sheetCompiler.gd" id="2_7bnwt"]
+[ext_resource type="Script" uid="uid://dpodqe2t280op" path="res://Scripts/Parts/SheetElements/sheetCompilerManager.gd" id="2_7bnwt"]
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="3_lqynr"]
 [ext_resource type="Material" uid="uid://0bo2bl8wqi7c" path="res://Assets/SheetColoredCompat.tres" id="4_fsur0"]
 [ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="5_cpvvm"]

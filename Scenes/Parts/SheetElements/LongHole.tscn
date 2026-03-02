@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://by83vnhw218sk"]
+[gd_scene format=3 uid="uid://by83vnhw218sk"]
 
 [ext_resource type="Script" uid="uid://dohbt3xgt4hm4" path="res://Scripts/Parts/SheetElements/longHole.gd" id="1_7vhs4"]
 
@@ -27,36 +27,36 @@ material = SubResource("StandardMaterial3D_nrdih")
 radius = 0.01
 height = 0.02
 
-[node name="LongHole" type="Node3D" node_paths=PackedStringArray("debugMesh", "debugBoundsA", "debugBoundsB")]
+[node name="LongHole" type="Node3D" unique_id=1566618105 node_paths=PackedStringArray("debugMesh", "debugBoundsA", "debugBoundsB")]
 script = ExtResource("1_7vhs4")
 debugMesh = NodePath("MeshInstance3D")
 debugBoundsA = NodePath("DebugBall1")
 debugBoundsB = NodePath("DebugBall2")
 type = 1
 
-[node name="Start" type="Node3D" parent="."]
+[node name="Start" type="Node3D" parent="." unique_id=1518286608]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Start"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Start" unique_id=928353006]
 visible = false
 mesh = SubResource("SphereMesh_7vhs4")
 
-[node name="End" type="Node3D" parent="."]
+[node name="End" type="Node3D" parent="." unique_id=203440895]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0, 0)
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="End"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="End" unique_id=1542074071]
 visible = false
 mesh = SubResource("SphereMesh_7vhs4")
 skeleton = NodePath("../../Start")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1671213855]
 visible = false
 mesh = SubResource("CylinderMesh_7vhs4")
 
-[node name="DebugBall1" type="MeshInstance3D" parent="."]
+[node name="DebugBall1" type="MeshInstance3D" parent="." unique_id=1348457132]
 visible = false
 mesh = SubResource("SphereMesh_q8qxb")
 
-[node name="DebugBall2" type="MeshInstance3D" parent="."]
+[node name="DebugBall2" type="MeshInstance3D" parent="." unique_id=1939351802]
 visible = false
 mesh = SubResource("SphereMesh_0t7g4")
