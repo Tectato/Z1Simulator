@@ -1,8 +1,5 @@
 extends Node
 
-var spriteDict = {}
-var polygonDict = {}
-var meshDict = {}
 var users = {}
 @onready var meshCompiler = $SheetCompiler
 @onready var renderHandler = $RenderHandler
@@ -13,45 +10,23 @@ func query(path : String):
 		newSheet.meshReady.connect(registerMesh)
 		return newSheet
 	return meshCompiler.getSheetData(path)
-	if spriteDict.has(path):
-		while !users[path].is_empty() and !users[path].front():
-			users[path].remove_at(0)
-		#if users[path].is_empty():
-			#users.erase(path)
-			#spriteDict.erase(path)
-			#polygonDict.erase(path)
-			#return null
-		var mesh = meshDict[path] if meshDict.has(path) else null
-		if users[path].is_empty():
-			return [null, spriteDict[path], polygonDict[path], mesh]
-		return [users[path].front(), spriteDict[path], polygonDict[path], mesh]
-	else:
-		return null
-
-func registerSprite(user : Sheet, path : String, sprite : Texture, polygon : PackedVector2Array):
-	spriteDict[path] = sprite
-	polygonDict[path] = polygon
-	if users.has(path):
-		users[path].append(user)
-	else:
-		users[path] = [user]
 
 func registerMesh(path : String, mesh : ArrayMesh):
-	meshDict[path] = mesh
 	renderHandler.initMesh(path, mesh)
 	for user in users[path]:
 		user.meshIndex = renderHandler.addInstance(path)
 		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
-		user.mesh.updateMaterial()
+		user.mesh.call_deferred("updateMaterial")
 
 func registerUser(user : Sheet, path : String):
 	if users.has(path):
 		users[path].append(user)
 	else:
 		users[path] = [user]
-	if meshDict.has(path):
+	if renderHandler.hasSheet(path):
 		user.meshIndex = renderHandler.addInstance(path)
 		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
+		user.mesh.call_deferred("updateMaterial")
 
 func unregisterUser(user : Sheet, path : String):
 	users[path].erase(user)
@@ -61,6 +36,9 @@ func unregisterUser(user : Sheet, path : String):
 		#spriteDict.erase(path)
 		#polygonDict.erase(path)
 		#meshDict.erase(path)
+
+func reloadSheet(path : String):
+	pass #TODO
 
 func cleanUnusedSheets():
 	var toDelete = []
@@ -78,11 +56,8 @@ func cleanUnusedSheets():
 	#batch = 20
 	for path in toDelete:
 		users.erase(path)
-		spriteDict.erase(path)
-		polygonDict.erase(path)
-		meshDict.erase(path)
 		renderHandler.removeRenderer(path)
-		# TODO: clean meshCompiler instances
+		meshCompiler.removeSheetData(path)
 		#framesTaken += 1
 		#batch -= 1
 		#if batch <= 0:

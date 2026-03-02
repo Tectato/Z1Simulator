@@ -128,7 +128,7 @@ func clearDiff():
 	updateInteractionCandidates()
 
 func loadSVG(path : String):
-	sheetData = SheetLibrary.query(PathHandler.toAbsolutePath(path))
+	sheetData = SheetLibrary.query(path)
 	postParseSetup()
 	SheetLibrary.registerUser(self, sheetData.path)
 

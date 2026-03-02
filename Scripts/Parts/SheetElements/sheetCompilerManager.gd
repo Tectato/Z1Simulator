@@ -27,3 +27,8 @@ func hasSheet(path : String):
 func getSheetData(path : String):
 	if instances.has(path): return instances[path]
 	return prepareInstance(path)
+
+func removeSheetData(path : String):
+	if instances.has(path):
+		instances[path].call_deferred("queue_free")
+		instances.erase(path)

@@ -47,6 +47,9 @@ func initMesh(key : String, mesh : Mesh):
 		materialToUse = materialFlat
 	newRenderer.material_override = materialToUse
 
+func hasSheet(key : String):
+	return renderers.has(key)
+
 func addInstance(key : String):
 	var vacant = getVacant(key)
 	if vacant < 0:
