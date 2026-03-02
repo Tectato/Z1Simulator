@@ -17,7 +17,7 @@ func _process(delta: float) -> void:
 	if hovered != $Interface/ClickArea and not (hovered and hovered.is_in_group("PermitsCameraMove")):
 		return
 	var newMousePos = interface.get_global_mouse_position()
-	var mouseDelta = (newMousePos - mousePos) * delta
+	var mouseDelta = (newMousePos - mousePos)/50.0# * delta
 	mousePos = newMousePos
 	if not Input.is_action_pressed("nav_orbit_move") and not (hovered and hovered.is_in_group("PermitsCameraMove")):
 		if Input.is_action_just_pressed("scroll_up"):
