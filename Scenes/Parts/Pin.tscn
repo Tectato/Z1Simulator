@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7jvhmxdbxm1d"]
+[gd_scene format=3 uid="uid://b7jvhmxdbxm1d"]
 
 [ext_resource type="Script" uid="uid://3ryssge2xugi" path="res://Scripts/Parts/pin.gd" id="1_ax1co"]
 
@@ -23,28 +23,28 @@ roughness = 0.48
 height = 0.1
 radius = 0.025
 
-[node name="Pin" type="Node3D" node_paths=PackedStringArray("collider", "mesh")]
+[node name="Pin" type="Node3D" unique_id=805540248 node_paths=PackedStringArray("collider", "mesh")]
 script = ExtResource("1_ax1co")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 
-[node name="Highlight" type="MeshInstance3D" parent="."]
+[node name="Highlight" type="MeshInstance3D" parent="." unique_id=565691971]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 visible = false
 material_overlay = SubResource("StandardMaterial3D_5g07p")
 mesh = SubResource("CylinderMesh_vqpos")
 skeleton = NodePath("../MeshInstance3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1946062767]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_vqpos")
 mesh = SubResource("CylinderMesh_vqpos")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=2068078603]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1278421810]
 shape = SubResource("CylinderShape3D_ax1co")

@@ -82,6 +82,7 @@ func cleanUnusedSheets():
 		polygonDict.erase(path)
 		meshDict.erase(path)
 		renderHandler.removeRenderer(path)
+		# TODO: clean meshCompiler instances
 		#framesTaken += 1
 		#batch -= 1
 		#if batch <= 0:

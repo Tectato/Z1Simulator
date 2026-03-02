@@ -14,7 +14,7 @@ albedo_color = Color(1, 1, 1, 0.39215687)
 [sub_resource type="BoxMesh" id="BoxMesh_cpvvm"]
 material = SubResource("StandardMaterial3D_ttsf7")
 
-[node name="SheetLibrary" type="Node" unique_id=1495848536]
+[node name="SheetLibrary" type="Node" unique_id=540057914]
 script = ExtResource("1_c1se5")
 
 [node name="SheetCompiler" type="Node3D" parent="." unique_id=1078889004]

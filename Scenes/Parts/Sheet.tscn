@@ -13,6 +13,10 @@ shader_parameter/thickness = 0.02
 
 [sub_resource type="PlaceholderMesh" id="PlaceholderMesh_wkhiy"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1r6gd"]
+radius = 0.01
+height = 0.1
+
 [node name="Sheet" type="Node3D" unique_id=1093484506 node_paths=PackedStringArray("debugPoint", "collider")]
 script = ExtResource("3_k6d36")
 debugPoint = NodePath("MeshInstance3D")
@@ -41,3 +45,7 @@ polygon = PackedVector2Array(0, 0, 1, 0, 1, 1)
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("PlaceholderMesh_wkhiy")
 script = ExtResource("8_wkhiy")
+
+[node name="debug" type="MeshInstance3D" parent="." unique_id=629288004]
+visible = false
+mesh = SubResource("CapsuleMesh_1r6gd")

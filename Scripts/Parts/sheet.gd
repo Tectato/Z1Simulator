@@ -175,7 +175,7 @@ func _notification(what):
 			SheetLibrary.unregisterUser(self, sheetData.path)
 			return
 		if is_visible_in_tree():
-			SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform)
+			SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02))
 
 func setSelected(value):
 	super.setSelected(value)
@@ -321,12 +321,13 @@ func intersectsOutline(pos : Vector3):
 func getIntersector(pos : Vector3):
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * $Outline.global_transform
+	$debug.position = posRelative
 	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
 	if !withinOutline:
 		return null
 	for hole in sheetData.holes:
-		posRelative = pos * hole.global_transform
-		if hole.checkPos(posRelative):
+		#posRelative = pos * hole.global_transform
+		if hole.checkPos(to_local(pos) * hole.transform):
 			return hole
 	return null
 	
@@ -348,7 +349,7 @@ func place():
 
 func updateInstance():
 	if is_visible_in_tree():
-		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform)
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02))
 
 func updateHeight():
 	position = position * Vector3(1,0,1) + Vector3.UP * heightIndex * Global.workspace.sheetSpacing
@@ -534,7 +535,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 				if pin == initiator:
 					moveCandidates[pin] = pin
 					continue
-				if !part.checkPos(part.to_local(pin.global_position - globalOffset)): # machine.to_global on offset
+				if !part.checkPos(to_local(pin.global_position - globalOffset) * part.transform): # machine.to_global on offset
 					moveCandidates[pin] = pin
 	
 	var dirID = dirToInt(dir)
@@ -804,7 +805,7 @@ func setupAfterDuplication(source = null):
 
 func visibilityChanged():
 	if is_visible_in_tree():
-		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform)
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02))
 	else:
 		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.scaled(Vector3.ZERO))
 

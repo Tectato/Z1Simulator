@@ -150,8 +150,8 @@ func setFixed(value, propagate = true):
 			#$MeshInstance3D.material_override = staticMaterial if value else normalMaterial
 		if propagate:
 			for thing in interactionCandidates:
-				if thing is PointHole and !thing.get_parent().fixed:
-					thing.get_parent().call_deferred("updateFixedState")
+				if thing[1] is PointHole and !thing[0].fixed:
+					thing[0].call_deferred("updateFixedState")
 
 func visModeChanged(mode : Editor.VisMode):
 	if highlighted: return
@@ -191,10 +191,10 @@ func setHeight(value):
 		var maxHeight = 0.1
 		var machineOffset = getMachine().global_position.y
 		for thing in interactionCandidates:
-			var partHeight = thing.global_position.y - machineOffset
+			var partHeight = thing[0].global_position.y - machineOffset
 			if partHeight < maxHeight: continue
-			var inRange = false or thing is Hole
-			if thing is Sheet:
+			var inRange = false or thing[1] is Hole
+			if thing[1] == null:
 				for searchRadius in [0.5, 1.0]:
 					for offset in [
 							Vector3(-1, 0,-1),
@@ -206,11 +206,11 @@ func setHeight(value):
 							Vector3( 0, 0,-1),
 							Vector3( 0, 0, 1)
 						]:
-						inRange = inRange or thing.intersectsOutline(global_position+offset*searchRadius*Global.workspace.pinTravel)
+						inRange = inRange or thing[0].intersectsOutline(global_position+offset*searchRadius*Global.workspace.pinTravel)
 						if inRange: break
 					if inRange: break
 			if inRange:
-				maxHeight = max(maxHeight, thing.global_position.y - machineOffset)
+				maxHeight = max(maxHeight, thing[0].global_position.y - machineOffset)
 		maxHeight *= 10
 		maxHeight += 0.4
 		effectiveHeight = maxHeight
@@ -322,9 +322,9 @@ func updateInteractionCandidates():
 	for sheet in inRange:
 		var hole = sheet.getIntersector(global_position)
 		if hole == null:
-			interactionCandidates.append(sheet)
+			interactionCandidates.append([sheet, null])
 		else:
-			interactionCandidates.append(hole)
+			interactionCandidates.append([sheet, hole])
 			if hole is PointHole or hole is LongHole:
 				minDiameter = min(minDiameter, hole.radius * 2)
 	interactionCandidates.sort_custom(sortByFixed)
@@ -338,9 +338,18 @@ func updateInteractionCandidates():
 	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 	#updateConstraints()
 
+static func sortByFixed(A, B):
+	var PartA = A[0]
+	var PartB = B[0]
+	if !(PartA is Movable and PartB is Movable): return false # TODO temporary
+	if PartA.fixed == PartB.fixed: return false
+	if PartA is Movable:
+		return PartA.fixed
+	return false
+
 func updateConstraints():
 	for thing in interactionCandidates:
-		if thing is PointHole and thing.get_parent().fixed:
+		if thing[1] is PointHole and thing[0].fixed:
 			setFixed(true, false)
 			return
 
@@ -420,26 +429,26 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	for part in interactionCandidates:
 		#if sheet.intersects(pos):
 			#sheet.move(dir,chain)
-		if part is Sheet:
-			if part == initiator:
-				moveCandidates[part] = part
+		if part[1] == null:
+			if part[0] == initiator:
+				moveCandidates[part[0]] = part[0]
 				continue
-			if part.intersectsOutline(global_position+globalOffset):
-				moveCandidates[part] = part
+			if part[0].intersectsOutline(global_position+globalOffset):
+				moveCandidates[part[0]] = part[0]
 				#var partMoved = part.move(dir, self,chain.duplicate())
 				#if partMoved == MoveState.Moved:
 					#moved.append(part)
 				#canMove = canMove and partMoved > 0
 		else:
-			var sheet = part.get_parent()
+			var sheet = part[0]
 			if sheet == initiator:
 				# We skip further canMoves in the same dir, but must consider different initiators
 				# Also we know this part can move as it initiated the movement to begin with
 				moveCandidates[sheet] = sheet
 				continue
 			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
-			var posRelative = part.to_local(global_position+globalOffset)#pos * sheet.outline.global_transform
-			if !part.checkPos(posRelative):
+			var posRelative = part[1].to_local(part[0].to_local(global_position+globalOffset))#pos * sheet.outline.global_transform
+			if !part[1].checkPos(part[0].to_local(global_position+globalOffset) * part[1].transform):
 				moveCandidates[sheet] = sheet
 				#var partMoved = sheet.move(dir, self,chain.duplicate())
 				#if partMoved == MoveState.Moved:
