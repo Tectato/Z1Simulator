@@ -29,6 +29,7 @@ var rotHistory = []
 var forces = {}
 var movedPins = {}
 var gizmo
+var localClipZones = []
 var sheetData : SheetData
 
 var sortTargetPos : Vector3
@@ -61,6 +62,12 @@ func serialize():
 			#else:
 			if !relation.isInterMachineRelation() and not relation is LinearConstraint:
 				getMachine().relations[relation.serialize()] = null
+	if !localClipZones.is_empty():
+		localClipZones.sort_custom(sortClipZone)
+		var clipStates = []
+		for zone in localClipZones:
+			clipStates.append(1 if zone.clipped else 0)
+		output["clipped"] = clipStates
 	return output
 
 func deserialize(source : Dictionary):
@@ -93,6 +100,9 @@ func deserialize(source : Dictionary):
 		getMachine().uuidManager.registerID(self, uuid)
 	if !sheetData:
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
+	if source.has("clipped") and !localClipZones.is_empty():
+		for i in range(localClipZones.size()):
+			if source["clipped"][i] > 0: localClipZones[i].flipClipped()
 	place()
 	if source.has("static"):
 		setFixed(true, false)
@@ -137,6 +147,18 @@ func postParseSetup():
 	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	sprite.position = -sheetData.midPoint + Space.toVec3(sheetData.partOffset) + Vector3.UP * 0.001
 	hitbox.polygon = sheetData.polygon
+	for sticker in sheetData.stickers:
+		var copy = sticker.duplicate()
+		#sheetData.remove_child(copy)
+		add_child(copy)
+	for zone in sheetData.clipZones:
+		var copy = zone.duplicate()
+		copy.name = zone.name
+		copy.id = zone.id
+		#sheetData.remove_child(copy)
+		add_child(copy)
+		localClipZones.append(copy)
+	localClipZones.sort_custom(sortClipZone)
 
 func _ready():
 	#mesh = debugPolygon
@@ -179,6 +201,8 @@ func _notification(what):
 
 func setSelected(value):
 	super.setSelected(value)
+	for zone in localClipZones:
+		zone.collider.monitorable = value
 	#sprite.set_instance_shader_parameter("selected", value)
 	mesh.updateMaterial()
 	sprite.visible = value
@@ -260,6 +284,8 @@ func snap(srcPos):
 
 func projectDown(ray : RayCast3D):
 	ray.add_exception(collider)
+	for zone in localClipZones:
+		ray.add_exception(zone.collider)
 	var height = castPoints(ray) + 0.02
 	#ray.global_position = global_position + Vector3.UP
 	#ray.force_raycast_update()
@@ -298,6 +324,11 @@ func sortByLength3D(a : Vector3, b : Vector3):
 func sortByDistance(a : Vector3, b : Vector3):
 	return a.distance_squared_to(sortTargetPos) < b.distance_squared_to(sortTargetPos)
 
+func sortClipZone(a : ClipZone, b : ClipZone):
+	var idA = int(a.id.split("_")[1])
+	var idB = int(b.id.split("_")[1])
+	return idA < idB
+
 func intersects(pos : Vector3):
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * global_transform
@@ -307,15 +338,20 @@ func intersects(pos : Vector3):
 	if !withinOutline:
 		return false
 	var withinHole = false
-	for hole in sheetData.holes: #TODO transform
+	for hole in sheetData.holes:
 		posRelative = pos * hole.global_transform
 		withinHole = withinHole or hole.checkPos(posRelative)
 	return withinOutline and not withinHole
 
 func intersectsOutline(pos : Vector3):
 	#var posRelative = outline.to_local(pos)
-	var posRelative = pos * $Outline.global_transform #TODO transform
+	var posRelative = pos * $Outline.global_transform
 	var intersects = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
+	if intersects:
+		for zone in localClipZones:
+			if zone.checkPos(posRelative - zone.position):
+				intersects = !zone.clipped
+				break
 	return intersects
 
 func getIntersector(pos : Vector3):

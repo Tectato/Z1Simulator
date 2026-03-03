@@ -276,6 +276,8 @@ func iterate(shift, checkForUI, leftClick, clicked):
 				updateMask()
 				if target.get_parent() is Pin:
 					target.get_parent().nudge()
+				elif target.get_parent() is ClipZone:
+					target.get_parent().flipClipped()
 			return
 	ignoreList.clear()
 	clear_exceptions()
@@ -355,7 +357,7 @@ func paste():
 		if part is Sheet:
 			#selected.append(Global.workspace.importSheet(part.path))
 			#var instance = part.duplicateCustom()
-			var instance = Global.workspace.duplicateSheet(part, part.path)
+			var instance = Global.workspace.duplicateSheet(part, part.sheetData.path)
 			Global.workspace.selectedLayer.addPart(instance)
 			selected.append(instance)
 		elif part is ClockPin:

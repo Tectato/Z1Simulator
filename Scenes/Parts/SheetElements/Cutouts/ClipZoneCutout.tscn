@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://c15ir88oehvv1"]
+
+[node name="ClipZoneCutout" type="CSGBox3D" unique_id=1741830023]
+operation = 2
+size = Vector3(0.1, 0.04, 0.1)

@@ -314,7 +314,7 @@ func importSheet(path):
 
 func duplicateSheet(source, path):
 	var copy = SHEET.instantiate()
-	copy.setupAfterDuplication(source)
+	#copy.setupAfterDuplication(source)
 	copy.call_deferred("loadSVG", path)
 	return copy
 

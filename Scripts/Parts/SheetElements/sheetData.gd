@@ -7,6 +7,7 @@ const LOGICHOLE = preload("res://Scenes/Parts/SheetElements/LogicHole.tscn")
 const SQUAREHOLE = preload("res://Scenes/Parts/SheetElements/SquareHole.tscn")
 const CUSTOMHOLE = preload("res://Scenes/Parts/SheetElements/CustomHole.tscn")
 const STICKER = preload("res://Scenes/Parts/SheetElements/Sticker.tscn")
+const CLIPZONE = preload("res://Scenes/Parts/SheetElements/ClipZone.tscn")
 
 const scaleFactor = 0.001
 var partOffset : Vector2
@@ -85,6 +86,13 @@ func loadSVG(filepath : String):
 		add_child(cutout)
 		cutout.position = (cutout.position + hole.position).rotated(Vector3.RIGHT, -PI/2)
 		cutout.rotate_y(hole.rotation.y)
+		cutout.rotate_x(-PI/2)
+	for zone in clipZones:
+		zone.position -= midPoint - offset
+		var cutout = zone.getCutout()
+		add_child(cutout)
+		cutout.position = (cutout.position + zone.position).rotated(Vector3.RIGHT, -PI/2)
+		cutout.rotate_y(zone.rotation.y)
 		cutout.rotate_x(-PI/2)
 	
 	
@@ -195,10 +203,9 @@ func parseElement(part : String):
 				newHole.name = id
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
 			if id.contains("zone"):
-				#var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
-				#newHole.setEdgeLength(float(dict["edgeLength"])/1000)
-				#newHole.id = id
-				#newHole.name = id
+				var newZone = addClipZone(Vector2(float(dict["x"]),float(dict["y"])), Vector2(float(dict["width"]),float(dict["height"])))
+				newZone.id = id
+				newZone.name = id
 				pass
 		"image":
 			addSticker(Vector2(float(dict["x"]),float(dict["y"])),Vector2(float(dict["width"]),float(dict["height"])),dict["href"])
@@ -227,6 +234,14 @@ func addSticker(pos, size, imagePath):
 	newSticker.scale = Vector3(scaleFac,1,scaleFac)
 	var yAdjustment = scaleFac * newSticker.texture.get_height()/100
 	newSticker.position += Vector3(0,0,1) * yAdjustment
+
+func addClipZone(pos : Vector2, size : Vector2):
+	var newZone = CLIPZONE.instantiate()
+	add_child(newZone)
+	clipZones.append(newZone)
+	newZone.position = Space.toVec3(pos)/1000 + Vector3(partOffset.x,0,partOffset.y)
+	newZone.init(size/1000)
+	return newZone
 
 func addPolygon(segments, isOutline):
 	var polygonParent : Node3D

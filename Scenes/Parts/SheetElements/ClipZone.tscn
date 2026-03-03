@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://bhlk4tqdfhpqe"]
+
+[ext_resource type="Script" uid="uid://dktngyyx7ldb4" path="res://Scripts/Parts/SheetElements/clipZone.gd" id="1_khhgu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khhgu"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.8000002, 0, 1, 0.26666668)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn1tq"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.32800007, 0, 0.41, 0.4627451)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ask51"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.8000002, 0, 1, 0.7607843)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0o7al"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.27200007, 0, 0.34, 0.7294118)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rn1tq"]
+resource_local_to_scene = true
+size = Vector3(0.1, 0.03, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ask51"]
+
+[node name="ClipZone" type="Node3D" unique_id=532362505 node_paths=PackedStringArray("collider", "mesh")]
+script = ExtResource("1_khhgu")
+materialNormal = SubResource("StandardMaterial3D_khhgu")
+materialClipped = SubResource("StandardMaterial3D_rn1tq")
+materialSelected = SubResource("StandardMaterial3D_ask51")
+materialClippedSelected = SubResource("StandardMaterial3D_0o7al")
+collider = NodePath("Area3D")
+mesh = NodePath("MeshInstance3D")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=933310646]
+collision_layer = 3
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=56168630]
+shape = SubResource("BoxShape3D_rn1tq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2090213879]
+transform = Transform3D(0.1, 0, 0, 0, 0.03, 0, 0, 0, 0.1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_khhgu")
+mesh = SubResource("BoxMesh_ask51")
