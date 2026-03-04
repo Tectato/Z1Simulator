@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cwmwuhv74car2"]
+[gd_scene format=3 uid="uid://cwmwuhv74car2"]
 
 [ext_resource type="Script" uid="uid://d3qido7tuk3jf" path="res://Scripts/Editor/3DUI/eventIndicator.gd" id="1_5cpx1"]
 [ext_resource type="Texture2D" uid="uid://dr34liedvsxl6" path="res://Sprites/Events/attention.png" id="1_tle2g"]
@@ -57,10 +57,15 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="EventIndicator" type="Node3D"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_5cpx1"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.2
+
+[node name="EventIndicator" type="Node3D" unique_id=1727157300]
 script = ExtResource("1_5cpx1")
 
-[node name="Sprite" type="AnimatedSprite3D" parent="."]
+[node name="Sprite" type="AnimatedSprite3D" parent="." unique_id=2035197873]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
 billboard = 1
 no_depth_test = true
@@ -70,8 +75,13 @@ sprite_frames = SubResource("SpriteFrames_ura7d")
 animation = &"turn"
 autoplay = "attention"
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=754666750]
+wait_time = 3.0
 one_shot = true
 autostart = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=194802066]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.084998384, 0)
+mesh = SubResource("CylinderMesh_5cpx1")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -38,5 +38,5 @@ func init(dims : Vector2):
 	mesh.position = hitbox.position - Vector3.UP * 0.01
 
 func checkPos(pos : Vector3):
-	var rect = Rect2(Space.toVec2(hitbox.position), Space.toVec2(hitbox.shape.size))
+	var rect = Rect2(Space.toVec2(hitbox.position-hitbox.shape.size/2.0), Space.toVec2(hitbox.shape.size))
 	return rect.has_point(Space.toVec2(pos))

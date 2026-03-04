@@ -2,7 +2,7 @@ extends Node3D
 class_name EventIndicator
 
 enum Type {Attention, Error, Blocked, Turn}
-var riseSpeed = 0.1
+var riseSpeed = 0.02
 
 func setType(type : Type):
 	var anim = ""

@@ -351,6 +351,7 @@ func intersectsOutline(pos : Vector3):
 		for zone in localClipZones:
 			if zone.checkPos(posRelative - zone.position):
 				intersects = !zone.clipped
+				#Simulator.spawnIndicator(pos * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Attention if zone.clipped else EventIndicator.Type.Error)
 				break
 	return intersects
 
