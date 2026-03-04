@@ -202,7 +202,8 @@ func _notification(what):
 func setSelected(value):
 	super.setSelected(value)
 	for zone in localClipZones:
-		zone.collider.monitorable = value
+		zone.hitbox.disabled = !value
+		zone.mesh.visible = value
 	#sprite.set_instance_shader_parameter("selected", value)
 	mesh.updateMaterial()
 	sprite.visible = value
@@ -237,9 +238,9 @@ func updateConstraints():
 						return
 	if heightIndex == 0:
 		setFixed(true)
-	for relation in relations:
-		if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
-			relation.call_deferred("delete")
+	#for relation in relations:
+		#if not relation.A in currentPins.keys() and not relation.B in currentPins.keys():
+			#relation.call_deferred("delete")
 	
 
 func getBounds():

@@ -5,6 +5,7 @@ const SPRING_MESH = preload("res://Scenes/Parts/Relations/SpringMesh.tscn")
 
 const epsilon = 0.04
 var initialDist = 0.0
+var heightDiff = 0
 @export var materialNormal : Material
 @export var materialTension : Material
 @export var materialSelected : Material
@@ -20,6 +21,15 @@ func init():
 	#var aPos2 = A.global_position
 	#initialDist = A.to_global(A.position).distance_to(B.to_global(B.position))
 	initialDist = A.global_position.distance_to(B.global_position)
+	var sheetsInvolved = 0
+	if A is Pin:
+		if B is Pin:
+			$MeshPivot.position = Vector3.UP * 0.1
+		else:
+			$MeshPivot.global_position = A.global_position * Vector3(1,0,1) + B.global_position * Vector3.UP
+	else:
+		$MeshPivot.global_position = A.global_position
+	updateVisuals()
 	Simulator.record.connect(updateTension)
 
 func canMove(dir : Vector2, initiator, chain = []):
@@ -73,8 +83,9 @@ func updateMeshInstances():
 	var numInstances = 0
 
 func updateVisuals():
-	$MeshPivot.look_at(B.global_position + Vector3.UP * 0.1)
-	$MeshPivot.scale = Vector3(.2,.2,A.global_position.distance_to(B.global_position))
+	$MeshPivot.look_at(B.global_position)
+	$MeshPivot.rotation.x = 0
+	$MeshPivot.scale = Vector3(.2,.2,Space.toVec2(A.global_position).distance_to(Space.toVec2(B.global_position)))
 	#$Mesh.global_position = (A.global_position + B.global_position) / 2
 
 func isUnderTension():

@@ -45,8 +45,10 @@ monitorable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=56168630]
 shape = SubResource("BoxShape3D_rn1tq")
+disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2090213879]
 transform = Transform3D(0.1, 0, 0, 0, 0.03, 0, 0, 0, 0.1, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_khhgu")
 mesh = SubResource("BoxMesh_ask51")
