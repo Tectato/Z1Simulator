@@ -220,7 +220,7 @@ func addHole(prefab, pos):
 	var newHole = prefab.instantiate()
 	add_child(newHole)
 	holes.append(newHole)
-	newHole.position = Vector3(pos.x, 0, pos.y)/1000 + Vector3(partOffset.x,0,partOffset.y)
+	newHole.position = Vector3(pos.x, -0.05, pos.y)/1000 + Vector3(partOffset.x,0,partOffset.y)
 	return newHole
 
 func addSticker(pos, size, imagePath):
