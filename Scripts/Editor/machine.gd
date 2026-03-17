@@ -56,7 +56,7 @@ func addLayer():
 	newLayer.updateCollider()
 	updateLayerPositions()
 	if Global.editor:
-		Global.editor.selector.select(newLayer.collider)
+		Global.editor.selector.call_deferred("select", newLayer.collider)
 		Global.editor.updateSceneTree()
 	return newLayer
 
@@ -71,7 +71,7 @@ func duplicateLayer(layer : Layer):
 	newLayer.updateCollider()
 	updateLayerPositions()
 	if Global.editor:
-		Global.editor.selector.select(newLayer.collider)
+		Global.editor.selector.call_deferred("select", newLayer.collider)
 		Global.editor.updateSceneTree()
 
 func moveLayer(layer : Layer, direction = 1):
@@ -90,6 +90,8 @@ func removeLayer(layer):
 	else:
 		Global.editor.updateSceneTree()
 		updateLayerPositions()
+	if index > 0:
+		Global.editor.selector.call_deferred("select", layers[index-1].collider)
 
 func getLayerHeight(layer):
 	return layers.find(layer)

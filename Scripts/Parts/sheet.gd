@@ -796,6 +796,7 @@ func setHighlight(enabled : bool, highlightColor : Color):
 		mesh.setHighlight(null)
 
 func setupAfterDuplication(source = null):
+	loadSVG(source.sheetData.path)
 	pass
 	#if holes.is_empty():
 		#if source == null:
