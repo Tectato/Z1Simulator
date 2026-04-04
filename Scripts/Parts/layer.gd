@@ -270,9 +270,21 @@ func setupAfterDuplication(source : Layer):
 		part.layer = self
 		part.place()
 		part.resetUUID()
+	var mapping = {}
 	for part in source.parts:
 		if ownHash.has(part.position):
-			ownHash[part.position].setupAfterDuplication(part)
+			var copy = ownHash[part.position]
+			copy.setupAfterDuplication(part)
+			mapping[part] = copy
+	for part in source.parts:
+		for relation in part.relations:
+			var other = relation.getOppositeOf(part)
+			if mapping.has(other):
+				other = mapping[other]
+			if relation is Spring:
+				mapping[part].addRelation(Relation.Type.Spring, other)
+			elif relation is Link:
+				mapping[part].addRelation(Relation.Type.Link, other)
 
 func updatePosition():
 	for part in parts:

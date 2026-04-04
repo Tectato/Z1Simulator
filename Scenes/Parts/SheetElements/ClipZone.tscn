@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bhlk4tqdfhpqe"]
 
 [ext_resource type="Script" uid="uid://dktngyyx7ldb4" path="res://Scripts/Parts/SheetElements/clipZone.gd" id="1_khhgu"]
+[ext_resource type="PackedScene" uid="uid://bh6pnli0v8p06" path="res://Scenes/Parts/SheetElements/Cutouts/ClipZonePositive.tscn" id="2_rn1tq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khhgu"]
-transparency = 1
 shading_mode = 0
-albedo_color = Color(0.8000002, 0, 1, 0.26666668)
+albedo_color = Color(0.8000002, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn1tq"]
 transparency = 1
@@ -49,6 +49,8 @@ disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2090213879]
 transform = Transform3D(0.1, 0, 0, 0, 0.03, 0, 0, 0, 0.1, 0, 0, 0)
-visible = false
 material_override = SubResource("StandardMaterial3D_khhgu")
 mesh = SubResource("BoxMesh_ask51")
+
+[node name="ClipZonePositive" parent="." unique_id=934805480 instance=ExtResource("2_rn1tq")]
+visible = false

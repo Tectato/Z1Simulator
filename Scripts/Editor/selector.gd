@@ -351,7 +351,7 @@ func paste():
 		#min = Vector3(min(min.x,partMin.x),min(min.y,partMin.y),min(min.z,partMin.z))
 		#max = Vector3(max(max.x,partMax.x),max(max.y,partMax.y),max(max.z,partMax.z))
 	
-	
+	var mapping = {} # Maps original parts to their duplicates
 	for part in clipboard:
 		if !part: continue
 		if part is Sheet:
@@ -375,7 +375,7 @@ func paste():
 		newPart.id = part.id
 		mouseRelative.push_back(Vector3(0,0,0))#TODO
 		partDragOrigins.push_back(part.global_position)
-		
+		mapping[part] = newPart
 		
 		if newPart is Sheet:
 			pass
@@ -391,6 +391,16 @@ func paste():
 			newPart.outputState = part.outputState
 			newPart.setOutput(part.output)
 	placing = true
+	
+	for part in clipboard:
+		for relation in part.relations:
+			var other = relation.getOppositeOf(part)
+			if mapping.has(other):
+				other = mapping[other]
+			if relation is Spring:
+				mapping[part].addRelation(Relation.Type.Spring, other)
+			elif relation is Link:
+				mapping[part].addRelation(Relation.Type.Link, other)
 
 func getMidPoint(selection):
 	var min = Vector3(1,1,1)*1000

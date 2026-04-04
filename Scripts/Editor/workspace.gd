@@ -268,6 +268,11 @@ func deserialize(path):
 	if !values.is_empty():
 		Global.editor.valueInterface.call_deferred("deserialize", values)
 	
+	if !machines.is_empty():
+		await get_tree().process_frame
+		selectedMachine = machines.back()
+		selectedLayer = selectedMachine.layers.front()
+	
 func exportMachine(_path):
 	pass
 

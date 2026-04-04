@@ -90,7 +90,7 @@ func removeLayer(layer):
 	else:
 		Global.editor.updateSceneTree()
 		updateLayerPositions()
-	if index > 0:
+	if index > 0 and not beingDeleted:
 		Global.editor.selector.call_deferred("select", layers[index-1].collider)
 
 func getLayerHeight(layer):

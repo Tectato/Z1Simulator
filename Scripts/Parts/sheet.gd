@@ -203,7 +203,7 @@ func setSelected(value):
 	super.setSelected(value)
 	for zone in localClipZones:
 		zone.hitbox.disabled = !value
-		zone.mesh.visible = value
+		#zone.mesh.visible = value
 	#sprite.set_instance_shader_parameter("selected", value)
 	mesh.updateMaterial()
 	sprite.visible = value
@@ -796,6 +796,9 @@ func setHighlight(enabled : bool, highlightColor : Color):
 		mesh.setHighlight(null)
 
 func setupAfterDuplication(source = null):
+	for child in get_children():
+		if child is ClipZone:
+			child.queue_free()
 	loadSVG(source.sheetData.path)
 	pass
 	#if holes.is_empty():

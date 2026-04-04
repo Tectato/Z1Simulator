@@ -105,6 +105,9 @@ func flipTension():
 	updateTension()
 
 func _process(delta: float) -> void:
+	if !A or !B:
+		queue_free()
+		return
 	if A.inMotion or B.inMotion:
 		updateVisuals()
 

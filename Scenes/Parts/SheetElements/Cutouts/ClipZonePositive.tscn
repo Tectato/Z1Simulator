@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bh6pnli0v8p06"]
+
+[node name="ClipZonePositive" type="CSGBox3D" unique_id=934805480]
+operation = 1
+size = Vector3(0.1, 0.04, 0.1)

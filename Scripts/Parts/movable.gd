@@ -15,7 +15,6 @@ enum MoveState { Blocked, Moved, AlreadyMoving }
 
 var interactionCandidates = []
 var relations = []
-var constraints = []
 var fixed = false
 var blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
 var setToMove = [-1,-1,-1,-1]
@@ -177,7 +176,6 @@ func propagateNonblockingRelations(dir : Vector2, chain = []):
 			relation.applyMove(dir, self, chain)
 
 func abortMove(initiator, chain = []):
-	schedule(visualizeChain, false)
 	setToMove = [-1,-1,-1,-1]
 	#if Global.editor.selector.selected.is_empty():
 		#Global.editor.selector.select(collider)
@@ -197,6 +195,7 @@ func abortMove(initiator, chain = []):
 		print("Move aborted")
 	inMotion = false
 	targetPos = preMovePos
+	schedule(visualizeChain, false)
 	Simulator.spawnIndicator(global_position, EventIndicator.Type.Blocked)
 	#for relation in relations:
 		#if not relation == movedBy: #relation.isBlocking():

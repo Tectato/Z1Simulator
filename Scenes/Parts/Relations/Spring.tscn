@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://nsxv6ovm16pq"]
+[gd_scene format=3 uid="uid://nsxv6ovm16pq"]
 
 [ext_resource type="Script" uid="uid://bgqey7x3854sm" path="res://Scripts/Parts/Relations/spring.gd" id="1_bydxs"]
 [ext_resource type="ArrayMesh" uid="uid://bhwu8rtdh1dfb" path="res://Models/spring.obj" id="2_2xbpn"]
@@ -24,31 +24,31 @@ emission = Color(0.654902, 0.223529, 0, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_8mycr"]
 size = Vector3(0.3, 0.3, 1)
 
-[node name="Spring" type="Node3D"]
+[node name="Spring" type="Node3D" unique_id=1080749864]
 script = ExtResource("1_bydxs")
 materialNormal = SubResource("StandardMaterial3D_bydxs")
 materialTension = SubResource("StandardMaterial3D_2xbpn")
 materialSelected = SubResource("StandardMaterial3D_8mycr")
 
-[node name="MeshPivot" type="Node3D" parent="."]
+[node name="MeshPivot" type="Node3D" parent="." unique_id=909796035]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="MeshPivot"]
+[node name="Mesh" type="MeshInstance3D" parent="MeshPivot" unique_id=1490161854]
 transform = Transform3D(1, 0, 0, 0, 1.31134e-07, 1, 0, -1, 1.31134e-07, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_bydxs")
 mesh = ExtResource("2_2xbpn")
 skeleton = NodePath("../..")
 
-[node name="SpringSelectable" type="Node3D" parent="MeshPivot" node_paths=PackedStringArray("parent", "collider", "mesh")]
+[node name="SpringSelectable" type="Node3D" parent="MeshPivot" unique_id=243880800 node_paths=PackedStringArray("parent", "collider", "mesh")]
 script = ExtResource("3_2xbpn")
 parent = NodePath("../..")
 collider = NodePath("SelectionHitbox")
 mesh = NodePath("../Mesh")
 
-[node name="SelectionHitbox" type="Area3D" parent="MeshPivot/SpringSelectable"]
+[node name="SelectionHitbox" type="Area3D" parent="MeshPivot/SpringSelectable" unique_id=1329923119]
 collision_layer = 3
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshPivot/SpringSelectable/SelectionHitbox"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshPivot/SpringSelectable/SelectionHitbox" unique_id=480064575]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 shape = SubResource("BoxShape3D_8mycr")
