@@ -5,6 +5,8 @@ class_name Selector
 @export var mover : RayCast3D
 @export var clickArea : Control
 @export var transformGizmo : Node3D
+@export var selectionBox : NinePatchRect
+@export var debugPolygon : Polygon2D
 
 var clickPos : Vector2
 var mouseDragOrigin : Vector3
@@ -19,6 +21,9 @@ var clipboard = []
 var clickedButton : Control3D
 var hoveredButton : Control3D
 var gizmoOn = false
+
+var boxStart : Vector2
+var boxSelecting = false
 
 signal newSelection(parts)
 
@@ -68,7 +73,7 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 			if clickedButton:
 				clickedButton.release()
 				clickedButton = null
-			if not placing:
+			if not placing and not boxSelecting:
 				if dragging:
 					if selected:
 						for part in selected:
@@ -77,7 +82,12 @@ func _on_click_area_gui_input(event: InputEvent) -> void:
 						updateGizmo()
 				else:
 					cast(true, false)
-				dragging = false
+			dragging = false
+			if boxSelecting:
+				boxSelecting = false
+				selectionBox.visible = false
+				var mousePos = get_viewport().get_mouse_position()
+				boxSelect(Space.vector2Min(mousePos, boxStart), Space.vector2Max(mousePos, boxStart))
 		if event.is_action_pressed("mouse_right"):
 			cast(false, true, false, true)
 		if event.is_action_released("mouse_right"):
@@ -95,22 +105,33 @@ func _process(_delta: float) -> void:
 	if focusElsewhere:
 		focusElsewhere = focusElsewhere != clickArea
 	selected = selected.filter(exists)
-	if !selected.is_empty() and !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
+	if !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
+		var shouldMoveParts = !selected.is_empty() && !Input.is_key_pressed(KEY_SHIFT)
 		if !dragging and !placing:
 			var dist = get_viewport().get_mouse_position().distance_to(clickPos)
 			if clicking and dist > 5:
 				dragging = true
-				var soundsPlayed = 0
-				for thing in selected:
-					if thing is Pin:
-						Simulator.partAudioHandler.pick(true)
-						soundsPlayed |= 1
-					if thing is Sheet:
-						Simulator.partAudioHandler.pick(false)
-						soundsPlayed |= 2
-					if soundsPlayed > 2: break
-		if (dragging or placing) and not selected[0] is Layer and canModify():
+				if shouldMoveParts:
+					var soundsPlayed = 0
+					for thing in selected:
+						if thing is Pin:
+							Simulator.partAudioHandler.pick(true)
+							soundsPlayed |= 1
+						if thing is Sheet:
+							Simulator.partAudioHandler.pick(false)
+							soundsPlayed |= 2
+						if soundsPlayed > 2: break
+				else:
+					boxSelecting = true
+					boxStart = clickPos
+					selectionBox.visible = true
+					selectionBox.position = clickPos
+		if (dragging or placing) and shouldMoveParts and not selected[0] is Layer and canModify():
 			mover.move()
+		if boxSelecting:
+			var mousePos = get_viewport().get_mouse_position()
+			selectionBox.position = Space.vector2Min(boxStart, mousePos)
+			selectionBox.size = Space.vector2Max(boxStart, mousePos) - Space.vector2Min(boxStart, mousePos)
 	if !selected.is_empty() and !focusElsewhere:
 		if selected.size() == 1 and selected[0] is Sheet and selected[0].hasPivot() and Input.is_action_pressed("mouse_right"):
 			mover.spin()
@@ -458,8 +479,13 @@ func select(target, checkForUI = false, shift = false, clicked = true):
 		#print("No Hit")
 
 func selectSet(parts = []):
-	deselect()
-	selected = parts
+	if !Input.is_key_pressed(KEY_SHIFT):
+		deselect()
+		selected = parts
+	else:
+		for part in parts:
+			if !part in selected:
+				selected.append(part)
 	for part in selected:
 		part.setSelected(true)
 		partDragOrigins.append(part.global_position)
@@ -488,3 +514,45 @@ func updateGizmo():
 		transformGizmo.setAxesEnabled(movability)
 	else:
 		transformGizmo.hide()
+
+func boxSelect(min : Vector2, max : Vector2):
+	if not Global.workspace.resolution == Workspace.Resolution.Part: return
+	var box = Rect2(min, max-min)
+	var boxPolygon = [Vector2(min.x, min.y), Vector2(max.x, min.y), Vector2(max.x, max.y), Vector2(min.x, max.y)]
+	var machineCandidates = []
+	if Global.workspace.hideUnselectedLayers:
+		machineCandidates = [Global.workspace.selectedMachine]
+	else:
+		for machine in Global.workspace.machines:
+			var bounds = machine.getBounds()
+			appendCandidate(machine, boxPolygon, machineCandidates)
+
+	var layerCandidates = []
+	if Global.workspace.hideUnselectedLayers:
+		layerCandidates = [Global.workspace.selectedLayer]
+	else:
+		for machine in machineCandidates:
+			var selectedIndex = 0
+			if machine == Global.workspace.selectedMachine:
+				selectedIndex = machine.getLayerHeight(Global.workspace.selectedLayer)
+			for i in range(selectedIndex, machine.layers.size()):
+				var layer = machine.layers[i]
+				appendCandidate(layer, boxPolygon, layerCandidates)
+	
+	var partCandidates = []
+	for machine in machineCandidates:
+		for part in machine.clockPins:
+			appendCandidate(part, boxPolygon, partCandidates)
+		for part in machine.globalPins:
+			appendCandidate(part, boxPolygon, partCandidates)
+	for layer in layerCandidates:
+		for part in layer.parts:
+			appendCandidate(part, boxPolygon, partCandidates)
+	selectSet(partCandidates)
+
+func appendCandidate(candidate, boxPolygon : PackedVector2Array, list : Array):
+	var bounds = candidate.getBounds()
+	var candidatePolygon = Space.boxToScreenPolygon(bounds[0] + candidate.global_position, bounds[1] + candidate.global_position, camera)
+	var intersection = Geometry2D.intersect_polygons(candidatePolygon, boxPolygon)
+	if !intersection.is_empty():
+		list.append(candidate)

@@ -4,13 +4,12 @@
 [ext_resource type="PackedScene" uid="uid://bh6pnli0v8p06" path="res://Scenes/Parts/SheetElements/Cutouts/ClipZonePositive.tscn" id="2_rn1tq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khhgu"]
-shading_mode = 0
 albedo_color = Color(0.8000002, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rn1tq"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(0.32800007, 0, 0.41, 0.4627451)
+albedo_color = Color(0.32800007, 0, 0.41, 0.14901961)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ask51"]
 transparency = 1

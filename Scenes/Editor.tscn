@@ -132,6 +132,7 @@
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
 [ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
+[ext_resource type="Texture2D" uid="uid://bratdmc6cuuk7" path="res://Sprites/selectionBox.png" id="127_m3vij"]
 [ext_resource type="Texture2D" uid="uid://b08jemc6cnm77" path="res://Sprites/Buttons/Visibility/3DuiVis.png" id="130_00thf"]
 [ext_resource type="Texture2D" uid="uid://c5tmslgldndiv" path="res://Sprites/focusPoint.png" id="130_4ptxc"]
 [ext_resource type="Texture2D" uid="uid://cymmm53jl7m6l" path="res://Sprites/Buttons/Visibility/3DuiVis_active.png" id="131_m3vij"]
@@ -561,7 +562,7 @@ current = true
 script = ExtResource("2_0hhuw")
 focusPoint = NodePath("../FocusPoint")
 
-[node name="SelectionRay" type="RayCast3D" parent="Camera3D" unique_id=399789399 node_paths=PackedStringArray("camera", "mover", "clickArea", "transformGizmo")]
+[node name="SelectionRay" type="RayCast3D" parent="Camera3D" unique_id=399789399 node_paths=PackedStringArray("camera", "mover", "clickArea", "transformGizmo", "selectionBox", "debugPolygon")]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
 enabled = false
 collision_mask = 35
@@ -571,6 +572,8 @@ camera = NodePath("..")
 mover = NodePath("../../MoveRay")
 clickArea = NodePath("../Interface/ClickArea")
 transformGizmo = NodePath("../../TransformGizmo")
+selectionBox = NodePath("../Interface/SelectionBox")
+debugPolygon = NodePath("../Interface/Polygon2D")
 
 [node name="CommentRay" type="RayCast3D" parent="Camera3D" unique_id=825949964 node_paths=PackedStringArray("camera", "displayBox", "displayText")]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, -2.9802322e-08, 1, 0, 0, 0)
@@ -2763,6 +2766,21 @@ offset_right = 209.0
 grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
+
+[node name="Polygon2D" type="Polygon2D" parent="Camera3D/Interface" unique_id=1945157069]
+color = Color(1, 1, 1, 0.28235295)
+
+[node name="SelectionBox" type="NinePatchRect" parent="Camera3D/Interface" unique_id=873300585]
+visible = false
+modulate = Color(0.5, 0.6916666, 1, 1)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("127_m3vij")
+patch_margin_left = 1
+patch_margin_top = 1
+patch_margin_right = 1
+patch_margin_bottom = 1
 
 [node name="UIVisibility" type="TextureButton" parent="Camera3D" unique_id=463810253]
 anchors_preset = 2

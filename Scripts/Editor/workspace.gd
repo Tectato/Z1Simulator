@@ -82,7 +82,8 @@ func visModeChanged(mode : Editor.VisMode):
 func setResolution(newRes):
 	if newRes != resolution and !Global.editor.loading:
 		resolution = newRes
-		updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
+		if selectedLayer != null:
+			updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
 		resolutionChanged.emit(newRes)
 
 func setSelectability(newSel):
@@ -98,7 +99,8 @@ func setIntermediatePlateVis(newVis):
 func setUnselectedLayersHidden(newVis):
 	if newVis != hideUnselectedLayers:
 		hideUnselectedLayers = newVis
-		updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
+		if selectedLayer != null:
+			updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
 		unselectedLayersVisChanged.emit()
 
 func setShowPowerFlow(value):
@@ -249,7 +251,7 @@ func deserialize(path):
 	if !machines.is_empty():
 		setResolution(Resolution.Machine)
 		selectedMachine = machines.back()
-		Global.editor.selector.select(selectedMachine.collider)
+		#Global.editor.selector.select(selectedMachine.collider)
 		if !selectedMachine.layers.is_empty():
 			selectedLayer = selectedMachine.layers[0]
 			Global.editor.planInterface.setPlan(selectedLayer.plan)
@@ -485,5 +487,4 @@ func stopRecording():
 			print("Could not write file for project")
 	else:
 		print("No project loaded")
-	
 	#Simulator.rewind.emit()
