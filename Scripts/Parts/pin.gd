@@ -362,8 +362,8 @@ func delete():
 		machine.removeGlobalPin(self)
 
 func canMove(dir : Vector2, initiator, chain = []):
-	if selected:
-		pass
+	#if selected:
+		#pass
 	var out = super.canMove(dir, initiator, chain)
 	if out != MoveState.Moved: return out
 	var dirID = dirToInt(dir)
@@ -377,8 +377,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
 	var canMove = check2
-	if selected:
-		pass
+	#if selected:
+		#pass
 	if check2 and toMove.has(dirID):
 		for sheet in toMove[dirID]:
 			if sheet == initiator:

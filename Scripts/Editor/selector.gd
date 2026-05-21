@@ -208,14 +208,7 @@ func _process(_delta: float) -> void:
 				if part is Movable:
 					part.clearRelations()
 		elif Input.is_action_just_pressed("link"):
-			if selected.size() == 2 and selected[0] is Movable and selected[1] is Movable:
-				if selected[0] is ClockPin and selected[1] is ClockPin:
-					selected[0].addRelation(Relation.Type.InputLink, selected[1])
-				else:
-					if Input.is_key_pressed(KEY_CTRL):
-						selected[0].addRelation(Relation.Type.Spring, selected[1])
-					else:
-						selected[0].addRelation(Relation.Type.Link, selected[1])
+			link()
 		cast(false,true,true,false)
 	if Input.is_action_just_pressed("paste"):
 		paste()
@@ -423,6 +416,21 @@ func paste():
 			elif relation is Link:
 				mapping[part].addRelation(Relation.Type.Link, other)
 
+func link():
+	Global.editor.previousAction = link
+	for i in range(selected.size()-1): # If more than 2 are selected, make a chain
+		if selected[i] is Movable and selected[i+1] is Movable:
+			addRelation(selected[i], selected[i+1])
+
+func addRelation(partA : Movable, partB : Movable):
+	if partA is ClockPin and partB is ClockPin:
+		partA.addRelation(Relation.Type.InputLink, partB)
+	else:
+		if Input.is_key_pressed(KEY_ALT):
+			partA.addRelation(Relation.Type.Spring, partB)
+		else:
+			partA.addRelation(Relation.Type.Link, partB)
+
 func getMidPoint(selection):
 	var min = Vector3(1,1,1)*1000
 	var max = Vector3(1,1,1)*-1000
@@ -540,14 +548,19 @@ func boxSelect(min : Vector2, max : Vector2):
 				appendCandidate(layer, boxPolygon, layerCandidates)
 	
 	var partCandidates = []
-	for machine in machineCandidates:
-		for part in machine.clockPins:
-			appendCandidate(part, boxPolygon, partCandidates)
-		for part in machine.globalPins:
-			appendCandidate(part, boxPolygon, partCandidates)
+	var mask = Global.workspace.getSelectabilityMask()
+	if Global.workspace.selectability != Workspace.Selectability.Sheets:
+		for machine in machineCandidates:
+			for part in machine.clockPins:
+				appendCandidate(part, boxPolygon, partCandidates)
+			for part in machine.globalPins:
+				appendCandidate(part, boxPolygon, partCandidates)
 	for layer in layerCandidates:
 		for part in layer.parts:
-			appendCandidate(part, boxPolygon, partCandidates)
+			if part is Sheet and mask & 0b10:
+				appendCandidate(part, boxPolygon, partCandidates)
+			elif part is Pin and mask & 0b01:
+				appendCandidate(part, boxPolygon, partCandidates)
 	selectSet(partCandidates)
 
 func appendCandidate(candidate, boxPolygon : PackedVector2Array, list : Array):

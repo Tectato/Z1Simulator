@@ -85,7 +85,7 @@ func _process(_delta: float) -> void:
 			dragPos = dragOrigin + axis * axis.dot(dragPos-dragOrigin)
 		
 		var dragDelta = dragPos - dragOrigin
-		dragDelta = snapped(dragDelta, Vector3(1,1,1)*Workspace.gridSize/16) * Vector3(1,0,1) + Vector3.UP * snapped(dragDelta.y,0.02)
+		dragDelta = snapped(dragDelta, Vector3(1,1,1)*Workspace.gridSize/16) * Vector3(1,0,1) + Vector3.UP * snapped(dragDelta.y,Global.workspace.sheetSpacing)
 		
 		var i = -1
 		for part in parent.selector.selected:

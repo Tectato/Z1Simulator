@@ -278,7 +278,7 @@ func snap(srcPos):
 		global_position = srcPos + candidates[0]
 	else:
 		global_position = srcPos
-	position = position * Vector3(1,0,1) + snappedf(position.y, 0.045) * Vector3.UP
+	position = position * Vector3(1,0,1) + snappedf(position.y, Global.workspace.sheetSpacing) * Vector3.UP
 	restPos = global_position
 	targetPos = position
 	return global_position
@@ -347,9 +347,12 @@ func intersects(pos : Vector3):
 func intersectsOutline(pos : Vector3):
 	#var posRelative = outline.to_local(pos)
 	var posRelative = pos * $Outline.global_transform
+	var coarseCheck = sheetData.boundingRect.has_point(Space.toVec2(posRelative))
+	if !coarseCheck: return false
 	var intersects = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
 	if intersects:
 		for zone in localClipZones:
+			if !zone.clipped: continue
 			if zone.checkPos(posRelative - zone.position):
 				intersects = !zone.clipped
 				#Simulator.spawnIndicator(pos * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Attention if zone.clipped else EventIndicator.Type.Error)

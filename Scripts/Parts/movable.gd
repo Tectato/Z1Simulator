@@ -72,8 +72,8 @@ func setHighlight(enabled : bool, highlightColor : Color):
 	pass
 
 func canMove(dir : Vector2, initiator, chain = []):
-	if selected:
-		pass
+	#if selected:
+		#pass
 	var dirID = dirToInt(dir)
 	if fixed or blockedCycle[dirID] == Simulator.totalStep:
 		return MoveState.Blocked

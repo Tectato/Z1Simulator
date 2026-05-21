@@ -676,9 +676,12 @@ dialog_text = "Add or load Machine"
 cancel_button_text = "Load as Project"
 
 [node name="SaveRequest" type="ConfirmationDialog" parent="Camera3D/Interface" unique_id=392708393]
+oversampling_override = 1.0
 initial_position = 1
+size = Vector2i(268, 106)
 ok_button_text = "Yes"
-dialog_text = "Save current project?"
+dialog_text = "Save changes to current project?"
+dialog_autowrap = true
 cancel_button_text = "No"
 
 [node name="HelpWindow" type="Window" parent="Camera3D/Interface" unique_id=1228020896]

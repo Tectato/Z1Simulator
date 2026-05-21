@@ -13,6 +13,7 @@ const scaleFactor = 0.001
 var partOffset : Vector2
 var midPoint : Vector3
 var bounds = []
+var boundingRect : Rect2
 var holes = []
 var stickers = []
 var clipZones = []
@@ -62,6 +63,7 @@ func loadSVG(filepath : String):
 	
 	var radii = (max-min)/2
 	bounds = [Vector3(-radii.x,-0.05, -radii.y), Vector3(radii.x, 0.05, radii.y)]
+	boundingRect = Rect2(Space.toVec2(bounds[0]), Space.toVec2(bounds[1]-bounds[0]))
 	
 	midPoint = (Vector3(min.x,0,min.y) + Vector3(max.x,0,max.y))/2
 	var offset = Vector3(partOffset.x,0,partOffset.y)

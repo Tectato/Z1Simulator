@@ -488,3 +488,9 @@ func stopRecording():
 	else:
 		print("No project loaded")
 	#Simulator.rewind.emit()
+	
+func getSelectabilityMask():
+	match(selectability):
+		Selectability.Both: return 0b11
+		Selectability.Sheets: return 0b10
+		Selectability.Pins: return 0b01
