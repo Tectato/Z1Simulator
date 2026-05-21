@@ -33,5 +33,6 @@ static func boxToScreenPolygon(start : Vector3, end : Vector3, camera : Camera3D
 						))
 	var points2D = []
 	for point in points3D:
-		points2D.append(camera.unproject_position(point))
+		if !camera.is_position_behind(point):
+			points2D.append(camera.unproject_position(point))
 	return Geometry2D.convex_hull(points2D)

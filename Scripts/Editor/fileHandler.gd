@@ -27,6 +27,7 @@ func extractMachines(path : String):
 			for machine in source["machines"]:
 				var newMachine = {}
 				if machine.has("path"):
+					if machine["path"] == null: continue
 					newMachine["machine"] = loadMachineFile(PathHandler.toAbsolutePath(machine["path"]))
 					newMachine["pos_x"] = machine["pos_x"]
 					if machine.has("pos_y"):

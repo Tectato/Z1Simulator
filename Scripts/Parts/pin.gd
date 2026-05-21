@@ -103,7 +103,8 @@ func deserializeDiff(diff):
 		if outputState != arr[1]:
 			flipOutput()
 		directionality = int(arr[2])
-		indicator.setDirection(directionality)
+		if output:
+			indicator.setDirection(directionality)
 
 func clearDiff():
 	position = storedPos

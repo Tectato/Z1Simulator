@@ -89,6 +89,7 @@ func deserialize(source : Dictionary):
 	height = source["height"]
 	for sheet in sheets:
 		#Check if sheet has been deserialized already and copy that instead
+		if sheet["file"] == null: continue
 		var imagePath = PathHandler.toAbsolutePath(sheet["file"])
 		#var cached = SheetLibrary.query(imagePath)
 		var newPart

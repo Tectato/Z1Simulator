@@ -72,9 +72,12 @@ func next(stopClock = true):
 	partsMoved = 0
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
+	var autoClockPaused = $AutoClock.paused
+	$AutoClock.paused = true # Pause clock to ensure it doesnt keep running through lag spikes
 	step.emit()
 	for instance in clockInstances:
 		instance.clockCycle(currentStep)
+	$AutoClock.paused = autoClockPaused
 	gizmo.setClockStep(currentStep+1)
 	$MoveComplete.start()
 	$Cooldown.start()
