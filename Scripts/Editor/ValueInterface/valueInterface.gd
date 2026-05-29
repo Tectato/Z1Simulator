@@ -12,7 +12,9 @@ func serialize():
 
 func deserialize(src):
 	for uuid in src:
+		if uuid == null: continue
 		var machine = Global.workspace.uuidManager.getPart(int(uuid))
+		if machine == null: continue
 		addMachine(machine)
 		machineEntries[machine].deserialize(src[uuid])
 

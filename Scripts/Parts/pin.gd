@@ -477,6 +477,13 @@ func abortMove(initiator, chain = []):
 	if output:
 		flipOutput()
 
+func rewind():
+	var canRewind = !posHistory.is_empty()
+	super.rewind()
+	if canRewind and output and inMotion:
+		await get_tree().process_frame
+		stateChanged.emit(self)
+
 func getMachine():
 	if layer == null and machine != null:
 		return machine

@@ -2588,9 +2588,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -184.0
-offset_top = -113.0
+offset_top = -125.0
 offset_right = 184.0
-offset_bottom = 113.0
+offset_bottom = 125.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("77_rgbjt")
@@ -2712,6 +2712,19 @@ text = "Brass static sheets in shaded view"
 layout_mode = 2
 theme = SubResource("Theme_pd6ol")
 
+[node name="Debug" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1257706290]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug" unique_id=939600024]
+layout_mode = 2
+mouse_filter = 1
+text = "Show debug info"
+
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug" unique_id=943811266]
+layout_mode = 2
+theme = SubResource("Theme_pd6ol")
+
 [node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1428938694]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -2769,6 +2782,32 @@ offset_right = 209.0
 grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
+
+[node name="ObjectInfo" type="Label" parent="Camera3D/Interface/VisibilityParent" unique_id=918748649]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -209.0
+offset_top = -23.0
+offset_right = 209.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "UUID:"
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ObjectInfo" unique_id=2103652677]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Polygon2D" type="Polygon2D" parent="Camera3D/Interface" unique_id=1945157069]
 color = Color(1, 1, 1, 0.28235295)
@@ -3084,6 +3123,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="drag_ended" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume/HSlider" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_h_slider_drag_ended"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_store_diff_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_brass_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_debug_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/VisibilityParent/CommentDisplay" to="Camera3D/Interface/VisibilityParent/CommentDisplay" method="_on_gui_input"]

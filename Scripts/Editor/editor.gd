@@ -202,5 +202,10 @@ func localizeMachine():
 		selector.selected[0].makeLocal()
 
 func clearDiff():
-	if selector.selected.size() == 1 and selector.selected[0] is Machine:
-		selector.selected[0].clearDiff()
+	if !selector.selected.is_empty():
+		if selector.selected[0] is Machine:
+			selector.selected[0].clearDiff()
+		else:
+			for part in selector.selected:
+				if part is Movable:
+					part.clearDiff()

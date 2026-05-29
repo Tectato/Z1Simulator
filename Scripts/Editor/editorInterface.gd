@@ -16,6 +16,7 @@ extends Control
 @onready var selectedLabel = $VisibilityParent/SelectedLabel/Label
 @onready var tutorial = $VisibilityParent/Tutorial
 
+@onready var infoLabel = $VisibilityParent/ObjectInfo
 @onready var debugLabel = $VisibilityParent/DebugLabel
 
 const WebRootFolder = "/Machines"
@@ -257,9 +258,16 @@ func visModeShaded() -> void:
 
 func newSelection(parts = []):
 	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
+	var instancePartsSelected = !parts.is_empty()
+	for part in parts:
+		if !(part is Movable and part.getMachine().importedInstance):
+			instancePartsSelected = false
+			break
 	$VisibilityParent/MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
-	$VisibilityParent/MenuBar/Edit.set_item_disabled(1, !oneInstanceMachineSelected)
+	$VisibilityParent/MenuBar/Edit.set_item_disabled(1, !(oneInstanceMachineSelected or instancePartsSelected))
 	commentBox.hide()
+	if !parts.is_empty() and (parts.back() is Movable or parts.back() is Machine):
+		Global.editor.interface.infoLabel.text = "UUID: " + str(parts.back().uuid)
 
 func _on_edit_lock_toggled(toggled_on: bool) -> void:
 	editor.editingLocked = toggled_on

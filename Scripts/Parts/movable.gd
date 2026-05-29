@@ -72,8 +72,8 @@ func setHighlight(enabled : bool, highlightColor : Color):
 	pass
 
 func canMove(dir : Vector2, initiator, chain = []):
-	#if selected:
-		#pass
+	if selected:
+		pass
 	var dirID = dirToInt(dir)
 	if fixed or blockedCycle[dirID] == Simulator.totalStep:
 		return MoveState.Blocked
@@ -96,6 +96,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		var relationMoved = relation.canMove(dir, self, chain.duplicate())
 		if relation.isBlocking():
 			canMove = canMove and relationMoved != MoveState.Blocked
+			if !canMove: break
 		if relationMoved == MoveState.Moved:
 			moved.append(relation)
 	if !canMove:

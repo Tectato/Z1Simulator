@@ -32,3 +32,6 @@ func _on_set_default_scene_pressed() -> void:
 
 func _on_h_slider_drag_ended(value_changed: bool) -> void:
 	Global.workspace.setVolume(volumeSlider.value)
+
+func _on_debug_toggled(toggled_on: bool) -> void:
+	Global.editor.interface.infoLabel.visible = toggled_on
