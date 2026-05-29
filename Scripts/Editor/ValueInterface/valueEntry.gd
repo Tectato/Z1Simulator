@@ -48,7 +48,9 @@ func deserialize(machine : Machine, src):
 	$Header/SignToggle.set_pressed_no_signal(isSigned)
 	if src.has("float"):
 		isFloat = bool(src["float"])
-		if src.has("radix"): radixSlider.set_value_no_signal(pins.size() - int(src["radix"]))
+		if src.has("radix"):
+			radixSlider.set_value_no_signal(pins.size() - int(src["radix"]))
+			radixPoint = int(src["radix"])
 	$Header/FloatToggle.set_pressed_no_signal(isFloat)
 	$FloatValue.visible = isFloat
 	
@@ -123,8 +125,7 @@ func updateFloat():
 		floatValue = float(currentValue - (1 << (bits.size()-2))) / (1 << radixPoint)
 	else:
 		floatValue = float(currentValue) / (1 << radixPoint)
-	flt.text = ("%0.4f" % floatValue).rstrip("0")
-	if flt.text.ends_with("."): flt.text += "0"
+	flt.text = ("%0.4f" % floatValue)
 
 #func decTextChanged(new_text: String) -> void:
 	#if new_text.is_empty():
