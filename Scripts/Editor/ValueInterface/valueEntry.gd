@@ -94,15 +94,14 @@ func updateDec():
 
 func executeUpdateDec():
 	updateScheduled = false
+	var topBit = true
 	var sum = 0
 	for bit in bits:
 		sum *= 2
 		sum += 1 if bit.button_pressed else 0
-	if isSigned:
-		if bits[0].button_pressed:
-			sum -= (1 << (bits.size()-1))
-			sum = (1 << (bits.size()-1)) - sum
+		if topBit and isSigned:
 			sum = -sum
+			topBit = false
 	currentValue = sum
 	#dec.text = str(sum)
 	dec.set_value_no_signal(currentValue)
@@ -121,10 +120,14 @@ func updateBin():
 
 func updateFloat():
 	var floatValue = 0
-	if isSigned and bits[0].button_pressed:
-		floatValue = float(currentValue - (1 << (bits.size()-2))) / (1 << radixPoint)
-	else:
-		floatValue = float(currentValue) / (1 << radixPoint)
+	#if isSigned and bits[0].button_pressed:
+		#floatValue = float(currentValue - (1 << (bits.size()-2))) / (1 << radixPoint)
+	#else:
+		#floatValue = float(currentValue) / (1 << radixPoint)
+	floatValue = float(currentValue) / (1 << radixPoint)
+	#if isSigned and bits[0].button_pressed:
+		#var temp = 1 << (bits.size()-1) - radixPoint
+		#floatValue -= (1 << ((bits.size()-1) - radixPoint))
 	flt.text = ("%0.4f" % floatValue)
 
 #func decTextChanged(new_text: String) -> void:
