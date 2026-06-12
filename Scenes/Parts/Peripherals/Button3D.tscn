@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://m8aac6l8xsbs"]
+
+[ext_resource type="Script" uid="uid://cbqsmqfnw3qwv" path="res://Scripts/Editor/3DUI/button3D.gd" id="1_3t4bh"]
+[ext_resource type="Texture2D" uid="uid://bwxsct2wh7127" path="res://Sprites/Buttons/3DUI/generic.png" id="1_h4aor"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3t4bh"]
+atlas = ExtResource("1_h4aor")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_76m25"]
+atlas = ExtResource("1_h4aor")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgmwx"]
+atlas = ExtResource("1_h4aor")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nfkjk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3t4bh")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_76m25")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lgmwx")
+}],
+"loop": false,
+"name": &"press",
+"speed": 6.0
+}]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_h4aor"]
+radius = 0.1
+
+[node name="Button3D" type="Node3D" unique_id=490697296]
+script = ExtResource("1_3t4bh")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=219513343]
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_nfkjk")
+autoplay = "default"
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1904010434]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.12, 0)
+billboard = 1
+text = "Button"
+font_size = 20
+outline_size = 8
+
+[node name="Area3D" type="Area3D" parent="." unique_id=2113659869]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=262334830]
+shape = SubResource("SphereShape3D_h4aor")
+
+[connection signal="clicked" from="." to="AnimatedSprite3D" method="play" binds= [&"press"]]

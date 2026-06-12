@@ -66,7 +66,7 @@ func save():
 	var dict = workspace.serialize(savePath)
 	var newFile = FileAccess.open(savePath, FileAccess.WRITE)
 	if newFile:
-		newFile.store_string(JSON.stringify(dict))
+		newFile.store_string(JSON.stringify(dict))#, "\t"))
 		newFile.close()
 	else:
 		print("Could not write file for project")
@@ -150,6 +150,11 @@ func addComment():
 	saved = false
 	selector.place(workspace.addComment())
 	previousAction = addComment
+
+func addExponentSlider(input = false):
+	saved = false
+	selector.place(workspace.addPeripheral(1 if input else 2))
+	previousAction = addExponentSlider
 
 func addMachine():
 	workspace.createNew()

@@ -316,12 +316,14 @@ func _process(delta: float) -> void:
 			#blockedCycle = -1
 
 func delete():
+	beingDeleted = true
 	clearRelations()
 	if layer:
 		layer.machine.gridLibrary.unregisterPart(self)
 		layer.removePart(self)
 	#else:
 		#print("Failed to unregister part; layer is gone")
+	onDelete.emit()
 	call_deferred("queue_free")
 
 func setFixed(value, _propagate = true):

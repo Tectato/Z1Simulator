@@ -808,6 +808,7 @@ func abortMove(initiator, chain = []):
 	rotHistory.pop_back()
 
 func delete():
+	if beingDeleted: return
 	beingDeleted = true
 	SheetLibrary.unregisterUser(self, sheetData.path)
 	super.delete()

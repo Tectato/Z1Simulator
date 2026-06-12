@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://bi5ixnbgsldck"]
+
+[ext_resource type="Script" uid="uid://c4c50ow7nj8mq" path="res://Scripts/Parts/Peripherals/exponentSlider.gd" id="1_db2qt"]
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="2_qblor"]
+[ext_resource type="FontFile" uid="uid://c6hv3oj38le0" path="res://Fonts/DigitalPixel-Regular.otf" id="3_1inwg"]
+[ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="4_qblor"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mfejg"]
+size = Vector3(0.14111328, 0.2175293, 0.057678223)
+
+[sub_resource type="PrismMesh" id="PrismMesh_h47y2"]
+size = Vector3(0.1, 0.1, 0.02)
+
+[node name="OutputExponentSlider" type="Node3D" unique_id=1616483458 node_paths=PackedStringArray("slider", "inputs", "labels", "collider")]
+script = ExtResource("1_db2qt")
+slider = NodePath("MeshInstance3D")
+inputs = [NodePath("ShiftLeft"), NodePath("ShiftRight")]
+labels = [NodePath("IndexLabel")]
+collider = NodePath("Area3D")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=2075601386]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+collision_layer = 3
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=69100004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0036621094, 0.10144043, 0.021820068)
+shape = SubResource("BoxShape3D_mfejg")
+
+[node name="ShiftLeft" parent="." unique_id=1533235914 instance=ExtResource("2_qblor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, -0.25)
+
+[node name="Label" type="Label3D" parent="ShiftLeft" unique_id=1727152632]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = " d3"
+font = ExtResource("3_1inwg")
+font_size = 10
+horizontal_alignment = 0
+
+[node name="ShiftRight" parent="." unique_id=805540248 instance=ExtResource("2_qblor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, 0.25)
+
+[node name="Label" type="Label3D" parent="ShiftRight" unique_id=902940017]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = " d4"
+font = ExtResource("3_1inwg")
+font_size = 10
+horizontal_alignment = 0
+
+[node name="IndexLabel" type="Label3D" parent="." unique_id=634326752]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = "0"
+font = ExtResource("3_1inwg")
+font_size = 10
+horizontal_alignment = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1327139100]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.05, 0)
+mesh = SubResource("PrismMesh_h47y2")
+
+[node name="ButtonReset" parent="." unique_id=490697296 instance=ExtResource("4_qblor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="Label3D" parent="ButtonReset" index="1" unique_id=1904010434]
+text = "Reset"
+
+[connection signal="clicked" from="ButtonReset" to="." method="reset"]
+
+[editable path="ButtonReset"]

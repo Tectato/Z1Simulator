@@ -355,6 +355,7 @@ func updateConstraints():
 			return
 
 func delete():
+	if beingDeleted: return
 	beingDeleted = true
 	PinRenderHandler.removeInstance("pin", meshIndex)
 	super.delete()

@@ -6,6 +6,8 @@ const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
+const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
+const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
 
 const pinTravel = 0.08
 const pinTravelSquared = pinTravel * pinTravel
@@ -354,6 +356,19 @@ func addComment():
 	selectedMachine.addComment(newComment)
 	newComment.beginPlace()
 	return newComment
+	
+func addPeripheral(type : int):
+	createIfNotExists()
+	setResolution(Resolution.Part)
+	var newPeripheral
+	match(type):
+		1:
+			newPeripheral = P_INPUTEXPONENT.instantiate()
+		2:
+			newPeripheral = P_OUTPUTEXPONENT.instantiate()
+	if newPeripheral == null: return
+	selectedLayer.addPart(newPeripheral)
+	return newPeripheral
 
 func createIfNotExists():
 	if machines.is_empty():

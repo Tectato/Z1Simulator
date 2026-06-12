@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://cblhyxbnupvoa"]
+
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="1_8q7bv"]
+[ext_resource type="Script" uid="uid://c4c50ow7nj8mq" path="res://Scripts/Parts/Peripherals/exponentSlider.gd" id="1_qj1uw"]
+[ext_resource type="FontFile" uid="uid://c6hv3oj38le0" path="res://Fonts/DigitalPixel-Regular.otf" id="2_qj1uw"]
+[ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="4_t4572"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t4572"]
+size = Vector3(0.14111328, 0.2175293, 0.057678223)
+
+[sub_resource type="PrismMesh" id="PrismMesh_p55in"]
+size = Vector3(0.1, 0.1, 0.02)
+
+[node name="InputExponentSlider" type="Node3D" unique_id=1834995163 node_paths=PackedStringArray("slider", "inputs", "outputs", "labels", "collider")]
+script = ExtResource("1_qj1uw")
+slider = NodePath("MeshInstance3D")
+isInput = true
+inputs = [NodePath("ShiftLeft"), NodePath("ShiftRight")]
+outputs = [NodePath("AtZeroOrMinus6"), NodePath("AtMinus6")]
+labels = [NodePath("IndexLabel")]
+collider = NodePath("Area3D")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1911663174]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+collision_layer = 3
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=696665051]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0036621094, 0.10144043, 0.021820068)
+shape = SubResource("BoxShape3D_t4572")
+
+[node name="ShiftLeft" parent="." unique_id=1171825191 instance=ExtResource("1_8q7bv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, -0.25)
+
+[node name="Label" type="Label3D" parent="ShiftLeft" unique_id=549153314]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = "u4
+(Shift left)"
+font = ExtResource("2_qj1uw")
+font_size = 10
+horizontal_alignment = 0
+
+[node name="ShiftRight" parent="." unique_id=805540248 instance=ExtResource("1_8q7bv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, 0.25)
+
+[node name="Label" type="Label3D" parent="ShiftRight" unique_id=487502000]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = "u5
+(Shift right)"
+font = ExtResource("2_qj1uw")
+font_size = 10
+horizontal_alignment = 0
+
+[node name="AtZeroOrMinus6" parent="." unique_id=1052312925 instance=ExtResource("1_8q7bv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.25)
+
+[node name="Label" type="Label3D" parent="AtZeroOrMinus6" unique_id=849557593]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = " u6
+(At 0 or -6)"
+font = ExtResource("2_qj1uw")
+font_size = 10
+horizontal_alignment = 0
+
+[node name="AtMinus6" parent="." unique_id=632964960 instance=ExtResource("1_8q7bv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -0.25)
+
+[node name="Label" type="Label3D" parent="AtMinus6" unique_id=285768231]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = " u7
+(At -6)"
+font = ExtResource("2_qj1uw")
+font_size = 10
+horizontal_alignment = 0
+
+[node name="IndexLabel" type="Label3D" parent="." unique_id=127997647]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+sorting_offset = 1.0
+billboard = 1
+double_sided = false
+alpha_cut = 1
+text = "0"
+font = ExtResource("2_qj1uw")
+font_size = 10
+horizontal_alignment = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1585970957]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.05, 0)
+mesh = SubResource("PrismMesh_p55in")
+
+[node name="ButtonLeft" parent="." unique_id=490697296 instance=ExtResource("4_t4572")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+
+[node name="Label3D" parent="ButtonLeft" index="1" unique_id=1904010434]
+text = "-1
+"
+
+[node name="ButtonRight" parent="." unique_id=301162926 instance=ExtResource("4_t4572")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.2)
+
+[node name="Label3D" parent="ButtonRight" index="1" unique_id=1904010434]
+text = "+1"
+
+[connection signal="clicked" from="ButtonLeft" to="." method="shift" binds= [-1]]
+[connection signal="clicked" from="ButtonRight" to="." method="shift" binds= [1]]
+
+[editable path="ButtonLeft"]
+[editable path="ButtonRight"]

@@ -9,6 +9,7 @@ var id = ""
 @export var mesh : MeshInstance3D
 
 signal idChanged
+signal onDelete
 
 func setSelected(value):
 	selected = value
@@ -37,6 +38,19 @@ func canBeMoved():
 
 func getValidMoveDirections():
 	return [true,true,true]
+
+func place():
+	pass
+
+func getBounds():
+	return [Vector3(-1,0,-1)*0.2, Vector3(1,2,1)*0.2]
+
+func snap(srcPos):
+	global_position = srcPos
+	return srcPos
+
+func projectDown(ray : RayCast3D):
+	pass
 
 func rename(newID):
 	id = newID

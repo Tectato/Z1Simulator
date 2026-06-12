@@ -5,6 +5,8 @@ const PLAN = preload("res://Scenes/PlanInterface/Plan.tscn")
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const AUDIOHANDLER = preload("res://Scenes/SheetSoundHandler.tscn")
+const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
+const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
 
 @onready var collider = $BoundingBox
 @onready var bb = $BoundingBox/CollisionShape3D
@@ -62,16 +64,21 @@ func serialize():
 	height = machine.getLayerHeight(self)
 	var sheets = []
 	var pins = []
+	var peripherals = []
 	for part in parts:
 		if part is Sheet:
 			sheets.append(part.serialize())
 		elif part is Pin:
 			pins.append(part.serialize())
+		elif part is Peripheral:
+			peripherals.append(part.serialize())
 	var output = {
 		"height" : height,
 		"sheets" : sheets,
 		"pins" : pins
 	}
+	if !peripherals.is_empty():
+		output["peripherals"] = peripherals
 	offset = position.y
 	var below = machine.getLayerBelow(self)
 	if below:
@@ -107,6 +114,21 @@ func deserialize(source : Dictionary):
 		var newPart = PIN.instantiate()
 		addPart(newPart)
 		newPart.deserialize(pin)
+	if source.has("peripherals"):
+		for part in source["peripherals"]:
+			match(int(part["type"])):
+				0:
+					pass # Data-driven
+				1:
+					var newPart = P_INPUTEXPONENT.instantiate()
+					addPart(newPart)
+					newPart.deserialize(part)
+				2:
+					var newPart = P_OUTPUTEXPONENT.instantiate()
+					addPart(newPart)
+					newPart.deserialize(part)
+				3:
+					pass # Program reader
 	if source.has("id"):
 		id = source["id"]
 	if source.has("plan"):
@@ -295,7 +317,8 @@ func setupAfterDuplication(source : Layer):
 
 func updatePosition():
 	for part in parts:
-		part.updatePositions()
+		if part is Movable:
+			part.updatePositions()
 	updateBaseplate(updateBounds())
 	if gizmo:
 		_draw_gizmo()
