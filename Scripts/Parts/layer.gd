@@ -23,6 +23,7 @@ var parts = []
 var gizmo : Gizmo
 var bounds = []
 var colliderUpdateScheduled = false
+var deserializing = false
 var selected = false
 var audioHandler = null
 
@@ -84,6 +85,7 @@ func serialize():
 	return output
 
 func deserialize(source : Dictionary):
+	deserializing = true
 	var sheets = source["sheets"]
 	var pins = source["pins"]
 	height = source["height"]
@@ -115,6 +117,7 @@ func deserialize(source : Dictionary):
 	if source.has("offset"):
 		position.y = float(source["offset"])
 		offset = position.y
+	deserializing = false
 	updateCollider()
 
 func serializeDiff():
@@ -134,7 +137,8 @@ func addPart(newPart):
 	newPart.layer = self
 	add_child(newPart)
 	newPart.place()
-	updateCollider()
+	if !deserializing:
+		updateCollider()
 
 func removePart(part):
 	parts.erase(part)
@@ -195,6 +199,8 @@ func getBounds():
 	return bounds
 
 func updateBounds():
+	if deserializing:
+		return
 	var min = Vector3(1,1,1) * 100000
 	var max = Vector3(1,1,1) * -100000
 	if parts.is_empty():

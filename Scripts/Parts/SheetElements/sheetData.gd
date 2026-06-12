@@ -18,16 +18,36 @@ var holes = []
 var stickers = []
 var clipZones = []
 var spriteTex : Texture2D
+var id = ""
 var path = ""
 var bakedMesh : Mesh
+var dataReady = false
 
 signal dataParsed()
 signal meshReady(path : String, mesh : Mesh)
 
+static var numInstances = 0
+static var t_spriteCreation = 0
+static var t_readFile = 0
+static var t_parseElements = 0
+static var t_applyOffset = 0
+static var t_buildCSG = 0
+static var t_compileMesh = 0
+
+static func printDebugTimes():
+	print("-= Times =- (" + str(numInstances) + " different sheets)")
+	print("Sprite Creation:\t" + str(t_spriteCreation / numInstances))
+	print("File Reading:\t\t" + str(t_readFile / numInstances))
+	print("Element Parsing:\t" + str(t_parseElements / numInstances))
+	print("Apply Offset:\t\t" + str(t_applyOffset / numInstances))
+	print("Build CSG:\t\t\t" + str(t_buildCSG / numInstances))
+	print("Compile Mesh:\t\t" + str(t_compileMesh / numInstances))
+
 func loadSVG(filepath : String):
 	path = filepath
-	if name.length() == 0:
-		name = path.get_file().trim_suffix(".import").trim_suffix(".svg") 
+	if id.length() == 0:
+		id = path.get_file().trim_suffix(".import").trim_suffix(".svg")
+		name = id
 	#var cached = SheetLibrary.query(path)
 	#var image
 	#if cached:
@@ -39,7 +59,13 @@ func loadSVG(filepath : String):
 		#else:
 			#updateBakedMesh()
 	#else:
-	spriteTex = ImageTexture.create_from_image(Image.load_from_file(path))
+# TIMING	numInstances += 1
+# TIMING	var startTime = Time.get_ticks_usec()
+	
+	#spriteTex = ImageTexture.create_from_image(Image.load_from_file(path))
+	
+# TIMING	t_spriteCreation += Time.get_ticks_usec() - startTime
+# TIMING	startTime = Time.get_ticks_usec()
 	#sprite.set_texture(image)
 	#TODO sheet -> sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	#if (cached and cached[0]):
@@ -48,10 +74,15 @@ func loadSVG(filepath : String):
 		#return
 	
 	var rawString = FileAccess.get_file_as_string(path)
+# TIMING	t_readFile += Time.get_ticks_usec() - startTime
+# TIMING	startTime = Time.get_ticks_usec()
+	
 	var elements = rawString.split("\n")
 	for element in elements:
 		parseElement(element)
-	var size = spriteTex.get_size()/100.0
+# TIMING	t_parseElements += Time.get_ticks_usec() - startTime
+# TIMING	startTime = Time.get_ticks_usec()
+	#var size = spriteTex.get_size()/100.0
 
 	var min = Vector2(1000,1000)
 	var max = Vector2(-1000,-1000)
@@ -84,28 +115,50 @@ func loadSVG(filepath : String):
 		sticker.position -= midPoint - offset
 	for hole in holes:
 		hole.position -= midPoint - offset
+		#var cutout = hole.getCutout()
+		#add_child(cutout)
+		#cutout.position = (cutout.position + hole.position).rotated(Vector3.RIGHT, -PI/2)
+		#cutout.rotate_y(hole.rotation.y)
+		#cutout.rotate_x(-PI/2)
+	for zone in clipZones:
+		zone.position -= midPoint - offset
+		#var cutout = zone.getCutout()
+		#add_child(cutout)
+		#cutout.position = (cutout.position + zone.position).rotated(Vector3.RIGHT, -PI/2)
+		#cutout.rotate_y(zone.rotation.y)
+		#cutout.rotate_x(-PI/2)
+	
+# TIMING	t_applyOffset += Time.get_ticks_usec() - startTime
+	
+	#SheetLibrary.registerSprite(self, path, image, outline.polygon)
+	#SheetLibrary.meshCompiler.compile(path)
+	dataReady = true
+	dataParsed.emit()
+	#call_deferred("updateBakedMesh")
+
+func setupCSG():
+# TIMING	var startTime = Time.get_ticks_usec()
+	if bakedMesh != null: return
+	for hole in holes:
 		var cutout = hole.getCutout()
 		add_child(cutout)
 		cutout.position = (cutout.position + hole.position).rotated(Vector3.RIGHT, -PI/2)
 		cutout.rotate_y(hole.rotation.y)
 		cutout.rotate_x(-PI/2)
 	for zone in clipZones:
-		zone.position -= midPoint - offset
 		var cutout = zone.getCutout()
 		add_child(cutout)
 		cutout.position = (cutout.position + zone.position).rotated(Vector3.RIGHT, -PI/2)
 		cutout.rotate_y(zone.rotation.y)
 		cutout.rotate_x(-PI/2)
 	
-	
-	#SheetLibrary.registerSprite(self, path, image, outline.polygon)
-	#SheetLibrary.meshCompiler.compile(path)
-	dataParsed.emit()
-	call_deferred("updateBakedMesh")
+# TIMING	t_buildCSG += Time.get_ticks_usec() - startTime
 
 func updateBakedMesh():
-	await get_tree().process_frame
+	#await get_tree().process_frame
+# TIMING	var startTime = Time.get_ticks_usec()
 	bakedMesh = bake_static_mesh()
+# TIMING	t_compileMesh += Time.get_ticks_usec() - startTime
 	meshReady.emit(path, bakedMesh)
 	#var cached = SheetLibrary.query(path)
 	#if cached[3] == null:
@@ -129,7 +182,8 @@ func parseElement(part : String):
 	dict["type"] = type
 	var inString = false
 	var current = ""
-	for chunk in split.slice(1):
+	for i in range(1, split.size()):
+		var chunk = split[i]
 		current += " " + chunk
 		var parentheses = chunk.count("\"")
 		if parentheses == 1:
@@ -162,14 +216,14 @@ func parseElement(part : String):
 				newHole.id = id
 				newHole.name = id
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["r"])/10, float(dict["horizontal"]) > 0, float(dict["length"]), false)
-			if id.contains("logicHole"):
+			elif id.contains("logicHole"):
 				var newHole = addHole(LOGICHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
 				newHole.setOpenLeft(float(dict["openLeft"]) > 0)
 				newHole.rotate_y(-int(dict["pinTravelDir"]) * PI/2)
 				newHole.id = id
 				newHole.name = id
 				pass#Global.partHandler.addLogicHole(float(dict["cx"]), float(dict["cy"]), int(dict["pinTravelDir"]), float(dict["openLeft"]) > 0)
-			if id.contains("customHole") or id.contains("outlinePath"):
+			elif id.contains("customHole") or id.contains("outlinePath"):
 				var pointString = dict["d"]
 				var split1 = pointString.lstrip("M ").rstrip(" Z").split("L ")
 				var segments = []
@@ -198,13 +252,13 @@ func parseElement(part : String):
 				newHole.id = id
 				newHole.name = id
 				pass#Global.partHandler.addLongHole(float(dict["cx"]), float(dict["cy"]), float(dict["width"])/20, float(dict["horizontal"]) > 0, float(dict["length"]), true)
-			if id.contains("squareHole"):
+			elif id.contains("squareHole"):
 				var newHole = addHole(SQUAREHOLE, Vector2(float(dict["cx"]),float(dict["cy"])))
 				newHole.setEdgeLength(float(dict["edgeLength"])/1000)
 				newHole.id = id
 				newHole.name = id
 				pass#Global.partHandler.addSquareHole(float(dict["cx"]), float(dict["cy"]), float(dict["edgeLength"])/10)
-			if id.contains("zone"):
+			elif id.contains("zone"):
 				var newZone = addClipZone(Vector2(float(dict["x"]),float(dict["y"])), Vector2(float(dict["width"]),float(dict["height"])))
 				newZone.id = id
 				newZone.name = id

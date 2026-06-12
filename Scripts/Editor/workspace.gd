@@ -248,6 +248,7 @@ func deserialize(path):
 			newMachine.clock.catchUpTo(int(entry["currentStepOverride"]))
 			pass
 		PathHandler.setProjectDir(projectDirTemp)
+		await get_tree().process_frame
 	if !machines.is_empty():
 		setResolution(Resolution.Machine)
 		selectedMachine = machines.back()

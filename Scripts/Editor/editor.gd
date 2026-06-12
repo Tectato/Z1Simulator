@@ -82,7 +82,7 @@ func loadProject(srcPath = ""):
 	PathHandler.setProjectDir(path)
 	saved = false
 	savePath = ""
-	workspace.deserialize(path)
+	await workspace.deserialize(path)
 	updateSceneTree()
 	previousAction = doNothing
 	interface.saveDialog.current_dir = path.get_base_dir()
@@ -94,6 +94,8 @@ func loadProject(srcPath = ""):
 	SheetLibrary.cleanUnusedSheets()
 	updateInstancePos.emit()
 	loading = false
+	#SheetData.printDebugTimes()
+	#Sheet.printDebugTimes()
 
 func importProjectInstace(srcPath = ""):
 	loading = true

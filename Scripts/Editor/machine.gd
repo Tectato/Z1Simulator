@@ -24,6 +24,7 @@ var clockPins = []
 var comments = []
 var relations = {}
 var beingDeleted = false
+var deserializing = false
 var colliderUpdateScheduled = false
 var importedInstance = false # If true, cannot be modified
 
@@ -54,9 +55,11 @@ func addLayer():
 	layers.append(newLayer)
 	newLayer.machine = self
 	newLayer.updateCollider()
-	updateLayerPositions()
+	if !deserializing:
+		updateLayerPositions()
 	if Global.editor:
-		Global.editor.selector.select(newLayer.collider)
+		if !deserializing:
+			Global.editor.selector.select(newLayer.collider)
 		Global.editor.updateSceneTree()
 	return newLayer
 
@@ -204,6 +207,7 @@ func deserialize(path : String):
 	deserializeFromDict(source)
 
 func deserializeFromDict(source):
+	deserializing = true
 	id = source["id"]
 	if id.begins_with("UnnamedMachine"):
 		id = ""
@@ -252,6 +256,7 @@ func deserializeFromDict(source):
 	var stepDiff = savedStep - Simulator.currentStep
 	stepDiff = wrapi(stepDiff, 0, 3)
 	clock.offset = stepDiff
+	deserializing = false
 
 func serializeDiff():
 	var out = {}

@@ -1,7 +1,7 @@
 extends Movable
 class_name Sheet
 
-
+const CLIPZONE = preload("res://Scenes/Parts/SheetElements/ClipZone.tscn")
 
 @onready var sprite = $Sprite3D
 @onready var hitbox = $Outline/Polygon
@@ -30,9 +30,19 @@ var forces = {}
 var movedPins = {}
 var gizmo
 var localClipZones = []
+var toClip = []
 var sheetData : SheetData
+var placeScheduled = false
 
 var sortTargetPos : Vector3
+
+static var numInstances = 0
+static var numWithZones = 0
+static var t_setPolygon = 0
+static var t_stickers = 0
+static var t_cloneZones = 0
+static var t_setZones = 0
+static var t_place = 0
 
 func serialize():
 	grabUUID()
@@ -100,9 +110,12 @@ func deserialize(source : Dictionary):
 		getMachine().uuidManager.registerID(self, uuid)
 	if !sheetData:
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
-	if source.has("clipped") and !localClipZones.is_empty():
-		for i in range(localClipZones.size()):
-			if source["clipped"][i] > 0: localClipZones[i].flipClipped()
+	if source.has("clipped"):
+		if !localClipZones.is_empty():
+			for i in range(localClipZones.size()):
+				if source["clipped"][i] > 0: localClipZones[i].flipClipped()
+		else:
+			toClip = source["clipped"]
 	place()
 	if source.has("static"):
 		setFixed(true, false)
@@ -138,27 +151,76 @@ func clearDiff():
 	updateInteractionCandidates()
 
 func loadSVG(path : String):
+	if sheetData != null:
+		print(name + ": loadSVG called a second time!")
+		return
 	sheetData = SheetLibrary.query(path)
-	postParseSetup()
+	if sheetData.dataReady:
+		postParseSetup()
+	else:
+		sheetData.dataParsed.connect(postParseSetup)
 	SheetLibrary.registerUser(self, sheetData.path)
 
 func postParseSetup():
-	sprite.texture = sheetData.spriteTex
-	sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
-	sprite.position = -sheetData.midPoint + Space.toVec3(sheetData.partOffset) + Vector3.UP * 0.001
+	#numInstances += 1							# TIMING
+	#var startTime = Time.get_ticks_usec()		# TIMING
+	
+	if id.length() == 0:
+		id = sheetData.name
+	#sprite.texture = sheetData.spriteTex
+	#sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
+	#sprite.position = -sheetData.midPoint + Space.toVec3(sheetData.partOffset) + Vector3.UP * 0.001
 	hitbox.polygon = sheetData.polygon
+	
+	#t_setPolygon += Time.get_ticks_usec() - startTime	# TIMING
+	#startTime = Time.get_ticks_usec()					# TIMING
+	
 	for sticker in sheetData.stickers:
 		var copy = sticker.duplicate()
 		#sheetData.remove_child(copy)
 		add_child(copy)
-	for zone in sheetData.clipZones:
-		var copy = zone.duplicate()
-		copy.name = zone.name
-		copy.id = zone.id
-		#sheetData.remove_child(copy)
-		add_child(copy)
-		localClipZones.append(copy)
-	localClipZones.sort_custom(sortClipZone)
+	
+	#t_stickers += Time.get_ticks_usec() - startTime		# TIMING
+	#startTime = Time.get_ticks_usec()					# TIMING
+	
+	if !sheetData.clipZones.is_empty():
+		numWithZones += 1
+		for zone in sheetData.clipZones:
+			#var copy = zone.duplicate()
+			#copy.name = zone.name
+			#copy.id = zone.id
+			#sheetData.remove_child(copy)
+			var copy = CLIPZONE.instantiate()
+			add_child(copy)
+			copy.setupAfterDuplication(zone)
+			localClipZones.append(copy)
+	
+		#t_cloneZones += Time.get_ticks_usec() - startTime	# TIMING
+		#startTime = Time.get_ticks_usec()					# TIMING
+			
+		if !localClipZones.is_empty():
+			localClipZones.sort_custom(sortClipZone)
+			if !toClip.is_empty():
+				for i in range(localClipZones.size()):
+					if toClip[i] > 0: localClipZones[i].flipClipped()
+				toClip.clear()
+	
+	#t_setZones += Time.get_ticks_usec() - startTime		# TIMING
+	#startTime = Time.get_ticks_usec()					# TIMING
+	
+	if placeScheduled:
+		placeScheduled = false
+		place()
+	
+	#t_place += Time.get_ticks_usec() - startTime		# TIMING
+
+static func printDebugTimes():
+	print("-= Sheet Times =- (" + str(numInstances) + " instances)")
+	print("Hitbox setup:\t\t" + str(t_setPolygon / numInstances))
+	print("Sticker copying:\t" + str(t_stickers / numInstances))
+	print("Zone cloning:\t\t" + str(t_cloneZones / numInstances) + ("\t -> Across " + str(numWithZones) + " sheets with zones: " + str(t_cloneZones / numWithZones) if numWithZones > 0 else ""))
+	print("Zone setting:\t\t" + str(t_setZones / numInstances) + ("\t -> Across " + str(numWithZones) + " sheets with zones: " + str(t_setZones / numWithZones) if numWithZones > 0 else ""))
+	print("Placing:\t\t\t" + str(t_place / numInstances))
 
 func _ready():
 	#mesh = debugPolygon
@@ -376,7 +438,9 @@ func getIntersector(pos : Vector3):
 func place():
 	heightIndex = int(max(0,roundf(position.y / Global.workspace.sheetSpacing)))
 	if !sheetData:
-		await get_tree().process_frame
+		#await get_tree().process_frame
+		placeScheduled = true
+		return
 	super.place()
 	if !Global.editor.loading:
 		Simulator.partAudioHandler.place(false)

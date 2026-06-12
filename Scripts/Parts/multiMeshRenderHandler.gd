@@ -12,6 +12,8 @@ var toAdd = {}
 var toColor = {}
 var toTransform = {}
 
+var addExecuted = {}
+
 func _ready() -> void:
 	await get_tree().process_frame
 	Global.editor.visModeChanged.connect(visModeChanged)
@@ -76,6 +78,13 @@ func executeAdd():
 		var colorBuffer = []
 		var transformBuffer = []
 		var prevCount = renderer.multimesh.instance_count
+		
+		#if not key in addExecuted: addExecuted[key] = 0
+		#addExecuted[key] += 1
+		#if addExecuted[key] > 1:
+			#print("Add executed " + str(addExecuted[key]) + " times for " + key)
+			#print(" > Previously " + str(prevCount) + ", adding " + str(toAdd[key]))
+			
 		for i in range(0,prevCount):
 			colorBuffer.append(renderer.multimesh.get_instance_color(i))
 			transformBuffer.append(renderer.multimesh.get_instance_transform(i))

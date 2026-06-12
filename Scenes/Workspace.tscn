@@ -115,7 +115,7 @@ script = ExtResource("6_w0wfr")
 [node name="Pin" parent="ShaderPrep" unique_id=616684073 instance=ExtResource("7_f7yrp")]
 script = null
 
-[node name="Highlight" parent="ShaderPrep/Pin" index="0"]
+[node name="Highlight" parent="ShaderPrep/Pin" index="0" unique_id=565691971]
 visible = true
 
 [node name="SheetMetallic" type="MeshInstance3D" parent="ShaderPrep" unique_id=1702571224]
@@ -131,7 +131,7 @@ mesh = SubResource("BoxMesh_puuh0")
 [node name="Sheet" parent="ShaderPrep" unique_id=541106686 instance=ExtResource("10_dswm8")]
 script = null
 
-[node name="Sprite3D" parent="ShaderPrep/Sheet" index="0"]
+[node name="Sprite3D" parent="ShaderPrep/Sheet" index="0" unique_id=248117127]
 visible = true
 material_overlay = SubResource("ShaderMaterial_f7yrp")
 

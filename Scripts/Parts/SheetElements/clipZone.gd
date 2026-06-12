@@ -54,6 +54,15 @@ func init(dims : Vector2):
 	#mesh.scale = Vector3.ONE
 	mesh.position = hitbox.position - Vector3.UP * 0.01
 
+func setupAfterDuplication(src : ClipZone):
+	name = src.name
+	id = src.id
+	hitbox.shape = src.hitbox.shape
+	hitbox.position = src.hitbox.position
+	mesh.scale = src.mesh.scale
+	mesh.position = src.mesh.position
+	position = src.position
+
 func checkPos(pos : Vector3):
 	var rect = Rect2(Space.toVec2(hitbox.position-hitbox.shape.size/2.0), Space.toVec2(hitbox.shape.size))
 	return rect.has_point(Space.toVec2(pos))

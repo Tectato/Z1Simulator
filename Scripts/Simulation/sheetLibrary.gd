@@ -12,6 +12,9 @@ func query(path : String):
 	return meshCompiler.getSheetData(path)
 
 func registerMesh(path : String, mesh : ArrayMesh):
+	if renderHandler.hasSheet(path):
+		#print("Repeat mesh registration for " + path)
+		return
 	renderHandler.initMesh(path, mesh)
 	for user in users[path]:
 		user.meshIndex = renderHandler.addInstance(path)
@@ -19,6 +22,9 @@ func registerMesh(path : String, mesh : ArrayMesh):
 		user.mesh.call_deferred("updateMaterial")
 
 func registerUser(user : Sheet, path : String):
+	if user.meshIndex >= 0:
+		return
+	
 	if users.has(path):
 		users[path].append(user)
 	else:
