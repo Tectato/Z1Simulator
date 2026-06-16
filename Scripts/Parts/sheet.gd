@@ -249,8 +249,10 @@ func _process(delta: float) -> void:
 			toMove.clear()
 			#blockedThisCycle = -1
 	if !fixed and rotating and !pointConstraints.is_empty():
-		rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
-		rotating = abs(rotation.y-targetRot) > 0.01
+		#rotation = rotation.move_toward(Vector3.UP * targetRot, delta * rotSpeed * Global.workspace.moveSpeed)
+		rotation.y = lerpf(previousRot, targetRot, Simulator.stepProgress)
+		#rotating = abs(rotation.y-targetRot) > 0.01
+		rotating = Simulator.stepProgress < 1.0
 		#SheetLibrary.renderHandler.setTransform(path, meshIndex, mesh.global_transform)
 
 func _notification(what):
@@ -697,7 +699,7 @@ func canTurn(dir : Vector2, pivot, initiator, chain = []):
 	var moveCandidates = {}
 	for part in pinCandidates.keys():
 		var pins = pinCandidates[part]
-		if part is Hole:
+		if true:#if part is Hole:
 			for pin in pins:
 				if pin == pivot:
 					continue
@@ -718,7 +720,13 @@ func canTurn(dir : Vector2, pivot, initiator, chain = []):
 				# Potential TODO: factor in distance diff for larger or smaller output movement
 				var pinAngleDiff = pivotToInit.angle_to(pivotToPin)
 				var rotatedDir = dir.rotated(snappedf(pinAngleDiff, PI/2))
-				if !part.checkPos(part.to_local(pin.global_position - Space.toVec3(rotatedDir))):
+				var shouldMove = false
+				if part is Hole:
+					shouldMove = !part.checkPos(part.to_local(pin.global_position - Space.toVec3(rotatedDir)))
+				else:
+					shouldMove = intersectsOutline(pin.global_position - Space.toVec3(rotatedDir))
+				#if intersects((pin.global_position - Space.toVec3(rotatedDir))):
+				if shouldMove:
 					canTurn = canTurn and pin.canMove(rotatedDir, self, chain)
 					if !canTurn:
 						if selected:
@@ -789,6 +797,7 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 		targetRot = previousRot # Prevent drift over time from inaccurate angle calculation
 	previousRot = rotation.y
 	targetPos = potentialTargetPos[0 if clockwise else 1]
+	#print("TargetRot: %0.6f" % targetRot + "\tTargetPos: (%0.4f, %0.4f)" % [targetPos.x, targetPos.z])
 	chain.erase(initiator)
 	if initiator.move(dir, self, chain) == MoveState.Moved:
 		moved.append(initiator)

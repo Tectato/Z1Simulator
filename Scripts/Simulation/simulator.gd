@@ -19,6 +19,7 @@ var stepScheduled = false
 var maxFrequency = 1.0
 var rewinding = false
 var partsMoved = 0
+var stepProgress = 0.0
 
 var gizmo : Control
 
@@ -30,6 +31,10 @@ signal rewind
 func _ready() -> void:
 	$AutoClock.wait_time = clockSpeed
 	call_deferred("lateReady")
+
+func _process(_delta: float) -> void:
+	if !$MoveComplete.is_stopped():
+		stepProgress = 1.0-$MoveComplete.time_left / $MoveComplete.wait_time
 
 func lateReady():
 	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
@@ -145,6 +150,7 @@ func stepToString(i : int):
 		3: return "IV"
 
 func _on_move_complete_timeout() -> void:
+	stepProgress = 1.0
 	$PulsingReset.start()
 
 func _on_pulsing_reset_timeout() -> void:
