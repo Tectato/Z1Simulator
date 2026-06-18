@@ -22,6 +22,9 @@ func _ready() -> void:
 		pin.setOutput(true)
 		pin.rename(pin.name)
 		pin.machine = getMachine()
+	
+	Simulator.record.connect(record)
+	Simulator.rewind.connect(rewind)
 
 func serialize():
 	var inputSerialized = []
@@ -72,3 +75,9 @@ func delete():
 
 func getValidMoveDirections():
 	return [true,false,true]
+
+func record():
+	pass
+
+func rewind():
+	pass
