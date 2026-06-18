@@ -241,8 +241,10 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if !fixed and inMotion:
-		position = position.move_toward(targetPos, delta * Global.workspace.moveSpeed) * Vector3(1,0,1) + Vector3.UP * position
-		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
+		#position = position.move_toward(targetPos, delta * Global.workspace.moveSpeed) * Vector3(1,0,1) + Vector3.UP * position
+		position = lerp(preMovePos, targetPos, Simulator.stepProgress)
+		#inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
+		inMotion = Simulator.stepProgress < 1.0
 		if !inMotion:
 			forces.clear()
 			movedBy.clear()
@@ -270,7 +272,7 @@ func setSelected(value):
 		#zone.mesh.visible = value
 	#sprite.set_instance_shader_parameter("selected", value)
 	mesh.updateMaterial()
-	sprite.visible = value
+	#sprite.visible = value
 
 func setFixed(value, _propagate = true):
 	var before = fixed
@@ -673,11 +675,14 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 		#movedPins[movedPart] = null
 	return 1
 
-func canTurn(dir : Vector2, pivot, initiator, chain = []):
+func canTurn(dir : Vector2, pivot : Pin, initiator : Pin, chain = []):
 	if forces.is_empty():
 		return false
 	var force = forces[initiator]
-	var initToPivot = (pivot.position - initiator.position).normalized()
+	#var d_initMovement = dir.length()
+	var initToPivot = (pivot.position - initiator.position)
+	var r_init = initToPivot.length()
+	initToPivot = initToPivot.normalized()
 	var impulse = Space.toVec3(force[0]).normalized()
 	var angle = abs(impulse.dot(initToPivot))
 	if angle >= 0.6: return false
@@ -717,9 +722,11 @@ func canTurn(dir : Vector2, pivot, initiator, chain = []):
 						toMoveInRotation[dirID] = {pin:pin}
 					continue
 				var pivotToPin = Space.toVec2(pin.position - pivot.position)
+				var r_pin = pivotToPin.length()
 				# Potential TODO: factor in distance diff for larger or smaller output movement
 				var pinAngleDiff = pivotToInit.angle_to(pivotToPin)
 				var rotatedDir = dir.rotated(snappedf(pinAngleDiff, PI/2))
+				rotatedDir *= r_pin / r_init
 				var shouldMove = false
 				if part is Hole:
 					shouldMove = !part.checkPos(part.to_local(pin.global_position - Space.toVec3(rotatedDir)))
@@ -760,7 +767,7 @@ func tryTurn(pivot, initiator):
 	if forces.is_empty():
 		return false
 	var force = forces[initiator]
-	var pivotToInit = (pivot.position - initiator.position).normalized()
+	#var pivotToInit = (pivot.position - initiator.position).normalized()
 		
 	#if forces.size() > 1 or pointConstraints.is_empty():
 		#move(force[0], self, force[1])
@@ -791,6 +798,8 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 		print("Unexpected turn of sheet " + id + " (" + str(uuid) + ")")
 		return
 	Simulator.spawnIndicator(pivot.global_position * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Turn)
+	var r_init = (initiator.position - pivot.position).length()
+	var d_init = dir.length()
 	rotSpeed = potentialRotSpeed[0 if clockwise else 1]
 	targetRot = potentialTargetRot[0 if clockwise else 1]
 	if abs(angle_difference(wrapf(targetRot,-PI,PI), wrapf(previousRot,-PI,PI))) < 0.04:
@@ -804,7 +813,8 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 	for rotatedDir in toMoveInRotation.keys():
 		for pin in toMoveInRotation[rotatedDir]:
 			if pin == initiator: continue
-			pin.move(intToDir(rotatedDir) * Workspace.pinTravel, self, chain)
+			var r_pin = (pin.position - pivot.position).length()
+			pin.move(intToDir(rotatedDir) * d_init * (r_pin/r_init), self, chain)
 	inMotion = true
 	rotating = true
 	pass

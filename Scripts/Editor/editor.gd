@@ -57,7 +57,7 @@ func saveAs(path : String):
 		savePath = path
 		save()
 	else:
-		interface.saveError.popup()
+		interface.errorBox.popup()
 
 func save():
 	saved = true

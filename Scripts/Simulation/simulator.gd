@@ -20,6 +20,7 @@ var maxFrequency = 1.0
 var rewinding = false
 var partsMoved = 0
 var stepProgress = 0.0
+@onready var runningTimer = $MoveComplete
 
 var gizmo : Control
 
@@ -33,8 +34,10 @@ func _ready() -> void:
 	call_deferred("lateReady")
 
 func _process(_delta: float) -> void:
-	if !$MoveComplete.is_stopped():
-		stepProgress = 1.0-$MoveComplete.time_left / $MoveComplete.wait_time
+	if !runningTimer.is_stopped():
+		stepProgress = 1.0-runningTimer.time_left / runningTimer.wait_time
+		#print(runningTimer.name + ": %0.2f" % stepProgress)
+	#elif stepProgress < 1.0: stepProgress = 1.0
 
 func lateReady():
 	Global.workspace.moveSpeedChanged.connect(moveSpeedChanged)
@@ -84,6 +87,7 @@ func next(stopClock = true):
 		instance.clockCycle(currentStep)
 	$AutoClock.paused = autoClockPaused
 	gizmo.setClockStep(currentStep+1)
+	runningTimer = $MoveComplete
 	$MoveComplete.start()
 	$Cooldown.start()
 	$CrankAudioHandler.playStep(currentStep)
@@ -105,6 +109,7 @@ func prev(stopClock = true, calledByUser = true):
 		totalStep -= 1
 		gizmo.setClockStep(currentStep+1)
 		rewinding = true
+		runningTimer = $MoveComplete
 		$MoveComplete.start()
 		$Cooldown.start()
 	history -= 1
@@ -137,6 +142,7 @@ func getCooldown():
 
 func moveSpeedChanged():
 	$MoveComplete.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed)
+	$BackMoveComplete.wait_time = $MoveComplete.wait_time
 	$Cooldown.wait_time = $MoveComplete.wait_time * 2 + $PulsingReset.wait_time * 2
 	maxFrequency = 1/($Cooldown.wait_time * 4)
 	#TODO
@@ -151,11 +157,18 @@ func stepToString(i : int):
 
 func _on_move_complete_timeout() -> void:
 	stepProgress = 1.0
+	#Pin.printDebugTimes()
 	$PulsingReset.start()
 
+func _on_back_move_complete_timeout() -> void:
+	stepProgress = 1.0
+
 func _on_pulsing_reset_timeout() -> void:
+	stepProgress = 0.0
 	if !rewinding:
 		backstep.emit()
 		call_deferred("callRecord")
 	else:
 		prev(true, false)
+	runningTimer = $BackMoveComplete
+	$BackMoveComplete.start()

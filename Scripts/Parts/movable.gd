@@ -217,6 +217,7 @@ func record():
 func rewind():
 	if fixed: return
 	if posHistory.is_empty(): return
+	preMovePos = targetPos
 	targetPos = posHistory.pop_back()
 	if targetPos != position:
 		Simulator.partsMoved += 1
@@ -307,8 +308,10 @@ func updateInteractionCandidates():
 
 func _process(delta: float) -> void:
 	if !fixed and inMotion:
-		position = position.move_toward(targetPos, delta * Global.workspace.moveSpeed) * Vector3(1,0,1) + Vector3.UP * position
-		inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
+		#position = position.move_toward(targetPos, delta * Global.workspace.moveSpeed) * Vector3(1,0,1) + Vector3.UP * position
+		position = lerp(preMovePos, targetPos, Simulator.stepProgress)
+		#inMotion = abs(position.x-targetPos.x)+abs(position.z-targetPos.z) > 0
+		inMotion = Simulator.stepProgress < 1.0
 		if !inMotion:
 			movedBy.clear()
 			moved.clear()

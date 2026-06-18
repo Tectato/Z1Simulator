@@ -99,6 +99,9 @@ one_shot = true
 [node name="MoveComplete" type="Timer" parent="." unique_id=320871119]
 one_shot = true
 
+[node name="BackMoveComplete" type="Timer" parent="." unique_id=136931503]
+one_shot = true
+
 [node name="PulsingReset" type="Timer" parent="." unique_id=861367045]
 wait_time = 0.05
 one_shot = true
@@ -148,4 +151,5 @@ stream = SubResource("AudioStreamRandomizer_wbhrm")
 [connection signal="timeout" from="AutoClock" to="." method="_on_auto_clock_timeout"]
 [connection signal="timeout" from="Cooldown" to="." method="_on_cooldown_timeout"]
 [connection signal="timeout" from="MoveComplete" to="." method="_on_move_complete_timeout"]
+[connection signal="timeout" from="BackMoveComplete" to="." method="_on_back_move_complete_timeout"]
 [connection signal="timeout" from="PulsingReset" to="." method="_on_pulsing_reset_timeout"]

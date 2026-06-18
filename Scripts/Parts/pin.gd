@@ -15,9 +15,23 @@ var outputState = false
 var flippingOutput = false
 var indicator : Node3D
 var directionality = 0 # 0 = Both, 1 = X, 2 = Y
+#var stateHistory = []
 const standardColor = Color("969696")
 
 signal stateChanged(pin)
+
+#static var t_superMove = 0.0
+#static var t_prop1 = 0.0
+#static var t_prop2 = 0.0
+#static var t_moveSelf = 0.0
+#static var instances = [0,0,0,0]
+#
+#static func printDebugTimes():
+	#print("-= Pin Movement Times =-")
+	#print("super.move():\t %0.4f (%d)" % [(t_superMove / instances[0]), instances[0]])
+	#print("propagation 1:\t %0.4f (%d)" % [(t_prop1 / instances[1]), instances[1]])
+	#print("propagation 2:\t %0.4f (%d)" % [(t_prop2 / instances[2]), instances[2]])
+	#print("self move:\t\t %0.4f (%d)" % [(t_moveSelf / instances[3]), instances[3]])
 
 func serialize():
 	grabUUID()
@@ -364,9 +378,14 @@ func delete():
 		machine.removeGlobalPin(self)
 
 func canMove(dir : Vector2, initiator, chain = []):
+	#instances[0] += 1							# TIMINGS
+	#var startTime = Time.get_ticks_usec()		#
 	#if selected:
 		#pass
 	var out = super.canMove(dir, initiator, chain)
+	#t_superMove += Time.get_ticks_usec() - startTime	# TIMINGS
+	#startTime = Time.get_ticks_usec()					#
+	#instances[1] += 1									#
 	if out != MoveState.Moved: return out
 	var dirID = dirToInt(dir)
 	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
@@ -374,11 +393,17 @@ func canMove(dir : Vector2, initiator, chain = []):
 		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
 		return MoveState.Blocked
+	#t_prop1 += Time.get_ticks_usec() - startTime		# TIMINGS
+	#startTime = Time.get_ticks_usec()					#
+	#instances[2] += 1									#
 	var check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	if !check2:
 		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
 	var canMove = check2
+	#t_prop2 += Time.get_ticks_usec() - startTime		# TIMINGS
+	#startTime = Time.get_ticks_usec()					#
+	#instances[3] += 1									#
 	#if selected:
 		#pass
 	if check2 and toMove.has(dirID):
@@ -389,6 +414,8 @@ func canMove(dir : Vector2, initiator, chain = []):
 			canMove = canMove and sheet.canMove(dir, self, chain.duplicate())
 			if !canMove:
 				break
+	#t_moveSelf += Time.get_ticks_usec() - startTime		# TIMINGS
+	#instances[3] += 1									#
 	if canMove:
 		setToMove[dirID] = Simulator.totalStep
 	else:
@@ -475,15 +502,25 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 
 func abortMove(initiator, chain = []):
 	super.abortMove(initiator, chain)
-	if output:
-		flipOutput()
+	#if output:
+		#flipOutput()
+
+func record():
+	super.record()
+	#stateHistory.push_back(outputState)
+	#if stateHistory.size() > Global.historyLength:
+		#stateHistory.pop_front()
 
 func rewind():
-	var canRewind = !posHistory.is_empty()
+	#var canRewind = !posHistory.is_empty()
 	super.rewind()
-	if canRewind and output and inMotion:
-		await get_tree().process_frame
-		stateChanged.emit(self)
+	#if canRewind and output and inMotion:
+		#await get_tree().process_frame
+		#stateChanged.emit(self)
+	#if stateHistory.is_empty(): return
+	#var recordedState = stateHistory.pop_back()
+	#if recordedState != outputState:
+		#flipOutput()
 
 func getMachine():
 	if layer == null and machine != null:
