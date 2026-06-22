@@ -263,7 +263,7 @@ func _notification(what):
 			SheetLibrary.unregisterUser(self, sheetData.path)
 			return
 		if is_visible_in_tree():
-			SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02))
+			SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 
 func setSelected(value):
 	super.setSelected(value)
@@ -272,6 +272,7 @@ func setSelected(value):
 		#zone.mesh.visible = value
 	#sprite.set_instance_shader_parameter("selected", value)
 	mesh.updateMaterial()
+	SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 	#sprite.visible = value
 
 func setFixed(value, _propagate = true):
@@ -458,7 +459,7 @@ func place():
 
 func updateInstance():
 	if is_visible_in_tree():
-		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02))
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 
 func updateHeight():
 	position = position * Vector3(1,0,1) + Vector3.UP * heightIndex * Global.workspace.sheetSpacing
@@ -934,9 +935,9 @@ func setupAfterDuplication(source = null):
 
 func visibilityChanged():
 	if is_visible_in_tree():
-		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02))
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 	else:
-		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.scaled(Vector3.ZERO))
+		SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.scaled(Vector3.ZERO), false)
 
 func staticSheetVisChanged(newVis):
 	if fixed:

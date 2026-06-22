@@ -20,6 +20,7 @@ var maxFrequency = 1.0
 var rewinding = false
 var partsMoved = 0
 var stepProgress = 0.0
+var nudging = false
 @onready var runningTimer = $MoveComplete
 
 var gizmo : Control
@@ -155,8 +156,16 @@ func stepToString(i : int):
 		2: return "III"
 		3: return "IV"
 
+func nudge():
+	nudging = true
+	runningTimer = $MoveComplete
+	$MoveComplete.start()
+
 func _on_move_complete_timeout() -> void:
 	stepProgress = 1.0
+	if nudging:
+		nudging = false
+		return
 	#Pin.printDebugTimes()
 	$PulsingReset.start()
 

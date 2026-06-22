@@ -2,9 +2,12 @@ extends Node
 
 @export var materialFlat : Material
 @export var materialShaded : Material
+@export var materialHighlight : Material
+@export var hasHighlights = true
 @export var debug : MeshInstance3D
 
 var renderers = {}
+var highlightRenderers = {}
 var vacantEntries = {}
 
 var scheduled = {}
@@ -42,6 +45,17 @@ func initMesh(key : String, mesh : Mesh):
 	multimesh.use_colors = true
 	newRenderer.multimesh = multimesh
 	
+	if hasHighlights:
+		var highlight = MultiMeshInstance3D.new()
+		newRenderer.add_child(highlight)
+		highlightRenderers[key] = highlight
+		var highlightMultimesh = MultiMesh.new()
+		highlightMultimesh.mesh = mesh
+		highlightMultimesh.transform_format = MultiMesh.TRANSFORM_3D
+		highlightMultimesh.use_colors = false
+		highlight.multimesh = highlightMultimesh
+		highlight.material_override = materialHighlight
+	
 	var materialToUse
 	if Global.editor.currentVisMode == Editor.VisMode.Realistic:
 		materialToUse = materialShaded
@@ -74,6 +88,8 @@ func executeAdd():
 	#print("Add executed")
 	for key in toAdd.keys():
 		var renderer = renderers[key]
+		var highlight
+		if hasHighlights: highlight = highlightRenderers[key]
 		
 		var colorBuffer = []
 		var transformBuffer = []
@@ -89,9 +105,11 @@ func executeAdd():
 			colorBuffer.append(renderer.multimesh.get_instance_color(i))
 			transformBuffer.append(renderer.multimesh.get_instance_transform(i))
 		renderer.multimesh.instance_count += toAdd[key]
+		if highlight: highlight.multimesh.instance_count += toAdd[key]
 		for i in range(0,colorBuffer.size()):
 			renderer.multimesh.set_instance_color(i, colorBuffer[i])
 			renderer.multimesh.set_instance_transform(i, transformBuffer[i])
+			if highlight: highlight.multimesh.set_instance_transform(i, transformBuffer[i])
 		
 		if toColor.has(key) and !toColor[key].is_empty():
 			for i in toColor[key].keys():
@@ -101,6 +119,7 @@ func executeAdd():
 			for i in toTransform[key].keys():
 				if i >= renderer.multimesh.instance_count: break
 				renderer.multimesh.set_instance_transform(i, toTransform[key][i])
+				if highlight: highlight.multimesh.set_instance_transform(i, toTransform[key][i])
 	toAdd.clear()
 	toColor.clear()
 	toTransform.clear()
@@ -114,6 +133,7 @@ func removeInstance(key : String, index : int):
 	if index >= renderers[key].multimesh.instance_count: return
 	var currentTransform = renderers[key].multimesh.get_instance_transform(index)
 	renderers[key].multimesh.set_instance_transform(index, currentTransform.scaled(Vector3.ZERO))
+	if hasHighlights: highlightRenderers[key].multimesh.set_instance_transform(index, currentTransform.scaled(Vector3.ZERO))
 	vacantEntries[key].append(index)
 	pass
 	#var transforms = []
@@ -127,14 +147,16 @@ func removeRenderer(key):
 	if renderers.has(key):
 		renderers[key].queue_free()
 		renderers.erase(key)
+		if hasHighlights: highlightRenderers.erase(key)
 		vacantEntries.erase(key)
 
 func clearInstances():
 	for key in renderers.keys():
 		renderers[key].multimesh.instance_count = 0
+		if hasHighlights: highlightRenderers[key].multimesh.instance_count = 0
 		vacantEntries[key] = []
 
-func setTransform(key : String, index : int, transform : Transform3D):
+func setTransform(key : String, index : int, transform : Transform3D, showHighlight = false):
 	if index < 0: return
 	if key.is_empty():
 		return
@@ -145,6 +167,8 @@ func setTransform(key : String, index : int, transform : Transform3D):
 			toTransform[key] = {index : transform}
 		return
 	renderers[key].multimesh.set_instance_transform(index, transform)
+	if hasHighlights:
+		highlightRenderers[key].multimesh.set_instance_transform(index, transform if showHighlight else transform.scaled(Vector3.ZERO))
 
 func setColor(key : String, index : int, color : Color):
 	if index < 0: return
@@ -159,6 +183,7 @@ func setColor(key : String, index : int, color : Color):
 func setAABB(box : AABB):
 	for key in renderers:
 		renderers[key].multimesh.set_custom_aabb(box)
+		if hasHighlights: highlightRenderers[key].multimesh.set_custom_aabb(box)
 
 func updateAABB():
 	var gMin = Vector3.ONE * 1000

@@ -6,6 +6,30 @@
 [ext_resource type="Material" uid="uid://0bo2bl8wqi7c" path="res://Assets/SheetColoredCompat.tres" id="4_fsur0"]
 [ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="5_cpvvm"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qsjrb"]
+render_priority = 2
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(0.86, 0.35833335, 0, 0.7411765)
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+metadata/_stencil_owned = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpvvm"]
+render_priority = 1
+next_pass = SubResource("StandardMaterial3D_qsjrb")
+albedo_color = Color(0.91, 0.40040007, 0.14560002, 1)
+emission_enabled = true
+emission = Color(0.9098039, 0.4, 0.14509805, 1)
+emission_energy_multiplier = 0.5
+disable_receive_shadows = true
+grow_amount = 0.01
+stencil_mode = 2
+stencil_flags = 2
+stencil_color = Color(0.86, 0.35833335, 0, 0.7411765)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ttsf7"]
 transparency = 1
 shading_mode = 0
@@ -26,6 +50,7 @@ script = ExtResource("2_7bnwt")
 script = ExtResource("3_lqynr")
 materialFlat = ExtResource("4_fsur0")
 materialShaded = ExtResource("5_cpvvm")
+materialHighlight = SubResource("StandardMaterial3D_cpvvm")
 debug = NodePath("Node3D")
 
 [node name="Node3D" type="MeshInstance3D" parent="RenderHandler" unique_id=94355976]

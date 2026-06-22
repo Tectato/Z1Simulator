@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://csnajmxciys5y"]
+[gd_scene format=3 uid="uid://csnajmxciys5y"]
 
 [ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="1_iw2od"]
 [ext_resource type="Script" uid="uid://d1lxtwidrhv45" path="res://Scripts/Parts/pinRendererInit.gd" id="2_qhqdv"]
@@ -8,6 +8,31 @@
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 roughness = 0.48
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qsjrb"]
+render_priority = 2
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.85882354, 0.35686275, 0, 0.7411765)
+grow = true
+grow_amount = 0.01
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+metadata/_stencil_owned = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cikv5"]
+render_priority = 1
+next_pass = SubResource("StandardMaterial3D_qsjrb")
+albedo_color = Color(0.91, 0.40040007, 0.14560002, 1)
+emission_enabled = true
+emission = Color(0.9098039, 0.4, 0.14509805, 1)
+emission_energy_multiplier = 0.5
+disable_receive_shadows = true
+grow_amount = 0.01
+stencil_mode = 2
+stencil_flags = 2
+stencil_color = Color(0.86, 0.35833335, 0, 0.7411765)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_qhqdv"]
 top_radius = 0.025
@@ -24,17 +49,18 @@ albedo_color = Color(1, 1, 1, 0.39215687)
 [sub_resource type="BoxMesh" id="BoxMesh_ttsf7"]
 material = SubResource("StandardMaterial3D_ttsf7")
 
-[node name="PinRenderHandler" type="Node3D" node_paths=PackedStringArray("debug")]
+[node name="PinRenderHandler" type="Node3D" unique_id=159711815 node_paths=PackedStringArray("debug")]
 script = ExtResource("1_iw2od")
 materialFlat = SubResource("StandardMaterial3D_qhqdv")
 materialShaded = ExtResource("2_ttsf7")
+materialHighlight = SubResource("StandardMaterial3D_cikv5")
 debug = NodePath("Node3D")
 
-[node name="Initialiser" type="Node" parent="." node_paths=PackedStringArray("debug")]
+[node name="Initialiser" type="Node" parent="." unique_id=765608683 node_paths=PackedStringArray("debug")]
 script = ExtResource("2_qhqdv")
 mesh = SubResource("CylinderMesh_qhqdv")
 debug = NodePath("../Node3D")
 
-[node name="Node3D" type="MeshInstance3D" parent="."]
+[node name="Node3D" type="MeshInstance3D" parent="." unique_id=2087017600]
 visible = false
 mesh = SubResource("BoxMesh_ttsf7")

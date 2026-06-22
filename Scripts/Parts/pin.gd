@@ -154,7 +154,8 @@ func getBounds():
 
 func setSelected(value):
 	super.setSelected(value)
-	$Highlight.visible = value
+	#$Highlight.visible = value
+	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform, selected)
 
 func setFixed(value, propagate = true):
 	var before = fixed
@@ -247,7 +248,7 @@ func updateHeight(floor : float, height : float):
 		indicator.position = Vector3.UP * (floor + 0.1 * height + 0.05)
 	$Highlight.transform = $MeshInstance3D.transform
 	$Area3D.transform = $MeshInstance3D.transform
-	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
+	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform, selected)
 
 func setOutput(value):
 	if fixed or value == output:
@@ -283,7 +284,7 @@ func _notification(what: int) -> void:
 			PinRenderHandler.removeInstance("pin", meshIndex)
 			return
 		if is_visible_in_tree():
-			PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
+			PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform, selected)
 
 func snap(srcPos):
 	#var closestDist = Global.workspace.getClosestAlignmentPointRelative(Workspace.AlignmentType.Pin, global_position)
@@ -314,7 +315,7 @@ func place():
 		Simulator.partAudioHandler.place(true)
 
 func updateInstance():
-	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
+	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
 
 func rotatePart(by):
 	if output:
@@ -350,7 +351,7 @@ func updateInteractionCandidates():
 	$Area3D.transform = $MeshInstance3D.transform
 	if global:
 		setHeight(0.1)
-	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
+	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform, selected)
 	#updateConstraints()
 
 static func sortByFixed(A, B):
@@ -547,16 +548,18 @@ func nudge():
 			dirN = Vector2(0,-1)*Workspace.pinTravel * flipOrder
 		if canMove(dirP, self, []):
 			move(dirP, self, [])
+			Simulator.nudge()
 			Simulator.sheetAudioHandler.playSingle()
 			return
 		if canMove(dirN, self, []):
 			move(dirN, self, [])
+			Simulator.nudge()
 			Simulator.sheetAudioHandler.playSingle()
 			return
 	pass
 
 func visibilityChanged():
 	if is_visible_in_tree():
-		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform)
+		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
 	else:
-		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform.scaled(Vector3.ZERO))
+		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform.scaled(Vector3.ZERO), false)
