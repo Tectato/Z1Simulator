@@ -160,7 +160,7 @@ func _process(_delta: float) -> void:
 		for part in selected:
 			#i += 1
 			if part.canBeMoved():
-				if Input.is_action_just_pressed("rotate_ccw"):
+				if Input.is_action_just_pressed("rotate_ccw") and not Input.is_key_pressed(KEY_CTRL):
 					#var bounds = part.getBounds()
 					#var midPoint = (bounds[1]-bounds[0])/2
 					#mouseRelative[i] -= midPoint
@@ -168,10 +168,19 @@ func _process(_delta: float) -> void:
 					#mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
 					part.rotatePart(-PI/2)
 					part.place()
-				elif Input.is_action_just_pressed("rotate_cw"):
+				elif Input.is_action_just_pressed("rotate_cw") and not Input.is_key_pressed(KEY_CTRL):
 					#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
 					part.rotatePart(PI/2)
 					part.place()
+				
+				if part.getValidMoveDirections()[1]:
+					if Input.is_action_just_pressed("nudge_up"):
+						part.position.y += Global.workspace.sheetSpacing
+						part.place()
+					elif Input.is_action_just_pressed("nudge_down"):
+						part.position.y -= Global.workspace.sheetSpacing
+						part.place()
+				
 			if part is Machine:
 				if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
 					part.clock.increaseOffset()

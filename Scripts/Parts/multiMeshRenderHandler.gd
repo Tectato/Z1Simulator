@@ -109,7 +109,7 @@ func executeAdd():
 		for i in range(0,colorBuffer.size()):
 			renderer.multimesh.set_instance_color(i, colorBuffer[i])
 			renderer.multimesh.set_instance_transform(i, transformBuffer[i])
-			if highlight: highlight.multimesh.set_instance_transform(i, transformBuffer[i])
+			if highlight: highlight.multimesh.set_instance_transform(i, transformBuffer[i].scaled(Vector3.ZERO))
 		
 		if toColor.has(key) and !toColor[key].is_empty():
 			for i in toColor[key].keys():
@@ -119,7 +119,7 @@ func executeAdd():
 			for i in toTransform[key].keys():
 				if i >= renderer.multimesh.instance_count: break
 				renderer.multimesh.set_instance_transform(i, toTransform[key][i])
-				if highlight: highlight.multimesh.set_instance_transform(i, toTransform[key][i])
+				if highlight: highlight.multimesh.set_instance_transform(i, toTransform[key][i].scaled(Vector3.ZERO))
 	toAdd.clear()
 	toColor.clear()
 	toTransform.clear()

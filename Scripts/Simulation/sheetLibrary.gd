@@ -18,7 +18,7 @@ func registerMesh(path : String, mesh : ArrayMesh):
 	renderHandler.initMesh(path, mesh)
 	for user in users[path]:
 		user.meshIndex = renderHandler.addInstance(path)
-		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
+		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform.translated(Vector3.UP * -0.02))
 		user.mesh.call_deferred("updateMaterial")
 
 func registerUser(user : Sheet, path : String):
@@ -31,7 +31,7 @@ func registerUser(user : Sheet, path : String):
 		users[path] = [user]
 	if renderHandler.hasSheet(path):
 		user.meshIndex = renderHandler.addInstance(path)
-		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform)
+		renderHandler.setTransform(path, user.meshIndex, user.mesh.global_transform.translated(Vector3.UP * -0.02))
 		user.mesh.call_deferred("updateMaterial")
 
 func unregisterUser(user : Sheet, path : String):

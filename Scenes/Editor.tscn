@@ -119,8 +119,12 @@
 [ext_resource type="Texture2D" uid="uid://ckaotuhcrafcu" path="res://Sprites/Buttons/Parts/inputExponent.png" id="95_h6sg5"]
 [ext_resource type="Texture2D" uid="uid://cu76xgnbwvjqf" path="res://Sprites/Buttons/Parts/outputExponent.png" id="96_1q8bw"]
 [ext_resource type="Texture2D" uid="uid://dvr68rxt4v3e5" path="res://Sprites/yNeg.png" id="96_b5fr5"]
+[ext_resource type="Texture2D" uid="uid://bvrap4clop6xe" path="res://Sprites/Buttons/Parts/inputExponent_active.png" id="96_tqjql"]
 [ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
+[ext_resource type="Texture2D" uid="uid://ple42fn3cl8c" path="res://Sprites/Buttons/Parts/inputExponent_lit.png" id="97_ttmut"]
 [ext_resource type="Texture2D" uid="uid://cg0vwuovwm2py" path="res://Sprites/yPos.png" id="97_u4ilb"]
+[ext_resource type="Texture2D" uid="uid://bwcse5b6j433x" path="res://Sprites/Buttons/Parts/outputExponent_active.png" id="99_6xrox"]
+[ext_resource type="Texture2D" uid="uid://cpcs7fidp6pm6" path="res://Sprites/Buttons/Parts/outputExponent_lit.png" id="100_cfdn2"]
 [ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
 [ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
 [ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/ProgramInterface/notch.png" id="102_u1ej8"]
@@ -2229,15 +2233,15 @@ texture_hover = ExtResource("80_i1mcn")
 layout_mode = 2
 tooltip_text = "Place input exponent slider"
 texture_normal = ExtResource("95_h6sg5")
-texture_pressed = ExtResource("79_5ko8x")
-texture_hover = ExtResource("80_i1mcn")
+texture_pressed = ExtResource("96_tqjql")
+texture_hover = ExtResource("97_ttmut")
 
 [node name="OutputExponentSlider2" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1636840348]
 layout_mode = 2
 tooltip_text = "Place output exponent slider"
 texture_normal = ExtResource("96_1q8bw")
-texture_pressed = ExtResource("79_5ko8x")
-texture_hover = ExtResource("80_i1mcn")
+texture_pressed = ExtResource("99_6xrox")
+texture_hover = ExtResource("100_cfdn2")
 
 [node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent" unique_id=2065483624]
 own_world_3d = true

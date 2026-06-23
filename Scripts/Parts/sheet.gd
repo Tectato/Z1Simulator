@@ -166,7 +166,7 @@ func postParseSetup():
 	#var startTime = Time.get_ticks_usec()		# TIMING
 	
 	if id.length() == 0:
-		id = sheetData.name
+		id = sheetData.id
 	#sprite.texture = sheetData.spriteTex
 	#sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
 	#sprite.position = -sheetData.midPoint + Space.toVec3(sheetData.partOffset) + Vector3.UP * 0.001
@@ -803,9 +803,13 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 	var d_init = dir.length()
 	rotSpeed = potentialRotSpeed[0 if clockwise else 1]
 	targetRot = potentialTargetRot[0 if clockwise else 1]
-	if abs(angle_difference(wrapf(targetRot,-PI,PI), wrapf(previousRot,-PI,PI))) < 0.04:
+	#if abs(angle_difference(wrapf(targetRot,-PI,PI), wrapf(previousRot,-PI,PI))) < 0.04:
+	var wrappedCurrentRot = wrapf(rotation.y,-PI,PI)
+	# Assume that a rotation in the direction of the previous orientation has that same angle as its target
+	if sign(angle_difference(wrapf(targetRot,-PI,PI), wrappedCurrentRot)) == sign(angle_difference(wrapf(previousRot,-PI,PI), wrappedCurrentRot)):
 		targetRot = previousRot # Prevent drift over time from inaccurate angle calculation
 	previousRot = rotation.y
+	preMovePos = position
 	targetPos = potentialTargetPos[0 if clockwise else 1]
 	#print("TargetRot: %0.6f" % targetRot + "\tTargetPos: (%0.4f, %0.4f)" % [targetPos.x, targetPos.z])
 	chain.erase(initiator)
@@ -815,7 +819,9 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 		for pin in toMoveInRotation[rotatedDir]:
 			if pin == initiator: continue
 			var r_pin = (pin.position - pivot.position).length()
-			pin.move(intToDir(rotatedDir) * d_init * (r_pin/r_init), self, chain)
+			var r_ratio = r_pin/r_init #snappedf(r_pin/r_init, 0.2)
+			#print("Distance: %0.5f, snapped: %0.5f" % [(d_init * r_ratio), snappedf(d_init * r_ratio, 0.02)])
+			pin.move(intToDir(rotatedDir) * snappedf(d_init * r_ratio, 0.02), self, chain)
 	inMotion = true
 	rotating = true
 	pass

@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="2_qblor"]
 [ext_resource type="FontFile" uid="uid://c6hv3oj38le0" path="res://Fonts/DigitalPixel-Regular.otf" id="3_1inwg"]
 [ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="4_qblor"]
+[ext_resource type="Texture2D" uid="uid://c1kmouadtwks3" path="res://Sprites/Parts/exponentSlot_marked.png" id="5_pwkmf"]
+[ext_resource type="Texture2D" uid="uid://bag53j0wvuxsu" path="res://Sprites/Parts/exponentSlot.png" id="6_dgmly"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mfejg"]
 size = Vector3(0.14111328, 0.2175293, 0.057678223)
@@ -57,7 +59,7 @@ font_size = 10
 horizontal_alignment = 0
 
 [node name="IndexLabel" type="Label3D" parent="." unique_id=634326752]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.15, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.23812065, 0)
 sorting_offset = 1.0
 billboard = 1
 double_sided = false
@@ -72,10 +74,85 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0
 mesh = SubResource("PrismMesh_h47y2")
 
 [node name="ButtonReset" parent="." unique_id=490697296 instance=ExtResource("4_qblor")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.05, -0.2)
 
 [node name="Label3D" parent="ButtonReset" index="1" unique_id=1904010434]
 text = "Reset"
+
+[node name="Frame" type="Node3D" parent="." unique_id=2040522532]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="Frame" unique_id=2018175530]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, -0.080476485)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("5_pwkmf")
+
+[node name="Sprite3D2" type="Sprite3D" parent="Frame" unique_id=2113079847]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, -0.24054775)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("5_pwkmf")
+
+[node name="Sprite3D3" type="Sprite3D" parent="Frame" unique_id=809023284]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, -0.40040624)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D4" type="Sprite3D" parent="Frame" unique_id=1156576333]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, -0.56066114)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D5" type="Sprite3D" parent="Frame" unique_id=1339387964]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, -0.7203239)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D6" type="Sprite3D" parent="Frame" unique_id=629562436]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, -0.8804339)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D7" type="Sprite3D" parent="Frame" unique_id=1343180541]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, 0.87989444)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D8" type="Sprite3D" parent="Frame" unique_id=1409038973]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, 0.7198231)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D9" type="Sprite3D" parent="Frame" unique_id=381347805]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, 0.55996466)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D10" type="Sprite3D" parent="Frame" unique_id=1009385892]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, 0.39970976)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("6_dgmly")
+
+[node name="Sprite3D11" type="Sprite3D" parent="Frame" unique_id=523961154]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, 0.24004698)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("5_pwkmf")
+
+[node name="Sprite3D12" type="Sprite3D" parent="Frame" unique_id=525186743]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.25, 0.07993698)
+double_sided = false
+texture_filter = 0
+texture = ExtResource("5_pwkmf")
 
 [connection signal="clicked" from="ButtonReset" to="." method="reset"]
 

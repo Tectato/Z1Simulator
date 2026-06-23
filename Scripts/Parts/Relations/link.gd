@@ -59,6 +59,7 @@ func updatePos():
 	if Space.toVec2(pointA).distance_squared_to(Space.toVec2(pointB)) > 0.001:
 		$LinePivot.look_at(pointB)
 	else:
+		$LinePivot.rotation = Vector3.ZERO
 		$LinePivot.rotate_x(PI/2 if pointA.y < pointB.y else -PI/2)
 	$LinePivot.scale = Vector3(1,1,0) + Vector3.FORWARD * pointA.distance_to(pointB)
 
