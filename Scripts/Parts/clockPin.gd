@@ -136,7 +136,7 @@ func move(dir : Vector2, initiator, chain = []):
 			if !inMotion:
 				super.move(dir, null, chain)
 			return MoveState.AlreadyMoving
-		if self in chain:
+		if [self, dirID] in chain:
 			return MoveState.AlreadyMoving
 		if !inputCheckbox.isLocked():
 			return MoveState.Blocked

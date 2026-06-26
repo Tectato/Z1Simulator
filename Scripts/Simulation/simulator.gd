@@ -73,7 +73,7 @@ func setStep(value = 3):
 func next(stopClock = true):
 	if Global.editor.loading: return
 	if stopClock: stop()
-	if !$Cooldown.is_stopped():
+	if !$Cooldown.is_stopped() or !runningTimer.is_stopped():
 		if stepScheduled:
 			return
 		stepScheduled = true
@@ -81,6 +81,7 @@ func next(stopClock = true):
 	partsMoved = 0
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1
+	stepProgress = 0.0
 	var autoClockPaused = $AutoClock.paused
 	$AutoClock.paused = true # Pause clock to ensure it doesnt keep running through lag spikes
 	step.emit()
@@ -145,7 +146,7 @@ func moveSpeedChanged():
 	$MoveComplete.wait_time = (Workspace.pinTravel/Global.workspace.moveSpeed)
 	$BackMoveComplete.wait_time = $MoveComplete.wait_time
 	$Cooldown.wait_time = $MoveComplete.wait_time * 2 + $PulsingReset.wait_time * 2
-	maxFrequency = 1/($Cooldown.wait_time * 4)
+	maxFrequency = 1.0/($Cooldown.wait_time * 4)
 	#TODO
 	pass
 
@@ -157,6 +158,7 @@ func stepToString(i : int):
 		3: return "IV"
 
 func nudge():
+	if stepProgress < 1.0: return
 	nudging = true
 	runningTimer = $MoveComplete
 	$MoveComplete.start()
@@ -171,6 +173,9 @@ func _on_move_complete_timeout() -> void:
 
 func _on_back_move_complete_timeout() -> void:
 	stepProgress = 1.0
+	if stepScheduled:
+		await get_tree().process_frame
+		next($AutoClock.paused)
 
 func _on_pulsing_reset_timeout() -> void:
 	stepProgress = 0.0

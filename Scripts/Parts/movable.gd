@@ -114,11 +114,11 @@ func move(dir : Vector2, initiator, chain = []):
 		#print(initiator.id + " attempted to move static part " + id)
 		return MoveState.Blocked
 	movedBy[initiator] = initiator
-	if chain.has(self):
+	if chain.has([self, dirID]):
 		return MoveState.AlreadyMoving
 	
 	moved.clear()
-	chain.append(self)
+	chain.append([self, dirID])
 	
 	#translate(Vector3(dir.x,0,dir.y))
 	inMotion = true

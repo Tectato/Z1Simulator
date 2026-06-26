@@ -395,6 +395,23 @@ func rotatePart(angle):
 	rotate_y(angle)
 	snap(global_position)
 
+func rotateMachine(dir : int):
+	for layer in layers:
+		layer.rotateLayer(dir)
+	var angle = PI/2 * dir
+	for part in globalPins:
+		part.rotatePart(angle)
+		part.position = part.position.rotated(Vector3.UP, angle)
+		part.place()
+	for part in clockPins:
+		part.rotatePart(angle)
+		part.position = part.position.rotated(Vector3.UP, angle)
+		part.place()
+	for part in comments:
+		part.rotatePart(angle)
+		part.position = part.position.rotated(Vector3.UP, angle)
+		part.place()
+
 func toGlobalDir(direction):
 	if direction is Vector3:
 		return direction.rotated(Vector3.UP, rotation.y)

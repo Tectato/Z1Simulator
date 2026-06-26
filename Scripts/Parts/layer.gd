@@ -336,3 +336,15 @@ func getValidMoveDirections():
 
 func rotatePart(angle):
 	return
+
+func rotateLayer(dir : int):
+	var angle = PI/2 * dir
+	for part in parts:
+		if part is Sheet:
+			part.rotate_y(angle)
+			part.updateRotation()
+		else:
+			part.rotatePart(angle)
+		part.position = part.position.rotated(Vector3.UP, angle)
+		part.place()
+	

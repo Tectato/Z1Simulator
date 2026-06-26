@@ -114,3 +114,8 @@ func place():
 func delete():
 	machine.removeComment(self)
 	queue_free()
+
+func rotatePart(angle):
+	cornerA.position = cornerA.position.rotated(Vector3.UP, angle)
+	cornerB.position = cornerB.position.rotated(Vector3.UP, angle)
+	updateBox()

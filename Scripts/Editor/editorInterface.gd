@@ -132,7 +132,11 @@ func _on_edit_id_pressed(id: int) -> void:
 				Global.workspace.startRecording()
 			else:
 				Global.workspace.stopRecording()
-			$VisibilityParent/MenuBar/Edit.set_item_text(2, "Start recording" if !Global.workspace.recording else "Stop recording")
+			$VisibilityParent/MenuBar/Edit.set_item_text(4, "Start recording" if !Global.workspace.recording else "Stop recording")
+		3:
+			editor.rotateMachine(1)
+		4:
+			editor.rotateMachine(-1)
 
 func requestSheet():
 	importSheetDialog.popup()
@@ -258,6 +262,7 @@ func visModeShaded() -> void:
 
 func newSelection(parts = []):
 	var oneInstanceMachineSelected = parts.size() == 1 and parts[0] is Machine and parts[0].importedInstance
+	var editableMachineSelected = parts.size() == 1 and parts[0] is Machine and !parts[0].importedInstance
 	var instancePartsSelected = !parts.is_empty()
 	for part in parts:
 		if !(part is Movable and part.getMachine().importedInstance):
@@ -265,6 +270,8 @@ func newSelection(parts = []):
 			break
 	$VisibilityParent/MenuBar/Edit.set_item_disabled(0, !oneInstanceMachineSelected)
 	$VisibilityParent/MenuBar/Edit.set_item_disabled(1, !(oneInstanceMachineSelected or instancePartsSelected))
+	$VisibilityParent/MenuBar/Edit.set_item_disabled(2, !editableMachineSelected)
+	$VisibilityParent/MenuBar/Edit.set_item_disabled(3, !editableMachineSelected)
 	commentBox.hide()
 	if !parts.is_empty() and (parts.back() is Movable or parts.back() is Machine):
 		Global.editor.interface.infoLabel.text = "UUID: " + str(parts.back().uuid)

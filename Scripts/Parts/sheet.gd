@@ -552,12 +552,14 @@ func canMove(dir : Vector2, initiator, chain = []):
 		#if pointConstraints.is_empty() or pointConstraints.size() > 2:
 			#blockedCycle = Simulator.totalStep
 			#return MoveState.Blocked
-		for pin in moveCandidates:
-			if pin == initiator: continue
-			if canTurn(dir, pin, initiator, chain):
-				#pivots[dirID%2] = [pin]
-				pivots = [[pin],[pin]]
-				break
+		# Check if we can turn instead if the movement was initiated by a pin
+		if initiator is Pin:
+			for pin in moveCandidates:
+				if pin == initiator: continue
+				if canTurn(dir, pin, initiator, chain):
+					#pivots[dirID%2] = [pin]
+					pivots = [[pin],[pin]]
+					break
 		if pivots[dirID%2].size() != 1:
 			return MoveState.Blocked
 		setToMove[dirID] = Simulator.totalStep
@@ -581,7 +583,7 @@ func move(dir : Vector2, initiator, chain = []):
 	#if !turnInstead.has(initiator): return MoveState.AlreadyMoving # Having this here makes things work BUT if self is first an initiator of pin X but later gets initiated by X we return early and dont move
 	if turnInstead.has(initiator) and turnInstead[initiator][dirID]:
 		if inMotion: return MoveState.AlreadyMoving
-		chain.append(self)
+		chain.append([self, dirID])
 		forces[initiator] = [dir, chain]
 		#if !shouldTurn():
 			#return MoveState.Blocked

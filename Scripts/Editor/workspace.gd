@@ -125,6 +125,16 @@ func set3DUIVis(newVis):
 		show3DUI = newVis
 		worldUIVisChanged.emit(newVis)
 
+func setSheetSpacing(newVal):
+	if newVal != sheetSpacing:
+		sheetSpacing = newVal
+		sheetSpacingChanged.emit()
+
+func setMoveSpeed(newVal):
+	if newVal != moveSpeed:
+		moveSpeed = newVal
+		moveSpeedChanged.emit()
+
 func setVolume(newVal):
 	if newVal != maxVolume:
 		maxVolume = newVal

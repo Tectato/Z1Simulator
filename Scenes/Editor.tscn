@@ -84,7 +84,9 @@
 [ext_resource type="Script" uid="uid://b70fwdmpoftj7" path="res://Scripts/Editor/sceneTree.gd" id="42_1bbve"]
 [ext_resource type="Texture2D" uid="uid://b3vruo2ckl63" path="res://Sprites/Buttons/SceneTree/hide.png" id="42_3icuf"]
 [ext_resource type="Texture2D" uid="uid://cbgagclwkqade" path="res://Sprites/Buttons/SceneTree/show.png" id="43_1bbve"]
+[ext_resource type="Texture2D" uid="uid://da8clicvydhl7" path="res://Sprites/clockwise.png" id="43_lpwh4"]
 [ext_resource type="Texture2D" uid="uid://y1aq8vjhau7j" path="res://Sprites/Buttons/SceneTree/hide_lit.png" id="44_8ktkl"]
+[ext_resource type="Texture2D" uid="uid://dsv81iqguf6a1" path="res://Sprites/counterclockwise.png" id="44_tmgha"]
 [ext_resource type="Script" uid="uid://cxd3fkwtr80us" path="res://Scripts/Editor/SideWindow.gd" id="51_12riw"]
 [ext_resource type="Texture2D" uid="uid://h1ijth7h03v7" path="res://Sprites/clock.png" id="52_85c8q"]
 [ext_resource type="Texture2D" uid="uid://drcn2gkyoxtg4" path="res://Sprites/Buttons/Parts/sheet_locked.png" id="52_v5nsg"]
@@ -1899,7 +1901,8 @@ offset_right = 125.0
 offset_bottom = 40.0
 
 [node name="File" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar" unique_id=924937566]
-size = Vector2i(121, 143)
+oversampling_override = 1.0
+size = Vector2i(214, 224)
 item_count = 8
 item_0/text = "New Project"
 item_0/id = 0
@@ -1920,20 +1923,30 @@ item_7/id = 8
 
 [node name="Edit" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar" unique_id=1773781467]
 auto_translate_mode = 1
-size = Vector2i(121, 143)
-item_count = 3
+oversampling_override = 1.0
+size = Vector2i(201, 143)
+item_count = 5
 item_0/text = "Make local copy"
 item_0/id = 0
 item_0/disabled = true
 item_1/text = "Clear Diff"
 item_1/id = 1
 item_1/disabled = true
-item_2/text = "Start recording"
-item_2/id = 2
+item_2/text = "Rotate Machine CW"
+item_2/icon = ExtResource("43_lpwh4")
+item_2/id = 3
+item_2/disabled = true
+item_3/text = "Rotate Machine CCW"
+item_3/icon = ExtResource("44_tmgha")
+item_3/id = 4
+item_3/disabled = true
+item_4/text = "Start recording"
+item_4/id = 2
 
 [node name="Help" type="PopupMenu" parent="Camera3D/Interface/VisibilityParent/MenuBar" unique_id=217690394]
 auto_translate_mode = 1
-size = Vector2i(121, 143)
+oversampling_override = 1.0
+size = Vector2i(174, 143)
 item_count = 2
 item_0/text = "Show Help & Tips"
 item_0/id = 0
@@ -2338,13 +2351,29 @@ offset_top = -64.0
 offset_right = 64.0
 offset_bottom = 64.0
 
-[node name="FrequencyInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=367292931]
+[node name="TextFrequencyInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=367292931]
+visible = false
 layout_mode = 0
 offset_left = -139.0
 offset_top = 29.0
 offset_right = -70.4375
 offset_bottom = 60.0
 text = "0.25 Hz"
+
+[node name="FrequencyInput" type="SpinBox" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=723985030]
+layout_mode = 0
+offset_left = -139.0
+offset_top = 29.0
+offset_right = -52.5
+offset_bottom = 60.0
+max_value = 2.0
+step = 0.05
+value = 0.25
+suffix = "Hz"
+
+[node name="ValueTimeout" type="Timer" parent="Camera3D/Interface/VisibilityParent/ClockGizmo" unique_id=2084504302]
+wait_time = 0.2
+one_shot = true
 
 [node name="SideWindow" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=935138777]
 texture_filter = 1
@@ -2679,11 +2708,23 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Sheet spacing"
 
-[node name="SheetSpacingInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=536586903]
+[node name="SheetSpacingInput" type="SpinBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=1490948270]
+layout_mode = 2
+min_value = 0.021
+max_value = 0.2
+step = 0.001
+value = 0.045
+custom_arrow_step = 0.01
+
+[node name="TextSheetSpacingInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=536586903]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 text = "0.045"
 emoji_menu_enabled = false
+
+[node name="SheetSpacingTimeout" type="Timer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=1719921042]
+wait_time = 0.2
 
 [node name="MovementSpeed" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1400123631]
 layout_mode = 2
@@ -2693,11 +2734,23 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Move speed"
 
-[node name="MovementSpeedInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=184227329]
+[node name="MoveSpeedInput" type="SpinBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=1199496301]
+layout_mode = 2
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="TextMovementSpeedInput" type="LineEdit" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=184227329]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 text = "1.0"
 emoji_menu_enabled = false
+
+[node name="MoveSpeedTimeout" type="Timer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=1606736683]
+wait_time = 0.2
+one_shot = true
 
 [node name="Volume" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=618240631]
 layout_mode = 2
@@ -3138,7 +3191,9 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Comment" to="." method="addComment"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/InputExponentSlider" to="." method="addExponentSlider" binds= [true]]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/OutputExponentSlider2" to="." method="addExponentSlider"]
-[connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/ClockGizmo/FrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_editing_toggled"]
+[connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/ClockGizmo/TextFrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_editing_toggled"]
+[connection signal="value_changed" from="Camera3D/Interface/VisibilityParent/ClockGizmo/FrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_value_changed"]
+[connection signal="timeout" from="Camera3D/Interface/VisibilityParent/ClockGizmo/ValueTimeout" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_value_timeout_timeout"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/SideWindow/Hide" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_hide_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
 [connection signal="button_down" from="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_move_button_button_down"]
@@ -3150,8 +3205,12 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="focus_exited" from="Camera3D/Interface/VisibilityParent/SetCommentBox/ScrollContainer/TextEdit" to="Camera3D/Interface" method="_on_comment_text_edit_focus_exited"]
 [connection signal="timeout" from="Camera3D/Interface/VisibilityParent/ErrorBox/Timer" to="Camera3D/Interface/VisibilityParent/ErrorBox" method="close"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Header/Close" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_close_pressed"]
-[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_input_text_submitted"]
-[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MovementSpeedInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_movement_speed_input_text_submitted"]
+[connection signal="value_changed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/SheetSpacingInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_input_value_changed"]
+[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/TextSheetSpacingInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_input_text_submitted"]
+[connection signal="timeout" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing/SheetSpacingTimeout" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_sheet_spacing_timeout_timeout"]
+[connection signal="value_changed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MoveSpeedInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_move_speed_input_value_changed"]
+[connection signal="text_submitted" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/TextMovementSpeedInput" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_movement_speed_input_text_submitted"]
+[connection signal="timeout" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MoveSpeedTimeout" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_move_speed_timeout_timeout"]
 [connection signal="drag_ended" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume/HSlider" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_h_slider_drag_ended"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_store_diff_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_brass_toggled"]

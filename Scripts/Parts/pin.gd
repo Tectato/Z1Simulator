@@ -319,7 +319,7 @@ func updateInstance():
 
 func rotatePart(by):
 	if output:
-		directionality = wrapi(directionality+1*sign(by),0,3)
+		directionality = wrapi(directionality+1*sign(by),1,3)
 		indicator.setDirection(directionality)
 
 func updateInteractionCandidates():
@@ -381,8 +381,8 @@ func delete():
 func canMove(dir : Vector2, initiator, chain = []):
 	#instances[0] += 1							# TIMINGS
 	#var startTime = Time.get_ticks_usec()		#
-	#if selected:
-		#pass
+	if selected:
+		pass
 	var out = super.canMove(dir, initiator, chain)
 	#t_superMove += Time.get_ticks_usec() - startTime	# TIMINGS
 	#startTime = Time.get_ticks_usec()					#

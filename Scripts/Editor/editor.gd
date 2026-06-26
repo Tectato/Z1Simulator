@@ -208,6 +208,12 @@ func localizeMachine():
 	if selector.selected.size() == 1 and selector.selected[0] is Machine:
 		selector.selected[0].makeLocal()
 
+func rotateMachine(dir : int):
+	if selector.selected.size() == 1 and selector.selected[0] is Machine:
+		loading = true
+		selector.selected[0].rotateMachine(dir)
+		loading = false
+
 func clearDiff():
 	if !selector.selected.is_empty():
 		if selector.selected[0] is Machine:

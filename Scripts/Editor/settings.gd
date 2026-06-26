@@ -1,10 +1,12 @@
 extends Control
 
-@onready var moveSpeedInput = $VBoxContainer/MovementSpeed/MovementSpeedInput
+@onready var moveSpeedInput = $VBoxContainer/MovementSpeed/MoveSpeedInput
 @onready var volumeSlider = $VBoxContainer/Volume/HSlider
+@export var clockGizmo : Control
 
 func _ready() -> void:
-	moveSpeedInput.text = str(Global.workspace.moveSpeed)
+	#moveSpeedInput.text = str(Global.workspace.moveSpeed)
+	moveSpeedInput.value = Global.workspace.moveSpeed
 
 func _on_close_pressed() -> void:
 	hide()
@@ -35,3 +37,15 @@ func _on_h_slider_drag_ended(value_changed: bool) -> void:
 
 func _on_debug_toggled(toggled_on: bool) -> void:
 	Global.editor.interface.infoLabel.visible = toggled_on
+
+func _on_sheet_spacing_input_value_changed(value: float) -> void:
+	$VBoxContainer/SheetSpacing/SheetSpacingTimeout.start()
+
+func _on_sheet_spacing_timeout_timeout() -> void:
+	Global.workspace.setSheetSpacing($VBoxContainer/SheetSpacing/SheetSpacingInput.value)
+
+func _on_move_speed_input_value_changed(value: float) -> void:
+	$VBoxContainer/MovementSpeed/MoveSpeedTimeout.start()
+
+func _on_move_speed_timeout_timeout() -> void:
+	Global.workspace.setMoveSpeed(moveSpeedInput.value)
