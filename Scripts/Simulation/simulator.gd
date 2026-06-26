@@ -19,7 +19,7 @@ var stepScheduled = false
 var maxFrequency = 1.0
 var rewinding = false
 var partsMoved = 0
-var stepProgress = 0.0
+var stepProgress = 1.0
 var nudging = false
 @onready var runningTimer = $MoveComplete
 
@@ -78,6 +78,7 @@ func next(stopClock = true):
 			return
 		stepScheduled = true
 		return
+	stepScheduled = false
 	partsMoved = 0
 	currentStep = wrapi(currentStep+1,0,4)
 	totalStep += 1

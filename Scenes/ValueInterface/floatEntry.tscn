@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://d15cehtgyhhdm"]
+
+[ext_resource type="Script" uid="uid://c4l01jut6v6cw" path="res://Scripts/Editor/ValueInterface/floatEntry.gd" id="1_fk5y1"]
+[ext_resource type="Texture2D" uid="uid://bi0ks6nyku41a" path="res://Sprites/Buttons/Generic/delete.png" id="3_uaubv"]
+[ext_resource type="Texture2D" uid="uid://cow8rpggsfal1" path="res://Sprites/Buttons/Generic/delete_lit.png" id="4_fbxlb"]
+[ext_resource type="Texture2D" uid="uid://cad1fg2jl0ihg" path="res://Sprites/Buttons/Generic/delete_active.png" id="5_2fcik"]
+
+[node name="FloatEntry" type="FoldableContainer" unique_id=1266885409]
+offset_right = 283.0
+offset_bottom = 66.0
+script = ExtResource("1_fk5y1")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1528267778]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="VBox" unique_id=893117099]
+layout_mode = 2
+
+[node name="ID" type="LineEdit" parent="VBox/Header" unique_id=1860463897]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Value"
+placeholder_text = "Value name"
+
+[node name="VSeparator4" type="VSeparator" parent="VBox/Header" unique_id=1154963355]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+
+[node name="Delete" type="TextureButton" parent="VBox/Header" unique_id=1789215752]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete"
+texture_normal = ExtResource("3_uaubv")
+texture_pressed = ExtResource("4_fbxlb")
+texture_hover = ExtResource("5_2fcik")
+
+[node name="Value" type="HBoxContainer" parent="VBox" unique_id=1129883153]
+layout_mode = 2
+
+[node name="VSeparator2" type="VSeparator" parent="VBox/Value" unique_id=1681237052]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/Value" unique_id=1227513751]
+layout_mode = 2
+text = "0.0"
+
+[connection signal="text_changed" from="VBox/Header/ID" to="." method="_on_id_text_changed"]
+[connection signal="pressed" from="VBox/Header/Delete" to="." method="_on_delete_pressed"]

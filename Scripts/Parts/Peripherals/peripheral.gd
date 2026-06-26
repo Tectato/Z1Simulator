@@ -54,6 +54,12 @@ func deserialize(src : Dictionary):
 		for i in range(srcOutputs.size()):
 			outputs[i].deserialize(srcOutputs[i])
 
+func serializeDiff():
+	return null
+
+func deserializeDiff(src : Dictionary):
+	pass
+
 func pinInput(pin : Pin):
 	pass
 

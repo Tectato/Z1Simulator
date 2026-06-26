@@ -1,48 +1,60 @@
 [gd_scene format=3 uid="uid://dtekup3i5vj8j"]
 
 [ext_resource type="Script" uid="uid://bg7lhim085uf0" path="res://Scripts/Editor/ValueInterface/valueEntry.gd" id="1_ddg0g"]
+[ext_resource type="Theme" uid="uid://dsb4eep2yw4u5" path="res://Fonts/vanillaCheckboxTheme.tres" id="2_w7yd7"]
 [ext_resource type="Texture2D" uid="uid://bi0ks6nyku41a" path="res://Sprites/Buttons/Generic/delete.png" id="3_w7yd7"]
 [ext_resource type="Texture2D" uid="uid://cow8rpggsfal1" path="res://Sprites/Buttons/Generic/delete_lit.png" id="4_pyvho"]
 [ext_resource type="Texture2D" uid="uid://cad1fg2jl0ihg" path="res://Sprites/Buttons/Generic/delete_active.png" id="5_bpm0s"]
 
-[node name="ValueEntry" type="VBoxContainer" unique_id=1347183910]
+[node name="ValueEntry" type="FoldableContainer" unique_id=1266885409]
+offset_right = 283.0
+offset_bottom = 66.0
 script = ExtResource("1_ddg0g")
 
-[node name="Header" type="HBoxContainer" parent="." unique_id=893117099]
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1528267778]
 layout_mode = 2
 
-[node name="ID" type="LineEdit" parent="Header" unique_id=1860463897]
+[node name="Header" type="HBoxContainer" parent="VBox" unique_id=893117099]
+layout_mode = 2
+
+[node name="ID" type="LineEdit" parent="VBox/Header" unique_id=1860463897]
+custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Value"
 placeholder_text = "Value name"
 
-[node name="VSeparator2" type="VSeparator" parent="Header" unique_id=466657154]
+[node name="VSeparator2" type="VSeparator" parent="VBox/Header" unique_id=466657154]
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Header" unique_id=88623283]
+[node name="Label" type="Label" parent="VBox/Header" unique_id=88623283]
 layout_mode = 2
 text = "Signed:"
 
-[node name="SignToggle" type="CheckBox" parent="Header" unique_id=1216674608]
+[node name="SignToggle" type="CheckBox" parent="VBox/Header" unique_id=1216674608]
 texture_filter = 1
 layout_mode = 2
+theme = ExtResource("2_w7yd7")
 
-[node name="VSeparator4" type="VSeparator" parent="Header" unique_id=1154963355]
+[node name="VSeparator4" type="VSeparator" parent="VBox/Header" unique_id=1154963355]
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="Header" unique_id=2090250139]
+[node name="Label2" type="Label" parent="VBox/Header" unique_id=2090250139]
 layout_mode = 2
 text = "Float:"
 
-[node name="FloatToggle" type="CheckBox" parent="Header" unique_id=557250026]
+[node name="FloatToggle" type="CheckBox" parent="VBox/Header" unique_id=557250026]
 texture_filter = 1
 layout_mode = 2
+theme = ExtResource("2_w7yd7")
 
-[node name="VSeparator3" type="VSeparator" parent="Header" unique_id=4837293]
+[node name="VSeparator3" type="VSeparator" parent="VBox/Header" unique_id=4837293]
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
-[node name="Delete" type="TextureButton" parent="Header" unique_id=1789215752]
+[node name="Delete" type="TextureButton" parent="VBox/Header" unique_id=1789215752]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
@@ -51,50 +63,51 @@ texture_normal = ExtResource("3_w7yd7")
 texture_pressed = ExtResource("4_pyvho")
 texture_hover = ExtResource("5_bpm0s")
 
-[node name="Value" type="HBoxContainer" parent="." unique_id=1129883153]
+[node name="Value" type="HBoxContainer" parent="VBox" unique_id=1129883153]
 layout_mode = 2
 
-[node name="VSeparator2" type="VSeparator" parent="Value" unique_id=1681237052]
+[node name="SelectionCheckBox" type="CheckBox" parent="VBox/Value" unique_id=2005469238]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
+theme = ExtResource("2_w7yd7")
+disabled = true
 
-[node name="Dec" type="SpinBox" parent="Value" unique_id=888811351]
+[node name="Dec" type="SpinBox" parent="VBox/Value" unique_id=888811351]
 layout_mode = 2
 rounded = true
 
-[node name="DecString" type="LineEdit" parent="Value" unique_id=73510274]
+[node name="DecString" type="LineEdit" parent="VBox/Value" unique_id=73510274]
 visible = false
 layout_mode = 2
 text = "0"
 virtual_keyboard_type = 2
 
-[node name="Bin" type="HBoxContainer" parent="Value" unique_id=1438065320]
+[node name="Bin" type="HBoxContainer" parent="VBox/Value" unique_id=1438065320]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="VSeparator3" type="VSeparator" parent="Value/Bin" unique_id=237031022]
+[node name="VSeparator3" type="VSeparator" parent="VBox/Value/Bin" unique_id=237031022]
 layout_mode = 2
 
-[node name="FloatValue" type="HBoxContainer" parent="." unique_id=1909797923]
-visible = false
+[node name="FloatValue" type="HBoxContainer" parent="VBox" unique_id=1909797923]
 layout_mode = 2
 
-[node name="VSeparator5" type="VSeparator" parent="FloatValue" unique_id=1671053768]
+[node name="VSeparator5" type="VSeparator" parent="VBox/FloatValue" unique_id=1671053768]
 custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="Control" type="Control" parent="FloatValue" unique_id=2010187661]
+[node name="Control" type="Control" parent="VBox/FloatValue" unique_id=2010187661]
 layout_mode = 2
 size_flags_horizontal = 2
 
-[node name="Numeric" type="Label" parent="FloatValue" unique_id=196546247]
+[node name="Numeric" type="Label" parent="VBox/FloatValue" unique_id=196546247]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 8
 text = "1.000"
 
-[node name="ColorRect" type="ColorRect" parent="FloatValue/Numeric" unique_id=1113848872]
+[node name="ColorRect" type="ColorRect" parent="VBox/FloatValue/Numeric" unique_id=1113848872]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -104,22 +117,23 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.17733333, 0.28, 0, 1)
 
-[node name="VSeparator4" type="VSeparator" parent="FloatValue" unique_id=358893997]
+[node name="VSeparator4" type="VSeparator" parent="VBox/FloatValue" unique_id=358893997]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="RadixSlider" type="HSlider" parent="FloatValue" unique_id=834524432]
+[node name="RadixSlider" type="HSlider" parent="VBox/FloatValue" unique_id=834524432]
 layout_mode = 2
 size_flags_horizontal = 8
 scrollable = false
 
-[node name="VSeparator3" type="VSeparator" parent="FloatValue" unique_id=275949626]
+[node name="VSeparator3" type="VSeparator" parent="VBox/FloatValue" unique_id=275949626]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[connection signal="toggled" from="Header/SignToggle" to="." method="_on_sign_toggle_toggled"]
-[connection signal="toggled" from="Header/FloatToggle" to="." method="_on_float_toggle_toggled"]
-[connection signal="pressed" from="Header/Delete" to="." method="_on_delete_pressed"]
-[connection signal="value_changed" from="Value/Dec" to="." method="_on_dec_value_changed"]
-[connection signal="editing_toggled" from="Value/DecString" to="." method="_on_dec_editing_toggled"]
-[connection signal="drag_ended" from="FloatValue/RadixSlider" to="." method="_on_radix_slider_drag_ended"]
+[connection signal="text_changed" from="VBox/Header/ID" to="." method="_on_id_text_changed"]
+[connection signal="toggled" from="VBox/Header/SignToggle" to="." method="_on_sign_toggle_toggled"]
+[connection signal="toggled" from="VBox/Header/FloatToggle" to="." method="_on_float_toggle_toggled"]
+[connection signal="pressed" from="VBox/Header/Delete" to="." method="_on_delete_pressed"]
+[connection signal="toggled" from="VBox/Value/SelectionCheckBox" to="." method="_on_selection_check_box_toggled"]
+[connection signal="value_changed" from="VBox/Value/Dec" to="." method="_on_dec_value_changed"]
+[connection signal="drag_ended" from="VBox/FloatValue/RadixSlider" to="." method="_on_radix_slider_drag_ended"]

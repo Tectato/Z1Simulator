@@ -1,13 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2qny7rtrxs8"]
+[gd_scene format=3 uid="uid://b2qny7rtrxs8"]
 
 [ext_resource type="Script" uid="uid://d0or56bxjulcv" path="res://Scripts/Editor/ValueInterface/machineEntry.gd" id="1_obqvv"]
 
-[node name="MachineEntry" type="VBoxContainer"]
+[node name="MachineEntry" type="VBoxContainer" unique_id=460528928]
 script = ExtResource("1_obqvv")
 
-[node name="Name" type="Label" parent="."]
+[node name="Name" type="Label" parent="." unique_id=1676163417]
 layout_mode = 2
 text = "Machine"
 
-[node name="HSeparator" type="HSeparator" parent="."]
+[node name="HSeparator" type="HSeparator" parent="." unique_id=1929547847]
 layout_mode = 2

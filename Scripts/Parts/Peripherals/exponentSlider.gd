@@ -40,6 +40,31 @@ func deserialize(src : Dictionary):
 	exponent = src["value"]
 	updateState()
 
+func serializeDiff():
+	var out = {
+		"inputs" : [],
+		"outputs" : []
+	}
+	for i in len(inputs):
+		var pinDiff = inputs[i].serializeDiff()
+		if pinDiff: out["inputs"].append([i, pinDiff])
+	for i in len(outputs):
+		var pinDiff = outputs[i].serializeDiff()
+		if pinDiff: out["outputs"].append([i, pinDiff])
+	if exponent != 0:
+		out["value"] = exponent
+	if !out["inputs"].is_empty() or !out["outputs"].is_empty() or out.has("value"):
+		return out
+	return null
+
+func deserializeDiff(src : Dictionary):
+	for entry in src["inputs"]:
+		inputs[int(entry[0])].deserializeDiff(entry[1])
+	for entry in src["outputs"]:
+		outputs[int(entry[0])].deserializeDiff(entry[1])
+	if src.has("value"): exponent = src["value"]
+	updateState()
+
 func pinInput(pin : Pin):
 	var index = inputs.find(pin)
 	if index < 0: return

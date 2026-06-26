@@ -1,9 +1,8 @@
 extends Control
 
-const VALUE = preload("res://Scenes/ValueInterface/valueEntry.tscn")
+const VALUE = preload("res://Scenes/ValueInterface/floatEntry.tscn")
 
 var parent : Control
-var machine : Machine
 var values = []
 
 func serialize():
@@ -15,11 +14,11 @@ func serialize():
 func deserialize(src):
 	for entry in src:
 		var newValue = addValue()
-		newValue.deserialize(machine, entry)
+		newValue.parent = self
+		newValue.deserialize(entry)
 
-func setup(m):
-	machine = m
-	$Name.text = machine.id
+func setup(name : String):
+	$Name.text = name
 
 func addValue():
 	var newValue = VALUE.instantiate()
@@ -29,14 +28,12 @@ func addValue():
 	newValue.parent = self
 	return newValue
 
-func createValue(selection : Array):
-	var value = addValue()
-	value.setup(selection)
-	return value
+func createValue(valueA, valueB, selection : Array):
+	addValue().setup(valueA, valueB, selection)
 
 func removeValue(value):
 	values.erase(value)
 	if values.is_empty():
-		parent.removeMachineEntry(self)
+		parent.removeCompoundCategory()
 	else:
 		value.queue_free()

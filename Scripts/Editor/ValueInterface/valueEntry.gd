@@ -1,11 +1,16 @@
-extends Control
+extends FoldableContainer
+class_name ValueEntry
 
 const BIT_CHECKBOX = preload("res://Scenes/ProgramInterface/PinCheckbox.tscn")
 
-@onready var dec = $Value/Dec
-@onready var bin = $Value/Bin
-@onready var flt = $FloatValue/Numeric
-@onready var radixSlider = $FloatValue/RadixSlider
+@onready var dec = $VBox/Value/Dec
+@onready var bin = $VBox/Value/Bin
+@onready var flt = $VBox/FloatValue/Numeric
+@onready var radixSlider = $VBox/FloatValue/RadixSlider
+
+@onready var idBox = $VBox/Header/ID
+@onready var signToggle = $VBox/Header/SignToggle
+@onready var floatToggle = $VBox/Header/FloatToggle
 
 var parent : Control
 var bitToPin = {}
@@ -24,10 +29,14 @@ var radixPoint = 0
 var updateScheduled = false
 var pinUpdateTimeout = false
 
+signal valueChanged(int)
+signal floatChanged(float)
+
 func serialize():
 	var out = {
-		"id" : $Header/ID.text,
-		"pins" : []
+		"id" : idBox.text,
+		"pins" : [],
+		"folded" : folded
 	}
 	for bit in bits:
 		out["pins"].append(bitToPin[bit].uuid)
@@ -38,25 +47,32 @@ func serialize():
 	return out
 
 func deserialize(machine : Machine, src):
-	$Header/ID.text = src["id"]
+	idBox.text = src["id"]
+	#self.title = src["id"]
 	var pins = []
 	var uuidManager = machine.uuidManager
 	for entry in src["pins"]:
 		pins.append(uuidManager.getPart(int(entry)))
 	pins.reverse() # Setup expects least significant bit first
 	if src.has("signed"): isSigned = bool(src["signed"])
-	$Header/SignToggle.set_pressed_no_signal(isSigned)
+	signToggle.set_pressed_no_signal(isSigned)
 	if src.has("float"):
 		isFloat = bool(src["float"])
 		if src.has("radix"):
 			radixSlider.set_value_no_signal(pins.size() - int(src["radix"]))
 			radixPoint = int(src["radix"])
-	$Header/FloatToggle.set_pressed_no_signal(isFloat)
-	$FloatValue.visible = isFloat
+	floatToggle.set_pressed_no_signal(isFloat)
+	$VBox/FloatValue.visible = isFloat
 	
 	setup(pins)
+	
+	if src.has("folded") and bool(src["folded"]): fold()
 
 func setup(pins : Array):
+	#for child in $VBox/Header.get_children():
+		#add_title_bar_control(child)
+	add_title_bar_control($VBox/Header)
+	
 	for pin in pins:
 		var newBit = BIT_CHECKBOX.instantiate()
 		bits.push_front(newBit)
@@ -66,6 +82,7 @@ func setup(pins : Array):
 		newBit.toggled.connect(checkboxChanged)
 		bitToPin[newBit] = pin
 		pinToBit[pin] = newBit
+		newBit.set_pressed_no_signal(pin.outputState)
 	radixSlider.custom_minimum_size = Vector2(pins.size() * 28, 0)
 	radixSlider.max_value = pins.size()
 	
@@ -106,6 +123,7 @@ func executeUpdateDec():
 	#dec.text = str(sum)
 	dec.set_value_no_signal(currentValue)
 	if isFloat: updateFloat()
+	valueChanged.emit(currentValue)
 
 func updateBin():
 	if pinUpdateTimeout: return
@@ -129,6 +147,7 @@ func updateFloat():
 		#var temp = 1 << (bits.size()-1) - radixPoint
 		#floatValue -= (1 << ((bits.size()-1) - radixPoint))
 	flt.text = ("%0.4f" % floatValue)
+	floatChanged.emit(floatValue)
 
 #func decTextChanged(new_text: String) -> void:
 	#if new_text.is_empty():
@@ -156,7 +175,7 @@ func _on_sign_toggle_toggled(toggled_on: bool) -> void:
 
 func _on_float_toggle_toggled(toggled_on: bool) -> void:
 	isFloat = toggled_on
-	$FloatValue.visible = isFloat
+	$VBox/FloatValue.visible = isFloat
 	updateFloat()
 
 func _on_radix_slider_drag_ended(value_changed: bool) -> void:
@@ -171,3 +190,16 @@ func _on_dec_value_changed(value: float) -> void:
 		currentValue = int(value)
 		updateBin()
 		updatingDec = false
+
+func _on_selection_check_box_toggled(toggled_on: bool) -> void:
+	if toggled_on:
+		parent.parent.valueSelected(self)
+	else:
+		parent.parent.valueDeselected(self)
+
+func _on_id_text_changed(new_text: String) -> void:
+	self.title = new_text
+
+func setSelectable(state : bool):
+	$VBox/Value/SelectionCheckBox.disabled = !state
+	if !state: $VBox/Value/SelectionCheckBox.set_pressed_no_signal(false)

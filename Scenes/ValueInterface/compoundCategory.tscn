@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://6fat1mk10lcu"]
+
+[ext_resource type="Script" uid="uid://ccpa318xs4hbc" path="res://Scripts/Editor/ValueInterface/compoundCategory.gd" id="1_jb4qw"]
+
+[node name="CompoundCategory" type="VBoxContainer" unique_id=460528928]
+script = ExtResource("1_jb4qw")
+
+[node name="Name" type="Label" parent="." unique_id=1676163417]
+layout_mode = 2
+text = "Floating point values"
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=1929547847]
+layout_mode = 2

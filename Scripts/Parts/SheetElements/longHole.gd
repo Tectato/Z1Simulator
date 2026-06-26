@@ -50,7 +50,7 @@ func checkPos(pos):
 	#var posFlat = pos * Vector3(1,0,1)
 	#return start.position.distance_to(posFlat) < radius or end.position.distance_to(posFlat) < radius or posFlat.length() < radius
 	var pos2D = Vector2(pos.x, pos.z)
-	$DebugBall1.position = pos
+	#$DebugBall1.position = pos
 	return (pos2D.x > bounds[0].x and pos2D.y > bounds[0].y) and (pos2D.x < bounds[1].x and pos2D.y < bounds[1].y)
 
 func getCutout():
