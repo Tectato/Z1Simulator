@@ -54,6 +54,9 @@ func setup(valueA, valueB, selection : Array):
 	if sign:
 		sign.stateChanged.connect(newSign)
 		v_sign = sign.outputState
+	
+	title = "[" + ("+/-, " if sign else "") + exponent.idBox.text + ", " + mantissa.idBox.text + "]"
+	
 	exponent.valueChanged.connect(newExponent)
 	v_exponent = exponent.currentValue
 	mantissa.floatChanged.connect(newMantissa)

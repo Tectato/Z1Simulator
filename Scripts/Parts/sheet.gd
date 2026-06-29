@@ -22,7 +22,7 @@ var toMoveInCWRotation = {}
 var toMoveInCCWRotation = {}
 var turnDirections = {} # indexed by pins, entries are 4-arrays of bools where true means CW
 var potentialTargetRot = [0.0, 0.0] # Set in canTurn, but not committed as targetRot until we actually move
-var potentialTargetPos = [Vector3.ZERO, Vector3.ZERO]
+var potentialTargetPos = [null, null]
 var potentialRotSpeed = [2.0,2.0]
 var rotSpeed = 2.0
 var rotHistory = []
@@ -447,6 +447,10 @@ func place():
 		placeScheduled = true
 		return
 	super.place()
+	potentialTargetPos[0] = null
+	potentialTargetPos[1] = null
+	potentialTargetRot[0] = null
+	potentialTargetRot[1] = null
 	if !Global.editor.loading:
 		Simulator.partAudioHandler.place(false)
 	call_deferred("updateConstraints")
@@ -759,8 +763,11 @@ func canTurn(dir : Vector2, pivot : Pin, initiator : Pin, chain = []):
 			pass
 		var turnDirectionIndex = 0 if angleDiff > 0 else 1
 		potentialRotSpeed[turnDirectionIndex] = abs(angleDiff/0.08)#1/abs(angleDiff)
-		potentialTargetRot[turnDirectionIndex] = targetRot + angleDiff
-		potentialTargetPos[turnDirectionIndex] = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
+		# Use old values if they exist to prevent drift
+		if !potentialTargetRot[turnDirectionIndex]:
+			potentialTargetRot[turnDirectionIndex] = targetRot + angleDiff
+		if !potentialTargetPos[turnDirectionIndex]:
+			potentialTargetPos[turnDirectionIndex] = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
 		
 	return canTurn
 
@@ -808,8 +815,8 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 	#if abs(angle_difference(wrapf(targetRot,-PI,PI), wrapf(previousRot,-PI,PI))) < 0.04:
 	var wrappedCurrentRot = wrapf(rotation.y,-PI,PI)
 	# Assume that a rotation in the direction of the previous orientation has that same angle as its target
-	if sign(angle_difference(wrapf(targetRot,-PI,PI), wrappedCurrentRot)) == sign(angle_difference(wrapf(previousRot,-PI,PI), wrappedCurrentRot)):
-		targetRot = previousRot # Prevent drift over time from inaccurate angle calculation
+	#if sign(nangle_difference(wrapf(targetRot,-PI,PI), wrappedCurrentRot)) == sign(angle_difference(wrapf(previousRot,-PI,PI), wrappedCurrentRot)):
+		#targetRot = previousRot # Prevent drift over time from inaccurate angle calculation
 	previousRot = rotation.y
 	preMovePos = position
 	targetPos = potentialTargetPos[0 if clockwise else 1]
