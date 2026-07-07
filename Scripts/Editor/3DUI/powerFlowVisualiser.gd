@@ -45,12 +45,12 @@ func visualizeChain(end : Movable, successful = true):
 	if visualizedStep != Simulator.totalStep:
 		clearGizmos()
 		visualizedStep = Simulator.totalStep
+	#if start:
+		#for chain in chains:
+			#if chain[0] == start: return
 	#if chains.has(end):
 		#gizmos[end].free()
 	
-	var points = []
-	var prevPoint = null
-	var reachedClockPin = false
 	var chain = []
 	var searchQueue = []
 	var parentDict = {}
@@ -97,9 +97,17 @@ func visualizeChain(end : Movable, successful = true):
 		chain.append(currentNode)
 		currentNode = parentDict[currentNode]
 	chain.append(end)
+	
+	drawChain(chain, end, successful)
 
+func drawChain(chain = [], parent = null, successful = true):
+	var points = []
+	var prevPoint = null
+	var reachedClockPin = false
+	var isRawChain = chain.front() is Array
 	# Travel along chain, X/Z determined by pins, Y by sheets
 	for part in chain:
+		if isRawChain: part = part[0]
 		if reachedClockPin: break
 		if !prevPoint:
 			points.append(part.global_position)
@@ -125,15 +133,22 @@ func visualizeChain(end : Movable, successful = true):
 		#[lineMaterial])
 	var gradient = lineGradientSuccess if successful else lineGradientFail
 	var newGizmo = Line3D.createLine(points, 0.015, lineMesh, lineMaterial, gradient)
-	end.add_child(newGizmo)
+	parent.add_child(newGizmo)
 	#newGizmo.position -= end.global_position
 	newGizmo.global_position = Vector3.ZERO
 	newGizmo.global_rotation = Vector3.ZERO
 	gizmos.append(newGizmo)
-	chains.append(chain)
+	if isRawChain:
+		var newChain = []
+		for entry in chain:
+			newChain.append(entry[0])
+		chains.append(newChain)
+	else:
+		chains.append(chain)
 	var totalNodes = chain.size()
 	var i = 0
 	for node in chain:
+		if isRawChain: node = node[0]
 		var sampledColor = gradient.sample(float(i)/totalNodes)
 		# TODO: adjust this once sheet shading is fixed
 		if node is Sheet:

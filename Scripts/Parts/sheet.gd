@@ -734,6 +734,8 @@ func canTurn(dir : Vector2, pivot : Pin, initiator : Pin, chain = []):
 				var pinAngleDiff = pivotToInit.angle_to(pivotToPin)
 				var rotatedDir = dir.rotated(snappedf(pinAngleDiff, PI/2))
 				rotatedDir *= r_pin / r_init
+				rotatedDir = rotatedDir.snappedf(0.02)
+				#print("canTurn %d->%d: %0.4f" % [uuid, pin.uuid, rotatedDir.length()])
 				var shouldMove = false
 				if part is Hole:
 					shouldMove = !part.checkPos(part.to_local(pin.global_position - Space.toVec3(rotatedDir)))
@@ -768,7 +770,9 @@ func canTurn(dir : Vector2, pivot : Pin, initiator : Pin, chain = []):
 			potentialTargetRot[turnDirectionIndex] = targetRot + angleDiff
 		if !potentialTargetPos[turnDirectionIndex]:
 			potentialTargetPos[turnDirectionIndex] = pivot.position + posDiff.rotated(Vector3.UP, angleDiff)
-		
+	else:
+		schedule(drawErrorChain, [chain])
+	
 	return canTurn
 
 func tryTurn(pivot, initiator):
@@ -830,6 +834,7 @@ func turn(dir : Vector2, pivot, initiator, chain = []):
 			var r_pin = (pin.position - pivot.position).length()
 			var r_ratio = r_pin/r_init #snappedf(r_pin/r_init, 0.2)
 			#print("Distance: %0.5f, snapped: %0.5f" % [(d_init * r_ratio), snappedf(d_init * r_ratio, 0.02)])
+			#print("   turn %d->%d: %0.4f" % [uuid, pin.uuid, snappedf(d_init * r_ratio, 0.02)])
 			pin.move(intToDir(rotatedDir) * snappedf(d_init * r_ratio, 0.02), self, chain)
 	inMotion = true
 	rotating = true

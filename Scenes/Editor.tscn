@@ -145,6 +145,7 @@
 [ext_resource type="Texture2D" uid="uid://c5tmslgldndiv" path="res://Sprites/focusPoint.png" id="130_4ptxc"]
 [ext_resource type="Texture2D" uid="uid://cymmm53jl7m6l" path="res://Sprites/Buttons/Visibility/3DuiVis_active.png" id="131_m3vij"]
 [ext_resource type="Texture2D" uid="uid://cu34evtygw5ml" path="res://Sprites/Buttons/Visibility/3DuiVis_lit.png" id="132_h6sg5"]
+[ext_resource type="Script" uid="uid://bjj4l1mm73122" path="res://Scripts/Editor/Debug/uuidBar.gd" id="135_tmgha"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_r768j"]
 top_radius = 0.02
@@ -2866,7 +2867,7 @@ grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
 
-[node name="ObjectInfo" type="Label" parent="Camera3D/Interface/VisibilityParent" unique_id=918748649]
+[node name="DebugBar" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=1779291828]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -2874,15 +2875,20 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -209.0
-offset_top = -23.0
-offset_right = 209.0
+offset_left = -22.5
+offset_top = -40.0
+offset_right = 22.5
 grow_horizontal = 2
 grow_vertical = 0
+script = ExtResource("135_tmgha")
+
+[node name="ObjectInfo" type="Label" parent="Camera3D/Interface/VisibilityParent/DebugBar" unique_id=918748649]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
 text = "UUID:"
 horizontal_alignment = 1
 
-[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/ObjectInfo" unique_id=2103652677]
+[node name="ColorRect" type="ColorRect" parent="Camera3D/Interface/VisibilityParent/DebugBar/ObjectInfo" unique_id=2103652677]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -2891,6 +2897,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/DebugBar" unique_id=2028375816]
+layout_mode = 2
+
+[node name="SearchBar" type="SpinBox" parent="Camera3D/Interface/VisibilityParent/DebugBar/HBoxContainer" unique_id=782576098]
+layout_mode = 2
+size_flags_horizontal = 3
+allow_greater = true
+
+[node name="SearchUUID" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/DebugBar/HBoxContainer" unique_id=746517672]
+layout_mode = 2
+toggle_mode = false
 
 [node name="Polygon2D" type="Polygon2D" parent="Camera3D/Interface" unique_id=1945157069]
 color = Color(1, 1, 1, 0.28235295)
@@ -3218,6 +3236,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/VisibilityParent/CommentDisplay" to="Camera3D/Interface/VisibilityParent/CommentDisplay" method="_on_gui_input"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/DebugBar/HBoxContainer/SearchUUID" to="Camera3D/Interface/VisibilityParent/DebugBar" method="_on_search_uuid_pressed"]
 [connection signal="toggled" from="Camera3D/UIVisibility" to="Camera3D/Interface" method="_on_ui_visibility_toggled"]
 [connection signal="toggled" from="Camera3D/3DUIVisibility" to="Camera3D/Interface" method="_on_3dui_visibility_toggled"]
 

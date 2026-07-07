@@ -7,6 +7,7 @@ enum Type {DataDriven, InputExponent, OutputExponent, ProgramReader}
 @export var outputs : Array[Pin]
 @export var labels : Array[Label3D]
 
+var uuid = -1
 var beingDeleted = false
 
 func _ready() -> void:
@@ -27,6 +28,7 @@ func _ready() -> void:
 	Simulator.rewind.connect(rewind)
 
 func serialize():
+	grabUUID()
 	var inputSerialized = []
 	var outputSerialized = []
 	for pin in inputs:
@@ -34,6 +36,7 @@ func serialize():
 	for pin in outputs:
 		outputSerialized.append(pin.serialize())
 	var out = {
+		"uuid" : uuid,
 		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
 		"pos_z" : ("%0.4f" % position.z).rstrip("0")
 	}
@@ -45,6 +48,9 @@ func serialize():
 
 func deserialize(src : Dictionary):
 	position = Space.toVec3(Vector2(float(src["pos_x"]), float(src["pos_z"])))
+	if src.has("uuid"):
+		uuid = int(src["uuid"])
+		getMachine().uuidManager.registerID(self, uuid)
 	if src.has("inputs"):
 		var srcInputs = src["inputs"]
 		for i in range(srcInputs.size()):
@@ -59,6 +65,10 @@ func serializeDiff():
 
 func deserializeDiff(src : Dictionary):
 	pass
+
+func grabUUID():
+	if uuid < 0:
+		getMachine().uuidManager.request(self)
 
 func pinInput(pin : Pin):
 	pass

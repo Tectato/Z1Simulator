@@ -420,6 +420,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 	if canMove:
 		setToMove[dirID] = Simulator.totalStep
 	else:
+		schedule(drawErrorChain, [chain])
 		movedBy.clear()
 	return MoveState.Moved if canMove else MoveState.Blocked
 
@@ -492,6 +493,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	# Check if any immediate candidates are fixed to terminate search early
 	for part in moveCandidates:
 		if part.fixed:
+			schedule(drawErrorChain, [chain])
 			return 0
 	
 	var dirID = dirToInt(dir)

@@ -16,7 +16,7 @@ extends Control
 @onready var selectedLabel = $VisibilityParent/SelectedLabel/Label
 @onready var tutorial = $VisibilityParent/Tutorial
 
-@onready var infoLabel = $VisibilityParent/ObjectInfo
+@onready var debugBar = $VisibilityParent/DebugBar
 @onready var debugLabel = $VisibilityParent/DebugLabel
 
 const WebRootFolder = "/Machines"
@@ -273,8 +273,8 @@ func newSelection(parts = []):
 	$VisibilityParent/MenuBar/Edit.set_item_disabled(2, !editableMachineSelected)
 	$VisibilityParent/MenuBar/Edit.set_item_disabled(3, !editableMachineSelected)
 	commentBox.hide()
-	if !parts.is_empty() and (parts.back() is Movable or parts.back() is Machine):
-		Global.editor.interface.infoLabel.text = "UUID: " + str(parts.back().uuid)
+	#if !parts.is_empty() and (parts.back() is Movable or parts.back() is Machine):
+		#Global.editor.interface.infoLabel.text = "UUID: " + str(parts.back().uuid)
 
 func _on_edit_lock_toggled(toggled_on: bool) -> void:
 	editor.editingLocked = toggled_on

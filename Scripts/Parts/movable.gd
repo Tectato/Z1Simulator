@@ -165,7 +165,7 @@ func move(dir : Vector2, initiator, chain = []):
 		marker.partMoved(dirID)
 	blockedCycle = {0:-1, 1:-1, 2:-1, 3:-1}
 	if canMove and selected:
-		schedule(visualizeChain, true)
+		schedule(visualizeChain, [chain, true])
 	Simulator.partsMoved += 1
 	return MoveState.Moved if canMove else MoveState.Blocked
 
@@ -195,8 +195,8 @@ func abortMove(initiator, chain = []):
 	if selected:
 		print("Move aborted")
 	inMotion = false
-	targetPos = preMovePos
-	schedule(visualizeChain, false)
+	targetPos = preMovePos	
+	schedule(drawErrorChain, [chain])
 	Simulator.spawnIndicator(global_position, EventIndicator.Type.Blocked)
 	#for relation in relations:
 		#if not relation == movedBy: #relation.isBlocking():
@@ -207,6 +207,9 @@ func abortMove(initiator, chain = []):
 		elif part is Relation:
 			part.abortMove(self, chain)
 	moved.clear()
+
+func findBlocking():
+	pass
 
 func record():
 	if fixed: return
@@ -367,8 +370,17 @@ func setUseColor(value : bool):
 func setupAfterDuplication(source = null):
 	pass
 
-func visualizeChain(success = true):
-	Global.editor.powerFlow.visualizeChain(self, success)
+func visualizeChain(chain, success):
+	if chain.front() is ClockPin:
+		Global.editor.powerFlow.visualizeChain(self, success)
+	else:
+		Global.editor.powerFlow.drawChain(chain, self, true)
+
+func drawErrorChain(chain):
+	if Simulator.nudging: return
+	for part in chain:
+		if part is Spring: return
+	Global.editor.powerFlow.drawChain(chain, self, false)
 
 func schedule(callable : Callable, args = []):
 	if scheduled.has(callable): return
@@ -377,7 +389,7 @@ func schedule(callable : Callable, args = []):
 
 func execute(callable : Callable, args = []):
 	scheduled.erase(callable)
-	callable.call(args)
+	callable.callv(args)
 
 func clearHistory():
 	posHistory.clear()

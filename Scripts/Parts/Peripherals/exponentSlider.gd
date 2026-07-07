@@ -54,7 +54,7 @@ func serializeDiff():
 	if exponent != 0:
 		out["value"] = exponent
 	if !out["inputs"].is_empty() or !out["outputs"].is_empty() or out.has("value"):
-		return out
+		return {uuid:out}
 	return null
 
 func deserializeDiff(src : Dictionary):

@@ -118,7 +118,10 @@ func canMove(dir : Vector2, initiator, chain = []):
 			return MoveState.AlreadyMoving
 		if !inputCheckbox.isLocked():
 			return MoveState.Blocked
-	return super.canMove(dir, initiator, chain)
+	var canMove = super.canMove(dir, initiator, chain)
+	if canMove == MoveState.Blocked:
+		Simulator.spawnIndicator(global_position, EventIndicator.Type.Blocked)
+	return canMove
 
 func move(dir : Vector2, initiator, chain = []):
 	if selected:

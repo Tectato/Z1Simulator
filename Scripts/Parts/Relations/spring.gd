@@ -40,12 +40,14 @@ func canMove(dir : Vector2, initiator, chain = []):
 	inEffect = true
 	var currentDist = A.global_position.distance_to(B.global_position)
 	toMove[initiator] = null
+	var newChain = chain.duplicate()
+	newChain.append(self)
 	if A == initiator:
 		var globalDir = AParent.toGlobalDir(dir)
 		var toInit = A.global_position - B.global_position
 		if Space.toVec3(globalDir).dot(toInit) > 0 and currentDist+epsilon >= initialDist \
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
-			if B.canMove(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, chain):
+			if B.canMove(BParent.toLocalDir(AParent.toGlobalDir(dir)), self, newChain):
 				toMove[initiator] = B
 				setToMove = Simulator.totalStep
 	elif B == initiator:
@@ -53,7 +55,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 		var toInit = B.global_position - A.global_position
 		if Space.toVec3(globalDir).dot(toInit) > 0 and currentDist+epsilon >= initialDist \
 		or Space.toVec3(globalDir).dot(toInit) < 0 and currentDist-epsilon <= initialDist:
-			if A.canMove(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, chain):
+			if A.canMove(AParent.toLocalDir(BParent.toGlobalDir(dir)), self, newChain):
 				toMove[initiator] = A
 				setToMove = Simulator.totalStep
 	inEffect = false
