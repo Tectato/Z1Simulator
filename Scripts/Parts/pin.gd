@@ -9,6 +9,8 @@ var storedStates = [false, false, 0]
 var meshIndex = -1
 var diameter = 0.05
 var global = false
+var startLayer = 0
+var endLayer = -1
 var verticalScale = 0.2
 var output = false
 var outputState = false
@@ -46,6 +48,11 @@ func serialize():
 	elif fixed:
 		output["static"] = fixed
 	output["uuid"] = uuid
+	
+	if global:
+		if startLayer > 0 or endLayer >= 0:
+			output["bounds"] = [startLayer, endLayer]
+	
 	if !relations.is_empty():
 		for relation in relations: #TODO: If machine is instance, this doesnt get serialized
 			#if relation.isInterMachineRelation():
@@ -79,6 +86,10 @@ func deserialize(source : Dictionary):
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
+	
+	if source.has("bounds"):
+		startLayer = int(source["bounds"][0])
+		endLayer = int(source["bounds"][1])
 	
 	storedPos = position
 	storedStates = [output, outputState, directionality]
@@ -140,7 +151,7 @@ func _ready() -> void:
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.editor.updateInstancePos.connect(updateInstance)
 	Global.clearHistory.connect(clearHistory)
-	Global.workspace.updateGlobalPinBounds.connect(updateHeight)
+	Global.workspace.limitViewToLayer.connect(viewLimited)
 	visModeChanged(Global.editor.currentVisMode)
 	visibility_changed.connect(visibilityChanged)
 	meshIndex = PinRenderHandler.addInstance("pin")
@@ -201,42 +212,84 @@ func setHighlight(enabled : bool, highlightColor : Color):
 	else:
 		PinRenderHandler.setColor("pin", meshIndex, color if Global.editor.currentVisMode == Editor.VisMode.Colorcoded else standardColor)
 
+func modifyExtent(upper : bool, dir : int):
+	if !global: return
+	if upper:
+		endLayer += dir
+	else:
+		startLayer += dir
+	if endLayer < startLayer:
+		var temp = startLayer
+		startLayer = endLayer
+		endLayer = temp
+	if startLayer < 0 or endLayer < 0:
+		startLayer = 0
+		endLayer = -1
+	else:
+		startLayer = clampi(startLayer, 0, getMachine().layers.size()-1)
+		endLayer = clampi(endLayer, -1, getMachine().layers.size()-1)
+	#print("%d -> %d" % [startLayer, endLayer])
+	place()
+
+func isPartialGlobal():
+	return endLayer >= 0
+
 func setHeight(value):
+	var floor = 0.0
 	var effectiveHeight
 	if global:
-		var maxHeight = 0.1
-		var machineOffset = getMachine().global_position.y
-		for thing in interactionCandidates:
-			var partHeight = thing[0].global_position.y - machineOffset
-			if partHeight < maxHeight: continue
-			var inRange = false or thing[1] is Hole
-			if thing[1] == null:
-				for searchRadius in [0.5, 1.0]:
-					for offset in [
-							Vector3(-1, 0,-1),
-							Vector3(-1, 0, 0),
-							Vector3(-1, 0, 1),
-							Vector3( 1, 0,-1),
-							Vector3( 1, 0, 0),
-							Vector3( 1, 0, 1),
-							Vector3( 0, 0,-1),
-							Vector3( 0, 0, 1)
-						]:
-						inRange = inRange or thing[0].intersectsOutline(global_position+offset*searchRadius*Global.workspace.pinTravel)
+		if !isPartialGlobal():
+			var maxHeight = 0.1
+			var machineOffset = getMachine().global_position.y
+			for thing in interactionCandidates:
+				var partHeight = thing[0].global_position.y - machineOffset
+				if partHeight < maxHeight: continue
+				var inRange = false or thing[1] is Hole
+				if thing[1] == null:
+					for searchRadius in [0.5, 1.0]:
+						for offset in [
+								Vector3(-1, 0,-1),
+								Vector3(-1, 0, 0),
+								Vector3(-1, 0, 1),
+								Vector3( 1, 0,-1),
+								Vector3( 1, 0, 0),
+								Vector3( 1, 0, 1),
+								Vector3( 0, 0,-1),
+								Vector3( 0, 0, 1)
+							]:
+							inRange = inRange or thing[0].intersectsOutline(global_position+offset*searchRadius*Global.workspace.pinTravel)
+							if inRange: break
 						if inRange: break
-					if inRange: break
-			if inRange:
-				maxHeight = max(maxHeight, thing[0].global_position.y - machineOffset)
-		maxHeight *= 10
-		maxHeight += 0.4
-		effectiveHeight = maxHeight
+				if inRange:
+					maxHeight = max(maxHeight, thing[0].global_position.y - machineOffset)
+			maxHeight *= 10
+			maxHeight += 0.4
+			effectiveHeight = maxHeight
+		else:
+			var floorLayer = getMachine().getLayer(startLayer, true)
+			floor = floorLayer.position.y
+			var topLayer = getMachine().getLayer(endLayer, true)
+			var top = topLayer.position.y + topLayer.getBounds()[1].y
+			top = (top - floor) * 10.0
+			effectiveHeight = top if fixed else top - 0.4
 	else:
 		effectiveHeight = value if fixed else value - 0.4
 	
 	verticalScale = effectiveHeight
-	updateHeight(0, verticalScale)
+	updateHeight(floor, verticalScale)
 	#$Area3D.scale = Vector3(scale.x,value,scale.z)
 	#$Area3D.position = Vector3.UP * 0.1 * value / 2
+
+func viewLimited(machine : Machine, layerID : int):
+	if !global: return
+	if layerID == -1:
+		visible = true
+		setHeight(1)
+	else:
+		visible = (machine == getMachine()) and (!isPartialGlobal() or (startLayer <= layerID and layerID <= endLayer))
+		if visible:
+			var visibleLayer = getMachine().getLayer(layerID)
+			updateHeight(visibleLayer.position.y, visibleLayer.getBounds()[1].y * 10.021)
 
 func updateHeight(floor : float, height : float):
 	if height < 0 or !global:
@@ -327,11 +380,7 @@ func updateInteractionCandidates():
 	if getMachine().beingDeleted:
 		PinRenderHandler.removeInstance("pin", meshIndex)
 		return
-	var inRange = []
-	if machine:
-		inRange = machine.gridLibrary.getIntersectionCandidates(self)
-	elif layer:
-		inRange = layer.machine.gridLibrary.getIntersectionCandidates(self)
+	var inRange = getMachine().gridLibrary.getIntersectionCandidates(self)
 	
 	var minDiameter = 1.0
 	interactionCandidates.clear()

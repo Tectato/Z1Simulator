@@ -61,7 +61,7 @@ func updateVisibility():
 		visible = true
 
 func serialize():
-	height = machine.getLayerHeight(self)
+	height = machine.getLayerIndex(self)
 	var sheets = []
 	var pins = []
 	var peripherals = []
@@ -264,7 +264,7 @@ func delete():
 	queue_free()
 
 func updateWidgets():
-	height = machine.getLayerHeight(self)
+	height = machine.getLayerIndex(self)
 	var totalLayers = machine.layers.size()
 	add.visible = height == totalLayers-1
 	button_up.visible = height < totalLayers-1

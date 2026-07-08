@@ -39,6 +39,9 @@ func registerPart(part : Movable, notifyNeighbors = true):
 	var bounds = part.getBounds()
 	var min = bounds[0] + part.position
 	var max = bounds[1] + part.position
+	var layers = getLayers(part)
+	if part is Pin and part.global:
+		pass
 	#if gizmoA:
 		#gizmoA.free()
 		#gizmoB.free()
@@ -52,7 +55,8 @@ func registerPart(part : Movable, notifyNeighbors = true):
 	max /= Global.workspace.gridSize
 	for y in range(int(floor(min.z)),int(floor(max.z))+1):
 		for x in range(int(floor(min.x)),int(floor(max.x))+1):
-			registerPartCell(part, Vector2(x,y))
+			for layer in layers:
+				registerPartCell(part, layer, Vector2(x,y))
 	
 	if notifyNeighbors:
 		#Update Neighbours
@@ -60,8 +64,8 @@ func registerPart(part : Movable, notifyNeighbors = true):
 			existingPart.updateInteractionCandidates()
 		toNotify.clear()
 
-func registerPartCell(part : Movable, gridPos : Vector2):
-	var layer = getLayer(part)
+func registerPartCell(part : Movable, layer : int, gridPos : Vector2):
+	#var layer = getLayer(part)
 	var posKey = toPosKey(gridPos)
 	var occupancy = getDict(part is Sheet, layer)
 	var otherOccupancy = getDict(not part is Sheet, layer)
@@ -136,20 +140,23 @@ func unregisterPartCell(part : Movable, cell : Vector2):
 	if part is Sheet and globalPinOccupancy.has(posKey):
 		for existingPart in globalPinOccupancy[posKey]:
 			toNotify[existingPart] = null
-	elif part is Pin and not part.layer:
+	elif part is Pin and part.global:
 		for dict in sheetOccupancy:
 			if dict.has(posKey):
 				for sheet in dict[posKey]:
 					toNotify[sheet] = null
+			
 
 func getIntersectionCandidates(part : Movable):
 	#checkValidity()
+	var layers = getLayers(part)
 	var output = {}
 	if occupies.has(part):
 		if occupies[part] == null: return output
 		for cell in occupies[part]:
-			for candidate in getIntersectionCandidatesAtCell(cell, getLayer(part), part is Pin):
-				output.set(candidate,null)
+			for layer in layers:
+				for candidate in getIntersectionCandidatesAtCell(cell, layer, part is Pin):
+					output.set(candidate,null)
 	return output.keys()
 
 func getIntersectionCandidatesAtCell(pos : Vector2, layer : int, querySheets : bool):
@@ -195,6 +202,14 @@ func getLayer(part : Movable):
 		return part.layer.height
 	else:
 		return -1 # Part has no assigned layer, acts across all layers
+
+func getLayers(part : Movable):
+	var layers = [getLayer(part)]
+	if layers[0] < 0 and part.isPartialGlobal(): # Global or clock pin with custom start and end layer
+		layers = []
+		for i in range(part.startLayer, part.endLayer + 1):
+			layers.append(i)
+	return layers
 
 func getDict(sheet : bool, layer : int):
 	if sheet and layer >= 0:

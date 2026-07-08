@@ -195,6 +195,10 @@ func _process(_delta: float) -> void:
 						part.setPulsing(!part.pulsing)
 					if Input.is_action_just_pressed("toggle_input"):
 						part.setInput(!part.input)
+					if Input.is_action_just_pressed("nudge_up"):
+						part.modifyExtent(!ctrl, 1)
+					elif Input.is_action_just_pressed("nudge_down"):
+						part.modifyExtent(!ctrl, -1)
 				if part is Sheet:
 					if Input.is_action_just_pressed("flip"):
 						part.setFixed(!part.fixed)
@@ -205,6 +209,11 @@ func _process(_delta: float) -> void:
 					part.setOutput(!part.output)
 				if Input.is_action_just_pressed("flip"):
 					part.flipOutput()
+				
+				if Input.is_action_just_pressed("nudge_up"):
+					part.modifyExtent(!ctrl, 1)
+				elif Input.is_action_just_pressed("nudge_down"):
+					part.modifyExtent(!ctrl, -1)
 			elif part is SelectableHitbox:
 				if part.parent is Spring:
 					if Input.is_action_just_pressed("flip"):
@@ -415,10 +424,14 @@ func paste():
 			newPart.setInput(part.input)
 			newPart.inputCheckbox.setValue(part.inputCheckbox.checked)
 			newPart.activateNextCycle = part.activateNextCycle
+			newPart.startLayer = part.startLayer
+			newPart.endLayer = part.endLayer
 		elif newPart is Pin:
 			newPart.directionality = part.directionality
 			newPart.outputState = part.outputState
 			newPart.setOutput(part.output)
+			newPart.startLayer = part.startLayer
+			newPart.endLayer = part.endLayer
 	placing = true
 	
 	for part in clipboard:

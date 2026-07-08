@@ -21,6 +21,7 @@ signal forwardStepChanged
 signal pulsingChanged
 
 func _ready() -> void:
+	global = true
 	color = standardColor
 	Simulator.rewind.connect(rewind)
 	Simulator.record.connect(record)
@@ -29,7 +30,7 @@ func _ready() -> void:
 	inputCheckbox.toggled.connect(setActivateNextCycle)
 	Global.editor.visModeChanged.connect(visModeChanged)
 	Global.clearHistory.connect(clearHistory)
-	Global.workspace.updateGlobalPinBounds.connect(updateHeight)
+	Global.workspace.limitViewToLayer.connect(viewLimited)
 	Global.workspace.worldUIVisChanged.connect(set3DUIVis)
 	stepLabel.visible = Global.workspace.show3DUI
 	#travelIndicator.visible = stepLabel.visible
@@ -55,6 +56,9 @@ func set3DUIVis(newVis):
 	if travelIndicator: travelIndicator.visible = newVis
 
 func setHeight(_value):
+	if isPartialGlobal():
+		super.setHeight(0)
+		return
 	var maxHeight = 0.1
 	var machineOffset = getMachine().global_position.y
 	for thing in interactionCandidates:
@@ -100,6 +104,8 @@ func updateHeight(floor : float, height : float):
 	$Highlight.transform = $MeshInstance3D.transform
 	$Area3D.transform = $MeshInstance3D.transform
 	$StepLabel.position = Vector3.UP * (floor + 0.1 * height + 0.15)
+	if travelIndicator:
+		travelIndicator.position.y = floor
 	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 
 func canMove(dir : Vector2, initiator, chain = []):
@@ -248,6 +254,8 @@ func serialize():
 	if id.length() > 0:
 		output["id"] = id
 	output["uuid"] = uuid
+	if startLayer > 0 or endLayer >= 0:
+		output["bounds"] = [startLayer, endLayer]
 	if !relations.is_empty():
 		for relation in relations:
 			#if relation.isInterMachineRelation():
@@ -275,6 +283,9 @@ func deserialize(source : Dictionary):
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)
+	if source.has("bounds"):
+		startLayer = int(source["bounds"][0])
+		endLayer = int(source["bounds"][1])
 	updateLabel()
 	place()
 
@@ -324,8 +335,10 @@ func place():
 	updatePositions()
 	if machine:
 		machine.gridLibrary.requestUpdate(self)
-	updateInteractionCandidates()
+	#updateInteractionCandidates()
 	setHeight(0.1)
+	if !Global.editor.loading:
+		Simulator.partAudioHandler.place(true)
 
 func updateInteractionCandidates():
 	if beingDeleted: return
@@ -335,7 +348,9 @@ func updateInteractionCandidates():
 func updatePositions():
 	restPos = position if !inActivePos else position - travel.rotated(Vector3.UP,rotation.y)
 	targetPos = position
+	var travelIndicatorY = travelIndicator.position.y
 	travelIndicator.position = restPos + travel.rotated(Vector3.UP,rotation.y)/2 + Vector3.UP * 0.001
+	travelIndicator.position.y = travelIndicatorY
 	for relation in relations:
 		relation.updatePos()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bid8yuc1ufp1d"]
+[gd_scene format=3 uid="uid://bid8yuc1ufp1d"]
 
 [ext_resource type="Script" uid="uid://baw1bypo5hmfp" path="res://Scripts/Editor/machine.gd" id="1_ovuu0"]
 [ext_resource type="Script" uid="uid://iqoy760513a" path="res://Scripts/Simulation/gridLibrary.gd" id="2_7iaox"]
@@ -8,34 +8,34 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ovuu0"]
 
-[node name="Machine" type="Node3D"]
+[node name="Machine" type="Node3D" unique_id=1246055609]
 script = ExtResource("1_ovuu0")
 
-[node name="AlignmentManager" type="Node" parent="."]
+[node name="AlignmentManager" type="Node" parent="." unique_id=1140630285]
 
-[node name="BoundingBox" type="Area3D" parent="."]
+[node name="BoundingBox" type="Area3D" parent="." unique_id=1084948420]
 collision_layer = 16
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundingBox"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundingBox" unique_id=1343455258]
 shape = SubResource("BoxShape3D_ovuu0")
 
-[node name="Parts" type="Node3D" parent="."]
+[node name="Parts" type="Node3D" parent="." unique_id=1407473575]
 
-[node name="Comments" type="Node3D" parent="."]
+[node name="Comments" type="Node3D" parent="." unique_id=1051909782]
 
-[node name="GridLibrary" type="Node" parent="."]
+[node name="GridLibrary" type="Node" parent="." unique_id=813117058]
 script = ExtResource("2_7iaox")
 
-[node name="UUIDManager" parent="." instance=ExtResource("3_cewcs")]
+[node name="UUIDManager" parent="." unique_id=1434401908 instance=ExtResource("3_cewcs")]
 
-[node name="Frame" type="Node3D" parent="."]
+[node name="Frame" type="Node3D" parent="." unique_id=1617481745]
 script = ExtResource("4_y8amu")
 
-[node name="Clock" type="Node" parent="."]
+[node name="Clock" type="Node" parent="." unique_id=1990094035]
 script = ExtResource("5_w7ikp")
 
-[node name="CatchupTimer" type="Timer" parent="Clock"]
+[node name="CatchupTimer" type="Timer" parent="Clock" unique_id=1708239279]
 wait_time = 0.5
 one_shot = true
 

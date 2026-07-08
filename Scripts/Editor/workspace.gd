@@ -34,7 +34,7 @@ signal volumeChanged(newVal)
 enum Resolution {Machine, Layer, Part}
 var resolution = Resolution.Part
 signal resolutionChanged(newRes)
-signal updateGlobalPinBounds(floor, height)
+signal limitViewToLayer(machine : Machine, layer : int)
 
 enum Selectability {Both, Sheets, Pins}
 var selectability = Selectability.Both
@@ -85,7 +85,7 @@ func setResolution(newRes):
 	if newRes != resolution and !Global.editor.loading:
 		resolution = newRes
 		if selectedLayer != null:
-			updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
+			limitViewToLayer.emit(selectedLayer.machine, selectedLayer.height if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
 		resolutionChanged.emit(newRes)
 
 func setSelectability(newSel):
@@ -102,7 +102,7 @@ func setUnselectedLayersHidden(newVis):
 	if newVis != hideUnselectedLayers:
 		hideUnselectedLayers = newVis
 		if selectedLayer != null:
-			updateGlobalPinBounds.emit(selectedLayer.position.y, selectedLayer.getBounds()[1].y * 10 if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
+			limitViewToLayer.emit(selectedLayer.machine, selectedLayer.height if (hideUnselectedLayers and resolution == Resolution.Part) else -1)
 		unselectedLayersVisChanged.emit()
 
 func setShowPowerFlow(value):

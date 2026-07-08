@@ -96,7 +96,13 @@ func removeLayer(layer):
 	if index > 0 and not beingDeleted:
 		Global.editor.selector.call_deferred("select", layers[index-1].collider)
 
-func getLayerHeight(layer):
+func getLayer(index, clamp = false):
+	if clamp: index = clampi(index, 0, layers.size()-1)
+	if index >= 0 and index < layers.size():
+		return layers[index]
+	return null
+
+func getLayerIndex(layer):
 	return layers.find(layer)
 
 func getLayerBelow(layer):
