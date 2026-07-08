@@ -7,7 +7,8 @@ extends Node
 @export var debug : MeshInstance3D
 
 var renderers = {}
-var highlightRenderers = {}
+var highlightRenderers = {} # TODO: smarter hiding
+var visibleHighlights = {}
 var vacantEntries = {}
 
 var scheduled = {}
@@ -21,6 +22,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	Global.editor.visModeChanged.connect(visModeChanged)
 	#Global.workspace.updateAABBs.connect(updateAABB)
+	Global.editor.selector.newSelection.connect(newSelection)
 
 func visModeChanged(visMode : Editor.VisMode):
 	var materialToUse
@@ -55,6 +57,7 @@ func initMesh(key : String, mesh : Mesh):
 		highlightMultimesh.use_colors = false
 		highlight.multimesh = highlightMultimesh
 		highlight.material_override = materialHighlight
+		highlight.visible = false
 	
 	var materialToUse
 	if Global.editor.currentVisMode == Editor.VisMode.Realistic:
@@ -168,6 +171,9 @@ func setTransform(key : String, index : int, transform : Transform3D, showHighli
 		return
 	renderers[key].multimesh.set_instance_transform(index, transform)
 	if hasHighlights:
+		if showHighlight:
+			highlightRenderers[key].visible = true
+			visibleHighlights[key] = null
 		highlightRenderers[key].multimesh.set_instance_transform(index, transform if showHighlight else transform.scaled(Vector3.ZERO))
 
 func setColor(key : String, index : int, color : Color):
@@ -210,3 +216,9 @@ func execute(callable : Callable):
 	await get_tree().process_frame
 	scheduled.erase(callable)
 	callable.call()
+
+func newSelection(parts = []):
+	if parts.is_empty():
+		for key in visibleHighlights.keys():
+			if highlightRenderers.has(key): highlightRenderers[key].visible = false
+		visibleHighlights.clear()

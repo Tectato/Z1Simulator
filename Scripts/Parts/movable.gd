@@ -294,6 +294,8 @@ func place():
 	if layer:
 		layer.machine.gridLibrary.requestUpdate(self)
 		layer.updateCollider()
+	elif machine:
+		machine.gridLibrary.requestUpdate(self)
 	#schedule(updateInteractionCandidates) #Apparently not necessary?
 
 func updatePositions():
@@ -371,7 +373,7 @@ func setupAfterDuplication(source = null):
 	pass
 
 func visualizeChain(chain, success):
-	if chain.front() is ClockPin:
+	if chain.front() is ClockPin or (chain.front() is Array and chain.front()[0] is ClockPin):
 		Global.editor.powerFlow.visualizeChain(self, success)
 	else:
 		Global.editor.powerFlow.drawChain(chain, self, true)

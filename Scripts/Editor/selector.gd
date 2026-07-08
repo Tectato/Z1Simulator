@@ -104,6 +104,7 @@ func _process(_delta: float) -> void:
 	var focusElsewhere = get_viewport().gui_get_focus_owner()
 	if focusElsewhere:
 		focusElsewhere = focusElsewhere != clickArea
+	var ctrl = Input.is_key_pressed(KEY_CTRL)
 	selected = selected.filter(exists)
 	if !clickedButton and (Input.is_action_pressed("mouse_left") or placing):
 		var shouldMoveParts = !selected.is_empty() && !Input.is_key_pressed(KEY_SHIFT)
@@ -197,6 +198,8 @@ func _process(_delta: float) -> void:
 				if part is Sheet:
 					if Input.is_action_just_pressed("flip"):
 						part.setFixed(!part.fixed)
+					if Input.is_action_just_pressed("toggle_output"):
+						part.cycleTab()
 			elif part is Pin:# and part.canModify(): # Stored in diff if enabled now
 				if Input.is_action_just_pressed("toggle_output"):
 					part.setOutput(!part.output)
@@ -282,7 +285,7 @@ func cast(toSelect = true, checkForUI = false, leftClick = true, clicked = true)
 
 func iterate(shift, checkForUI, leftClick, clicked):
 	if !leftClick:
-		collision_mask = 0b100010
+		collision_mask = 0b100011
 		force_raycast_update()
 	var target = get_collider()
 	var index = 0
@@ -298,6 +301,8 @@ func iterate(shift, checkForUI, leftClick, clicked):
 			else:
 				updateMask()
 				if target.get_parent() is Pin:
+					target.get_parent().nudge()
+				elif target.get_parent() is Sheet and target.get_parent().pullTab:
 					target.get_parent().nudge()
 				elif target.get_parent() is ClipZone:
 					target.get_parent().flipClipped()
@@ -401,7 +406,8 @@ func paste():
 		mapping[part] = newPart
 		
 		if newPart is Sheet:
-			pass
+			newPart.directionality = part.directionality
+			if newPart.directionality > 0: newPart.updateTab()
 		elif newPart is ClockPin:
 			newPart.forwardStep = part.forwardStep
 			newPart.antiStep = part.antiStep

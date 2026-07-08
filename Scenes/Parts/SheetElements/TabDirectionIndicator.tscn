@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cc01l63mi7fti"]
+
+[ext_resource type="Texture2D" uid="uid://b2fjioapdugm" path="res://Sprites/outputX.png" id="1_4ue1b"]
+[ext_resource type="Script" uid="uid://dyrdscy11e76d" path="res://Scripts/Parts/SheetElements/tabDirectionIndicator.gd" id="1_12htv"]
+[ext_resource type="Texture2D" uid="uid://dnlmdht4wr7a4" path="res://Sprites/outputY.png" id="2_12htv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n0si8"]
+atlas = ExtResource("2_12htv")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_m2ea1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_4ue1b")
+}],
+"loop": false,
+"name": &"X",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n0si8")
+}],
+"loop": false,
+"name": &"Y",
+"speed": 5.0
+}]
+
+[node name="TabDirectionIndicator" type="Node3D" unique_id=1719066649]
+script = ExtResource("1_12htv")
+
+[node name="Directionality" type="AnimatedSprite3D" parent="." unique_id=286606957]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.025, 0)
+axis = 1
+double_sided = false
+alpha_cut = 1
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_m2ea1")
+animation = &"X"
+autoplay = "X"

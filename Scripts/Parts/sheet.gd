@@ -2,11 +2,16 @@ extends Movable
 class_name Sheet
 
 const CLIPZONE = preload("res://Scenes/Parts/SheetElements/ClipZone.tscn")
+const DIRECTIONINDICATOR = preload("res://Scenes/Parts/SheetElements/TabDirectionIndicator.tscn")
 
 @onready var sprite = $Sprite3D
 @onready var hitbox = $Outline/Polygon
 #@onready var debugPolygon = $CSGPolygon3D
 @export var debugPoint : Node3D
+var pullTab = false
+var pullState = false
+var directionIndicator : Node3D
+var directionality = 0
 var meshIndex = -1
 var pinCandidates = {}
 var pointConstraints = {}
@@ -78,6 +83,8 @@ func serialize():
 		for zone in localClipZones:
 			clipStates.append(1 if zone.clipped else 0)
 		output["clipped"] = clipStates
+	if pullTab:
+		output["pullTab"] = directionality
 	return output
 
 func deserialize(source : Dictionary):
@@ -119,6 +126,9 @@ func deserialize(source : Dictionary):
 	place()
 	if source.has("static"):
 		setFixed(true, false)
+	if source.has("pullTab"):
+		directionality = int(source["pullTab"])
+		updateTab()
 
 func serializeDiff():
 	var out = {}
@@ -267,6 +277,7 @@ func _notification(what):
 
 func setSelected(value):
 	super.setSelected(value)
+	if !sheetData: return
 	for zone in localClipZones:
 		zone.hitbox.disabled = !value
 		#zone.mesh.visible = value
@@ -274,6 +285,7 @@ func setSelected(value):
 	mesh.updateMaterial()
 	SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 	#sprite.visible = value
+	if directionIndicator: directionIndicator.setSelected(selected)
 
 func setFixed(value, _propagate = true):
 	var before = fixed
@@ -283,6 +295,54 @@ func setFixed(value, _propagate = true):
 		mesh.updateMaterial()
 		visible = Global.workspace.showStaticSheets
 		visibilityChanged()
+
+func cycleTab():
+	directionality += 1
+	updateTab()
+
+func updateTab():
+	if directionality >=0 and directionality < 3:
+		if !directionIndicator:
+			directionIndicator = DIRECTIONINDICATOR.instantiate()
+			add_child(directionIndicator)
+			directionIndicator.setSelected(selected)
+			pullTab = true
+		directionIndicator.setDirection(directionality)
+		if directionIndicator:
+			directionIndicator.rotation.y = -rotation.y
+	else:
+		pullTab = false
+		directionality %= 3
+		if directionIndicator:
+			directionIndicator.queue_free()
+			directionIndicator = null
+
+func nudge():
+	if pullTab and directionality > 0:
+		var cooldown = Simulator.getCooldown()
+		if cooldown > 0:
+			await get_tree().create_timer(cooldown).timeout
+		var dirP
+		var dirN
+		var flipOrder = -1 if pullState else 1
+		if directionality == 1:
+			dirP = Vector2(1,0)*Workspace.pinTravel * flipOrder
+			dirN = Vector2(-1,0)*Workspace.pinTravel * flipOrder
+		else:
+			dirP = Vector2(0,1)*Workspace.pinTravel * flipOrder
+			dirN = Vector2(0,-1)*Workspace.pinTravel * flipOrder
+		if canMove(dirP, self, []):
+			move(dirP, self, [])
+			Simulator.nudge()
+			Simulator.sheetAudioHandler.playSingle()
+			return
+		else:
+			pullState = !pullState
+		if canMove(dirN, self, []):
+			move(dirN, self, [])
+			Simulator.nudge()
+			Simulator.sheetAudioHandler.playSingle()
+			return
 
 func visModeChanged(mode : Editor.VisMode):
 	mesh.visModeChanged(mode)
@@ -613,6 +673,7 @@ func move(dir : Vector2, initiator, chain = []):
 		#return MoveState.Moved
 		##call_deferred("tryTurn")
 	#return MoveState.Moved if check1 > 0 and check2 > 0 else MoveState.Blocked
+	if pullTab: pullState = !pullState
 	return MoveState.Moved
 
 func record():
@@ -870,6 +931,8 @@ func rotatePart(by):
 func updateRotation():
 	previousRot = rotation.y
 	targetRot = rotation.y
+	if directionIndicator:
+		directionIndicator.rotation.y = -rotation.y
 
 func snapRotation():
 	#if pointConstraints.size() == 2:
