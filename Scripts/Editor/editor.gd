@@ -151,6 +151,13 @@ func addComment():
 	selector.place(workspace.addComment())
 	previousAction = addComment
 
+func addEccentric() -> void:
+	saved = false
+	if workspace.selectability == Workspace.Selectability.Sheets:
+		workspace.setSelectability(Workspace.Selectability.Both)
+	selector.place(workspace.addEccentric())
+	previousAction = addEccentric
+
 func addExponentSlider(input = false):
 	saved = false
 	selector.place(workspace.addPeripheral(1 if input else 2))

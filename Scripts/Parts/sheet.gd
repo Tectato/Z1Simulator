@@ -748,10 +748,10 @@ func canTurn(dir : Vector2, pivot : Pin, initiator : Pin, chain = []):
 		return false
 	var force = forces[initiator]
 	#var d_initMovement = dir.length()
-	var initToPivot = (pivot.position - initiator.position)
+	var initToPivot = Space.toVec2(pivot.position - initiator.position)
 	var r_init = initToPivot.length()
 	initToPivot = initToPivot.normalized()
-	var impulse = Space.toVec3(force[0]).normalized()
+	var impulse = force[0].normalized()
 	var angle = abs(impulse.dot(initToPivot))
 	if angle >= 0.6: return false
 	

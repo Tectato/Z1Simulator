@@ -113,3 +113,6 @@ func rewind():
 	if history.is_empty(): return
 	exponent = history.pop_back()
 	updateState()
+
+func getBounds():
+	return [Vector3(-1,0,-1)*0.4, Vector3(1,0.2,1)*0.4]

@@ -6,6 +6,7 @@ const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const CLOCKPIN = preload("res://Scenes/Parts/ClockPin.tscn")
 const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
+const ECCENTRIC = preload("res://Scenes/Parts/Basement/Eccentric.tscn")
 const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
 const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
 
@@ -366,6 +367,13 @@ func addComment():
 	selectedMachine.addComment(newComment)
 	newComment.beginPlace()
 	return newComment
+
+func addEccentric():
+	createIfNotExists()
+	setResolution(Resolution.Part)
+	var newEccentric = ECCENTRIC.instantiate()
+	selectedLayer.addPart(newEccentric)
+	return newEccentric
 	
 func addPeripheral(type : int):
 	createIfNotExists()

@@ -3,6 +3,7 @@ class_name Movable
 
 const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 const SPRING = preload("res://Scenes/Parts/Relations/Spring.tscn")
+const ECCENTRICARM = preload("res://Scenes/Parts/Basement/EccentricArm.tscn")
 
 var storedPos : Vector3
 
@@ -236,8 +237,8 @@ func addRelation(type : Relation.Type, other : Selectable):
 			newRelation = LINK.instantiate()
 		Relation.Type.Spring:
 			newRelation = SPRING.instantiate()
-		Relation.Type.LinearConstraint:
-			newRelation = LinearConstraint.new()
+		Relation.Type.EccentricArm:
+			newRelation = ECCENTRICARM.instantiate()
 		Relation.Type.InputLink:
 			return
 			#newRelation = INPUTLINK.instantiate()
@@ -347,7 +348,7 @@ static func sortByFixed(A, B):
 	return false
 
 func dirToInt(dir : Vector2, allowZero = false):
-	if abs(dir.x) > 0.01:
+	if abs(dir.x) > abs(dir.y):
 		return 1 if dir.x > 0 else 3
 	else:
 		if allowZero:
@@ -362,6 +363,12 @@ func intToDir(id : int):
 		2: return Vector2(0,1)
 		3: return Vector2(-1,0)
 	return Vector2(0,0)
+
+func dirIDDiff(dirA : int, dirB : int):
+	var diff = (dirB - dirA) % 4
+	if abs(diff) > 2:
+		diff = (diff - (2 * sign(diff))) * -1
+	return diff
 
 func setColor(color : Color):
 	pass

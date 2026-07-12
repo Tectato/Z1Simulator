@@ -218,6 +218,11 @@ func _process(_delta: float) -> void:
 				if part.parent is Spring:
 					if Input.is_action_just_pressed("flip"):
 						part.parent.flipTension()
+			elif part is Eccentric:
+				if Input.is_action_just_pressed("nudge_up"):
+					part.modifyExtent(!ctrl, 1)
+				elif Input.is_action_just_pressed("nudge_down"):
+					part.modifyExtent(!ctrl, -1)
 		if !focusElsewhere and Input.is_action_just_pressed("delete") and canModify():
 			transformGizmo.hide()
 			while !selected.is_empty():
@@ -457,7 +462,13 @@ func addRelation(partA : Movable, partB : Movable):
 		if Input.is_key_pressed(KEY_ALT):
 			partA.addRelation(Relation.Type.Spring, partB)
 		else:
-			partA.addRelation(Relation.Type.Link, partB)
+			if partA is Eccentric or partB is Eccentric:
+				if partA is Eccentric:
+					partB.addRelation(Relation.Type.EccentricArm, partA)
+				else:
+					partA.addRelation(Relation.Type.EccentricArm, partB)
+			else:
+				partA.addRelation(Relation.Type.Link, partB)
 
 func getMidPoint(selection):
 	var min = Vector3(1,1,1)*1000
@@ -570,7 +581,7 @@ func boxSelect(min : Vector2, max : Vector2):
 		for machine in machineCandidates:
 			var selectedIndex = 0
 			if machine == Global.workspace.selectedMachine:
-				selectedIndex = machine.getLayerHeight(Global.workspace.selectedLayer)
+				selectedIndex = machine.getLayerIndex(Global.workspace.selectedLayer)
 			for i in range(selectedIndex, machine.layers.size()):
 				var layer = machine.layers[i]
 				appendCandidate(layer, boxPolygon, layerCandidates)

@@ -123,9 +123,12 @@
 [ext_resource type="Texture2D" uid="uid://dvr68rxt4v3e5" path="res://Sprites/yNeg.png" id="96_b5fr5"]
 [ext_resource type="Texture2D" uid="uid://bvrap4clop6xe" path="res://Sprites/Buttons/Parts/inputExponent_active.png" id="96_tqjql"]
 [ext_resource type="Script" uid="uid://v8tyglqa168m" path="res://Scripts/Editor/3DUI/powerFlowVisualiser.gd" id="97_obh6b"]
+[ext_resource type="Texture2D" uid="uid://umndwdo5v5mq" path="res://Sprites/Buttons/Parts/eccentric.png" id="97_q6d0a"]
 [ext_resource type="Texture2D" uid="uid://ple42fn3cl8c" path="res://Sprites/Buttons/Parts/inputExponent_lit.png" id="97_ttmut"]
 [ext_resource type="Texture2D" uid="uid://cg0vwuovwm2py" path="res://Sprites/yPos.png" id="97_u4ilb"]
+[ext_resource type="Texture2D" uid="uid://53xvv5plhb6s" path="res://Sprites/Buttons/Parts/eccentric_active.png" id="98_3451d"]
 [ext_resource type="Texture2D" uid="uid://bwcse5b6j433x" path="res://Sprites/Buttons/Parts/outputExponent_active.png" id="99_6xrox"]
+[ext_resource type="Texture2D" uid="uid://cgpafnjqrekdb" path="res://Sprites/Buttons/Parts/eccentric_lit.png" id="99_mas1e"]
 [ext_resource type="Texture2D" uid="uid://cpcs7fidp6pm6" path="res://Sprites/Buttons/Parts/outputExponent_lit.png" id="100_cfdn2"]
 [ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
 [ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
@@ -2243,6 +2246,13 @@ texture_normal = ExtResource("78_qnh42")
 texture_pressed = ExtResource("79_5ko8x")
 texture_hover = ExtResource("80_i1mcn")
 
+[node name="Eccentric" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1908480452]
+layout_mode = 2
+tooltip_text = "Place comment"
+texture_normal = ExtResource("97_q6d0a")
+texture_pressed = ExtResource("98_3451d")
+texture_hover = ExtResource("99_mas1e")
+
 [node name="InputExponentSlider" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=292589919]
 layout_mode = 2
 tooltip_text = "Place input exponent slider"
@@ -3207,6 +3217,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/GlobalPin" to="." method="addGlobalPin"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/ClockPin" to="." method="addClockPin"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Comment" to="." method="addComment"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Eccentric" to="." method="addEccentric"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/InputExponentSlider" to="." method="addExponentSlider" binds= [true]]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/OutputExponentSlider2" to="." method="addExponentSlider"]
 [connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/ClockGizmo/TextFrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_editing_toggled"]

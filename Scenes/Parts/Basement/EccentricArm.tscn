@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://be73i55egp4dv"]
+
+[ext_resource type="Script" uid="uid://dxxpx1lknf00b" path="res://Scripts/Parts/Basement/eccentricArm.gd" id="1_mxhrf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2erm6"]
+albedo_color = Color(0.18, 0.16812001, 0.14760001, 1)
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_totay"]
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.04
+radial_segments = 12
+rings = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_xqxwa"]
+size = Vector3(0.08, 0.04, 1)
+
+[node name="EccentricArm" type="Node3D" unique_id=1105887533]
+script = ExtResource("1_mxhrf")
+
+[node name="Center" type="MeshInstance3D" parent="." unique_id=1509037572]
+material_override = SubResource("StandardMaterial3D_2erm6")
+mesh = SubResource("CylinderMesh_totay")
+
+[node name="Bridge" type="MeshInstance3D" parent="." unique_id=828590723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, -0.1)
+material_override = SubResource("StandardMaterial3D_2erm6")
+mesh = SubResource("BoxMesh_xqxwa")

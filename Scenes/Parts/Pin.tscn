@@ -45,6 +45,7 @@ mesh = SubResource("CylinderMesh_vqpos")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 collision_layer = 2
 collision_mask = 0
+monitoring = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1278421810]
 shape = SubResource("CylinderShape3D_ax1co")
