@@ -105,7 +105,7 @@ func updateHeight(floor : float, height : float):
 	$Area3D.transform = $MeshInstance3D.transform
 	$StepLabel.position = Vector3.UP * (floor + 0.1 * height + 0.15)
 	if travelIndicator:
-		travelIndicator.position.y = floor
+		travelIndicator.position.y = floor + 0.01
 	PinRenderHandler.setTransform("pin", meshIndex, $MeshInstance3D.global_transform)
 
 func canMove(dir : Vector2, initiator, chain = []):

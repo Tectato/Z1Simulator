@@ -214,6 +214,9 @@ func setHighlight(enabled : bool, highlightColor : Color):
 
 func modifyExtent(upper : bool, dir : int):
 	if !global: return
+	if !isPartialGlobal():
+		startLayer = 0
+		endLayer = getMachine().layers.size()-1
 	if upper:
 		endLayer += dir
 	else:
