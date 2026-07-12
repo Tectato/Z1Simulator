@@ -1,4 +1,5 @@
 extends Relation
+class_name EccentricArm
 
 @onready var bridge = $Bridge
 
@@ -16,13 +17,13 @@ func init():
 
 func canMove(dir : Vector2, initiator, chain = []):
 	if initiator == A:
-		return B.canTurn(dir, self, chain)
+		return B.canMove(dir, self, chain)
 	else:
 		return A.canMove(dir, self, chain)
 
 func applyMove(dir : Vector2, initiator : Selectable, chain = []):
 	if initiator == A:
-		return B.turn(dir, self, chain)
+		return B.move(dir, self, chain)
 	else:
 		return A.move(dir, self, chain)
 

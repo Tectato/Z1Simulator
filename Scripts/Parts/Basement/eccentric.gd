@@ -10,6 +10,7 @@ var meshIndex = -1
 var pins = {} #{pin -> [dirID, dist]} (dirID being the cardinal direction the pin is in relative to center)
 var startLayer = -1
 var endLayer = -1
+var links = []
 
 func _ready():
 	meshIndex = PinRenderHandler.addInstance("pin")
@@ -27,9 +28,12 @@ func setSelected(value):
 	if is_visible_in_tree():
 		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
 
-func canTurn(dir : Vector2, initiator : Relation, chain = []):
-	if chain.has(self):
-		return MoveState.AlreadyMoving
+func getTurnDir(moveDir : Vector2, initiator : Pin):
+	if !pins.has(initiator): return null
+	var initDirID = dirToInt(moveDir)
+	return -sign(dirIDDiff(initDirID, pins[initiator][0]))
+
+func canMove(dir : Vector2, initiator : Relation, chain = []):
 	var initDirID = dirToInt(dir)
 	
 	var initToPivot = Space.toVec2(position - initiator.A.position)
@@ -39,25 +43,55 @@ func canTurn(dir : Vector2, initiator : Relation, chain = []):
 	var angle = abs(impulse.dot(initToPivot))
 	if angle >= 0.6: return MoveState.Blocked
 	
+	var rotDir = getTurnDir(dir, initiator.A)
+	var dirScaled = dir.length() / r_init
+	var canTurnSelf = canTurn(rotDir, dirScaled, chain)
+	if canTurnSelf == MoveState.Blocked: return canTurnSelf
+	var canTurnLinked = true
+	for link in links:
+		canTurnLinked = canTurnLinked and link.getOppositeOf(self).canTurn(rotDir, dirScaled, chain)
+		if !canTurnLinked:
+			return MoveState.Blocked
+	return MoveState.Moved
+
+func move(dir : Vector2, initiator : Relation, chain = []):
+	var rotDir = getTurnDir(dir, initiator.A)
+	var turnSelf = turn(rotDir, chain)
+	if turnSelf == MoveState.Blocked: return turnSelf
+	var turnLinked = true
+	for link in links:
+		turnLinked = turnLinked and link.getOppositeOf(self).turn(rotDir, chain)
+		if !turnLinked:
+			return MoveState.Blocked
+	return MoveState.Moved
+
+func canTurn(rotDir : int, scaledMoveDist : float, chain = []):
+	if chain.has(self):
+		return MoveState.AlreadyMoving
+	
+	chain.append(self)
+	
 	if selected:
 		pass
-	var initPosARelative = Space.toVec2(initiator.A.position - position)
-	var ALinearized = Vector2(
-		1 * sign(initPosARelative.x) if abs(initPosARelative.x) > abs(initPosARelative.y) else 0,
-		1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
-	var initPosBRelative = initPosARelative + dir
-	var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
+	#var initPosARelative = Space.toVec2(initiator.A.position - position)
+	#var ALinearized = Vector2(
+		#1 * sign(initPosARelative.x) if abs(initPosARelative.x) > abs(initPosARelative.y) else 0,
+		#1 * sign(initPosARelative.y) if abs(initPosARelative.y) >= abs(initPosARelative.x) else 0)
+	#var initPosBRelative = initPosARelative + dir
+	#var angleDiff = ALinearized.angle_to(initPosARelative) - ALinearized.angle_to(initPosBRelative)
 
 	var canTurn = true
-	var pivotToInit = initPosARelative
+	#var pivotToInit = initPosARelative
 	var moveCandidates = {}
 	for pin in pins.keys():
-		if pin == initiator.A: continue
+		if pin == chain.back(): continue
 		var pivotToPin = Space.toVec2(pin.position - position)
 		var r_pin = pins[pin][1]
-		var pinAngleDiff = dirIDDiff(pins[initiator.A][0], pins[pin][0])#pivotToInit.angle_to(pivotToPin)
-		var rotatedDir = dir.rotated(pinAngleDiff * PI/2)#dir.rotated(snappedf(pinAngleDiff, PI/2))
-		rotatedDir *= r_pin / r_init
+		#var pinAngleDiff = dirIDDiff(pins[initiator.A][0], pins[pin][0])#pivotToInit.angle_to(pivotToPin)
+		#var rotatedDir = dir.rotated(pinAngleDiff * PI/2)#dir.rotated(snappedf(pinAngleDiff, PI/2))
+		#rotatedDir *= r_pin / r_init
+		var rotatedDir = intToDir(wrapi(pins[pin][0]+(1*rotDir), 0, 4))
+		rotatedDir *= r_pin * scaledMoveDist
 		rotatedDir = rotatedDir.snappedf(0.02)
 		#print("canTurn %d->%d: %0.4f" % [uuid, pin.uuid, rotatedDir.length()])
 		canTurn = canTurn and pin.canMove(rotatedDir, self, chain)
@@ -66,37 +100,46 @@ func canTurn(dir : Vector2, initiator : Relation, chain = []):
 				pass
 			break
 		else:
-			if toMove.has([initiator.A, initDirID]):
-				toMove[[initiator.A, initDirID]].append([pin, rotatedDir])
+			if toMove.has(rotDir):
+				toMove[rotDir].append([pin, rotatedDir])
 			else:
-				toMove[[initiator.A, initDirID]] = [[pin, rotatedDir]]
+				toMove[rotDir] = [[pin, rotatedDir]]
 	if !canTurn:
 		schedule(drawErrorChain, [chain])
 	return MoveState.Moved if canTurn else MoveState.Blocked
 
-func turn(dir : Vector2, initiator : Relation, chain = []):
-	var dirID = dirToInt(dir)
-	movedBy[initiator] = initiator
+func turn(rotDir : int, chain = []):
+	#var dirID = dirToInt(dir)
+	#movedBy[initiator] = initiator
 	if chain.has([self, -1]):
 		return MoveState.AlreadyMoving
 	chain.append([self, -1])
 	
 	var canTurn = true
-	if toMove.has([initiator.A, dirID]):
-		for entry in toMove[[initiator.A, dirID]]:
+	if toMove.has(rotDir):
+		for entry in toMove[rotDir]:
 			canTurn = canTurn and entry[0].move(entry[1], self, chain) != MoveState.Blocked
 	if !canTurn: return MoveState.Blocked
-	toMove.erase([initiator.A, dirID])
+	toMove.erase(rotDir)
 	for relation in relations:
 		relation.moved()
 	return MoveState.Moved
 
 func appendRelation(relation : Relation):
-	super.appendRelation(relation)
+	grabUUID()
+	if relation is EccentricArm:
+		if not relations.has(relation):
+			relations.append(relation)
+	else:
+		if not links.has(relation):
+			links.append(relation)
 	place()
 
 func removeRelation(relation : Relation):
-	super.removeRelation(relation)
+	if relation is EccentricArm:
+		relations.erase(relation)
+	else:
+		links.erase(relation)
 	place()
 
 func getBounds():

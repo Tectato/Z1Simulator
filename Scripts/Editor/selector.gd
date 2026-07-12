@@ -157,6 +157,24 @@ func _process(_delta: float) -> void:
 					toSelect.erase(part)
 				selectSet(toSelect)
 				return
+		if Input.is_action_just_pressed("select_linked"):
+			var prime = selected[0]
+			var toSelect = []
+			var searchSet = []
+			if prime is Movable:
+				var current = prime
+				while current != null:
+					for relation in current.relations:
+						var other = relation.getOppositeOf(current)
+						if !(other in toSelect) and !(other in searchSet):
+							toSelect.append(other)
+							searchSet.append(other)
+					if !searchSet.is_empty():
+						current = searchSet.pop_front()
+					else:
+						current = null
+			selectSet(toSelect)
+				
 		#var i = -1
 		for part in selected:
 			#i += 1
@@ -462,8 +480,10 @@ func addRelation(partA : Movable, partB : Movable):
 		if Input.is_key_pressed(KEY_ALT):
 			partA.addRelation(Relation.Type.Spring, partB)
 		else:
-			if partA is Eccentric or partB is Eccentric:
-				if partA is Eccentric:
+			var AEccentric = partA is Eccentric
+			var BEccentric = partB is Eccentric
+			if AEccentric != BEccentric:
+				if AEccentric:
 					partB.addRelation(Relation.Type.EccentricArm, partA)
 				else:
 					partA.addRelation(Relation.Type.EccentricArm, partB)

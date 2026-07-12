@@ -245,7 +245,7 @@ func addRelation(type : Relation.Type, other : Selectable):
 	add_child(newRelation)
 	newRelation.A = self
 	newRelation.B = other
-	relations.append(newRelation)
+	appendRelation(newRelation)
 	newRelation.init()
 	return newRelation
 
