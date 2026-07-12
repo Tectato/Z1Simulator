@@ -8,6 +8,7 @@ const POSITIVE = preload("res://Scenes/Parts/SheetElements/Cutouts/ClipZonePosit
 @export var materialClipped : Material
 @export var materialSelected : Material
 @export var materialClippedSelected : Material
+@export var sheetMaterial : Material
 @onready var hitbox = $Area3D/CollisionShape3D
 @onready var positiveCSG = $ClipZonePositive
 
@@ -25,7 +26,7 @@ func updateMaterial():
 	if selected:
 		mesh.material_override = materialClippedSelected if clipped else materialSelected
 	else:
-		mesh.material_override = materialClipped if clipped else materialNormal
+		mesh.material_override = materialClipped if clipped else sheetMaterial#materialNormal
 
 func getCutout():
 	var cutout = CUTOUT.instantiate()
@@ -50,7 +51,7 @@ func buildMesh():
 func init(dims : Vector2):
 	hitbox.shape.size = Vector3(dims.x, 0.06, dims.y)
 	hitbox.position = (hitbox.shape.size * Vector3(1,0,1)) / 2
-	mesh.scale = Vector3(dims.x, 0.03, dims.y)
+	mesh.scale = Vector3(dims.x, 0.02, dims.y)
 	#mesh.scale = Vector3.ONE
 	mesh.position = hitbox.position - Vector3.UP * 0.01
 

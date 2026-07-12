@@ -1,7 +1,9 @@
 [gd_scene format=3 uid="uid://bhlk4tqdfhpqe"]
 
 [ext_resource type="Script" uid="uid://dktngyyx7ldb4" path="res://Scripts/Parts/SheetElements/clipZone.gd" id="1_khhgu"]
+[ext_resource type="Shader" uid="uid://deqynlgllyqq8" path="res://Shaders/CompatOutlinePass_hardcodedColor.gdshader" id="2_0o7al"]
 [ext_resource type="PackedScene" uid="uid://bh6pnli0v8p06" path="res://Scenes/Parts/SheetElements/Cutouts/ClipZonePositive.tscn" id="2_rn1tq"]
+[ext_resource type="Shader" uid="uid://elyt8nlbykvd" path="res://Shaders/NormalToAlbedo.gdshader" id="3_lsvgf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khhgu"]
 albedo_color = Color(0.8000002, 0, 1, 1)
@@ -21,6 +23,16 @@ transparency = 1
 shading_mode = 0
 albedo_color = Color(0.27200007, 0, 0.34, 0.7294118)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_spy0v"]
+render_priority = 0
+shader = ExtResource("2_0o7al")
+shader_parameter/outline_threshold = 0.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lpao5"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_spy0v")
+shader = ExtResource("3_lsvgf")
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_rn1tq"]
 resource_local_to_scene = true
 size = Vector3(0.1, 0.03, 0.1)
@@ -33,6 +45,7 @@ materialNormal = SubResource("StandardMaterial3D_khhgu")
 materialClipped = SubResource("StandardMaterial3D_rn1tq")
 materialSelected = SubResource("StandardMaterial3D_ask51")
 materialClippedSelected = SubResource("StandardMaterial3D_0o7al")
+sheetMaterial = SubResource("ShaderMaterial_lpao5")
 collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 
@@ -48,7 +61,7 @@ disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2090213879]
 transform = Transform3D(0.1, 0, 0, 0, 0.03, 0, 0, 0, 0.1, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_khhgu")
+material_override = SubResource("ShaderMaterial_lpao5")
 mesh = SubResource("BoxMesh_ask51")
 
 [node name="ClipZonePositive" parent="." unique_id=934805480 instance=ExtResource("2_rn1tq")]
