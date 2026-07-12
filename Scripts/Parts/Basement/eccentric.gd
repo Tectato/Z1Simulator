@@ -18,10 +18,35 @@ func _ready():
 	set_notify_transform(true)
 
 func serialize():
-	return null
+	grabUUID()
+	var output = {
+		"pos_x" : ("%0.4f" % position.x).rstrip("0"),
+		"pos_z" : ("%0.4f" % position.z).rstrip("0")
+	}
+	if id.length() > 0:
+		output["id"] = id
+	output["uuid"] = uuid
+	output["bounds"] = [startLayer, endLayer]
+	
+	var allRelations = relations.duplicate()
+	allRelations.append_array(links)
+	if !allRelations.is_empty():
+		for relation in allRelations:
+			if !relation.isInterMachineRelation():
+				getMachine().relations[relation.serialize()] = null
+	return output
 
 func deserialize(source : Dictionary):
-	pass
+	position = Vector3(float(source["pos_x"]), 0, float(source["pos_z"]))
+	if source.has("id"):
+		id = source["id"]
+	if source.has("uuid"):
+		uuid = int(source["uuid"])
+		getMachine().uuidManager.registerID(self, uuid)
+	if source.has("bounds"):
+		startLayer = int(source["bounds"][0])
+		endLayer = int(source["bounds"][1])
+	place()
 
 func setSelected(value):
 	super.setSelected(value)
@@ -190,11 +215,11 @@ func updateHeight():
 	var floorLayer = getMachine().getLayer(startLayer, true)
 	var floor = floorLayer.position.y
 	var topLayer = getMachine().getLayer(endLayer, true)
-	var top = topLayer.position.y + topLayer.getBounds()[1].y
+	var top = topLayer.position.y + (topLayer.getBounds()[1].y if (endLayer - startLayer) < 1 else (0.08))
 	top = (top - floor) * 10.0
-	var effectiveHeight = top if fixed else top - 0.4
+	var effectiveHeight = top
 	mesh.scale = Vector3(1,effectiveHeight,1)
-	mesh.position = Vector3.UP * (floor + 0.1 * effectiveHeight / 2)
+	mesh.position = Vector3.UP * (floor + 0.1 * effectiveHeight / 2 - global_position.y)
 	#$Highlight.transform = mesh.transform
 	pinCollider.transform = mesh.transform
 	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
@@ -203,11 +228,12 @@ func rotatePart(by):
 	tryEqualize()
 
 func place():
-	startLayer = layer.height
-	endLayer = startLayer
+	if startLayer < 0 or endLayer < 0:
+		startLayer = layer.height
+		endLayer = startLayer
 	# No need for gridLibrary updates, we don't interact with anything directly
 	updatePositions()
-	updateHeight()
+	schedule(updateHeight)
 	pins.clear()
 	for relation in relations:
 		var pin = relation.A

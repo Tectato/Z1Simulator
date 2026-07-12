@@ -8,6 +8,11 @@ var inMotion = false
 var preMoveRot : float
 var targetRot : float
 
+func serialize():
+	var out = super.serialize()
+	out["type"] = "arm"
+	return out
+
 func init():
 	super.init()
 	look_at(B.collider.global_position)

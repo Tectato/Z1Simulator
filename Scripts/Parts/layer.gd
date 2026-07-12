@@ -7,6 +7,7 @@ const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const AUDIOHANDLER = preload("res://Scenes/SheetSoundHandler.tscn")
 const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
 const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
+const ECCENTRIC = preload("res://Scenes/Parts/Basement/Eccentric.tscn")
 
 @onready var collider = $BoundingBox
 @onready var bb = $BoundingBox/CollisionShape3D
@@ -65,6 +66,7 @@ func serialize():
 	var sheets = []
 	var pins = []
 	var peripherals = []
+	var arms = []
 	for part in parts:
 		if part is Sheet:
 			sheets.append(part.serialize())
@@ -72,6 +74,8 @@ func serialize():
 			pins.append(part.serialize())
 		elif part is Peripheral:
 			peripherals.append(part.serialize())
+		elif part is Eccentric:
+			arms.append(part.serialize())
 	var output = {
 		"height" : height,
 		"sheets" : sheets,
@@ -79,6 +83,8 @@ func serialize():
 	}
 	if !peripherals.is_empty():
 		output["peripherals"] = peripherals
+	if !arms.is_empty():
+		output["arms"] = arms
 	offset = position.y
 	var below = machine.getLayerBelow(self)
 	if below:
@@ -114,6 +120,11 @@ func deserialize(source : Dictionary):
 		var newPart = PIN.instantiate()
 		addPart(newPart)
 		newPart.deserialize(pin)
+	if source.has("arms"):
+		for part in source["arms"]:
+			var newPart = ECCENTRIC.instantiate()
+			addPart(newPart)
+			newPart.deserialize(part)
 	if source.has("peripherals"):
 		for part in source["peripherals"]:
 			match(int(part["type"])):

@@ -427,6 +427,8 @@ func paste():
 				selected.append(Global.workspace.addPin())
 			else:
 				selected.append(Global.workspace.addGlobalPin())
+		elif part is Eccentric:
+				selected.append(Global.workspace.addEccentric())
 		var newPart = selected.back()
 		newPart.rotation = part.rotation
 		newPart.setSelected(true)
@@ -453,6 +455,9 @@ func paste():
 			newPart.directionality = part.directionality
 			newPart.outputState = part.outputState
 			newPart.setOutput(part.output)
+			newPart.startLayer = part.startLayer
+			newPart.endLayer = part.endLayer
+		elif newPart is Eccentric:
 			newPart.startLayer = part.startLayer
 			newPart.endLayer = part.endLayer
 	placing = true
