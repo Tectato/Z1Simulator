@@ -81,9 +81,14 @@ void fragment() {
 	//float normal_edge = smoothstep(0.0,outline_threshold,gradient);
 
 	float combined_edge = max(normal_edge, depth_edge);
+	//float fresnel = smoothstep(0, 1, 5.0 * dot(vec3(0,0,1), center_normal));
 	
-	ALBEDO = vertex_color * max(0.4,(1.0-combined_edge));
+	float edge_gradient_y = texture(depth_texture, clamp(uv + vec2(0,1) * texel, vec2(0.0), vec2(1.0))).r
+							- texture(depth_texture, clamp(uv + vec2(0,-1) * texel, vec2(0.0), vec2(1.0))).r;
+	edge_gradient_y = clamp(abs(edge_gradient_y) * 20.0, 0.0, 1.0);
+	
+	ALBEDO = vertex_color * max(0.4,min(1.0-edge_gradient_y,1.0-combined_edge));
 	//ALBEDO = gradient * vec3(1,1,1);
-	//ALBEDO = center_normal;
+	//ALBEDO = (edge_gradient_y) * vec3(1,1,1);
 	//ALBEDO = vec3(uv.x, uv.y, 0.0);
 }

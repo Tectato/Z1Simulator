@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bvtgwlrwutvvr"]
 
 [ext_resource type="PackedScene" uid="uid://crobnroqc51y8" path="res://Scenes/Parts/ClockPin.tscn" id="1_8k7wh"]
+[ext_resource type="Environment" uid="uid://dk7y0ukitmi7n" path="res://Assets/LowQEnv.tres" id="1_c264a"]
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="2_iufkg"]
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="3_0f5h7"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="4_iufkg"]
@@ -58,6 +59,14 @@ shader = ExtResource("5_0f5h7")
 size = Vector3(5, 5, 5)
 
 [node name="TestScene" type="Node3D" unique_id=497972494]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=86577845]
+transform = Transform3D(0.61237234, -0.7071068, -0.35355365, 0.5000003, -2.2953994e-08, 0.86602527, -0.61237234, -0.7071068, 0.3535536, 0, 2, 0)
+shadow_blur = 0.606
+directional_shadow_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=398540212]
+environment = ExtResource("1_c264a")
 
 [node name="ClockPin" parent="." unique_id=1776373708 instance=ExtResource("1_8k7wh")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.3, 0, -1.1)

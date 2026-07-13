@@ -11,6 +11,7 @@ var diameter = 0.05
 var global = false
 var startLayer = 0
 var endLayer = -1
+var verticalFloor = 0
 var verticalScale = 0.2
 var output = false
 var outputState = false
@@ -278,8 +279,9 @@ func setHeight(value):
 	else:
 		effectiveHeight = value if fixed else value - 0.4
 	
+	verticalFloor = floor
 	verticalScale = effectiveHeight
-	updateHeight(floor, verticalScale)
+	updateHeight(verticalFloor, verticalScale)
 	#$Area3D.scale = Vector3(scale.x,value,scale.z)
 	#$Area3D.position = Vector3.UP * 0.1 * value / 2
 
@@ -287,7 +289,7 @@ func viewLimited(machine : Machine, layerID : int):
 	if !global: return
 	if layerID == -1:
 		visible = true
-		setHeight(1)
+		updateHeight(verticalFloor, verticalScale)
 	else:
 		visible = (machine == getMachine()) and (!isPartialGlobal() or (startLayer <= layerID and layerID <= endLayer))
 		if visible:

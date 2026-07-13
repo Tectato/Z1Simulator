@@ -43,9 +43,9 @@ func selectabilityChanged(_newSel):
 func updateMask():
 	match(Global.workspace.resolution):
 		Workspace.Resolution.Machine:
-			collision_mask = 0b0110000
+			collision_mask = 0b0100011
 		Workspace.Resolution.Layer:
-			collision_mask = 0b0101000
+			collision_mask = 0b0100011
 		Workspace.Resolution.Part:
 			match(Global.workspace.selectability):
 				Workspace.Selectability.Both:
@@ -524,6 +524,12 @@ func select(target, checkForUI = false, shift = false, clicked = true):
 		if (targetParent is Selectable or targetParent is Layer or targetParent is Machine):
 			if targetParent is CommentBox and !Global.workspace.showComments:
 				return
+			if targetParent is Movable and Global.workspace.resolution == Workspace.Resolution.Layer:
+				targetParent = targetParent.layer
+				if targetParent == null:
+					targetParent = Global.workspace.selectedMachine.layers[0]
+			elif targetParent is Movable and Global.workspace.resolution == Workspace.Resolution.Machine:
+				targetParent = targetParent.getMachine()
 			targetParent.setSelected(true)
 			selected.append(targetParent)
 			partDragOrigins.append(targetParent.global_position)

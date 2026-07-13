@@ -204,6 +204,7 @@ func postParseSetup():
 			add_child(copy)
 			copy.setupAfterDuplication(zone)
 			localClipZones.append(copy)
+			copy.parent = self
 	
 		#t_cloneZones += Time.get_ticks_usec() - startTime	# TIMING
 		#startTime = Time.get_ticks_usec()					# TIMING
@@ -276,11 +277,14 @@ func _notification(what):
 			SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 
 func setSelected(value):
+	var preSelected = selected
 	super.setSelected(value)
 	if !sheetData: return
+	if preSelected == selected: return
 	for zone in localClipZones:
 		zone.hitbox.disabled = !value
 		#zone.mesh.visible = value
+		zone.updateMaterial()
 	#sprite.set_instance_shader_parameter("selected", value)
 	mesh.updateMaterial()
 	SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)

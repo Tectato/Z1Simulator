@@ -15,6 +15,7 @@ var links = []
 func _ready():
 	meshIndex = PinRenderHandler.addInstance("pin")
 	PinRenderHandler.setColor("pin", meshIndex, Color("616161ff"))
+	visibility_changed.connect(visibilityChanged)
 	set_notify_transform(true)
 
 func serialize():
@@ -266,3 +267,14 @@ func delete():
 	beingDeleted = true
 	PinRenderHandler.removeInstance("pin", meshIndex)
 	super.delete()
+
+func visibilityChanged():
+	var vis = is_visible_in_tree()
+	if vis:
+		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
+	else:
+		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform.scaled(Vector3.ZERO), false)
+	for relation in relations:
+		relation.visible = vis
+	for link in links:
+		link.visible = vis
