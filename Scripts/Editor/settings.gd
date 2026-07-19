@@ -49,3 +49,6 @@ func _on_move_speed_input_value_changed(value: float) -> void:
 
 func _on_move_speed_timeout_timeout() -> void:
 	Global.workspace.setMoveSpeed(moveSpeedInput.value)
+
+func _on_verbose_toggled(toggled_on: bool) -> void:
+	Global.editor.verboseOutput = toggled_on

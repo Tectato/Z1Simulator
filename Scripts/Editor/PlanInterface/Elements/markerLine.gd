@@ -14,7 +14,8 @@ func serialize():
 	var posX = position.x
 	var posY = position.y
 	for point in line.points:
-		out["points"].append([int(point.x + posX), int(point.y + posY)])
+		out["points"].append(int(point.x + posX))
+		out["points"].append(int(point.y + posY))
 	return out
 
 func deserialize(src):
@@ -22,8 +23,13 @@ func deserialize(src):
 	width = src["width"]
 	line.width = width
 	line.clear_points()
-	for point in src["points"]:
-		line.add_point(Vector2(float(point[0]),float(point[1])))
+	var points = src["points"]
+	if points[0] is Array: # Old format
+		for point in src["points"]:
+			line.add_point(Vector2(float(point[0]),float(point[1])))
+	else:
+		for i in range(points.size()/2):
+			line.add_point(Vector2(float(points[i*2]),float(points[(i*2)+1])))
 	finished = true
 
 func start():

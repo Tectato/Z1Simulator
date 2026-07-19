@@ -35,7 +35,7 @@ func deserialize(src : Dictionary):
 		var machine = Global.workspace.uuidManager.getPart(int(src["sign"][0]))
 		if machine:
 			signPin = machine.uuidManager.getPart(int(src["sign"][1]))
-	setup(exponentEntry, mantissaEntry, [signPin] if signPin else null)
+	setup(exponentEntry, mantissaEntry, [signPin] if signPin else [])
 	if src.has("folded") and bool(src["folded"]): fold()
 
 func setup(valueA, valueB, selection : Array):
@@ -79,7 +79,7 @@ func updateValue():
 	if abs(value) > 1000000:
 		var exp = str(value).split(".")[0].length() - 1
 		var dec = value / pow(10,exp)
-		$VBox/Value/Label.text = "{dec}e{exp}".format({"dec":("%1.2f" % dec), "exp":str(exp)})
+		$VBox/Value/Label.text = "{dec}e{exp}".format({"dec":("%1.3f" % dec), "exp":str(exp)})
 	else:
 		var text = ("%0.10f" % value).rstrip("0")
 		if text.ends_with("."): text += "0"

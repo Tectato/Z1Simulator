@@ -18,6 +18,7 @@ var currentVisMode = VisMode.Colorcoded
 var editingLocked = false
 var tutorialDone = false
 var loading = false
+var verboseOutput = false
 
 enum VisMode { Monochrome, Colorcoded, Realistic }
 
@@ -66,7 +67,7 @@ func save():
 	var dict = workspace.serialize(savePath)
 	var newFile = FileAccess.open(savePath, FileAccess.WRITE)
 	if newFile:
-		newFile.store_string(JSON.stringify(dict))#, "\t"))
+		newFile.store_string(JSON.stringify(dict, "\t") if verboseOutput else JSON.stringify(dict))
 		newFile.close()
 	else:
 		print("Could not write file for project")

@@ -346,6 +346,8 @@ keycode = 4194305
 [sub_resource type="Shortcut" id="Shortcut_81ubf"]
 events = [SubResource("InputEventKey_v5nsg")]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q6d0a"]
+
 [sub_resource type="Theme" id="Theme_pd6ol"]
 CheckBox/icons/checked = ExtResource("100_kkpsg")
 CheckBox/icons/unchecked = ExtResource("101_msmja")
@@ -2658,9 +2660,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -184.0
-offset_top = -125.0
+offset_top = -143.0
 offset_right = 184.0
-offset_bottom = 125.0
+offset_bottom = 143.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("77_rgbjt")
@@ -2719,6 +2721,11 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Sheet spacing"
 
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=1099156902]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
 [node name="SheetSpacingInput" type="SpinBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SheetSpacing" unique_id=1490948270]
 layout_mode = 2
 min_value = 0.021
@@ -2745,6 +2752,11 @@ theme_override_constants/separation = 20
 layout_mode = 2
 text = "Move speed"
 
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=1994974052]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
 [node name="MoveSpeedInput" type="SpinBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed" unique_id=1199496301]
 layout_mode = 2
 min_value = 0.1
@@ -2770,6 +2782,11 @@ layout_mode = 2
 layout_mode = 2
 text = "Volume"
 
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume" unique_id=480862104]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
 [node name="HSlider" type="HSlider" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume" unique_id=1901176571]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -2787,6 +2804,11 @@ tooltip_text = "If enabled, saves things like part positions of imported machine
 mouse_filter = 1
 text = "Store diff of imported machines"
 
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff" unique_id=166453968]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
 [node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff" unique_id=1881209592]
 layout_mode = 2
 tooltip_text = "If enabled, saves things like part positions of imported machine instances without modifying their source file"
@@ -2802,6 +2824,11 @@ layout_mode = 2
 mouse_filter = 1
 text = "Brass static sheets in shaded view"
 
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=401848149]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
 [node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=911802341]
 layout_mode = 2
 theme = SubResource("Theme_pd6ol")
@@ -2815,8 +2842,33 @@ layout_mode = 2
 mouse_filter = 1
 text = "Show debug info"
 
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug" unique_id=838278934]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
 [node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug" unique_id=943811266]
 layout_mode = 2
+theme = SubResource("Theme_pd6ol")
+
+[node name="FancyOutput" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=2007815569]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/FancyOutput" unique_id=859240261]
+layout_mode = 2
+tooltip_text = "Significantly increases project size but improves readability and IDE formatting"
+mouse_filter = 1
+text = "Line breaks in project files"
+
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/FancyOutput" unique_id=1067532501]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
+
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/FancyOutput" unique_id=1884745888]
+layout_mode = 2
+tooltip_text = "Significantly increases project size but improves readability and IDE formatting"
 theme = SubResource("Theme_pd6ol")
 
 [node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1428938694]
@@ -3244,6 +3296,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_store_diff_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_brass_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_debug_toggled"]
+[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/FancyOutput/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_verbose_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/VisibilityParent/CommentDisplay" to="Camera3D/Interface/VisibilityParent/CommentDisplay" method="_on_gui_input"]
