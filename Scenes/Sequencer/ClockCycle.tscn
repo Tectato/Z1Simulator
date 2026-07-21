@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://j87cpoiat8iy"]
+
+[ext_resource type="Texture2D" uid="uid://bm4bqm31ao5u7" path="res://Sprites/Buttons/Sequencer/clockStep1.png" id="1_gm0vw"]
+[ext_resource type="Script" uid="uid://1qu2f45erkju" path="res://Scripts/Editor/Sequencer/stepVisualizer.gd" id="1_td811"]
+[ext_resource type="Texture2D" uid="uid://cktgvo3vthdxs" path="res://Sprites/Buttons/Sequencer/stepHighlight.png" id="2_pux30"]
+[ext_resource type="Texture2D" uid="uid://dx1mvqq8tfbff" path="res://Sprites/Buttons/Sequencer/clockStep2.png" id="2_st7x7"]
+[ext_resource type="Texture2D" uid="uid://clyvgg6u7yof" path="res://Sprites/Buttons/Sequencer/clockStep3.png" id="3_td811"]
+[ext_resource type="Texture2D" uid="uid://c3loq1p4vumd2" path="res://Sprites/Buttons/Sequencer/clockStep4.png" id="4_pux30"]
+
+[node name="Cycle" type="Control"]
+custom_minimum_size = Vector2(108, 16)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_td811")
+
+[node name="Highlight" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+position = Vector2(8, 8)
+texture = ExtResource("2_pux30")
+
+[node name="I" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(8, 8)
+texture = ExtResource("1_gm0vw")
+
+[node name="II" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(36, 8)
+texture = ExtResource("2_st7x7")
+
+[node name="III" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(64, 8)
+texture = ExtResource("3_td811")
+
+[node name="IV" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(92, 8)
+texture = ExtResource("4_pux30")

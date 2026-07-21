@@ -9,6 +9,7 @@ const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
 const ECCENTRIC = preload("res://Scenes/Parts/Basement/Eccentric.tscn")
 const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
 const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
+const P_READER = preload("res://Scenes/Parts/Peripherals/ProgramReader.tscn")
 
 const pinTravel = 0.08
 const pinTravelSquared = pinTravel * pinTravel
@@ -144,7 +145,8 @@ func setVolume(newVal):
 func clear():
 	uuidManager.clear()
 	Global.editor.selector.deselect()
-	Global.editor.programInterface.clear()
+	Global.editor.sequencer.clear()
+	Global.editor.programmer.clear()
 	Global.editor.valueInterface.clear()
 	SheetLibrary.renderHandler.clearInstances()
 	PinRenderHandler.clearInstances()
@@ -210,9 +212,12 @@ func serialize(_path : String):
 		for relation in list:
 			outList.append(relation.serialize())
 		output["relations"] = outList
-	var sequences = Global.editor.programInterface.serialize()
+	var sequences = Global.editor.sequencer.serialize()
 	if !sequences.is_empty():
 		output["sequences"] = sequences
+	var programs = Global.editor.programmer.serialize()
+	if !programs.is_empty():
+		output["programs"] = programs
 	var values = Global.editor.valueInterface.serialize()
 	if !values.is_empty():
 		output["values"] = values
@@ -233,13 +238,17 @@ func deserialize(path):
 	var projectDirTemp = PathHandler.projectDir + "a.json"
 	var relations = []
 	var sequences = []
+	var programs = []
 	var values = {}
 	for entry in machinesDict:
 		if entry.has("relations"): # Relations entry
 			relations.append_array(entry["relations"])
 			continue
-		if entry.has("sequences"): # Relations entry
+		if entry.has("sequences"):
 			sequences.append_array(entry["sequences"])
+			continue
+		if entry.has("programs"):
+			programs.append_array(entry["programs"])
 			continue
 		if entry.has("values"):
 			values.merge(entry["values"])
@@ -280,7 +289,9 @@ func deserialize(path):
 			"spring":
 				A.addRelation(Relation.Type.Spring, B)
 	if !sequences.is_empty():
-		Global.editor.programInterface.call_deferred("deserialize", sequences)
+		Global.editor.sequencer.call_deferred("deserialize", sequences)
+	if !programs.is_empty():
+		Global.editor.programmer.call_deferred("deserialize", programs)
 	if !values.is_empty():
 		Global.editor.valueInterface.call_deferred("deserialize", values)
 	
@@ -384,6 +395,8 @@ func addPeripheral(type : int):
 			newPeripheral = P_INPUTEXPONENT.instantiate()
 		2:
 			newPeripheral = P_OUTPUTEXPONENT.instantiate()
+		3:
+			newPeripheral = P_READER.instantiate()
 	if newPeripheral == null: return
 	selectedLayer.addPart(newPeripheral)
 	return newPeripheral

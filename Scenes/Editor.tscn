@@ -106,11 +106,11 @@
 [ext_resource type="Texture2D" uid="uid://dw2shl5gx61yw" path="res://Sprites/Buttons/PlanInterface/scaleHandle_lit.png" id="59_pyiqs"]
 [ext_resource type="Texture2D" uid="uid://3rtr06md5j2c" path="res://Sprites/Buttons/Parts/globalPin_locked.png" id="60_36n1v"]
 [ext_resource type="Texture2D" uid="uid://b53eygwnjfjwg" path="res://Sprites/Buttons/Parts/clockPin_locked.png" id="64_ybrqq"]
-[ext_resource type="Script" uid="uid://byqm58pgi73or" path="res://Scripts/Editor/ProgramInterface/programInterface.gd" id="76_uima5"]
+[ext_resource type="Script" uid="uid://byqm58pgi73or" path="res://Scripts/Editor/Sequencer/sequencer.gd" id="76_uima5"]
 [ext_resource type="Script" uid="uid://xv8jqf1vcuuv" path="res://Scripts/Editor/settings.gd" id="77_rgbjt"]
-[ext_resource type="Texture2D" uid="uid://c5086h3nigrd7" path="res://Sprites/Buttons/ProgramInterface/add.png" id="77_uima5"]
+[ext_resource type="Texture2D" uid="uid://c5086h3nigrd7" path="res://Sprites/Buttons/Sequencer/add.png" id="77_uima5"]
 [ext_resource type="Texture2D" uid="uid://h0ki0tf2su2a" path="res://Sprites/Buttons/Generic/close.png" id="77_v2xkj"]
-[ext_resource type="Texture2D" uid="uid://c0j0rqw7w7le" path="res://Sprites/Buttons/ProgramInterface/add_lit.png" id="78_gidbq"]
+[ext_resource type="Texture2D" uid="uid://c0j0rqw7w7le" path="res://Sprites/Buttons/Sequencer/add_lit.png" id="78_gidbq"]
 [ext_resource type="Texture2D" uid="uid://y8nsrc447kmx" path="res://Sprites/Buttons/Parts/comment.png" id="78_qnh42"]
 [ext_resource type="Texture2D" uid="uid://cuww8ivyn1bu7" path="res://Sprites/Buttons/Generic/close_lit.png" id="78_rgbjt"]
 [ext_resource type="Texture2D" uid="uid://bu3bkckauy372" path="res://Sprites/Buttons/Parts/comment_active.png" id="79_5ko8x"]
@@ -130,19 +130,23 @@
 [ext_resource type="Texture2D" uid="uid://bwcse5b6j433x" path="res://Sprites/Buttons/Parts/outputExponent_active.png" id="99_6xrox"]
 [ext_resource type="Texture2D" uid="uid://cgpafnjqrekdb" path="res://Sprites/Buttons/Parts/eccentric_lit.png" id="99_mas1e"]
 [ext_resource type="Texture2D" uid="uid://cpcs7fidp6pm6" path="res://Sprites/Buttons/Parts/outputExponent_lit.png" id="100_cfdn2"]
-[ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/ProgramInterface/checkbox_checked.png" id="100_kkpsg"]
-[ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/ProgramInterface/checkbox_unchecked.png" id="101_msmja"]
-[ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/ProgramInterface/notch.png" id="102_u1ej8"]
+[ext_resource type="Texture2D" uid="uid://b8tnshlsqc04a" path="res://Sprites/Buttons/Sequencer/checkbox_checked.png" id="100_kkpsg"]
+[ext_resource type="Texture2D" uid="uid://g7x0d55x3vns" path="res://Sprites/Buttons/Sequencer/checkbox_unchecked.png" id="101_msmja"]
+[ext_resource type="Texture2D" uid="uid://c21jax338j5o0" path="res://Sprites/Buttons/Sequencer/notch.png" id="102_u1ej8"]
 [ext_resource type="Script" uid="uid://dspukpid4uh25" path="res://Scripts/Editor/helpWindow.gd" id="103_msmja"]
 [ext_resource type="Texture2D" uid="uid://cgjt6k6u2lf35" path="res://Sprites/Buttons/PlanInterface/selector_active.png" id="104_vrjel"]
 [ext_resource type="Texture2D" uid="uid://df4dqsivp1yqw" path="res://Sprites/Buttons/PlanInterface/edit_active.png" id="105_gsma0"]
 [ext_resource type="Texture2D" uid="uid://bsq0mlgm12i1n" path="res://Sprites/Buttons/PlanInterface/link_active.png" id="106_6x1oi"]
+[ext_resource type="Texture2D" uid="uid://mesquvskmyqt" path="res://Sprites/Buttons/Parts/reader.png" id="106_lte3c"]
 [ext_resource type="Texture2D" uid="uid://c7para4riaj2b" path="res://Sprites/Buttons/PlanInterface/Elements/circle_active.png" id="107_13gmj"]
+[ext_resource type="Texture2D" uid="uid://bfiwtlkluwfgb" path="res://Sprites/Buttons/Parts/reader_active.png" id="107_ixopf"]
+[ext_resource type="Texture2D" uid="uid://cwey2s3fmx4x0" path="res://Sprites/Buttons/Parts/reader_lit.png" id="108_kklpi"]
 [ext_resource type="Texture2D" uid="uid://bs65qo5j0sfmr" path="res://Sprites/Buttons/PlanInterface/Elements/rectangle_active.png" id="108_yjo3m"]
 [ext_resource type="Texture2D" uid="uid://dloyj7xrfjtfc" path="res://Sprites/Buttons/PlanInterface/Elements/line_active.png" id="109_66atf"]
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
 [ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
+[ext_resource type="Script" uid="uid://cetuxuiwg12my" path="res://Scripts/Editor/Programming/programmer.gd" id="123_ixopf"]
 [ext_resource type="Texture2D" uid="uid://bratdmc6cuuk7" path="res://Sprites/selectionBox.png" id="127_m3vij"]
 [ext_resource type="Texture2D" uid="uid://b08jemc6cnm77" path="res://Sprites/Buttons/Visibility/3DuiVis.png" id="130_00thf"]
 [ext_resource type="Texture2D" uid="uid://c5tmslgldndiv" path="res://Sprites/focusPoint.png" id="130_4ptxc"]
@@ -2269,6 +2273,13 @@ texture_normal = ExtResource("96_1q8bw")
 texture_pressed = ExtResource("99_6xrox")
 texture_hover = ExtResource("100_cfdn2")
 
+[node name="ProgramReader" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1186478368]
+layout_mode = 2
+tooltip_text = "Place output exponent slider"
+texture_normal = ExtResource("106_lte3c")
+texture_pressed = ExtResource("107_ixopf")
+texture_hover = ExtResource("108_kklpi")
+
 [node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent" unique_id=2065483624]
 own_world_3d = true
 transparent_bg = true
@@ -2423,9 +2434,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 0
+current_tab = 2
 
 [node name="Scene" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=818079262 node_paths=PackedStringArray("selector")]
+visible = false
 layout_mode = 2
 script = ExtResource("42_1bbve")
 selector = NodePath("../../../../../SelectionRay")
@@ -2455,10 +2467,38 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Programming" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=1091164312]
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming" unique_id=2086260484]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming/ScrollContainer" unique_id=585858295]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("123_ixopf")
+
+[node name="First" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming/ScrollContainer/ProgramInterface" unique_id=1436040116]
+layout_mode = 2
+
+[node name="Add" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming/ScrollContainer/ProgramInterface" unique_id=550461880]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Add new sequence"
+texture_normal = ExtResource("77_uima5")
+texture_pressed = ExtResource("78_gidbq")
+texture_hover = ExtResource("78_gidbq")
+
 [node name="Sequencer" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=1422343894]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 2
+metadata/_tab_index = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer" unique_id=1922896854]
 layout_mode = 1
@@ -2468,15 +2508,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ProgramInterface" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer" unique_id=159724309]
+[node name="SequenceInterface" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer" unique_id=159724309]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("76_uima5")
 
-[node name="First" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" unique_id=994186572]
+[node name="First" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/SequenceInterface" unique_id=994186572]
 layout_mode = 2
 
-[node name="Add" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" unique_id=1343947724]
+[node name="Add" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/SequenceInterface" unique_id=1343947724]
 layout_mode = 2
 size_flags_horizontal = 4
 tooltip_text = "Add new sequence"
@@ -2487,7 +2527,7 @@ texture_hover = ExtResource("78_gidbq")
 [node name="Values" type="Control" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer" unique_id=1548467709]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 4
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values" unique_id=1436319273]
 layout_mode = 1
@@ -3272,11 +3312,13 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Eccentric" to="." method="addEccentric"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/InputExponentSlider" to="." method="addExponentSlider" binds= [true]]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/OutputExponentSlider2" to="." method="addExponentSlider"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/ProgramReader" to="." method="addProgramReader"]
 [connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/ClockGizmo/TextFrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="value_changed" from="Camera3D/Interface/VisibilityParent/ClockGizmo/FrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_value_changed"]
 [connection signal="timeout" from="Camera3D/Interface/VisibilityParent/ClockGizmo/ValueTimeout" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_value_timeout_timeout"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/SideWindow/Hide" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_hide_toggled"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming/ScrollContainer/ProgramInterface/Add" to="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming/ScrollContainer/ProgramInterface" method="_on_add_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/SequenceInterface/Add" to="Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/SequenceInterface" method="_on_add_pressed"]
 [connection signal="button_down" from="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_move_button_button_down"]
 [connection signal="button_up" from="Camera3D/Interface/VisibilityParent/SideWindow/MoveButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_move_button_button_up"]
 [connection signal="button_down" from="Camera3D/Interface/VisibilityParent/SideWindow/RescaleButton" to="Camera3D/Interface/VisibilityParent/SideWindow" method="_on_rescale_button_button_down"]

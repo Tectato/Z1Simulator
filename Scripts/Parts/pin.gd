@@ -590,9 +590,10 @@ func getValidMoveDirections():
 
 func nudge():
 	if output and directionality > 0:
-		var cooldown = Simulator.getCooldown()
-		if cooldown > 0:
-			await get_tree().create_timer(cooldown).timeout
+		if inMotion:
+			var cooldown = Simulator.getCooldown()
+			if cooldown > 0:
+				await get_tree().create_timer(cooldown).timeout
 		var dirP
 		var dirN
 		var flipOrder = -1 if outputState else 1

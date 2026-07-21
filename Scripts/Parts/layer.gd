@@ -7,6 +7,7 @@ const PIN = preload("res://Scenes/Parts/Pin.tscn")
 const AUDIOHANDLER = preload("res://Scenes/SheetSoundHandler.tscn")
 const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
 const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
+const P_READER = preload("res://Scenes/Parts/Peripherals/ProgramReader.tscn")
 const ECCENTRIC = preload("res://Scenes/Parts/Basement/Eccentric.tscn")
 
 @onready var collider = $BoundingBox
@@ -139,7 +140,9 @@ func deserialize(source : Dictionary):
 					addPart(newPart)
 					newPart.deserialize(part)
 				3:
-					pass # Program reader
+					var newPart = P_READER.instantiate()
+					addPart(newPart)
+					newPart.deserialize(part)
 	if source.has("id"):
 		id = source["id"]
 	if source.has("plan"):

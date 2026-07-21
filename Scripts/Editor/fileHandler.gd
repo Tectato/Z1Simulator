@@ -55,6 +55,8 @@ func extractMachines(path : String):
 			out.append({"relations":source["relations"]})
 		if source.has("sequences"):
 			out.append({"sequences":source["sequences"]})
+		if source.has("programs"):
+			out.append({"programs":source["programs"]})
 		if source.has("values"):
 			out.append({"values":source["values"]})
 		return out

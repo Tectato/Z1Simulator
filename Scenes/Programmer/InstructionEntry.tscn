@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bx8ylcdh5ktkh"]
+
+[ext_resource type="Texture2D" uid="uid://bi0ks6nyku41a" path="res://Sprites/Buttons/Generic/delete.png" id="1_ehf5o"]
+[ext_resource type="Script" uid="uid://dro6vs3tejrs" path="res://Scripts/Editor/Programming/instructionEntry.gd" id="1_x2ar5"]
+[ext_resource type="Texture2D" uid="uid://cow8rpggsfal1" path="res://Sprites/Buttons/Generic/delete_lit.png" id="2_x2ar5"]
+[ext_resource type="Texture2D" uid="uid://cad1fg2jl0ihg" path="res://Sprites/Buttons/Generic/delete_active.png" id="3_a287q"]
+
+[node name="InstructionEntry" type="HBoxContainer" unique_id=2064692550]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x2ar5")
+
+[node name="ID" type="Label" parent="." unique_id=1004235600]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Input"
+
+[node name="Address" type="SpinBox" parent="." unique_id=1924637704]
+layout_mode = 2
+max_value = 63.0
+
+[node name="VSeparator5" type="VSeparator" parent="." unique_id=801669503]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+
+[node name="Delete" type="TextureButton" parent="." unique_id=1448129309]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete"
+texture_normal = ExtResource("1_ehf5o")
+texture_pressed = ExtResource("2_x2ar5")
+texture_hover = ExtResource("3_a287q")
+
+[connection signal="value_changed" from="Address" to="." method="_on_address_value_changed"]
+[connection signal="pressed" from="Delete" to="." method="delete"]

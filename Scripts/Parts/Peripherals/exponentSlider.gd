@@ -58,10 +58,7 @@ func serializeDiff():
 	return null
 
 func deserializeDiff(src : Dictionary):
-	for entry in src["inputs"]:
-		inputs[int(entry[0])].deserializeDiff(entry[1])
-	for entry in src["outputs"]:
-		outputs[int(entry[0])].deserializeDiff(entry[1])
+	super.deserializeDiff(src)
 	if src.has("value"): exponent = src["value"]
 	updateState()
 

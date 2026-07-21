@@ -11,6 +11,7 @@ var commentsVisible = true
 
 func _ready() -> void:
 	Global.workspace.commentVisChanged.connect(commentVisChanged)
+	Global.workspace.resolutionChanged.connect(resolutionChanged)
 
 func _process(_delta: float) -> void:
 	if commentsVisible:
@@ -24,6 +25,9 @@ func commentVisChanged(newVis):
 		focusedComment = null
 		displayBox.hide()
 
+func resolutionChanged(newRes):
+	clear_exceptions()
+
 func cast():
 	var hovered = get_viewport().gui_get_hovered_control()
 	var mousePos = get_viewport().get_mouse_position()
@@ -33,6 +37,9 @@ func cast():
 		position = Vector3.ZERO
 	target_position = camera.project_local_ray_normal(mousePos) * 100
 	force_raycast_update()
+	while get_collider() and !get_collider().is_visible_in_tree():
+		add_exception(get_collider())
+		force_raycast_update()
 	if !is_colliding():
 		if displayBox.visible:
 			if focusedComment:

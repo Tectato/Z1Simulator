@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://bgwu35odrq8ap"]
+
+[ext_resource type="Texture2D" uid="uid://bi0ks6nyku41a" path="res://Sprites/Buttons/Generic/delete.png" id="1_3on44"]
+[ext_resource type="Script" uid="uid://7a2obo56bxs8" path="res://Scripts/Editor/Programming/programEntry.gd" id="1_rexwq"]
+[ext_resource type="Texture2D" uid="uid://cow8rpggsfal1" path="res://Sprites/Buttons/Generic/delete_lit.png" id="2_m8bjl"]
+[ext_resource type="Theme" uid="uid://dsb4eep2yw4u5" path="res://Fonts/vanillaCheckboxTheme.tres" id="2_x3xcd"]
+[ext_resource type="Texture2D" uid="uid://cad1fg2jl0ihg" path="res://Sprites/Buttons/Generic/delete_active.png" id="3_e8jj8"]
+[ext_resource type="Texture2D" uid="uid://dfvxouehtb0dn" path="res://Sprites/Buttons/Programming/Instructions/input.png" id="4_m8bjl"]
+[ext_resource type="Texture2D" uid="uid://bda26qgsvab73" path="res://Sprites/Buttons/Programming/Instructions/output.png" id="5_go6lr"]
+[ext_resource type="Texture2D" uid="uid://dcwb45wdmff6o" path="res://Sprites/Buttons/Programming/Instructions/noop.png" id="5_kka6k"]
+[ext_resource type="Texture2D" uid="uid://ck6pfct1syr4t" path="res://Sprites/Buttons/Programming/Instructions/add.png" id="6_rexwq"]
+[ext_resource type="Texture2D" uid="uid://bittmu7talcig" path="res://Sprites/Buttons/Programming/Instructions/noop_active.png" id="7_gufe8"]
+[ext_resource type="Texture2D" uid="uid://bnw1u64kg847v" path="res://Sprites/Buttons/Programming/Instructions/sub.png" id="7_kka6k"]
+[ext_resource type="Texture2D" uid="uid://de6j7wvqa6klv" path="res://Sprites/Buttons/Programming/Instructions/noop_lit.png" id="8_tqfuk"]
+[ext_resource type="Texture2D" uid="uid://cnihxphjspt1b" path="res://Sprites/Buttons/Programming/Instructions/mult.png" id="8_x3xcd"]
+[ext_resource type="Texture2D" uid="uid://cnx5s322x740w" path="res://Sprites/Buttons/Programming/Instructions/div.png" id="9_p048m"]
+[ext_resource type="Texture2D" uid="uid://gwq7w41jvx2w" path="res://Sprites/Buttons/Programming/Instructions/input_active.png" id="10_2ujb1"]
+[ext_resource type="Texture2D" uid="uid://bufa3wwqd1s1c" path="res://Sprites/Buttons/Programming/Instructions/read.png" id="10_gkyyh"]
+[ext_resource type="Texture2D" uid="uid://lxx3sr1jd1s3" path="res://Sprites/Buttons/Programming/Instructions/write.png" id="11_cp0n0"]
+[ext_resource type="Texture2D" uid="uid://b0rashdyrro6y" path="res://Sprites/Buttons/Programming/Instructions/input_lit.png" id="11_m0nol"]
+[ext_resource type="Texture2D" uid="uid://bxrf4c1qaymer" path="res://Sprites/Buttons/Programming/Instructions/output_active.png" id="13_g6slg"]
+[ext_resource type="Texture2D" uid="uid://d3j4vf5fo5tn5" path="res://Sprites/Buttons/Programming/Instructions/output_lit.png" id="14_43ee0"]
+[ext_resource type="Texture2D" uid="uid://dh4rrtg8tkgig" path="res://Sprites/Buttons/Programming/Instructions/add_active.png" id="16_iwemc"]
+[ext_resource type="Texture2D" uid="uid://bqan0bae0tt4f" path="res://Sprites/Buttons/Programming/Instructions/add_lit.png" id="17_axj5t"]
+[ext_resource type="Texture2D" uid="uid://cjgy5fsbvxys3" path="res://Sprites/Buttons/Programming/Instructions/sub_active.png" id="19_6wmwg"]
+[ext_resource type="Texture2D" uid="uid://bg7y46al5b8kv" path="res://Sprites/Buttons/Programming/Instructions/sub_lit.png" id="20_booru"]
+[ext_resource type="Texture2D" uid="uid://h6t1wo2nojlk" path="res://Sprites/Buttons/Programming/Instructions/mult_active.png" id="22_ghl1w"]
+[ext_resource type="Texture2D" uid="uid://dqjicxw51s102" path="res://Sprites/Buttons/Programming/Instructions/mult_lit.png" id="23_wu0gh"]
+[ext_resource type="Texture2D" uid="uid://dx7421xyd36hk" path="res://Sprites/Buttons/Programming/Instructions/div_active.png" id="25_7xlrj"]
+[ext_resource type="Texture2D" uid="uid://sge0y2r5fjy3" path="res://Sprites/Buttons/Programming/Instructions/div_lit.png" id="26_7ie7t"]
+[ext_resource type="Texture2D" uid="uid://dpovs8qrxoqpc" path="res://Sprites/Buttons/Programming/Instructions/read_active.png" id="28_cwkxm"]
+[ext_resource type="Texture2D" uid="uid://ce841hvnd4nnu" path="res://Sprites/Buttons/Programming/Instructions/read_lit.png" id="29_x8l0b"]
+[ext_resource type="Texture2D" uid="uid://ekainir5to22" path="res://Sprites/Buttons/Programming/Instructions/write_active.png" id="31_fi3pw"]
+[ext_resource type="Texture2D" uid="uid://c6agawoo821jw" path="res://Sprites/Buttons/Programming/Instructions/write_lit.png" id="32_6mu4s"]
+
+[node name="ProgramEntry" type="FoldableContainer" unique_id=2000519424]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rexwq")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1250083055]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="VBox" unique_id=159288388]
+layout_mode = 2
+
+[node name="ID" type="LineEdit" parent="VBox/Header" unique_id=1722741600]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Program"
+placeholder_text = "Program name"
+
+[node name="Label" type="Label" parent="VBox/Header" unique_id=89863450]
+layout_mode = 2
+text = "Selected:"
+
+[node name="Selected" type="CheckBox" parent="VBox/Header" unique_id=1874360790]
+texture_filter = 1
+layout_mode = 2
+theme = ExtResource("2_x3xcd")
+
+[node name="VSeparator4" type="VSeparator" parent="VBox/Header" unique_id=1330530791]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+
+[node name="Delete" type="TextureButton" parent="VBox/Header" unique_id=1503291727]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Delete"
+texture_normal = ExtResource("1_3on44")
+texture_pressed = ExtResource("2_m8bjl")
+texture_hover = ExtResource("3_e8jj8")
+
+[node name="AddInstruction" type="HBoxContainer" parent="VBox" unique_id=1013862683]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="NoOp" type="TextureButton" parent="VBox/AddInstruction" unique_id=730797717]
+layout_mode = 2
+tooltip_text = "No Operation"
+texture_normal = ExtResource("5_kka6k")
+texture_pressed = ExtResource("7_gufe8")
+texture_hover = ExtResource("8_tqfuk")
+
+[node name="Input" type="TextureButton" parent="VBox/AddInstruction" unique_id=2083301623]
+layout_mode = 2
+tooltip_text = "Read input"
+texture_normal = ExtResource("4_m8bjl")
+texture_pressed = ExtResource("10_2ujb1")
+texture_hover = ExtResource("11_m0nol")
+
+[node name="Output" type="TextureButton" parent="VBox/AddInstruction" unique_id=605735291]
+layout_mode = 2
+tooltip_text = "Show output"
+texture_normal = ExtResource("5_go6lr")
+texture_pressed = ExtResource("13_g6slg")
+texture_hover = ExtResource("14_43ee0")
+
+[node name="Add" type="TextureButton" parent="VBox/AddInstruction" unique_id=354353432]
+layout_mode = 2
+tooltip_text = "Add"
+texture_normal = ExtResource("6_rexwq")
+texture_pressed = ExtResource("16_iwemc")
+texture_hover = ExtResource("17_axj5t")
+
+[node name="Sub" type="TextureButton" parent="VBox/AddInstruction" unique_id=155290754]
+layout_mode = 2
+tooltip_text = "Subtract"
+texture_normal = ExtResource("7_kka6k")
+texture_pressed = ExtResource("19_6wmwg")
+texture_hover = ExtResource("20_booru")
+
+[node name="Mult" type="TextureButton" parent="VBox/AddInstruction" unique_id=2028727684]
+layout_mode = 2
+tooltip_text = "Multiply"
+texture_normal = ExtResource("8_x3xcd")
+texture_pressed = ExtResource("22_ghl1w")
+texture_hover = ExtResource("23_wu0gh")
+
+[node name="Div" type="TextureButton" parent="VBox/AddInstruction" unique_id=585619655]
+layout_mode = 2
+tooltip_text = "Divide"
+texture_normal = ExtResource("9_p048m")
+texture_pressed = ExtResource("25_7xlrj")
+texture_hover = ExtResource("26_7ie7t")
+
+[node name="Read" type="TextureButton" parent="VBox/AddInstruction" unique_id=1399810261]
+layout_mode = 2
+tooltip_text = "Read from memory"
+texture_normal = ExtResource("10_gkyyh")
+texture_pressed = ExtResource("28_cwkxm")
+texture_hover = ExtResource("29_x8l0b")
+
+[node name="Write" type="TextureButton" parent="VBox/AddInstruction" unique_id=345429699]
+layout_mode = 2
+tooltip_text = "Write to memory"
+texture_normal = ExtResource("11_cp0n0")
+texture_pressed = ExtResource("31_fi3pw")
+texture_hover = ExtResource("32_6mu4s")
+
+[node name="Address" type="SpinBox" parent="VBox/AddInstruction" unique_id=2136931138]
+layout_mode = 2
+tooltip_text = "Memory address"
+max_value = 63.0
+
+[connection signal="toggled" from="VBox/Header/Selected" to="." method="select_toggled"]
+[connection signal="pressed" from="VBox/Header/Delete" to="." method="delete"]
+[connection signal="pressed" from="VBox/AddInstruction/NoOp" to="." method="addInstruction" binds= [0]]
+[connection signal="pressed" from="VBox/AddInstruction/Input" to="." method="addInstruction" binds= [1]]
+[connection signal="pressed" from="VBox/AddInstruction/Output" to="." method="addInstruction" binds= [2]]
+[connection signal="pressed" from="VBox/AddInstruction/Add" to="." method="addInstruction" binds= [3]]
+[connection signal="pressed" from="VBox/AddInstruction/Sub" to="." method="addInstruction" binds= [4]]
+[connection signal="pressed" from="VBox/AddInstruction/Mult" to="." method="addInstruction" binds= [5]]
+[connection signal="pressed" from="VBox/AddInstruction/Div" to="." method="addInstruction" binds= [6]]
+[connection signal="pressed" from="VBox/AddInstruction/Read" to="." method="addInstruction" binds= [7]]
+[connection signal="pressed" from="VBox/AddInstruction/Write" to="." method="addInstruction" binds= [8]]

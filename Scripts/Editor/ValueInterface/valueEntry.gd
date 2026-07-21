@@ -1,7 +1,7 @@
 extends FoldableContainer
 class_name ValueEntry
 
-const BIT_CHECKBOX = preload("res://Scenes/ProgramInterface/PinCheckbox.tscn")
+const BIT_CHECKBOX = preload("res://Scenes/Sequencer/PinCheckbox.tscn")
 
 @onready var dec = $VBox/Value/Dec
 @onready var bin = $VBox/Value/Bin

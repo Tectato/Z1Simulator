@@ -61,10 +61,25 @@ func deserialize(src : Dictionary):
 			outputs[i].deserialize(srcOutputs[i])
 
 func serializeDiff():
+	var out = {
+		"inputs" : [],
+		"outputs" : []
+	}
+	for i in len(inputs):
+		var pinDiff = inputs[i].serializeDiff()
+		if pinDiff: out["inputs"].append([i, pinDiff])
+	for i in len(outputs):
+		var pinDiff = outputs[i].serializeDiff()
+		if pinDiff: out["outputs"].append([i, pinDiff])
+	if !out["inputs"].is_empty() or !out["outputs"].is_empty():
+		return {uuid:out}
 	return null
 
 func deserializeDiff(src : Dictionary):
-	pass
+	for entry in src["inputs"]:
+		inputs[int(entry[0])].deserializeDiff(entry[1])
+	for entry in src["outputs"]:
+		outputs[int(entry[0])].deserializeDiff(entry[1])
 
 func grabUUID():
 	if uuid < 0:
@@ -75,8 +90,10 @@ func pinInput(pin : Pin):
 
 func place():
 	for pin in inputs:
+		pin.layer = layer
 		pin.place()
 	for pin in outputs:
+		pin.layer = layer
 		pin.place()
 
 func delete():

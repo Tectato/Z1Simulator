@@ -50,7 +50,7 @@ collider = NodePath("Area3D")
 mesh = NodePath("MeshInstance3D")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=933310646]
-collision_layer = 3
+collision_layer = 32
 collision_mask = 0
 monitoring = false
 monitorable = false

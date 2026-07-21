@@ -6,7 +6,8 @@ class_name Editor
 @onready var selector = $Camera3D/SelectionRay
 @onready var tree = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Scene
 @onready var planInterface = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Plan/PlanInterface
-@onready var programInterface = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/ProgramInterface
+@onready var sequencer = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Sequencer/ScrollContainer/SequenceInterface
+@onready var programmer = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Programming/ScrollContainer/ProgramInterface
 @onready var valueInterface = $Camera3D/Interface/VisibilityParent/SideWindow/TabContainer/Values/ScrollContainer/ValueInterface
 @onready var powerFlow = $PowerFlowVis
 var tempProjectPath = ""
@@ -163,6 +164,11 @@ func addExponentSlider(input = false):
 	saved = false
 	selector.place(workspace.addPeripheral(1 if input else 2))
 	previousAction = addExponentSlider
+
+func addProgramReader() -> void:
+	saved = false
+	selector.place(workspace.addPeripheral(3))
+	previousAction = addProgramReader
 
 func addMachine():
 	workspace.createNew()

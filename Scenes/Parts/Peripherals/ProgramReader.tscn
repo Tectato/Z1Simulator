@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://ddbao1ll3ql2g"]
+
+[ext_resource type="Script" uid="uid://chscl77q1pcee" path="res://Scripts/Parts/Peripherals/programReader.gd" id="1_h45j8"]
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="1_prl8f"]
+[ext_resource type="Script" uid="uid://dlnhci2g6lkrq" path="res://Scripts/Simulation/Program/program.gd" id="2_67qrf"]
+[ext_resource type="Script" uid="uid://l6fb0y0o2qx4" path="res://Scripts/Simulation/Program/instruction.gd" id="2_n8cvq"]
+[ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="5_4c02h"]
+
+[sub_resource type="Resource" id="Resource_4c02h"]
+script = ExtResource("2_n8cvq")
+type = 65
+metadata/_custom_type_script = "uid://l6fb0y0o2qx4"
+
+[sub_resource type="Resource" id="Resource_pcqj8"]
+script = ExtResource("2_n8cvq")
+type = 128
+address = 60
+metadata/_custom_type_script = "uid://l6fb0y0o2qx4"
+
+[sub_resource type="Resource" id="Resource_n8cvq"]
+script = ExtResource("2_67qrf")
+instructions = Array[ExtResource("2_n8cvq")]([SubResource("Resource_4c02h"), SubResource("Resource_pcqj8")])
+metadata/_custom_type_script = "uid://dlnhci2g6lkrq"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h45j8"]
+size = Vector3(0.9, 0.3, 1.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pcqj8"]
+size = Vector3(0.9, 0.01, 1.2)
+
+[node name="ProgramReader" type="Node3D" unique_id=1200068895 node_paths=PackedStringArray("inputs", "outputs", "collider")]
+script = ExtResource("1_h45j8")
+program = SubResource("Resource_n8cvq")
+inputs = [NodePath("Inputs/Set"), NodePath("Inputs/Advance")]
+outputs = [NodePath("Opcode/Pin"), NodePath("Opcode/Pin2"), NodePath("Opcode/Pin3"), NodePath("Opcode/Pin4"), NodePath("Opcode/Pin5"), NodePath("Opcode/Pin6"), NodePath("Opcode/Pin7"), NodePath("Opcode/Pin8")]
+collider = NodePath("Area3D")
+
+[node name="Opcode" type="Node3D" parent="." unique_id=1693911732]
+
+[node name="Pin" parent="Opcode" unique_id=805540248 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
+
+[node name="Pin2" parent="Opcode" unique_id=618755978 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
+
+[node name="Pin3" parent="Opcode" unique_id=1259592631 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.6)
+
+[node name="Pin4" parent="Opcode" unique_id=172343809 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
+
+[node name="Pin5" parent="Opcode" unique_id=727440288 instance=ExtResource("1_prl8f")]
+
+[node name="Pin6" parent="Opcode" unique_id=592803751 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3)
+
+[node name="Pin7" parent="Opcode" unique_id=1322479302 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
+
+[node name="Pin8" parent="Opcode" unique_id=1587057911 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.9)
+
+[node name="Inputs" type="Node3D" parent="." unique_id=2046813085]
+
+[node name="Set" parent="Inputs" unique_id=1406902947 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0.9)
+
+[node name="Advance" parent="Inputs" unique_id=1980238348 instance=ExtResource("1_prl8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0.9)
+
+[node name="Reset" parent="." unique_id=490697296 instance=ExtResource("5_4c02h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.1, 0)
+
+[node name="Label3D" parent="Reset" index="1" unique_id=1904010434]
+text = "Reset"
+
+[node name="Area3D" type="Area3D" parent="." unique_id=2107189499]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=145492277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.15, 0)
+shape = SubResource("BoxShape3D_h45j8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=915560763]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0)
+mesh = SubResource("BoxMesh_pcqj8")
+
+[connection signal="clicked" from="Reset" to="." method="_on_reset_clicked"]
+
+[editable path="Reset"]
