@@ -104,7 +104,8 @@ func importProjectInstace(srcPath = ""):
 	var path = tempProjectPath if srcPath.length() < 1 else srcPath
 	PathHandler.setProjectDir(path)
 	saved = false
-	workspace.importMachines(FileHandler.extractMachines(path))
+	#workspace.importMachines(FileHandler.extractMachines(path))
+	workspace.importProject(path)
 	updateSceneTree()
 	previousAction = doNothing
 	loading = false

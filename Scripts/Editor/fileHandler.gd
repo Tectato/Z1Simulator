@@ -28,7 +28,7 @@ func extractMachines(path : String):
 				var newMachine = {}
 				if machine.has("path"):
 					if machine["path"] == null: continue
-					newMachine["machine"] = loadMachineFile(PathHandler.toAbsolutePath(machine["path"]))
+					#newMachine["machine"] = loadMachineFile(PathHandler.toAbsolutePath(machine["path"]))
 					newMachine["pos_x"] = machine["pos_x"]
 					if machine.has("pos_y"):
 						newMachine["pos_y"] = machine["pos_y"]
@@ -43,6 +43,8 @@ func extractMachines(path : String):
 						newMachine["currentStepOverride"] = machine["currentStepOverride"]
 					if machine.has("diff"):
 						newMachine["diff"] = machine["diff"]
+					if machine.has("overrides"):
+						newMachine["overrides"] = machine["overrides"]
 					out.append(newMachine)
 				else:
 					machine["instance"] = false
@@ -70,32 +72,32 @@ func loadMachineFile(path : String):
 		return
 	if !source.has("id"):
 		if source.has("machines"):
-			return source["machines"][0]["machine"] #TODO: Recursive project loading
+			return source["machines"]#[0]["machine"] #TODO: Recursive project loading
 		print("Invalid machine file")
 		return
 	return source
 
-func compile(machines : Array):
+func compile(machines : Array, projects : Array):
 	var out = []
 	for entry in machines:
 		var rotation = entry.rotation.y
 		rotation = rotation/(PI/2)
 		rotation += 4
 		rotation = int(rotation)%4
-		if entry.importedInstance:
-			out.append({
-				"path":PathHandler.toRelativePath(entry.fullPath),
-				"pos_x":entry.global_position.x,
-				"pos_y":entry.global_position.y,
-				"pos_z":entry.global_position.z,
-				"rotation":rotation,
-				"currentStepOverride":entry.clock.getCurrentStep(),
-				"uuid":entry.uuid
-			})
-			if Global.workspace.saveDiff:
-				var diff = entry.serializeDiff()
-				if diff:
-					out.back()["diff"] = diff
+		if entry.importedInstance: continue
+			#out.append({
+				#"path":PathHandler.toRelativePath(entry.fullPath),
+				#"pos_x":entry.global_position.x,
+				#"pos_y":entry.global_position.y,
+				#"pos_z":entry.global_position.z,
+				#"rotation":rotation,
+				##"currentStepOverride":entry.clock.getCurrentStep(),
+				#"uuid":entry.uuid
+			#})
+			#if Global.workspace.saveDiff:
+				#var diff = entry.serializeDiff()
+				#if diff:
+					#out.back()["diff"] = diff
 		else:
 			out.append({
 				"machine":entry.serialize(),
@@ -106,6 +108,21 @@ func compile(machines : Array):
 				"currentStepOverride":entry.clock.getCurrentStep(),
 				"uuid":entry.uuid
 			})
+	for project in projects:
+		out.append({
+			"path":PathHandler.toRelativePath(project.path),
+			"pos_x" : ("%0.4f" % project.totalOffset.x).rstrip("0"),
+			"pos_y" : ("%0.4f" % project.totalOffset.y).rstrip("0"),
+			"pos_z" : ("%0.4f" % project.totalOffset.z).rstrip("0"),
+			#"rotation":rotation,
+			#"currentStepOverride":entry.clock.getCurrentStep(),
+			"uuid":project.uuid,
+			"overrides":project.serialize()
+		})
+		if Global.workspace.saveDiff:
+			var diff = project.serializeDiff()
+			if diff:
+				out.back()["diff"] = diff
 	return out
 
 #func writeConfig():

@@ -15,6 +15,7 @@ const COMMENT = preload("res://Scenes/Visualisation/CommentBox.tscn")
 @onready var clock = $Clock
 
 var id = ""
+var srcUUID = -1
 var uuid = -1
 var dir = ""
 var fullPath = ""
@@ -27,10 +28,13 @@ var beingDeleted = false
 var deserializing = false
 var colliderUpdateScheduled = false
 var importedInstance = false # If true, cannot be modified
+var previousPos : Vector3
+var parent : Project
 
 var gizmo
 
 func _ready() -> void:
+	previousPos = position
 	frame.fixed = true
 	frame.machine = self
 	if uuid < 0:
@@ -187,8 +191,8 @@ func serialize(path = null):
 		"id" : id,
 		"layers" : layersOut,
 		"globalPins" : globalPinsOut,
-		"clockPins" : clockPinsOut,
-		"currentClockStep" : clock.getCurrentStep()
+		"clockPins" : clockPinsOut#,
+		#"currentClockStep" : clock.getCurrentStep()
 	}
 	if !relations.is_empty():
 		output["relations"] = relations.keys()
@@ -354,7 +358,10 @@ func getBounds():
 
 func place():
 	updateCollider()
-	pass
+	if parent:
+		var posDiff = position - previousPos
+		parent.machineMoved(self, posDiff)
+		previousPos = position
 
 func snap(srcPos):
 	global_position = srcPos
@@ -382,6 +389,8 @@ func delete(): #TODO: prompt for confirmation or undo
 	clock.delete()
 	if gizmo:
 		gizmo.free()
+	if parent:
+		parent.removeMachine(self)
 	queue_free()
 
 func getMachine():

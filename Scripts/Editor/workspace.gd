@@ -1,6 +1,7 @@
 extends Node3D
 class_name Workspace
 
+const PROJECT = preload("res://Scenes/Project.tscn")
 const MACHINE = preload("res://Scenes/Machine.tscn")
 const SHEET = preload("res://Scenes/Parts/Sheet.tscn")
 const PIN = preload("res://Scenes/Parts/Pin.tscn")
@@ -62,6 +63,7 @@ signal worldUIVisChanged(newVis)
 
 signal updateAABBs
 
+var projects = []
 var machines = []
 var interMachineRelations = {}
 var selectedMachine : Machine
@@ -151,7 +153,11 @@ func clear():
 	SheetLibrary.renderHandler.clearInstances()
 	PinRenderHandler.clearInstances()
 	while !machines.is_empty():
-		machines[0].delete()
+		var toRemove = machines.pop_back()
+		if toRemove: toRemove.delete()
+	while !projects.is_empty():
+		var toRemove = projects.pop_back()
+		if toRemove: toRemove.delete()
 	Simulator.reset()
 	interMachineRelations.clear()
 	selectedMachine = null
@@ -173,7 +179,7 @@ func exists(object):
 
 func serialize(_path : String):
 	Global.unnamedIDs.clear()
-	var machineEntries = FileHandler.compile(machines)
+	var machineEntries = FileHandler.compile(machines, projects)
 	#if machines.size() > 1:
 		#var machinesDir = path.get_file().trim_suffix(".json") + "_machines"
 		#var dir = DirAccess.open(path.get_base_dir())
@@ -223,7 +229,7 @@ func serialize(_path : String):
 		output["values"] = values
 	return output
 
-func deserialize(path):
+func deserialize(path, parent = self):
 	#var source = JSON.parse_string(FileAccess.get_file_as_string(path))
 	#if source["machines"] is Array:
 		#for machine in source["machines"]:
@@ -253,22 +259,44 @@ func deserialize(path):
 		if entry.has("values"):
 			values.merge(entry["values"])
 			continue
-		var machinePath = ""
-		if entry["instance"]:
-			machinePath = PathHandler.toAbsolutePath(entry["path"])
-			PathHandler.setProjectDir(machinePath)
 		var diff = entry["diff"] if entry.has("diff") else null
-		var newMachine = importMachine(entry["machine"], entry["instance"], machinePath, diff)
-		if entry.has("uuid"):
-			newMachine.uuid = int(entry["uuid"])
-			uuidManager.registerID(newMachine, newMachine.uuid)
-		#newMachine.snap()
-		newMachine.call_deferred("snap", Vector3(entry["pos_x"], entry["pos_y"] if entry.has("pos_y") else 0, entry["pos_z"]))
-		if entry.has("rotation"):
-			newMachine.rotatePart(entry["rotation"]*(PI/2))
-		if entry.has("currentStepOverride"):
-			newMachine.clock.catchUpTo(int(entry["currentStepOverride"]))
-			pass
+		var projectPath = ""
+		if entry["instance"]:
+			projectPath = PathHandler.toAbsolutePath(entry["path"])
+			PathHandler.setProjectDir(projectPath)
+			var project = PROJECT.instantiate()
+			if parent == self: projects.append(project)
+			project.setPath(entry["path"])
+			if parent is Project:
+				parent.addProject(project)
+			else:
+				parent.add_child(project)
+			project.setup(parent)
+			await deserialize(projectPath, project)
+			if entry.has("overrides"):
+				project.deserialize(entry["overrides"])
+			elif entry.has("uuid"):
+				project.srcUUID = int(entry["uuid"])
+				project.uuid = int(entry["uuid"])
+				if project.machines.size() == 1: # Legacy behavior
+					uuidManager.registerID(project.machines[0], project.srcUUID)
+				else:
+					uuidManager.registerID(project, project.srcUUID)
+			if diff:
+				project.deserializeDiff(diff)
+			project.applyOffset(null, Vector3(float(entry["pos_x"]), float(entry["pos_y"]) if entry.has("pos_y") else 0, float(entry["pos_z"])))
+			if project.topLevelInstance: project.totalOffset = Vector3(float(entry["pos_x"]), float(entry["pos_y"]) if entry.has("pos_y") else 0, float(entry["pos_z"]))
+		else:
+			var newMachine = importMachine(entry["machine"], entry["instance"], "", diff, parent)
+			if entry.has("uuid"):
+				newMachine.uuid = int(entry["uuid"])
+				uuidManager.registerID(newMachine, newMachine.uuid)
+			#newMachine.snap()
+			newMachine.call_deferred("snap", Vector3(entry["pos_x"], entry["pos_y"] if entry.has("pos_y") else 0, entry["pos_z"]))
+			if entry.has("rotation"):
+				newMachine.rotatePart(entry["rotation"]*(PI/2))
+			if entry.has("currentStepOverride"):
+				newMachine.clock.catchUpTo(int(entry["currentStepOverride"]))
 		PathHandler.setProjectDir(projectDirTemp)
 		await get_tree().process_frame
 	if !machines.is_empty():
@@ -314,11 +342,26 @@ func importMachines(src):
 		if entry.has("currentStepOverride"):
 			pass
 
-func importMachine(src, instance = false, path = "", diff = null):
+func importProject(path):
+	var project = PROJECT.instantiate()
+	projects.append(project)
+	project.setPath(path)
+	add_child(project)
+	project.setup(self)
+	uuidManager.request(project, true)
+	await deserialize(path, project)
+
+func removeProject(project : Project):
+	projects.erase(project)
+
+func importMachine(src, instance = false, path = "", diff = null, parent = self):
 	var newMachine = MACHINE.instantiate()
-	machines.append(newMachine)
-	add_child(newMachine)
-	newMachine.importedInstance = instance
+	if parent is Project:
+		parent.addMachine(newMachine)
+	else:
+		machines.append(newMachine)
+		parent.add_child(newMachine)
+	newMachine.importedInstance = instance or parent != self
 	newMachine.fullPath = path
 	if src is String:
 		newMachine.deserialize(src) # TODO: check whether machine or project

@@ -430,6 +430,7 @@ func paste():
 		elif part is Eccentric:
 				selected.append(Global.workspace.addEccentric())
 		var newPart = selected.back()
+		if !newPart: continue
 		newPart.rotation = part.rotation
 		newPart.setSelected(true)
 		newPart.setFixed(part.fixed)

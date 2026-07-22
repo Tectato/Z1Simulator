@@ -91,8 +91,9 @@ func _on_add_float_toggled(toggled_on: bool) -> void:
 	creatingFloatToggled.emit(creatingFloat)
 
 func findValue(machineUUID, valueName):
+	var candidate = Global.workspace.uuidManager.getPart(machineUUID)
 	for machine in machineEntries:
-		if machine.uuid == machineUUID:
+		if machine.uuid == machineUUID or (candidate and candidate.srcUUID == machineUUID):
 			for value in machineEntries[machine].values:
 				if value.idBox.text == valueName:
 					return value
