@@ -5,7 +5,7 @@ uniform sampler2D albedo : source_color, filter_nearest;
 const float scale = 3.333;
 const vec3 tint = vec3(0.05,0.05,0.1);
 const vec3 standardColor = vec3(0.05,0.05,0.05);
-const float compatMult = 4.0;
+const float compatMult = 4.0; // compat: 4.0, forward: 1.0
 uniform bool applyTint = false;
 varying vec3 worldPos;
 

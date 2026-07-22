@@ -13,7 +13,5 @@ sky = SubResource("Sky_rh7oy")
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 reflected_light_source = 2
-ssao_enabled = true
 ssao_radius = 0.16
-ssao_intensity = 4.3
 ssao_light_affect = 1.0

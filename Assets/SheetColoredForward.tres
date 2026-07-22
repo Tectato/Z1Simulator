@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c3phko5b6d2ns"]
+
+[ext_resource type="Shader" uid="uid://bng6hy14v3mkx" path="res://Shaders/SheetMesh/ForwardColorcoded.gdshader" id="1_ringu"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ringu")
+shader_parameter/outline_threshold = 0.2

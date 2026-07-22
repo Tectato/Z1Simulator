@@ -1,11 +1,10 @@
-[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://38ft0gv8apta"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://38ft0gv8apta"]
 
 [ext_resource type="Shader" uid="uid://c0as0wcvcqixi" path="res://Shaders/SheetMeshOutlinePass.gdshader" id="1_dppbc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_uai6l"]
 render_priority = 0
 shader = ExtResource("1_dppbc")
-shader_parameter/outline_threshold = 0.8
 
 [resource]
 resource_local_to_scene = true

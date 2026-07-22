@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cdolgrtf4ryr4" path="res://Scripts/Editor/workspace.gd" id="1_lxv6g"]
 [ext_resource type="PackedScene" uid="uid://b3mp481i5xfq" path="res://Scenes/Parts/Baseplate.tscn" id="2_fpxkw"]
-[ext_resource type="Environment" uid="uid://dk7y0ukitmi7n" path="res://Assets/LowQEnv.tres" id="3_jtmtj"]
+[ext_resource type="Environment" uid="uid://dk7y0ukitmi7n" path="res://Assets/LowQEnv.tres" id="3_f7yrp"]
 [ext_resource type="PackedScene" uid="uid://b6256ek8c667t" path="res://Scenes/UUIDManager.tscn" id="4_me6lg"]
 [ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="6_fpxkw"]
 [ext_resource type="Texture2D" uid="uid://djqys18a08smf" path="res://Sprites/arrow.png" id="6_lxv6g"]
@@ -27,7 +27,7 @@ shader_parameter/thickness = 0.02
 [sub_resource type="BoxMesh" id="BoxMesh_puuh0"]
 size = Vector3(0.05, 0.05, 0.05)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ruixb"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f7yrp"]
 resource_local_to_scene = true
 render_priority = 4
 shader = ExtResource("11_ruixb")
@@ -57,7 +57,7 @@ shadow_blur = 0.606
 directional_shadow_mode = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=881461426]
-environment = ExtResource("3_jtmtj")
+environment = ExtResource("3_f7yrp")
 
 [node name="Axes" type="Sprite3D" parent="." unique_id=1341383534]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.009800587, 0)
@@ -133,7 +133,7 @@ script = null
 
 [node name="Sprite3D" parent="ShaderPrep/Sheet" index="0" unique_id=248117127]
 visible = true
-material_overlay = SubResource("ShaderMaterial_ruixb")
+material_overlay = SubResource("ShaderMaterial_f7yrp")
 
 [node name="PowerFlow" type="MeshInstance3D" parent="ShaderPrep" unique_id=285898234]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43804374, 0, 0)

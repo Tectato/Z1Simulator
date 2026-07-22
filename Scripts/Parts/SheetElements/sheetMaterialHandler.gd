@@ -4,13 +4,13 @@ extends GeometryInstance3D
 #@export var materialShaded : Material
 
 @onready var parent = get_parent()
-#const standardColor = Color(0.078, 0.257, 0.71, 1.0)
+#const standardColor = Color(0.078, 0.257, 0.71, 1.0) # Forward?
 #const standardColor = Color(0.239, 0.411, 0.834, 1.0)
-const standardColor = Color(0.22, 0.518, 0.918, 1.0)
+const standardColor = Color(0.22, 0.518, 0.918, 1.0) # Compat
 #const standardColor = Color("3d9ee2ff")
 var markerColor = standardColor
 var currentColor = standardColor
-var fixedFac = 0.7 #0.5
+var fixedFac = 0.7 #Forward: 0.5 Compat: 0.7
 
 func visModeChanged(mode : Editor.VisMode):
 	updateMaterial()

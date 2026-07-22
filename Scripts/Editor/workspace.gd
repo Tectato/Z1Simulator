@@ -83,6 +83,8 @@ func visModeChanged(mode : Editor.VisMode):
 	$DirectionalLight3D.shadow_enabled = shaded
 	if compatibility_mode:
 		$DirectionalLight3D.light_energy = 0.3 if shaded else 1.0
+	else:
+		$DirectionalLight3D.light_energy = 1.0 if shaded else 1.0
 	$WorldEnvironment.environment.ssao_enabled = shaded
 
 func setResolution(newRes):
