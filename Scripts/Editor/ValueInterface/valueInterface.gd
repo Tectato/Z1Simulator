@@ -14,22 +14,29 @@ signal creatingFloatToggled(bool)
 func serialize():
 	var out = {}
 	for machine in machineEntries:
-		out[machine.uuid] = machineEntries[machine].serialize()
+		var serialized = machineEntries[machine].serialize()
+		if !serialized.is_empty():
+			out[machine.uuid] = serialized
 	if compoundCategory:
-		out["compoundValues"] = compoundCategory.serialize()
+		var serialized = compoundCategory.serialize()
+		if !serialized.is_empty():
+			out["compoundValues"] = serialized
 	return out
 
-func deserialize(src):
+func deserialize(args : Array): # [src : Dict, imported : bool]
+	var src = args[0]
+	var imported = args[1]
 	for uuid in src:
 		if uuid == null: continue
 		if uuid == "compoundValues":
 			addCompoundCategory()
-			compoundCategory.deserialize(src[uuid])
+			compoundCategory.deserialize(src[uuid], imported)
 			continue
 		var machine = Global.workspace.uuidManager.getPart(int(uuid))
 		if machine == null: continue
-		addMachine(machine)
-		machineEntries[machine].deserialize(src[uuid])
+		if !machineEntries.has(machine):
+			addMachine(machine)
+		machineEntries[machine].deserialize(src[uuid], imported)
 		for value in machineEntries[machine].values:
 			creatingFloatToggled.connect(value.setSelectable)
 

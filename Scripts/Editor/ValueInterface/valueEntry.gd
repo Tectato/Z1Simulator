@@ -29,6 +29,8 @@ var radixPoint = 0
 var updateScheduled = false
 var pinUpdateTimeout = false
 
+var importedInstance = false
+
 signal valueChanged(int)
 signal floatChanged(float)
 

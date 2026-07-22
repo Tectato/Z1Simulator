@@ -9,13 +9,16 @@ signal programUpdated(newProgram : ProgramEntry)
 func serialize():
 	var out = []
 	for program in programs:
-		if !program.isEmpty():
+		if !program.isEmpty() and !program.importedInstance:
 			out.append(program.serialize())
 	return out
 
-func deserialize(arr = []):
+func deserialize(args : Array): # [arr : Dict, imported : bool]
+	var arr = args[0]
+	var imported = args[1]
 	for program in arr:
 		var newProgram = addProgram()
+		newProgram.importedInstance = imported
 		newProgram.deserialize(program)
 
 func addProgram():

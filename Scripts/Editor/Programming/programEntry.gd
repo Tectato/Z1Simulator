@@ -10,6 +10,8 @@ const INSTRUCTION_ENTRY = preload("res://Scenes/Programmer/InstructionEntry.tscn
 var instructions = []
 var parent
 
+var importedInstance = false
+
 signal selected(ProgramEntry)
 signal changed(ProgramEntry)
 

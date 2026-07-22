@@ -8,13 +8,16 @@ var sequences = []
 func serialize():
 	var out = []
 	for sequence in sequences:
-		if !sequence.isEmpty():
+		if !sequence.isEmpty() and !sequence.importedInstance:
 			out.append(sequence.serialize())
 	return out
 
-func deserialize(arr = []):
+func deserialize(args : Array): # [arr : Dict, imported : bool]
+	var arr = args[0]
+	var imported = args[1]
 	for sequence in arr:
 		var newSequence = addSequence()
+		newSequence.importedInstance = imported
 		newSequence.deserialize(sequence)
 
 func addSequence():

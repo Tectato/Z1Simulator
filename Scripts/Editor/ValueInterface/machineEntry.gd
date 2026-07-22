@@ -9,12 +9,14 @@ var values = []
 func serialize():
 	var out = []
 	for value in values:
-		out.append(value.serialize())
+		if !value.importedInstance:
+			out.append(value.serialize())
 	return out
 	
-func deserialize(src):
+func deserialize(src, imported = false):
 	for entry in src:
 		var newValue = addValue()
+		newValue.importedInstance = imported
 		newValue.deserialize(machine, entry)
 
 func setup(m):

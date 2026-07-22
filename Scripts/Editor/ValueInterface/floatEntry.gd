@@ -12,6 +12,8 @@ var v_sign = false
 var v_exponent = 0
 var v_mantissa = 0.0
 
+var importedInstance = false
+
 func serialize():
 	var out = {
 		"id": idBox.text,

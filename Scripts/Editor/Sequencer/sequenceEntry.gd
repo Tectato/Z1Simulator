@@ -13,6 +13,8 @@ var initiated = false
 var running = false
 var internalStep = -1
 
+var importedInstance = false
+
 func _ready() -> void:
 	title = id
 	call_deferred("lateReady")

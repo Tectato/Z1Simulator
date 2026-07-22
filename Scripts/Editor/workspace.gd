@@ -317,11 +317,11 @@ func deserialize(path, parent = self):
 			"spring":
 				A.addRelation(Relation.Type.Spring, B)
 	if !sequences.is_empty():
-		Global.editor.sequencer.call_deferred("deserialize", sequences)
+		Global.editor.sequencer.call_deferred("deserialize", [sequences, parent != self])
 	if !programs.is_empty():
-		Global.editor.programmer.call_deferred("deserialize", programs)
+		Global.editor.programmer.call_deferred("deserialize", [programs, parent != self])
 	if !values.is_empty():
-		Global.editor.valueInterface.call_deferred("deserialize", values)
+		Global.editor.valueInterface.call_deferred("deserialize", [values, parent != self])
 	
 	if !machines.is_empty():
 		await get_tree().process_frame
