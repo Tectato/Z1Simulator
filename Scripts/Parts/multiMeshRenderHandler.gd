@@ -25,6 +25,7 @@ func _ready() -> void:
 	Global.editor.selector.newSelection.connect(newSelection)
 
 func visModeChanged(visMode : Editor.VisMode):
+	if !materialShaded: return
 	var materialToUse
 	if visMode == Editor.VisMode.Realistic:
 		materialToUse = materialShaded
@@ -60,7 +61,7 @@ func initMesh(key : String, mesh : Mesh):
 		highlight.visible = false
 	
 	var materialToUse
-	if Global.editor.currentVisMode == Editor.VisMode.Realistic:
+	if materialShaded and Global.editor.currentVisMode == Editor.VisMode.Realistic:
 		materialToUse = materialShaded
 	else:
 		materialToUse = materialFlat
@@ -222,3 +223,14 @@ func newSelection(parts = []):
 		for key in visibleHighlights.keys():
 			if highlightRenderers.has(key): highlightRenderers[key].visible = false
 		visibleHighlights.clear()
+
+func getStats():
+	var fixed = 0
+	var moving = 0
+	for key in renderers.keys():
+		var renderer = renderers[key].multimesh
+		for i in range(renderer.instance_count):
+			if renderer.get_instance_transform(i).basis.get_scale().x < 0.0625: continue
+			if renderer.get_instance_color(i).b < 0.5: fixed += 1
+			else: moving += 1
+	return [moving, fixed]

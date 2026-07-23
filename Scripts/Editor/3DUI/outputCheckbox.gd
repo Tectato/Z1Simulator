@@ -16,7 +16,8 @@ func _ready() -> void:
 
 func setValue(value : bool):
 	state = value
-	checkbox.play(str(value))
+	#checkbox.play(str(value))
+	checkbox.setSprite("1" if value else "0")
 
 func set3DUIVisible(newVis):
 	visible = newVis
@@ -28,10 +29,12 @@ func click(left = true):
 func setDirection(dir : Directionality):
 	match(dir):
 		Directionality.X:
-			direction.play("X")
+			#direction.play("X")
+			direction.setSprite("X")
 			direction.visible = true
 		Directionality.Y:
-			direction.play("Y")
+			#direction.play("Y")
+			direction.setSprite("Y")
 			direction.visible = true
 		Directionality.Both:
 			direction.visible = false

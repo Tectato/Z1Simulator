@@ -30,6 +30,7 @@ func addProgram():
 		programs.back().add_sibling(newProgram)
 	programs.append(newProgram)
 	newProgram.selected.connect(programSelected)
+	newProgram.changed.connect(selectedProgramUpdated)
 	#newProgram.newSelection(Global.editor.selector.selected)
 	return newProgram
 
@@ -52,6 +53,11 @@ func getSelectedProgram():
 	for program in programs:
 		if program.selectionBox.button_pressed: return program
 	return null
+
+func highlightInstruction(index : int):
+	for program in programs:
+		if program.isSelected():
+			program.highlightInstruction(index)
 
 func _input(event: InputEvent) -> void:
 	if event.is_echo(): return

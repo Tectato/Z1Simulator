@@ -1,7 +1,7 @@
 extends Control
 
-@onready var idLabel = $ID
-@onready var addressBox = $Address
+@onready var idLabel = $HBox/ID
+@onready var addressBox = $HBox/Address
 
 var parent : ProgramEntry
 var instruction : Instruction
@@ -24,6 +24,9 @@ func setInstruction(id : int, address : int):
 	addressBox.set_value_no_signal(address if id > 6 else 0)
 	idLabel.text = instruction._to_string()
 	changed.emit()
+
+func setHighlight(value : bool):
+	$ColorRect.visible = value
 
 func _on_address_value_changed(value: float) -> void:
 	if instruction.type == Instruction.code.Read or instruction.type == Instruction.code.Write:

@@ -36,9 +36,14 @@ func deserialize(src : Dictionary):
 
 func select_toggled(toggled_on : bool):
 	selected.emit(self if toggled_on else null)
+	if !toggled_on: highlightInstruction(-1)
 
 func setSelected(value : bool):
 	selectionBox.set_pressed_no_signal(value)
+	if !value: highlightInstruction(-1)
+
+func isSelected():
+	return selectionBox.button_pressed
 
 func addInstruction(type : int):
 	var newInstruction = INSTRUCTION_ENTRY.instantiate()
@@ -49,12 +54,17 @@ func addInstruction(type : int):
 	newInstruction.changed.connect(updated)
 	if type >= 0:
 		newInstruction.setInstruction(type, addressInput.value)
+	updated()
 	return newInstruction
 
 func removeInstruction(instruction):
 	instructions.erase(instruction)
 	instruction.call_deferred("queue_free")
 	updated()
+
+func highlightInstruction(index : int):
+	for i in range(instructions.size()):
+		instructions[i].setHighlight(i == index)
 
 func updated():
 	if selectionBox.button_pressed: changed.emit(self)

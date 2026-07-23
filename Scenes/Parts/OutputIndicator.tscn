@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://rmakeuwcgr1g"]
 
 [ext_resource type="Script" uid="uid://bvxt18whwp0rm" path="res://Scripts/Editor/3DUI/outputCheckbox.gd" id="1_jc0ww"]
+[ext_resource type="PackedScene" uid="uid://g2tsl8njb2ot" path="res://Scenes/Visualisation/SpriteInstance.tscn" id="2_ee4cw"]
 [ext_resource type="Texture2D" uid="uid://bvyj0vbqn74w1" path="res://Sprites/checkbox.png" id="2_p5nrf"]
+[ext_resource type="Texture2D" uid="uid://ff4hwh5u2s80" path="res://Sprites/checkbox_0.png" id="3_o0plk"]
 [ext_resource type="Texture2D" uid="uid://b2fjioapdugm" path="res://Sprites/outputX.png" id="4_p5nrf"]
+[ext_resource type="Texture2D" uid="uid://cpb2gx15bxsvm" path="res://Sprites/checkbox_1.png" id="4_tu06x"]
 [ext_resource type="Texture2D" uid="uid://dnlmdht4wr7a4" path="res://Sprites/outputY.png" id="5_ml58t"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fc7u5"]
@@ -61,8 +64,22 @@ radius = 0.05
 [node name="OutputIndicator" type="Node3D" unique_id=1113617633]
 script = ExtResource("1_jc0ww")
 
-[node name="Checkbox" type="AnimatedSprite3D" parent="." unique_id=1578167543]
+[node name="Checkbox" parent="." unique_id=1898771586 instance=ExtResource("2_ee4cw")]
+sprites = Dictionary[String, Texture]({
+"0": ExtResource("3_o0plk"),
+"1": ExtResource("4_tu06x")
+})
+
+[node name="Directionality" parent="." unique_id=1771612392 instance=ExtResource("2_ee4cw")]
+transform = Transform3D(2, 0, 0, 0, -8.742278e-08, 2, 0, -2, -8.742278e-08, 0, -0.045, 0)
+sprites = Dictionary[String, Texture]({
+"X": ExtResource("4_p5nrf"),
+"Y": ExtResource("5_ml58t")
+})
+
+[node name="CheckboxSprite" type="AnimatedSprite3D" parent="." unique_id=1578167543]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+visible = false
 sorting_offset = 1.0
 billboard = 1
 double_sided = false
@@ -71,7 +88,7 @@ texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_n0si8")
 animation = &"false"
 
-[node name="Directionality" type="AnimatedSprite3D" parent="." unique_id=1527619890]
+[node name="DirectionalitySprite" type="AnimatedSprite3D" parent="." unique_id=1527619890]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.05013243, 0)
 visible = false
 axis = 1

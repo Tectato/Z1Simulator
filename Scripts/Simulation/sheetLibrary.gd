@@ -70,3 +70,12 @@ func cleanUnusedSheets():
 			#batch = 20
 			#await get_tree().process_frame
 	#print("Cleanup took " + str(framesTaken) + " frames")
+
+func getStats():
+	var staticSheets = 0
+	var movingSheets = 0
+	for key in users.keys():
+		for sheet in users[key]:
+			if sheet.fixed: staticSheets += 1
+			else: movingSheets += 1
+	return [movingSheets, staticSheets]

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bsbo5twx266in"]
+
+[ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="1_b5hji"]
+
+[node name="SpriteRenderer" type="Node" unique_id=1901825103]
+script = ExtResource("1_b5hji")
+hasHighlights = false

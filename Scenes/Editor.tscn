@@ -2916,6 +2916,12 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Set current scene as default"
 
+[node name="PrintStats" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1565543319]
+visible = false
+layout_mode = 2
+disabled = true
+text = "Print scene statistics"
+
 [node name="PathExport" type="Button" parent="Camera3D/Interface/VisibilityParent" unique_id=1548884114]
 visible = false
 layout_mode = 0
@@ -3340,6 +3346,7 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_debug_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/FancyOutput/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_verbose_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/PrintStats" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_print_stats_pressed"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PathExport" to="Camera3D/Interface" method="_on_path_export_pressed"]
 [connection signal="gui_input" from="Camera3D/Interface/VisibilityParent/CommentDisplay" to="Camera3D/Interface/VisibilityParent/CommentDisplay" method="_on_gui_input"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/DebugBar/HBoxContainer/SearchUUID" to="Camera3D/Interface/VisibilityParent/DebugBar" method="_on_search_uuid_pressed"]

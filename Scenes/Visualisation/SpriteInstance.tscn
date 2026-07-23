@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://g2tsl8njb2ot"]
+
+[ext_resource type="Script" uid="uid://b52qdrvlmpbo3" path="res://Scripts/Editor/3DUI/spriteInstance.gd" id="1_p87id"]
+
+[node name="SpriteInstance" type="Node3D" unique_id=1898771586]
+script = ExtResource("1_p87id")

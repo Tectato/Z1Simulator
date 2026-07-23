@@ -37,6 +37,8 @@ func _on_h_slider_drag_ended(value_changed: bool) -> void:
 
 func _on_debug_toggled(toggled_on: bool) -> void:
 	Global.editor.interface.debugBar.visible = toggled_on
+	$VBoxContainer/PrintStats.visible = toggled_on
+	$VBoxContainer/PrintStats.disabled = !toggled_on
 
 func _on_sheet_spacing_input_value_changed(value: float) -> void:
 	$VBoxContainer/SheetSpacing/SheetSpacingTimeout.start()
@@ -52,3 +54,6 @@ func _on_move_speed_timeout_timeout() -> void:
 
 func _on_verbose_toggled(toggled_on: bool) -> void:
 	Global.editor.verboseOutput = toggled_on
+
+func _on_print_stats_pressed() -> void:
+	Global.workspace.printStats()

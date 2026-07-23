@@ -93,6 +93,10 @@ func loadProject(srcPath = ""):
 	interface.loadProjectDialog.current_file = path.get_file()
 	interface.webSetup()
 	await get_tree().create_timer(0.5).timeout
+	var showing3DUI = workspace.show3DUI
+	workspace.set3DUIVis(false)
+	if showing3DUI:
+		workspace.set3DUIVis(true)
 	SheetLibrary.cleanUnusedSheets()
 	updateInstancePos.emit()
 	loading = false

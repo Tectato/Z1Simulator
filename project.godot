@@ -33,6 +33,7 @@ SheetLibrary="*res://Scenes/SheetLibrary.tscn"
 PathHandler="*res://Scenes/PathHandler.tscn"
 FileHandler="*res://Scenes/FileHandler.tscn"
 PinRenderHandler="*res://Scenes/PinRenderHandler.tscn"
+SpriteRenderHandler="*uid://ixmqtmnrfewb"
 
 [editor]
 

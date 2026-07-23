@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://ixmqtmnrfewb"]
+
+[ext_resource type="Script" uid="uid://b4t1lwx1iw7p5" path="res://Scripts/Editor/3DUI/spriteRenderHandler.gd" id="1_fkqte"]
+[ext_resource type="Texture2D" uid="uid://ff4hwh5u2s80" path="res://Sprites/checkbox_0.png" id="2_umei3"]
+[ext_resource type="Texture2D" uid="uid://cpb2gx15bxsvm" path="res://Sprites/checkbox_1.png" id="3_xh6x0"]
+[ext_resource type="Texture2D" uid="uid://b2fjioapdugm" path="res://Sprites/outputX.png" id="4_jf7t0"]
+[ext_resource type="Texture2D" uid="uid://dnlmdht4wr7a4" path="res://Sprites/outputY.png" id="5_dmtnm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xh6x0"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("2_umei3")
+texture_filter = 0
+texture_repeat = false
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ikb2b"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("3_xh6x0")
+texture_filter = 0
+texture_repeat = false
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_82vae"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("4_jf7t0")
+texture_filter = 0
+texture_repeat = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tasor"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("5_dmtnm")
+texture_filter = 0
+texture_repeat = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_umei3"]
+size = Vector2(0.08, 0.08)
+
+[node name="SpriteRenderHandler" type="Node" unique_id=209190067]
+script = ExtResource("1_fkqte")
+sprites = Array[StandardMaterial3D]([SubResource("StandardMaterial3D_xh6x0"), SubResource("StandardMaterial3D_ikb2b"), SubResource("StandardMaterial3D_82vae"), SubResource("StandardMaterial3D_tasor")])
+mesh = SubResource("QuadMesh_umei3")

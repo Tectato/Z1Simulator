@@ -154,6 +154,7 @@ func clear():
 	Global.editor.valueInterface.clear()
 	SheetLibrary.renderHandler.clearInstances()
 	PinRenderHandler.clearInstances()
+	SpriteRenderHandler.clearInstances()
 	while !machines.is_empty():
 		var toRemove = machines.pop_back()
 		if toRemove: toRemove.delete()
@@ -586,3 +587,15 @@ func getSelectabilityMask():
 		Selectability.Both: return 0b11
 		Selectability.Sheets: return 0b10
 		Selectability.Pins: return 0b01
+
+func printStats():
+	var sheetStats = SheetLibrary.getStats()
+	print("=== Scene statistics ===")
+	print("Moving sheets: %d" % sheetStats[0])
+	print("Static sheets: %d" % sheetStats[1])
+	var pinStats = PinRenderHandler.getStats()
+	print("Moving pins: %d" % pinStats[0])
+	print("Static pins: %d" % pinStats[1])
+	print("-- Total --")
+	print("Moving parts: %d" % (sheetStats[0] + pinStats[0]))
+	print("Static parts: %d" % (sheetStats[1] + pinStats[1]))

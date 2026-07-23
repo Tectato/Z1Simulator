@@ -33,6 +33,7 @@ func setInstruction():
 		if bool(code & 0b1) != outputs[i].outputState:
 			outputs[i].nudge()
 		code >>= 1
+	Global.editor.programmer.highlightInstruction(index)
 
 func advance():
 	index += 1
