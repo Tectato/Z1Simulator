@@ -196,7 +196,7 @@ func abortMove(initiator, chain = []):
 	if selected:
 		print("Move aborted")
 	inMotion = false
-	targetPos = preMovePos	
+	targetPos = preMovePos
 	schedule(drawErrorChain, [chain])
 	Simulator.spawnIndicator(global_position, EventIndicator.Type.Blocked)
 	#for relation in relations:

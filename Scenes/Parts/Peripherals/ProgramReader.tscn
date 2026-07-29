@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://dlnhci2g6lkrq" path="res://Scripts/Simulation/Program/program.gd" id="2_67qrf"]
 [ext_resource type="Script" uid="uid://l6fb0y0o2qx4" path="res://Scripts/Simulation/Program/instruction.gd" id="2_n8cvq"]
 [ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="5_4c02h"]
+[ext_resource type="PackedScene" uid="uid://croe28elkiam2" path="res://Models/readerImported.tscn" id="6_pcqj8"]
 
 [sub_resource type="Resource" id="Resource_4c02h"]
 script = ExtResource("2_n8cvq")
@@ -23,7 +24,10 @@ instructions = Array[ExtResource("2_n8cvq")]([SubResource("Resource_4c02h"), Sub
 metadata/_custom_type_script = "uid://dlnhci2g6lkrq"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_h45j8"]
-size = Vector3(0.9, 0.3, 1.2)
+size = Vector3(2.33291, 0.09672852, 3.1215332)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pcqj8"]
+size = Vector3(2.051709, 1.0005004, 1.2009827)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pcqj8"]
 size = Vector3(0.9, 0.01, 1.2)
@@ -69,7 +73,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0.9)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0.9)
 
 [node name="Reset" parent="." unique_id=490697296 instance=ExtResource("5_4c02h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20858559, 0.9840356, 0)
 
 [node name="Label3D" parent="Reset" index="1" unique_id=1904010434]
 text = "Reset"
@@ -77,12 +81,20 @@ text = "Reset"
 [node name="Area3D" type="Area3D" parent="." unique_id=2107189499]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=145492277]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31893396, -0.03742607, 0.26035827)
 shape = SubResource("BoxShape3D_h45j8")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D" unique_id=1166989466]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1783334, 0.50089794, 0.27930653)
+shape = SubResource("BoxShape3D_pcqj8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=915560763]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0)
+visible = false
 mesh = SubResource("BoxMesh_pcqj8")
+
+[node name="reader2" parent="." unique_id=1629438163 instance=ExtResource("6_pcqj8")]
+transform = Transform3D(-10, 0, -8.742278e-07, 0, 10, 0, 8.742278e-07, 0, -10, 7.6948233, -2.4919453, 0.5705126)
 
 [connection signal="clicked" from="Reset" to="." method="_on_reset_clicked"]
 

@@ -547,7 +547,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	# Check if any immediate candidates are fixed to terminate search early
 	for part in moveCandidates:
 		if part.fixed:
-			schedule(drawErrorChain, [chain])
+			#schedule(drawErrorChain, [chain])
 			return 0
 	
 	var dirID = dirToInt(dir)
