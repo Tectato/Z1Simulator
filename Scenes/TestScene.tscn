@@ -6,14 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="3_0f5h7"]
 [ext_resource type="Shader" uid="uid://dl60pkoi0xjnk" path="res://Shaders/BevelTest.gdshader" id="4_iufkg"]
 [ext_resource type="Shader" uid="uid://dajexqetfnvm" path="res://Shaders/NormalTest.gdshader" id="5_0f5h7"]
-[ext_resource type="Material" uid="uid://38ft0gv8apta" path="res://Assets/SheetFlatLocal.tres" id="6_c264a"]
+[ext_resource type="Material" uid="uid://0bo2bl8wqi7c" path="res://Assets/SheetColoredCompat.tres" id="6_6xh1p"]
+[ext_resource type="Shader" uid="uid://7flgwuf2ntjq" path="res://Shaders/VoxelTraversal.gdshader" id="8_5rbs6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0f5h7"]
 render_priority = 0
 shader = ExtResource("4_iufkg")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/bevel_size = 0.125
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qsjrb"]
 render_priority = 2
@@ -45,9 +43,6 @@ size = Vector3(1, 0.02, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qsjrb"]
 render_priority = 0
 shader = ExtResource("4_iufkg")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/bevel_size = 0.125
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c264a"]
 next_pass = SubResource("ShaderMaterial_qsjrb")
@@ -63,6 +58,27 @@ shader = ExtResource("5_0f5h7")
 
 [sub_resource type="BoxMesh" id="BoxMesh_6xh1p"]
 size = Vector3(5, 5, 5)
+
+[sub_resource type="Gradient" id="Gradient_201fe"]
+offsets = PackedFloat32Array(0.3800905, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.63, 0.63, 0.63, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xjl2p"]
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_ytmxh"]
+width = 32
+height = 32
+depth = 32
+noise = SubResource("FastNoiseLite_xjl2p")
+color_ramp = SubResource("Gradient_201fe")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hctok"]
+render_priority = 0
+shader = ExtResource("8_5rbs6")
+shader_parameter/voxels = SubResource("NoiseTexture3D_ytmxh")
+shader_parameter/max_steps = 64
+
+[sub_resource type="BoxMesh" id="BoxMesh_t2vuu"]
 
 [node name="TestScene" type="Node3D" unique_id=497972494]
 
@@ -139,7 +155,7 @@ mesh = SubResource("BoxMesh_c264a")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=1196692902]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2763102, 1.923655, 0.7493798)
-material_override = ExtResource("6_c264a")
+material_override = ExtResource("6_6xh1p")
 mesh = SubResource("BoxMesh_c264a")
 skeleton = NodePath("../MeshInstance3D")
 
@@ -158,3 +174,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.41308, 3.22992, 2.41322)
 visible = false
 material_override = SubResource("ShaderMaterial_c264a")
 mesh = SubResource("BoxMesh_6xh1p")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="." unique_id=417673119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
+material_override = SubResource("ShaderMaterial_hctok")
+mesh = SubResource("BoxMesh_t2vuu")

@@ -2910,6 +2910,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
 layout_mode = 2
 tooltip_text = "Significantly increases project size but improves readability and IDE formatting"
 theme = SubResource("Theme_pd6ol")
+button_pressed = true
 
 [node name="SetDefaultScene" type="Button" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1428938694]
 layout_mode = 2

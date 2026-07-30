@@ -36,6 +36,16 @@ signal stateChanged(pin)
 	#print("propagation 2:\t %0.4f (%d)" % [(t_prop2 / instances[2]), instances[2]])
 	#print("self move:\t\t %0.4f (%d)" % [(t_moveSelf / instances[3]), instances[3]])
 
+static var s_partsChecked = 0
+static var t_timeSpent = 0.0
+
+static func printDebugInfo():
+	print("-= Pin movement workload =-")
+	print("Parts checked:\t %d" % s_partsChecked)
+	print("Time spent:\t\t %0.4fms" % (t_timeSpent/1000.0))
+	s_partsChecked = 0
+	t_timeSpent = 0.0
+
 func serialize():
 	grabUUID()
 	var output = {
@@ -504,26 +514,26 @@ func move(dir : Vector2, initiator, chain = []):
 	return MoveState.Moved
 	
 func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
-	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
 	if selected:
 		pass
+	var dirID = dirToInt(dir)
+	var toMoveHasDir = toMove.has(dirID)
 	var moveCandidates = {}
 	#if selected:
 		#print("A")
+	#var t_start = Time.get_ticks_usec()
+	
 	for part in interactionCandidates:
-		#if sheet.intersects(pos):
-			#sheet.move(dir,chain)
+		if toMoveHasDir and toMove[dirID].has(part): continue
 		if part[1] == null:
 			if part[0] == initiator:
 				moveCandidates[part[0]] = part[0]
 				continue
+			#s_partsChecked += 1
 			if part[0].intersectsOutline(global_position+globalOffset):
 				moveCandidates[part[0]] = part[0]
-				#var partMoved = part.move(dir, self,chain.duplicate())
-				#if partMoved == MoveState.Moved:
-					#moved.append(part)
-				#canMove = canMove and partMoved > 0
+				if part[0].fixed: break
 		else:
 			var sheet = part[0]
 			if sheet == initiator:
@@ -531,26 +541,19 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 				# Also we know this part can move as it initiated the movement to begin with
 				moveCandidates[sheet] = sheet
 				continue
-			#var posRot = (global_position - sheet.global_position).rotated(Vector3.UP, -sheet.rotation.y)
+			#s_partsChecked += 1
 			var posRelative = part[1].to_local(part[0].to_local(global_position+globalOffset))#pos * sheet.outline.global_transform
 			if !part[1].checkPos(part[0].to_local(global_position+globalOffset) * part[1].transform):
 				moveCandidates[sheet] = sheet
-				#var partMoved = sheet.move(dir, self,chain.duplicate())
-				#if partMoved == MoveState.Moved:
-					#moved.append(sheet)
-				#canMove = canMove and partMoved > 0
-		
-		if !canMove:
-			#abortMove(self, chain)
-			return false
-	
+				if part[0].fixed: break
 	# Check if any immediate candidates are fixed to terminate search early
 	for part in moveCandidates:
 		if part.fixed:
 			#schedule(drawErrorChain, [chain])
 			return 0
+		
+	#t_timeSpent += Time.get_ticks_usec() - t_start
 	
-	var dirID = dirToInt(dir)
 	if toMove.has(dirID):
 		toMove[dirID].merge(moveCandidates)
 	else:

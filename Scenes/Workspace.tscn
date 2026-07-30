@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://b2845uayksbce" path="res://Scenes/Parts/Sheet.tscn" id="10_dswm8"]
 [ext_resource type="Shader" uid="uid://n0vyy28prjuf" path="res://Shaders/SheetHighlight.gdshader" id="11_ruixb"]
 [ext_resource type="Texture2D" uid="uid://bscojfsxnpxmv" path="res://Test/AA.svg" id="12_uurxa"]
+[ext_resource type="Shader" uid="uid://7flgwuf2ntjq" path="res://Shaders/VoxelTraversal.gdshader" id="13_dswm8"]
+[ext_resource type="Script" uid="uid://dnmqfhlwjmcrd" path="res://Scripts/Editor/heatmap.gd" id="14_ruixb"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_jtmtj"]
 viewport_path = NodePath("AxesViewport")
@@ -27,7 +29,7 @@ shader_parameter/thickness = 0.02
 [sub_resource type="BoxMesh" id="BoxMesh_puuh0"]
 size = Vector3(0.05, 0.05, 0.05)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_f7yrp"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ruixb"]
 resource_local_to_scene = true
 render_priority = 4
 shader = ExtResource("11_ruixb")
@@ -44,6 +46,14 @@ albedo_color = Color(1, 1, 1, 0.8745098)
 
 [sub_resource type="BoxMesh" id="BoxMesh_rrjwu"]
 size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dpqif"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("13_dswm8")
+shader_parameter/max_steps = 64
+
+[sub_resource type="BoxMesh" id="BoxMesh_nmjyg"]
 
 [node name="Workspace" type="Node3D" unique_id=1190107213]
 script = ExtResource("1_lxv6g")
@@ -133,12 +143,19 @@ script = null
 
 [node name="Sprite3D" parent="ShaderPrep/Sheet" index="0" unique_id=248117127]
 visible = true
-material_overlay = SubResource("ShaderMaterial_f7yrp")
+material_overlay = SubResource("ShaderMaterial_ruixb")
 
 [node name="PowerFlow" type="MeshInstance3D" parent="ShaderPrep" unique_id=285898234]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.43804374, 0, 0)
 material_override = SubResource("StandardMaterial3D_rrjwu")
 mesh = SubResource("BoxMesh_rrjwu")
+
+[node name="Heatmap" type="MeshInstance3D" parent="." unique_id=1611082470]
+transform = Transform3D(10, 0, 0, 0, -4.371139e-07, -5, 0, 10, -2.1855695e-07, 0, 0, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_dpqif")
+mesh = SubResource("BoxMesh_nmjyg")
+script = ExtResource("14_ruixb")
 
 [editable path="ShaderPrep/Pin"]
 [editable path="ShaderPrep/Sheet"]

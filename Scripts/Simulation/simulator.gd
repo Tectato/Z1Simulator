@@ -169,7 +169,8 @@ func _on_move_complete_timeout() -> void:
 	if nudging:
 		nudging = false
 		return
-	#Pin.printDebugTimes()
+	#Pin.printDebugInfo()
+	#Sheet.printDebugInfo()
 	$PulsingReset.start()
 
 func _on_back_move_complete_timeout() -> void:

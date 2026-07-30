@@ -19,7 +19,7 @@ var currentVisMode = VisMode.Colorcoded
 var editingLocked = false
 var tutorialDone = false
 var loading = false
-var verboseOutput = false
+var verboseOutput = true
 
 enum VisMode { Monochrome, Colorcoded, Realistic }
 

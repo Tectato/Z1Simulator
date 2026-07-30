@@ -41,13 +41,23 @@ var placeScheduled = false
 
 var sortTargetPos : Vector3
 
-static var numInstances = 0
-static var numWithZones = 0
-static var t_setPolygon = 0
-static var t_stickers = 0
-static var t_cloneZones = 0
-static var t_setZones = 0
-static var t_place = 0
+#static var numInstances = 0
+#static var numWithZones = 0
+#static var t_setPolygon = 0
+#static var t_stickers = 0
+#static var t_cloneZones = 0
+#static var t_setZones = 0
+#static var t_place = 0
+
+static var s_partsChecked = 0
+static var t_timeSpent = 0.0
+
+static func printDebugInfo():
+	print("-= Sheet movement workload =-")
+	print("Parts checked:\t %d" % s_partsChecked)
+	print("Time spent:\t\t %0.4fms" % (t_timeSpent/1000.0))
+	s_partsChecked = 0
+	t_timeSpent = 0.0
 
 func serialize():
 	grabUUID()
@@ -194,7 +204,7 @@ func postParseSetup():
 	#startTime = Time.get_ticks_usec()					# TIMING
 	
 	if !sheetData.clipZones.is_empty():
-		numWithZones += 1
+		#numWithZones += 1
 		for zone in sheetData.clipZones:
 			#var copy = zone.duplicate()
 			#copy.name = zone.name
@@ -225,13 +235,13 @@ func postParseSetup():
 	
 	#t_place += Time.get_ticks_usec() - startTime		# TIMING
 
-static func printDebugTimes():
-	print("-= Sheet Times =- (" + str(numInstances) + " instances)")
-	print("Hitbox setup:\t\t" + str(t_setPolygon / numInstances))
-	print("Sticker copying:\t" + str(t_stickers / numInstances))
-	print("Zone cloning:\t\t" + str(t_cloneZones / numInstances) + ("\t -> Across " + str(numWithZones) + " sheets with zones: " + str(t_cloneZones / numWithZones) if numWithZones > 0 else ""))
-	print("Zone setting:\t\t" + str(t_setZones / numInstances) + ("\t -> Across " + str(numWithZones) + " sheets with zones: " + str(t_setZones / numWithZones) if numWithZones > 0 else ""))
-	print("Placing:\t\t\t" + str(t_place / numInstances))
+#static func printDebugTimes():
+	#print("-= Sheet Times =- (" + str(numInstances) + " instances)")
+	#print("Hitbox setup:\t\t" + str(t_setPolygon / numInstances))
+	#print("Sticker copying:\t" + str(t_stickers / numInstances))
+	#print("Zone cloning:\t\t" + str(t_cloneZones / numInstances) + ("\t -> Across " + str(numWithZones) + " sheets with zones: " + str(t_cloneZones / numWithZones) if numWithZones > 0 else ""))
+	#print("Zone setting:\t\t" + str(t_setZones / numInstances) + ("\t -> Across " + str(numWithZones) + " sheets with zones: " + str(t_setZones / numWithZones) if numWithZones > 0 else ""))
+	#print("Placing:\t\t\t" + str(t_place / numInstances))
 
 func _ready():
 	#mesh = debugPolygon
@@ -701,25 +711,33 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	var canMove = true
 	var globalOffset = getMachine().toGlobalDir(offset)
 	var cantMove = 0
+	var dirID = dirToInt(dir)
+	var toMoveHasDir = toMove.has(dirID)
 	var moveCandidates = {}
+	#var t_start = Time.get_ticks_usec()
 	for part in pinCandidates.keys():
 		var pins = pinCandidates[part]
 		if part is Sheet:
 			for pin in pins:
+				if toMoveHasDir and toMove[dirID].has(pin): continue
 				if pin == initiator:
 					moveCandidates[pin] = pin
 					continue
+				#s_partsChecked += 1
 				if intersectsOutline(pin.global_position - globalOffset):
 					moveCandidates[pin] = pin
+					if pin.fixed: break
 		else:
 			for pin in pins:
+				if toMoveHasDir and toMove[dirID].has(pin): continue
 				if pin == initiator:
 					moveCandidates[pin] = pin
 					continue
+				#s_partsChecked += 1
 				if !part.checkPos(to_local(pin.global_position - globalOffset) * part.transform): # machine.to_global on offset
 					moveCandidates[pin] = pin
+					if pin.fixed: break
 	
-	var dirID = dirToInt(dir)
 	# Check if any immediate candidates are fixed to terminate search early
 	for pin in moveCandidates:
 		if pin.fixed:
@@ -728,6 +746,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 			cantMove += 1
 			if cantMove > 1:
 				return 0
+	#t_timeSpent += Time.get_ticks_usec() - t_start
 	if toMove.has(dirID):
 		toMove[dirID].merge(moveCandidates)
 	else:
