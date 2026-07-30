@@ -12,11 +12,11 @@ refraction_scale = 0.01
 
 [node name="reader" unique_id=1629438163 instance=ExtResource("1_fey3h")]
 
-[node name="Bar" parent="Reader/Skeleton3D/Root" parent_id_path=PackedInt32Array(2130529555) index="0" unique_id=538485363]
+[node name="Bar" parent="Reader/Skeleton3D/Root" parent_id_path=PackedInt32Array(221315013) index="0" unique_id=1607670784]
 surface_material_override/3 = SubResource("StandardMaterial3D_5mbtb")
 
-[node name="Extras" parent="Reader/Skeleton3D/Root" parent_id_path=PackedInt32Array(2130529555) index="1" unique_id=724567716]
+[node name="Extras" parent="Reader/Skeleton3D/Root" parent_id_path=PackedInt32Array(221315013) index="1" unique_id=1324909324]
 surface_material_override/0 = SubResource("StandardMaterial3D_5mbtb")
 
-[node name="ReaderPlan" parent="Reader/Skeleton3D/Root" parent_id_path=PackedInt32Array(2130529555) index="3" unique_id=624100274]
+[node name="ReaderPlan" parent="Reader/Skeleton3D/Root" parent_id_path=PackedInt32Array(221315013) index="3" unique_id=1095368152]
 surface_material_override/2 = SubResource("StandardMaterial3D_5mbtb")

@@ -85,5 +85,5 @@ void fragment() {
 	ALBEDO = COLOR.rgb;
 	METALLIC = 1.0;
 	SPECULAR = 0.5;
-	ROUGHNESS = 0.4;
+	ROUGHNESS = 0.6;
 }

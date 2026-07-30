@@ -25,7 +25,7 @@ func updateMaterial():
 			currentColor = markerColor
 			#material_override = materialFlat
 		Editor.VisMode.Realistic:
-			currentColor = Color(0.6, 0.6, 0.6, 1.0)
+			currentColor = Color(0.8, 0.8, 0.8, 1.0)
 			#material_override = materialFlat if parent.selected else materialShaded
 	if parent.selected:
 		currentColor = currentColor.blend(Color(1.0, 0.4, 0.4, 0.75))
