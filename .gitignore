@@ -22,3 +22,6 @@ Sprites/Environment/
 *.avi
 *.exe
 *.pck
+*.zip
+*.tmp
+*.TMP
