@@ -1,6 +1,7 @@
 extends Peripheral
 
 @export var slider : Node3D
+@export var slideDir = Vector3.BACK
 @export var isInput = false
 # Input Exponent:
 # L_ Inputs:
@@ -21,10 +22,12 @@ extends Peripheral
 var exponent = 0
 var history = []
 var updateScheduled = false
+var sliderStartPos : Vector3
 
 func _ready() -> void:
 	super._ready()
-	updateState()
+	sliderStartPos = slider.position
+	updatePos()
 	Simulator.step.connect(checkUpdate)
 
 func serialize():
@@ -38,7 +41,7 @@ func serialize():
 func deserialize(src : Dictionary):
 	super.deserialize(src)
 	exponent = src["value"]
-	updateState()
+	updatePos()
 
 func serializeDiff():
 	var out = {
@@ -60,7 +63,7 @@ func serializeDiff():
 func deserializeDiff(src : Dictionary):
 	super.deserializeDiff(src)
 	if src.has("value"): exponent = src["value"]
-	updateState()
+	updatePos()
 
 func pinInput(pin : Pin):
 	var index = inputs.find(pin)
@@ -68,38 +71,42 @@ func pinInput(pin : Pin):
 	if !pin.outputState: return
 	match(index):
 		0:
-			shift(-1)
+			shift(-1, true)
 		1:
-			shift(1)
+			shift(1, true)
 		2:
 			reset()
 
-func shift(dir):
+func shift(dir, machineInitiated = false):
 	if abs(exponent + dir) > 6:
 		Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
 		return
 	exponent += dir
-	updateState()
+	if !machineInitiated:
+		updatePos()
+	else:
+		updateScheduled = true
 
 func reset():
 	exponent = 0
-	updateState()
+	updatePos()
 
 func checkUpdate():
 	if updateScheduled:
 		if Simulator.currentStep != 3: return
 		updateScheduled = false
-		if isInput:
-			var atMinus6 = exponent == -6
-			var atZero = exponent == 0
-			if outputs[0].outputState == (atZero or atMinus6): outputs[0].nudge() 	# u6
-			if outputs[1].outputState != (atMinus6): outputs[1].nudge()				# u7
+		updatePos()
 
-func updateState():
-	slider.position = Vector3.BACK * exponent * Workspace.pinTravel + Vector3.UP * 0.05
+func updatePos():
+	slider.position = sliderStartPos + slideDir * exponent * Workspace.pinTravel
 	labels[0].text = str(exponent)
-	updateScheduled = true
 	#if Simulator.currentStep == 3: checkUpdate()
+	if isInput:
+		var atMinus6 = exponent == -6
+		var atZero = exponent == 0
+		var belowZero = exponent < 0
+		if outputs[0].outputState == (atZero or atMinus6): outputs[0].nudge() 	# u6
+		if outputs[1].outputState == (belowZero): outputs[1].nudge()			# u7
 
 func record():
 	history.push_back(exponent)
@@ -109,7 +116,7 @@ func record():
 func rewind():
 	if history.is_empty(): return
 	exponent = history.pop_back()
-	updateState()
+	updatePos()
 
 func getBounds():
 	return [Vector3(-1,0,-1)*0.4, Vector3(1,0.2,1)*0.4]
