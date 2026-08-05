@@ -8,6 +8,10 @@
 [ext_resource type="Texture2D" uid="uid://c1kmouadtwks3" path="res://Sprites/Parts/exponentSlot_marked.png" id="5_u4toh"]
 [ext_resource type="PackedScene" uid="uid://mompytl878wx" path="res://Models/inputExponentFrame.glb" id="7_h0teq"]
 [ext_resource type="PackedScene" uid="uid://ckcki7i8to0ts" path="res://Models/inputExponent.glb" id="8_07oxj"]
+[ext_resource type="Script" uid="uid://dkspdk7fhppcg" path="res://Scripts/Parts/Peripherals/Visuals/sliderMechanism.gd" id="9_2tt0q"]
+[ext_resource type="Script" uid="uid://c0fhe4qsj4wqi" path="res://Scripts/Parts/Peripherals/Visuals/callableMover.gd" id="10_2aibh"]
+[ext_resource type="Script" uid="uid://cs5txv4uqv7yc" path="res://Scripts/Parts/Peripherals/Visuals/stepRotator.gd" id="10_48fsg"]
+[ext_resource type="Script" uid="uid://cpobe3vm8jd4h" path="res://Scripts/Parts/Peripherals/Visuals/stepTracker.gd" id="11_0jlyt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t4572"]
 size = Vector3(3.0073853, 0.2175293, 0.40427017)
@@ -18,9 +22,10 @@ albedo_color = Color(1, 0.38900006, 0.22000003, 1)
 [sub_resource type="PrismMesh" id="PrismMesh_p55in"]
 size = Vector3(0.1, 0.1, 0.02)
 
-[node name="InputExponentSlider" type="Node3D" unique_id=1834995163 node_paths=PackedStringArray("slider", "inputs", "outputs", "labels", "collider")]
+[node name="InputExponentSlider" type="Node3D" unique_id=1834995163 node_paths=PackedStringArray("slider", "sliderArmature", "inputs", "outputs", "labels", "collider")]
 script = ExtResource("1_qj1uw")
 slider = NodePath("inputExponent/InputSlider/Skeleton3D/Slider_2")
+sliderArmature = NodePath("inputExponent")
 slideDir = Vector3(0.1, 0, 0)
 isInput = true
 inputs = [NodePath("ShiftLeft"), NodePath("ShiftRight")]
@@ -219,8 +224,46 @@ texture = ExtResource("5_p55in")
 [node name="inputExponentFrame" parent="Frame" unique_id=328670094 instance=ExtResource("7_h0teq")]
 transform = Transform3D(-20, 0, -1.7484556e-06, 0, 20, 0, 1.7484556e-06, 0, -20, 0, 0.2, 0)
 
-[node name="inputExponent" parent="." unique_id=673034786 instance=ExtResource("8_07oxj")]
+[node name="inputExponent" parent="." unique_id=673034786 node_paths=PackedStringArray("moverLeft", "moverRight", "sliderCarriage") instance=ExtResource("8_07oxj")]
 transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0.38968664, -1.1920929e-07, -1.7441158)
+script = ExtResource("9_2tt0q")
+moverLeft = NodePath("InputSlider/Skeleton3D/MoverLeft")
+moverRight = NodePath("InputSlider/Skeleton3D/MoverRight")
+sliderCarriage = NodePath("InputSlider/Skeleton3D/Slider_2")
+
+[node name="MoverLeft" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="0" unique_id=1259951929]
+script = ExtResource("10_2aibh")
+moveDiff = Vector3(-0.008, 0, 0)
+
+[node name="291_5_2" parent="inputExponent/InputSlider/Skeleton3D/MoverLeft" index="0" unique_id=1106364190 node_paths=PackedStringArray("targetPin")]
+script = ExtResource("11_0jlyt")
+targetPin = NodePath("../../../../../ShiftLeft")
+forwardAxis = Vector3(1, 0, 0)
+
+[node name="MoverRight" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="1" unique_id=266968858]
+script = ExtResource("10_2aibh")
+moveDiff = Vector3(0.008, 0, 0)
+
+[node name="291_5_1" parent="inputExponent/InputSlider/Skeleton3D/MoverRight" index="0" unique_id=293330035 node_paths=PackedStringArray("targetPin")]
+script = ExtResource("11_0jlyt")
+targetPin = NodePath("../../../../../ShiftRight")
+forwardAxis = Vector3(1, 0, 0)
+
+[node name="Slider_2" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="2" unique_id=736536845]
+script = ExtResource("10_2aibh")
+moveDiff = Vector3(0.008, 0, 0)
+
+[node name="TwistReset" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="3" unique_id=982088149]
+script = ExtResource("10_48fsg")
+activeStep = 1
+startAngle = -12.0
+angleDiff = 24.0
+
+[node name="TwistSet" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="4" unique_id=1385593843]
+script = ExtResource("10_48fsg")
+activeStep = 3
+startAngle = 12.0
+angleDiff = -24.0
 
 [connection signal="clicked" from="ButtonLeft" to="." method="shift" binds= [-1]]
 [connection signal="clicked" from="ButtonRight" to="." method="shift" binds= [1]]

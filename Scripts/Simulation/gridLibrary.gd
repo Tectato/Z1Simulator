@@ -118,6 +118,7 @@ func unregisterPart(part : Movable, notifyNeighbors = true):
 	if notifyNeighbors:
 		#Update Neighbours
 		for existingPart in toNotify.keys():
+			if !existingPart: continue
 			existingPart.updateInteractionCandidates()
 		toNotify.clear()
 	

@@ -1,6 +1,7 @@
 extends Peripheral
 
 @export var slider : Node3D
+@export var sliderArmature : Node3D
 @export var slideDir = Vector3.BACK
 @export var isInput = false
 # Input Exponent:
@@ -20,6 +21,7 @@ extends Peripheral
 #	--
 
 var exponent = 0
+var lastMove = 0
 var history = []
 var updateScheduled = false
 var sliderStartPos : Vector3
@@ -82,6 +84,7 @@ func shift(dir, machineInitiated = false):
 		Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
 		return
 	exponent += dir
+	lastMove = dir
 	if !machineInitiated:
 		updatePos()
 	else:
@@ -94,19 +97,20 @@ func reset():
 func checkUpdate():
 	if updateScheduled:
 		if Simulator.currentStep != 3: return
-		updateScheduled = false
 		updatePos()
+		updateScheduled = false
 
 func updatePos():
-	slider.position = sliderStartPos + slideDir * exponent * Workspace.pinTravel
+	if sliderArmature: sliderArmature.setValue(exponent, updateScheduled)
+	else: slider.position = sliderStartPos + slideDir * exponent * Workspace.pinTravel
 	labels[0].text = str(exponent)
 	#if Simulator.currentStep == 3: checkUpdate()
 	if isInput:
 		var atMinus6 = exponent == -6
 		var atZero = exponent == 0
 		var belowZero = exponent < 0
-		if outputs[0].outputState == (atZero or atMinus6): outputs[0].nudge() 	# u6
-		if outputs[1].outputState == (belowZero): outputs[1].nudge()			# u7
+		if outputs[0].outputState != (atZero or atMinus6): outputs[0].nudge() 	# u6
+		if outputs[1].outputState != (belowZero): outputs[1].nudge()			# u7
 
 func record():
 	history.push_back(exponent)

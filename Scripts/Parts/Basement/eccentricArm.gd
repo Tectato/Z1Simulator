@@ -2,6 +2,7 @@ extends Relation
 class_name EccentricArm
 
 @onready var bridge = $Bridge
+@onready var distLabel = $DistLabel
 
 # A is target pin, B is eccentric parent
 var inMotion = false
@@ -54,3 +55,8 @@ func updatePos():
 
 func rewind():
 	call_deferred("moved")
+
+func setSelected(value):
+	distLabel.visible = value
+	distLabel.global_position = Space.toVec3(Space.toVec2(A.global_position)+Space.toVec2(B.global_position))/2 + Vector3.UP * (global_position.y + 0.1)
+	distLabel.text = "%0.2f" % (Space.toVec2(A.global_position).distance_to(Space.toVec2(B.global_position)))

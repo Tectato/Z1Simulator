@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://be73i55egp4dv"]
 
 [ext_resource type="Script" uid="uid://dxxpx1lknf00b" path="res://Scripts/Parts/Basement/eccentricArm.gd" id="1_mxhrf"]
+[ext_resource type="FontFile" uid="uid://kj26sylm4dpl" path="res://Fonts/m5x7.ttf" id="2_8ijl0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2erm6"]
 albedo_color = Color(0.18, 0.16812001, 0.14760001, 1)
@@ -27,3 +28,14 @@ mesh = SubResource("CylinderMesh_totay")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, -0.1)
 material_override = SubResource("StandardMaterial3D_2erm6")
 mesh = SubResource("BoxMesh_xqxwa")
+
+[node name="DistLabel" type="Label3D" parent="." unique_id=1584215411]
+visible = false
+pixel_size = 0.0025
+billboard = 1
+double_sided = false
+no_depth_test = true
+texture_filter = 0
+render_priority = 1
+text = "0.0"
+font = ExtResource("2_8ijl0")

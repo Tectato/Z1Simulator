@@ -65,5 +65,6 @@ func updatePos():
 
 func serialize():
 	var out = super.serialize()
+	if !out: return null
 	out["type"] = "link"
 	return out

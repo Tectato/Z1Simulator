@@ -553,6 +553,7 @@ func updateInteractionCandidates():
 	pointConstraints.clear()
 	#linearConstraints.clear()
 	for pin in inRange:
+		if !pin: continue
 		var hole = getIntersector(pin.global_position)
 		var key = hole if hole != null else self
 		if pinCandidates.has(key):

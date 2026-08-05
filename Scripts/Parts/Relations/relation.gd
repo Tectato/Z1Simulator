@@ -50,6 +50,7 @@ func updatePos():
 	pass
 
 func serialize():
+	if !A or !B: return null
 	var out = {
 		"type" : "Unset",
 		"A" : A.uuid,

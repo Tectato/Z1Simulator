@@ -361,4 +361,8 @@ func rotateLayer(dir : int):
 			part.rotatePart(angle)
 		part.position = part.position.rotated(Vector3.UP, angle)
 		part.place()
-	
+
+func callOnEccentrics(function : Callable):
+	for part in parts:
+		if part is Eccentric:
+			function.call(part)

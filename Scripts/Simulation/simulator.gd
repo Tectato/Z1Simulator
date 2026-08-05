@@ -159,7 +159,7 @@ func stepToString(i : int):
 		3: return "IV"
 
 func nudge():
-	if stepProgress < 1.0: return
+	if stepProgress < 1.0 or !$Cooldown.is_stopped(): return
 	nudging = true
 	runningTimer = $MoveComplete
 	$MoveComplete.start()

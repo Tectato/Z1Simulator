@@ -54,6 +54,7 @@ func canBeMoved():
 	return true
 
 func addLayer():
+	var currentState = layers.duplicate()
 	var newLayer = LAYER.instantiate()
 	add_child(newLayer)
 	layers.append(newLayer)
@@ -65,9 +66,11 @@ func addLayer():
 		if !deserializing:
 			Global.editor.selector.select(newLayer.collider)
 		Global.editor.updateSceneTree()
+	updatePinExtents(currentState)
 	return newLayer
 
 func duplicateLayer(layer : Layer):
+	var currentState = layers.duplicate()
 	var index = layers.find(layer)
 	var newLayer = layer.duplicate()
 	add_child(newLayer)
@@ -80,15 +83,19 @@ func duplicateLayer(layer : Layer):
 	if Global.editor:
 		Global.editor.selector.select(newLayer.collider)
 		Global.editor.updateSceneTree()
+	updatePinExtents(currentState)
 
 func moveLayer(layer : Layer, direction = 1):
+	var currentState = layers.duplicate()
 	var index = layers.find(layer)
 	layers.erase(layer)
 	layers.insert(index+direction, layer)
 	gridLibrary.moveLayer(index, direction)
 	updateLayerPositions()
+	updatePinExtents(currentState)
 
 func removeLayer(layer):
+	var currentState = layers.duplicate()
 	var index = layers.find(layer)
 	layers.erase(layer)
 	gridLibrary.removeLayer(index)
@@ -99,6 +106,37 @@ func removeLayer(layer):
 		updateLayerPositions()
 	if index > 0 and not beingDeleted:
 		Global.editor.selector.call_deferred("select", layers[index-1].collider)
+	updatePinExtents(currentState)
+
+func updatePinExtents(previousState : Array):
+	if Global.editor and Global.editor.loading: return
+	var indexDiff = {}
+	for i in range(previousState.size()):
+		var newIndex = layers.find(previousState[i])
+		indexDiff[i] = newIndex
+	var fixExtents = func (part):
+		if part.endLayer < 0: return
+		var currentTop = part.endLayer
+		var currentBot = part.startLayer
+		var newTop = indexDiff[currentTop]
+		while(newTop < 0 and currentTop > 0):
+			currentTop -= 1
+			newTop = indexDiff[currentTop]
+		var newBot = indexDiff[currentBot]
+		while(newBot < 0 and currentBot > 0):
+			currentBot -= 1
+			newBot = indexDiff[currentBot]
+		var topDiff = newTop - part.endLayer
+		if topDiff != 0: part.modifyExtent(true, topDiff)
+		var botDiff = newBot - part.startLayer
+		if botDiff != 0: part.modifyExtent(false, botDiff)
+	
+	for pin in clockPins:
+		fixExtents.call(pin)
+	for pin in globalPins:
+		fixExtents.call(pin)
+	for layer in layers:
+		layer.callOnEccentrics(fixExtents)
 
 func getLayer(index, clamp = false):
 	if clamp: index = clampi(index, 0, layers.size()-1)

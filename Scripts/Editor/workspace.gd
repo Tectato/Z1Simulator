@@ -311,9 +311,13 @@ func deserialize(path, parent = self):
 			Global.editor.planInterface.setPlan(selectedLayer.plan)
 	for relation in relations:
 		var AParent = uuidManager.getPart(int(relation["AParent"]))
+		if !AParent: continue
 		var A = AParent.uuidManager.getPart(int(relation["A"]))
+		if !A: continue
 		var BParent = uuidManager.getPart(int(relation["BParent"]))
+		if !BParent: continue
 		var B = BParent.uuidManager.getPart(int(relation["B"]))
+		if !B: continue
 		match relation.type:
 			"link":
 				A.addRelation(Relation.Type.Link, B)

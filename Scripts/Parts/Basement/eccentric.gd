@@ -29,12 +29,15 @@ func serialize():
 	output["uuid"] = uuid
 	output["bounds"] = [startLayer, endLayer]
 	
+	cullRelations()
 	var allRelations = relations.duplicate()
 	allRelations.append_array(links)
 	if !allRelations.is_empty():
 		for relation in allRelations:
 			if !relation.isInterMachineRelation():
-				getMachine().relations[relation.serialize()] = null
+				var serialized = relation.serialize()
+				if !serialized: continue
+				getMachine().relations[serialized] = null
 	return output
 
 func deserialize(source : Dictionary):
@@ -51,6 +54,8 @@ func deserialize(source : Dictionary):
 
 func setSelected(value):
 	super.setSelected(value)
+	for relation in relations:
+		relation.setSelected(value)
 	if is_visible_in_tree():
 		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
 
@@ -224,6 +229,7 @@ func updateHeight():
 	#$Highlight.transform = mesh.transform
 	pinCollider.transform = mesh.transform
 	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
+	cullRelations()
 
 func rotatePart(by):
 	tryEqualize()
@@ -278,3 +284,7 @@ func visibilityChanged():
 		relation.visible = vis
 	for link in links:
 		link.visible = vis
+
+func cullRelations():
+	super.cullRelations()
+	links = links.filter(exists)

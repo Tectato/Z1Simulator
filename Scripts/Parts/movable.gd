@@ -272,6 +272,12 @@ func clearRelations():
 			relation.call_deferred("delete")
 	relations.clear()
 
+func cullRelations():
+	relations = relations.filter(exists)
+
+func exists(thing):
+	return thing != null
+
 func hasRelation(A, B):
 	for relation in relations:
 		if relation.A == A and relation.B == B:
