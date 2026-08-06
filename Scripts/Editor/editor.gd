@@ -175,6 +175,11 @@ func addProgramReader() -> void:
 	selector.place(workspace.addPeripheral(3))
 	previousAction = addProgramReader
 
+func addPeripheral(prefab : PackedScene):
+	saved = false
+	selector.place(workspace.addGeneric(prefab))
+	previousAction = doNothing
+
 func addMachine():
 	workspace.createNew()
 	previousAction = doNothing

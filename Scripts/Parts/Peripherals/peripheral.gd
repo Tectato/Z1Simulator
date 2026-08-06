@@ -1,7 +1,7 @@
 extends Selectable
 class_name Peripheral
 
-enum Type {DataDriven, InputExponent, OutputExponent, ProgramReader}
+enum Type {DataDriven, InputExponent, OutputExponent, ProgramReader, ResetInput, ConfirmInput}
 
 @export var inputs : Array[Pin]
 @export var outputs : Array[Pin]
@@ -58,6 +58,7 @@ func deserialize(src : Dictionary):
 	if src.has("outputs"):
 		var srcOutputs = src["outputs"]
 		for i in range(srcOutputs.size()):
+			if i >= outputs.size(): return
 			outputs[i].deserialize(srcOutputs[i])
 
 func serializeDiff():
@@ -114,3 +115,11 @@ func record():
 
 func rewind():
 	pass
+
+func setLayer(newLayer : Layer):
+	layer = newLayer
+	machine = layer.machine
+	for pin in inputs:
+		pin.layer = layer
+	for pin in outputs:
+		pin.layer = layer

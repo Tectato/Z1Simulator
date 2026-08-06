@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://bid61jor6cuxs"]
+
+[ext_resource type="Script" uid="uid://b3aja127go38x" path="res://Scripts/Parts/Peripherals/lever.gd" id="1_7ebva"]
+[ext_resource type="PackedScene" uid="uid://ooofnycownap" path="res://Models/confirmInput.glb" id="2_ysyfj"]
+[ext_resource type="Script" uid="uid://bitruedrw54ef" path="res://Scripts/Parts/Peripherals/leverInput.gd" id="3_se1p2"]
+[ext_resource type="Script" uid="uid://cbqsmqfnw3qwv" path="res://Scripts/Editor/3DUI/button3D.gd" id="4_qkwfr"]
+[ext_resource type="PackedScene" uid="uid://536qd7b6ytbe" path="res://Models/292_6_1.glb" id="5_52qs8"]
+[ext_resource type="Script" uid="uid://cpobe3vm8jd4h" path="res://Scripts/Parts/Peripherals/Visuals/stepTracker.gd" id="6_38fv1"]
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="7_xalbg"]
+[ext_resource type="PackedScene" uid="uid://dmyprqrkfq6al" path="res://Models/292_7.glb" id="8_38fv1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7ebva"]
+size = Vector3(0.030883789, 0.016906738, 0.01977539)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ysyfj"]
+size = Vector3(0.3515625, 1.3099365, 0.34936523)
+
+[sub_resource type="Animation" id="Animation_38fv1"]
+resource_name = "pull"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0, true],
+"method": &"setPin"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xalbg"]
+_data = {
+&"pull": SubResource("Animation_38fv1")
+}
+
+[node name="ConfirmInput" type="Node3D" unique_id=82171487 node_paths=PackedStringArray("lever", "animator", "outputs", "collider")]
+script = ExtResource("1_7ebva")
+lever = NodePath("confirmInput")
+animator = NodePath("AnimationPlayer")
+type = 5
+outputs = [NodePath("InputConfirmed")]
+collider = NodePath("Area3D")
+
+[node name="confirmInput" parent="." unique_id=1954718117 node_paths=PackedStringArray("button", "animator") instance=ExtResource("2_ysyfj")]
+transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0, -0.15, 0)
+script = ExtResource("3_se1p2")
+button = NodePath("InteractionArea")
+animator = NodePath("AnimationPlayer")
+pullAnim = "ConfirmInput_Pull"
+restAnim = "ConfirmInput_Idle"
+
+[node name="Skeleton3D" parent="confirmInput/ConfirmInput" parent_id_path=PackedInt32Array(1954718117, 699413506) index="0" unique_id=1682593740]
+bones/1/rotation = Quaternion(-0.030843638, 0.030843489, -0.7064337, 0.70643383)
+
+[node name="Lever" parent="confirmInput/ConfirmInput/Skeleton3D" index="0" unique_id=982903866]
+transform = Transform3D(1.7881393e-07, 0.9961947, 0.087155744, -1, 1.7881393e-07, 2.1979213e-07, 2.0489097e-07, -0.087155744, 0.9961947, 0, 0.028999966, 0)
+
+[node name="InteractionArea" type="Node3D" parent="confirmInput" unique_id=1647075075]
+transform = Transform3D(-0.008715577, 0, 0.09961948, 0, 0.1, 0, -0.09961948, 0, -0.008715577, 0.1789037, 0.03611966, -0.016116096)
+script = ExtResource("4_qkwfr")
+
+[node name="Area3D" type="Area3D" parent="confirmInput/InteractionArea" unique_id=209810989]
+transform = Transform3D(-4.3711387e-07, 0, -10, 0, 10, 0, 10, 0, -4.3711387e-07, 0, 0, 0)
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="confirmInput/InteractionArea/Area3D" unique_id=420903333]
+transform = Transform3D(1, 0, -3.5527137e-15, 0, 1, 0, 3.5527137e-15, 0, 1, -0.0045776367, 0.005340576, 0)
+shape = SubResource("BoxShape3D_7ebva")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1891149657]
+collision_layer = 3
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1139384926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.40460205, 0)
+shape = SubResource("BoxShape3D_ysyfj")
+
+[node name="292_6_1" parent="." unique_id=480016207 node_paths=PackedStringArray("targetPin") instance=ExtResource("5_52qs8")]
+transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0, 0.072843194, 0.73646456)
+script = ExtResource("6_38fv1")
+targetPin = NodePath("../InputConfirmed")
+forwardAxis = Vector3(1, 0, 0)
+
+[node name="InputConfirmed" parent="." unique_id=805540248 instance=ExtResource("7_xalbg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.040151626, 0, 0.8997278)
+
+[node name="292_72" parent="." unique_id=1302982737 instance=ExtResource("8_38fv1")]
+transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, -0.27903914, 0.041017696, 1.04)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=306862269]
+libraries/ = SubResource("AnimationLibrary_xalbg")
+
+[editable path="confirmInput"]

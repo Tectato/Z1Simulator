@@ -8,6 +8,8 @@ const AUDIOHANDLER = preload("res://Scenes/SheetSoundHandler.tscn")
 const P_INPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/InputExponent.tscn")
 const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.tscn")
 const P_READER = preload("res://Scenes/Parts/Peripherals/ProgramReader.tscn")
+const P_RESETINPUT = preload("res://Scenes/Parts/Peripherals/ResetInput.tscn")
+const P_CONFIRMINPUT = preload("res://Scenes/Parts/Peripherals/ConfirmInput.tscn")
 const ECCENTRIC = preload("res://Scenes/Parts/Basement/Eccentric.tscn")
 
 @onready var collider = $BoundingBox
@@ -128,21 +130,23 @@ func deserialize(source : Dictionary):
 			newPart.deserialize(part)
 	if source.has("peripherals"):
 		for part in source["peripherals"]:
+			var newPart
 			match(int(part["type"])):
 				0:
 					pass # Data-driven
 				1:
-					var newPart = P_INPUTEXPONENT.instantiate()
-					addPart(newPart)
-					newPart.deserialize(part)
+					newPart = P_INPUTEXPONENT.instantiate()
 				2:
-					var newPart = P_OUTPUTEXPONENT.instantiate()
-					addPart(newPart)
-					newPart.deserialize(part)
+					newPart = P_OUTPUTEXPONENT.instantiate()
 				3:
-					var newPart = P_READER.instantiate()
-					addPart(newPart)
-					newPart.deserialize(part)
+					newPart = P_READER.instantiate()
+				4:
+					newPart = P_RESETINPUT.instantiate()
+				5:
+					newPart = P_CONFIRMINPUT.instantiate()
+			if newPart:
+				addPart(newPart)
+				newPart.deserialize(part)
 	if source.has("id"):
 		id = source["id"]
 	if source.has("plan"):

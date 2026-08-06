@@ -20,6 +20,8 @@ func _process(_delta: float) -> void:
 
 func updateCurrentRot():
 	look_at(targetPin.global_position)
+	rotation.x = 0
+	rotation.z = 0
 	var facingPos = forwardAxis
 	var angleDiff = Vector2(0,-1).angle_to(Space.toVec2(facingPos))
 	rotation.y += angleDiff

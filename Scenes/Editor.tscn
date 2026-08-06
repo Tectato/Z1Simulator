@@ -116,6 +116,7 @@
 [ext_resource type="Texture2D" uid="uid://bu3bkckauy372" path="res://Sprites/Buttons/Parts/comment_active.png" id="79_5ko8x"]
 [ext_resource type="Texture2D" uid="uid://c38n06jl0k64s" path="res://Sprites/Buttons/Generic/close_active.png" id="79_e2vqq"]
 [ext_resource type="Texture2D" uid="uid://bdl35a0b55bc6" path="res://Sprites/Buttons/Parts/comment_lit.png" id="80_i1mcn"]
+[ext_resource type="Script" uid="uid://bx5jab7pxbroj" path="res://Scripts/Editor/customTabContainer.gd" id="83_kklpi"]
 [ext_resource type="Texture2D" uid="uid://c16k8ibw5hmae" path="res://Sprites/xPos.png" id="94_6kijv"]
 [ext_resource type="Texture2D" uid="uid://bjpuehpmf2sjx" path="res://Sprites/xNeg.png" id="94_cl6md"]
 [ext_resource type="Texture2D" uid="uid://ckaotuhcrafcu" path="res://Sprites/Buttons/Parts/inputExponent.png" id="95_h6sg5"]
@@ -143,7 +144,14 @@
 [ext_resource type="Texture2D" uid="uid://cwey2s3fmx4x0" path="res://Sprites/Buttons/Parts/reader_lit.png" id="108_kklpi"]
 [ext_resource type="Texture2D" uid="uid://bs65qo5j0sfmr" path="res://Sprites/Buttons/PlanInterface/Elements/rectangle_active.png" id="108_yjo3m"]
 [ext_resource type="Texture2D" uid="uid://dloyj7xrfjtfc" path="res://Sprites/Buttons/PlanInterface/Elements/line_active.png" id="109_66atf"]
+[ext_resource type="Texture2D" uid="uid://dp2af1p3a17c1" path="res://Sprites/Buttons/Parts/resetInput.png" id="110_c0c04"]
 [ext_resource type="Texture2D" uid="uid://c6gapelpr4pbq" path="res://Sprites/Buttons/PlanInterface/Elements/state_active.png" id="110_gtbin"]
+[ext_resource type="Texture2D" uid="uid://djm485sjj7oxx" path="res://Sprites/Buttons/Parts/resetInput_lit.png" id="111_m8o71"]
+[ext_resource type="Script" uid="uid://byppaj4toyf67" path="res://Scripts/Editor/genericPartPlacer.gd" id="112_kifs4"]
+[ext_resource type="PackedScene" uid="uid://dla0x8krp6bmq" path="res://Scenes/Parts/Peripherals/ResetInput.tscn" id="113_5q1b5"]
+[ext_resource type="Texture2D" uid="uid://ccjsi1bufy4xi" path="res://Sprites/Buttons/Parts/confirmInput.png" id="114_5q1b5"]
+[ext_resource type="PackedScene" uid="uid://bid61jor6cuxs" path="res://Scenes/Parts/Peripherals/ConfirmInput.tscn" id="114_m8o71"]
+[ext_resource type="Texture2D" uid="uid://cig7qw528l5g7" path="res://Sprites/Buttons/Parts/confirmInput_lit.png" id="115_rs51l"]
 [ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
 [ext_resource type="Script" uid="uid://cetuxuiwg12my" path="res://Scripts/Editor/Programming/programmer.gd" id="123_ixopf"]
@@ -2191,7 +2199,7 @@ texture_normal = ExtResource("21_pswvd")
 texture_pressed = ExtResource("22_df5t7")
 texture_hover = ExtResource("23_pux46")
 
-[node name="PartPlacers" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent" unique_id=235957137]
+[node name="PartPlacers" type="Control" parent="Camera3D/Interface/VisibilityParent" unique_id=1786288077 node_paths=PackedStringArray("tabs", "buttons")]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = 6
@@ -2199,21 +2207,34 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -32.0
+offset_left = -32.5
 offset_top = -160.0
 offset_right = 8.0
 offset_bottom = 4.0
 grow_horizontal = 0
 grow_vertical = 2
 scale = Vector2(2, 2)
-horizontal_scroll_mode = 0
+script = ExtResource("83_kklpi")
+tabs = [NodePath("Common"), NodePath("Specific")]
+buttons = [NodePath("ButtonCommon"), NodePath("ButtonSpecific")]
 
-[node name="List" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=2061252750]
+[node name="Common" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=1855121379]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="List" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common" unique_id=2061252750]
 texture_filter = 1
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=989161027]
+[node name="Sheet" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List" unique_id=989161027]
 layout_mode = 2
 tooltip_text = "Import sheet"
 texture_normal = ExtResource("28_v7xow")
@@ -2221,7 +2242,7 @@ texture_pressed = ExtResource("29_cv1oh")
 texture_hover = ExtResource("30_vtcxi")
 texture_disabled = ExtResource("52_v5nsg")
 
-[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1157993856]
+[node name="LogicPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List" unique_id=1157993856]
 layout_mode = 2
 tooltip_text = "Place logic pin (Local to layer)"
 texture_normal = ExtResource("31_y3ns8")
@@ -2229,7 +2250,7 @@ texture_pressed = ExtResource("32_625ua")
 texture_hover = ExtResource("33_2ery0")
 texture_disabled = ExtResource("56_81ubf")
 
-[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=2140756488]
+[node name="GlobalPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List" unique_id=2140756488]
 layout_mode = 2
 tooltip_text = "Place global logic pin (Across all layers)"
 texture_normal = ExtResource("34_2ery0")
@@ -2237,7 +2258,7 @@ texture_pressed = ExtResource("35_syg30")
 texture_hover = ExtResource("36_n4fht")
 texture_disabled = ExtResource("60_36n1v")
 
-[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=506366694]
+[node name="ClockPin" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List" unique_id=506366694]
 layout_mode = 2
 tooltip_text = "Place clock pin"
 texture_normal = ExtResource("34_syg30")
@@ -2245,40 +2266,99 @@ texture_pressed = ExtResource("35_n4fht")
 texture_hover = ExtResource("36_3icuf")
 texture_disabled = ExtResource("64_ybrqq")
 
-[node name="Comment" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=446700626]
-layout_mode = 2
-tooltip_text = "Place comment"
-texture_normal = ExtResource("78_qnh42")
-texture_pressed = ExtResource("79_5ko8x")
-texture_hover = ExtResource("80_i1mcn")
-
-[node name="Eccentric" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1908480452]
+[node name="Eccentric" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List" unique_id=1908480452]
 layout_mode = 2
 tooltip_text = "Place comment"
 texture_normal = ExtResource("97_q6d0a")
 texture_pressed = ExtResource("98_3451d")
 texture_hover = ExtResource("99_mas1e")
 
-[node name="InputExponentSlider" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=292589919]
+[node name="Comment" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List" unique_id=446700626]
+layout_mode = 2
+tooltip_text = "Place comment"
+texture_normal = ExtResource("78_qnh42")
+texture_pressed = ExtResource("79_5ko8x")
+texture_hover = ExtResource("80_i1mcn")
+
+[node name="Specific" type="ScrollContainer" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=322568723]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="List" type="VBoxContainer" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific" unique_id=1541423854]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 1
+
+[node name="InputExponentSlider" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=292589919]
 layout_mode = 2
 tooltip_text = "Place input exponent slider"
 texture_normal = ExtResource("95_h6sg5")
 texture_pressed = ExtResource("96_tqjql")
 texture_hover = ExtResource("97_ttmut")
 
-[node name="OutputExponentSlider2" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1636840348]
+[node name="OutputExponentSlider2" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=1636840348]
 layout_mode = 2
 tooltip_text = "Place output exponent slider"
 texture_normal = ExtResource("96_1q8bw")
 texture_pressed = ExtResource("99_6xrox")
 texture_hover = ExtResource("100_cfdn2")
 
-[node name="ProgramReader" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/List" unique_id=1186478368]
+[node name="ProgramReader" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=1186478368]
 layout_mode = 2
 tooltip_text = "Place output exponent slider"
 texture_normal = ExtResource("106_lte3c")
 texture_pressed = ExtResource("107_ixopf")
 texture_hover = ExtResource("108_kklpi")
+
+[node name="ResetInput" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=772094418]
+layout_mode = 2
+texture_normal = ExtResource("110_c0c04")
+texture_hover = ExtResource("111_m8o71")
+script = ExtResource("112_kifs4")
+part = ExtResource("113_5q1b5")
+
+[node name="ConfirmInput" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=419239652]
+layout_mode = 2
+texture_normal = ExtResource("114_5q1b5")
+texture_hover = ExtResource("115_rs51l")
+script = ExtResource("112_kifs4")
+part = ExtResource("114_m8o71")
+
+[node name="ButtonCommon" type="Button" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=1602735433]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -26.0
+offset_top = -16.0
+offset_right = -8.0
+offset_bottom = 15.0
+grow_horizontal = 0
+scale = Vector2(0.5, 0.5)
+disabled = true
+text = "1"
+
+[node name="ButtonSpecific" type="Button" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=1342022498]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -35.0
+offset_top = -16.0
+offset_right = -17.0
+offset_bottom = 15.0
+grow_horizontal = 0
+scale = Vector2(0.5, 0.5)
+text = "2"
 
 [node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent" unique_id=2065483624]
 own_world_3d = true
@@ -3311,15 +3391,15 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/SimulationControls/PausePlay" to="Camera3D/Interface/VisibilityParent/SimulationControls" method="_on_pause_play_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SimulationControls/NextStep" to="Camera3D/Interface/VisibilityParent/Tutorial/2_SimControls" method="next"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/SimulationControls/NextStep" to="Camera3D/Interface/VisibilityParent/SimulationControls" method="_on_next_step_pressed"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Sheet" to="Camera3D/Interface" method="requestSheet"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/LogicPin" to="." method="addPin"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/GlobalPin" to="." method="addGlobalPin"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/ClockPin" to="." method="addClockPin"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Comment" to="." method="addComment"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/Eccentric" to="." method="addEccentric"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/InputExponentSlider" to="." method="addExponentSlider" binds= [true]]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/OutputExponentSlider2" to="." method="addExponentSlider"]
-[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/List/ProgramReader" to="." method="addProgramReader"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List/Sheet" to="Camera3D/Interface" method="requestSheet"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List/LogicPin" to="." method="addPin"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List/GlobalPin" to="." method="addGlobalPin"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List/ClockPin" to="." method="addClockPin"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List/Eccentric" to="." method="addEccentric"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Common/List/Comment" to="." method="addComment"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List/InputExponentSlider" to="." method="addExponentSlider" binds= [true]]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List/OutputExponentSlider2" to="." method="addExponentSlider"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List/ProgramReader" to="." method="addProgramReader"]
 [connection signal="editing_toggled" from="Camera3D/Interface/VisibilityParent/ClockGizmo/TextFrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_editing_toggled"]
 [connection signal="value_changed" from="Camera3D/Interface/VisibilityParent/ClockGizmo/FrequencyInput" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_frequency_input_value_changed"]
 [connection signal="timeout" from="Camera3D/Interface/VisibilityParent/ClockGizmo/ValueTimeout" to="Camera3D/Interface/VisibilityParent/ClockGizmo" method="_on_value_timeout_timeout"]

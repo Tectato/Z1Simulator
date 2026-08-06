@@ -451,6 +451,14 @@ func addPeripheral(type : int):
 	selectedLayer.addPart(newPeripheral)
 	return newPeripheral
 
+func addGeneric(prefab : PackedScene):
+	createIfNotExists()
+	setResolution(Resolution.Part)
+	var newPeripheral = prefab.instantiate()
+	if newPeripheral == null: return
+	selectedLayer.addPart(newPeripheral)
+	return newPeripheral
+
 func createIfNotExists():
 	if machines.is_empty():
 		createNew()

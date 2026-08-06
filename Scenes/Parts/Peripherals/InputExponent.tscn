@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="1_8q7bv"]
 [ext_resource type="Script" uid="uid://c4c50ow7nj8mq" path="res://Scripts/Parts/Peripherals/exponentSlider.gd" id="1_qj1uw"]
+[ext_resource type="Script" uid="uid://v4yb51mgryhe" path="res://Scripts/Editor/3DUI/3DUIVisToggle.gd" id="2_0jlyt"]
 [ext_resource type="FontFile" uid="uid://c6hv3oj38le0" path="res://Fonts/DigitalPixel-Regular.otf" id="2_qj1uw"]
 [ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="4_t4572"]
 [ext_resource type="Texture2D" uid="uid://bag53j0wvuxsu" path="res://Sprites/Parts/exponentSlot.png" id="5_p55in"]
@@ -42,6 +43,7 @@ monitoring = false
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=696665051]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7329407, 0.10144043, -0.4025364)
 shape = SubResource("BoxShape3D_t4572")
+script = ExtResource("2_0jlyt")
 
 [node name="ShiftLeft" parent="." unique_id=1171825191 instance=ExtResource("1_8q7bv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0, -1.05)
@@ -57,6 +59,7 @@ text = "u4
 font = ExtResource("2_qj1uw")
 font_size = 10
 horizontal_alignment = 0
+script = ExtResource("2_0jlyt")
 
 [node name="ShiftRight" parent="." unique_id=805540248 instance=ExtResource("1_8q7bv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, 0, -1.05)
@@ -72,6 +75,7 @@ text = "u5
 font = ExtResource("2_qj1uw")
 font_size = 10
 horizontal_alignment = 0
+script = ExtResource("2_0jlyt")
 
 [node name="AtZeroOrMinus6" parent="." unique_id=1052312925 instance=ExtResource("1_8q7bv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -2.25)
@@ -87,6 +91,7 @@ text = " u6
 font = ExtResource("2_qj1uw")
 font_size = 10
 horizontal_alignment = 0
+script = ExtResource("2_0jlyt")
 
 [node name="AtMinus6" parent="." unique_id=632964960 instance=ExtResource("1_8q7bv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -2.45)
@@ -102,9 +107,10 @@ text = " u7
 font = ExtResource("2_qj1uw")
 font_size = 10
 horizontal_alignment = 0
+script = ExtResource("2_0jlyt")
 
 [node name="IndexLabel" type="Label3D" parent="." unique_id=127997647]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2503634, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.17792435, 0.26747334, 0)
 sorting_offset = 1.0
 billboard = 1
 double_sided = false
@@ -113,6 +119,7 @@ text = "0"
 font = ExtResource("2_qj1uw")
 font_size = 10
 horizontal_alignment = 2
+script = ExtResource("2_0jlyt")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1585970957]
 transform = Transform3D(-3.7855173e-08, 0.5, -0.8660254, 2.1855694e-08, 0.8660254, 0.5, 1, 0, -4.371139e-08, 0.021923602, 0.05, 0)

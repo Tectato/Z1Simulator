@@ -1,3 +1,59 @@
 [gd_scene format=3 uid="uid://dla0x8krp6bmq"]
 
-[node name="ResetInput" type="Node3D" unique_id=967403410]
+[ext_resource type="PackedScene" uid="uid://b43raymn88axf" path="res://Models/resetInput.glb" id="1_gfjdv"]
+[ext_resource type="Script" uid="uid://b3aja127go38x" path="res://Scripts/Parts/Peripherals/lever.gd" id="2_w5ysf"]
+[ext_resource type="Script" uid="uid://bitruedrw54ef" path="res://Scripts/Parts/Peripherals/leverInput.gd" id="3_83gk5"]
+[ext_resource type="Script" uid="uid://cbqsmqfnw3qwv" path="res://Scripts/Editor/3DUI/button3D.gd" id="3_w5ysf"]
+[ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="5_rswe7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gfjdv"]
+size = Vector3(0.015625, 0.015625, 0.02746582)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_83gk5"]
+size = Vector3(0.12011719, 0.9941406, 0.14160156)
+
+[node name="ResetInput" type="Node3D" unique_id=967403410 node_paths=PackedStringArray("lever", "outputs", "collider")]
+script = ExtResource("2_w5ysf")
+lever = NodePath("resetInput")
+outputs = [NodePath("Lö")]
+collider = NodePath("Area3D")
+
+[node name="resetInput" parent="." unique_id=871847775 node_paths=PackedStringArray("button", "animator") instance=ExtResource("1_gfjdv")]
+transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0, 0.05, 0)
+script = ExtResource("3_83gk5")
+button = NodePath("InteractionArea")
+animator = NodePath("AnimationPlayer")
+pullAnim = "ResetInput_Pull"
+restAnim = "ResetInput_Idle"
+
+[node name="Skeleton3D" parent="resetInput/ResetInput" parent_id_path=PackedInt32Array(871847775, 1551039716) index="0" unique_id=174495092]
+bones/1/rotation = Quaternion(0.6755903, 6.844275e-07, 9.3727925e-07, 0.73727727)
+
+[node name="Lever" parent="resetInput/ResetInput/Skeleton3D" index="0" unique_id=1550320202]
+transform = Transform3D(1, -2.1977297e-07, 2.2964387e-06, 2.3068544e-06, 0.08715563, -0.99619466, 1.8789109e-08, 0.99619466, 0.08715563, -2.1316303e-16, 2.7939677e-08, -1.7881412e-09)
+
+[node name="InteractionArea" type="Node3D" parent="resetInput" unique_id=1582190640]
+script = ExtResource("3_w5ysf")
+
+[node name="Area3D" type="Area3D" parent="resetInput/InteractionArea" unique_id=1971644490]
+transform = Transform3D(0.99619466, 0, 0.08715573, 0, 1, 0, -0.08715573, 0, 0.99619466, 0.005830705, 0, 0.059775613)
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="resetInput/InteractionArea/Area3D" unique_id=36156347]
+transform = Transform3D(1, 0, 0, 0, 1.0000002, 0, 0, 0, 1, 0, 0.0029296887, 0.05657959)
+shape = SubResource("BoxShape3D_gfjdv")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=998330154]
+collision_layer = 3
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1244813161]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0013885498, -0.39257813, 0)
+shape = SubResource("BoxShape3D_83gk5")
+
+[node name="Lö" parent="." unique_id=805540248 instance=ExtResource("5_rswe7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
+
+[editable path="resetInput"]

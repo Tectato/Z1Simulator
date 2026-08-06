@@ -29,6 +29,7 @@ signal step
 signal backstep
 signal record
 signal rewind
+signal stepDone
 
 func _ready() -> void:
 	$AutoClock.wait_time = clockSpeed
@@ -166,6 +167,7 @@ func nudge():
 
 func _on_move_complete_timeout() -> void:
 	stepProgress = 1.0
+	stepDone.emit()
 	if nudging:
 		nudging = false
 		return

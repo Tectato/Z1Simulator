@@ -285,6 +285,7 @@ func deserializeFromDict(source):
 		for relation in source["relations"]:
 			var A = uuidManager.getPart(int(relation["A"]))
 			var B = uuidManager.getPart(int(relation["B"]))
+			if !A or !B: continue
 			match relation.type:
 				"link":
 					A.addRelation(Relation.Type.Link, B)

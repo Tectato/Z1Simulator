@@ -20,6 +20,8 @@ extends Peripheral
 # L_ Outputs:
 #	--
 
+@export var valueRange = [-6, 6]
+
 var exponent = 0
 var lastMove = 0
 var history = []
@@ -28,7 +30,8 @@ var sliderStartPos : Vector3
 
 func _ready() -> void:
 	super._ready()
-	sliderStartPos = slider.position
+	if slider:
+		sliderStartPos = slider.position
 	updatePos()
 	Simulator.step.connect(checkUpdate)
 
@@ -80,7 +83,8 @@ func pinInput(pin : Pin):
 			reset()
 
 func shift(dir, machineInitiated = false):
-	if abs(exponent + dir) > 6:
+	var newValue = exponent + dir
+	if newValue < valueRange[0] or newValue > valueRange[1]:
 		Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
 		return
 	exponent += dir
@@ -92,7 +96,8 @@ func shift(dir, machineInitiated = false):
 
 func reset():
 	exponent = 0
-	updatePos()
+	sliderArmature.reset()
+	#updatePos()
 
 func checkUpdate():
 	if updateScheduled:

@@ -16,6 +16,7 @@ func _ready() -> void:
 
 func setValue(value : bool):
 	state = value
+	if !checkbox: checkbox = $Checkbox
 	#checkbox.play(str(value))
 	checkbox.setSprite("1" if value else "0")
 
@@ -27,6 +28,7 @@ func click(left = true):
 	parent.nudge()
 
 func setDirection(dir : Directionality):
+	if !direction: direction = $Directionality
 	match(dir):
 		Directionality.X:
 			#direction.play("X")
