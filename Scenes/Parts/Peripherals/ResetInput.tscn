@@ -12,9 +12,35 @@ size = Vector3(0.015625, 0.015625, 0.02746582)
 [sub_resource type="BoxShape3D" id="BoxShape3D_83gk5"]
 size = Vector3(0.12011719, 0.9941406, 0.14160156)
 
-[node name="ResetInput" type="Node3D" unique_id=967403410 node_paths=PackedStringArray("lever", "outputs", "collider")]
+[sub_resource type="Animation" id="Animation_rswe7"]
+resource_name = "pull"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [0, true],
+"method": &"setPin"
+}, {
+"args": [0, false],
+"method": &"setPin"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_adojs"]
+_data = {
+&"pull": SubResource("Animation_rswe7")
+}
+
+[node name="ResetInput" type="Node3D" unique_id=967403410 node_paths=PackedStringArray("lever", "animator", "outputs", "collider")]
 script = ExtResource("2_w5ysf")
 lever = NodePath("resetInput")
+animator = NodePath("AnimationPlayer")
 outputs = [NodePath("Lö")]
 collider = NodePath("Area3D")
 
@@ -27,10 +53,10 @@ pullAnim = "ResetInput_Pull"
 restAnim = "ResetInput_Idle"
 
 [node name="Skeleton3D" parent="resetInput/ResetInput" parent_id_path=PackedInt32Array(871847775, 1551039716) index="0" unique_id=174495092]
-bones/1/rotation = Quaternion(0.6755903, 6.844275e-07, 9.3727925e-07, 0.73727727)
+bones/1/rotation = Quaternion(0.70643383, 0.030844294, -0.030842671, 0.7064337)
 
 [node name="Lever" parent="resetInput/ResetInput/Skeleton3D" index="0" unique_id=1550320202]
-transform = Transform3D(1, -2.1977297e-07, 2.2964387e-06, 2.3068544e-06, 0.08715563, -0.99619466, 1.8789109e-08, 0.99619466, 0.08715563, -2.1316303e-16, 2.7939677e-08, -1.7881412e-09)
+transform = Transform3D(0.9961947, 0.087155744, 2.283603e-06, 2.293309e-06, -5.983145e-08, -0.99999994, -0.08715574, 0.99619466, -1.7881446e-07, -2.1316303e-16, 2.7939677e-08, -1.7881412e-09)
 
 [node name="InteractionArea" type="Node3D" parent="resetInput" unique_id=1582190640]
 script = ExtResource("3_w5ysf")
@@ -55,5 +81,8 @@ shape = SubResource("BoxShape3D_83gk5")
 
 [node name="Lö" parent="." unique_id=805540248 instance=ExtResource("5_rswe7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=847165146]
+libraries/ = SubResource("AnimationLibrary_adojs")
 
 [editable path="resetInput"]
