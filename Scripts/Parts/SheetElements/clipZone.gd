@@ -14,6 +14,7 @@ const POSITIVE = preload("res://Scenes/Parts/SheetElements/Cutouts/ClipZonePosit
 
 var parent : Sheet
 var clipped = false
+var rect : Rect2
 
 func setSelected(value):
 	super.setSelected(value)
@@ -57,6 +58,7 @@ func init(dims : Vector2):
 	mesh.scale = Vector3(dims.x, 0.02, dims.y)
 	#mesh.scale = Vector3.ONE
 	mesh.position = hitbox.position - Vector3.UP * 0.01
+	rect = Rect2(Space.toVec2(hitbox.position-hitbox.shape.size/2.0), Space.toVec2(hitbox.shape.size))
 
 func setupAfterDuplication(src : ClipZone):
 	name = src.name
@@ -66,7 +68,10 @@ func setupAfterDuplication(src : ClipZone):
 	mesh.scale = src.mesh.scale
 	mesh.position = src.mesh.position
 	position = src.position
+	rect = src.rect
 
 func checkPos(pos : Vector3):
-	var rect = Rect2(Space.toVec2(hitbox.position-hitbox.shape.size/2.0), Space.toVec2(hitbox.shape.size))
 	return rect.has_point(Space.toVec2(pos))
+
+func isInRange(pos : Vector3):
+	return rect.grow(Global.workspace.pinTravel * 2).has_point(Space.toVec2(pos))

@@ -402,7 +402,11 @@ func updateInteractionCandidates():
 	for sheet in inRange:
 		var hole = sheet.getIntersector(global_position)
 		if hole == null:
+			#var closestZone = sheet.getClosestClipZone(global_position)
+			#if closestZone == null or closestZone.global_position.distance_squared_to(global_position) > Global.workspace.pinTravelSquared:
 			interactionCandidates.append([sheet, null])
+			#else:
+				#interactionCandidates.append([sheet, closestZone])
 		else:
 			interactionCandidates.append([sheet, hole])
 			if hole is PointHole or hole is LongHole:
@@ -453,7 +457,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 	#instances[1] += 1									#
 	if out != MoveState.Moved: return out
 	var dirID = dirToInt(dir)
-	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
+	var check1 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	if !check1:
 		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
@@ -461,7 +465,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 	#t_prop1 += Time.get_ticks_usec() - startTime		# TIMINGS
 	#startTime = Time.get_ticks_usec()					#
 	#instances[2] += 1									#
-	var check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
+	var check2 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
 	if !check2:
 		blockedCycle[dirID] = Simulator.totalStep
 		#abortMove(initiator, chain)
@@ -531,7 +535,7 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 				moveCandidates[part[0]] = part[0]
 				continue
 			#s_partsChecked += 1
-			if part[0].intersectsOutline(global_position+globalOffset):
+			if part[0].intersectsOutline(global_position+globalOffset, self):
 				moveCandidates[part[0]] = part[0]
 				if part[0].fixed: break
 		else:

@@ -36,6 +36,7 @@ var movedPins = {}
 var gizmo
 var localClipZones = []
 var toClip = []
+var nearestZonesToPin = {}
 var sheetData : SheetData
 var placeScheduled = false
 
@@ -471,12 +472,12 @@ func sortClipZone(a : ClipZone, b : ClipZone):
 	var idB = int(b.id.split("_")[1])
 	return idA < idB
 
-func intersects(pos : Vector3):
+func intersects(pos : Vector3, pin = null):
 	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * global_transform
 	debugPoint.global_position = posRelative
 	#var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), outline.polygon)
-	var withinOutline = intersectsOutline(pos)
+	var withinOutline = intersectsOutline(pos, pin)
 	if !withinOutline:
 		return false
 	var withinHole = false
@@ -485,23 +486,23 @@ func intersects(pos : Vector3):
 		withinHole = withinHole or hole.checkPos(posRelative)
 	return withinOutline and not withinHole
 
-func intersectsOutline(pos : Vector3):
+func intersectsOutline(pos : Vector3, pin = null):
 	#var posRelative = outline.to_local(pos)
 	var posRelative = pos * $Outline.global_transform
 	var coarseCheck = sheetData.boundingRect.has_point(Space.toVec2(posRelative))
 	if !coarseCheck: return false
-	var intersects = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
-	if intersects:
-		for zone in localClipZones:
-			if !zone.clipped: continue
+	if localClipZones.is_empty():
+		return Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
+	else:
+		if !pin: return false
+		for zone in nearestZonesToPin[pin]:
+			#if zone.clipped: continue
 			if zone.checkPos(posRelative - zone.position):
-				intersects = !zone.clipped
-				#Simulator.spawnIndicator(pos * Vector3(1,0,1) + global_position * Vector3.UP, EventIndicator.Type.Attention if zone.clipped else EventIndicator.Type.Error)
-				break
-	return intersects
+				return true#!zone.clipped
+	return false
 
 func getIntersector(pos : Vector3):
-	var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
+	#var posRot = (pos - global_position).rotated(Vector3.UP, -rotation.y)
 	var posRelative = pos * $Outline.global_transform
 	$debug.position = posRelative
 	var withinOutline = Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
@@ -512,7 +513,15 @@ func getIntersector(pos : Vector3):
 		if hole.checkPos(to_local(pos) * hole.transform):
 			return hole
 	return null
-	
+
+func getCloseClipZones(pos : Vector3):
+	if localClipZones.is_empty(): return null
+	var posRelative = pos * $Outline.global_transform
+	var candidates = []
+	for zone in localClipZones:
+		if !zone.clipped and zone.isInRange(posRelative - zone.position):
+			candidates.append(zone)
+	return candidates
 
 func place():
 	heightIndex = int(max(0,roundf(position.y / Global.workspace.sheetSpacing)))
@@ -556,15 +565,26 @@ func updateInteractionCandidates():
 		if !pin: continue
 		var hole = getIntersector(pin.global_position)
 		var key = hole if hole != null else self
-		if pinCandidates.has(key):
-			pinCandidates[key].append(pin)
-		else:
-			pinCandidates[key] = [pin]
-		if hole is PointHole:
-			pointConstraints[pin] = null
-		#if hole is LongHole and pin.fixed:
-			#linearConstraints[pin] = null
-		# TODO: case for LongHoles
+		if key == self: # Limit outline candidates to pins that are actually close enough
+			var posRelative = pin.global_position * $Outline.global_transform
+			var actuallyInRange = sheetData.boundingRect.grow(2*Global.workspace.pinTravel).has_point(Space.toVec2(posRelative))
+			#if actuallyInRange:
+				#for y in range(-1,2):
+					#for x in range(-1,2):
+						#actuallyInRange = intersectsOutline(pin.global_position + Vector3(x,0,y) * Global.workspace.pinTravel)
+						#if actuallyInRange: break
+					#if actuallyInRange: break
+			if !actuallyInRange: key = null
+			elif !localClipZones.is_empty():
+				var closeZones = getCloseClipZones(pin.global_position)
+				nearestZonesToPin[pin] = closeZones
+		if key:
+			if pinCandidates.has(key):
+				pinCandidates[key].append(pin)
+			else:
+				pinCandidates[key] = [pin]
+			if hole is PointHole:
+				pointConstraints[pin] = null
 	if pointConstraints.size() > 0:
 		targetRot = rotation.y
 	var numFixedPins = 0
@@ -576,7 +596,9 @@ func updateInteractionCandidates():
 				return
 	if numFixedPins < 1:
 		setFixed(false)
-	interactionCandidates.sort_custom(sortByFixed)
+	#interactionCandidates.sort_custom(sortByFixed)
+	for key in pinCandidates.keys():
+		pinCandidates[key].sort_custom(sortByFixed)
 	updateConstraints()
 
 func canMove(dir : Vector2, initiator, chain = []):
@@ -599,10 +621,10 @@ func canMove(dir : Vector2, initiator, chain = []):
 	forces[initiator] = [dir, chain]
 	
 	if !toMove.has(dirID): toMove[dirID] = {}
-	var check1 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
+	var check1 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
 	var check2 = 0
 	if check1 > 0:
-		check2 = checkPropagation(Space.toVec3(dir), dir, initiator, chain)
+		check2 = checkPropagation(Space.toVec3(dir)/2, dir, initiator, chain)
 	var cantMove = 0
 	if selected:
 		pass
@@ -716,6 +738,8 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 	var toMoveHasDir = toMove.has(dirID)
 	var moveCandidates = {}
 	#var t_start = Time.get_ticks_usec()
+	if selected:
+		pass
 	for part in pinCandidates.keys():
 		var pins = pinCandidates[part]
 		if part is Sheet:
@@ -725,28 +749,37 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 					moveCandidates[pin] = pin
 					continue
 				#s_partsChecked += 1
-				if intersectsOutline(pin.global_position - globalOffset):
+				if intersectsOutline(pin.global_position - globalOffset, pin):
 					moveCandidates[pin] = pin
-					if pin.fixed: break
+					if pin.fixed: 
+						if !pivots[dirID%2].is_empty():
+							cantMove += 1
+						break
 		else:
+			var zone = part is ClipZone
 			for pin in pins:
 				if toMoveHasDir and toMove[dirID].has(pin): continue
 				if pin == initiator:
 					moveCandidates[pin] = pin
 					continue
 				#s_partsChecked += 1
-				if !part.checkPos(to_local(pin.global_position - globalOffset) * part.transform): # machine.to_global on offset
+				var intersects = false
+				if zone: intersects = part.checkPos(to_local(pin.global_position - globalOffset) * part.transform)
+				else: intersects = !part.checkPos(to_local(pin.global_position - globalOffset) * part.transform) # machine.to_global on offset
+				if intersects:
 					moveCandidates[pin] = pin
-					if pin.fixed: break
+					if pin.fixed: 
+						cantMove += 1
+						break
 	
 	# Check if any immediate candidates are fixed to terminate search early
-	for pin in moveCandidates:
-		if pin.fixed:
-			#if not pin in pivots[dirID]:
-				#pivots[dirID].append(pin)
-			cantMove += 1
-			if cantMove > 1:
-				return 0
+	#for pin in moveCandidates:
+		#if pin.fixed:
+			##if not pin in pivots[dirID]:
+				##pivots[dirID].append(pin)
+			#cantMove += 1
+			##if cantMove > 1:
+				##return 0
 	#t_timeSpent += Time.get_ticks_usec() - t_start
 	if toMove.has(dirID):
 		toMove[dirID].merge(moveCandidates)
