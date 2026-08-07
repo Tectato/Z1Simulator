@@ -64,7 +64,7 @@ func removeInstruction(instruction):
 
 func highlightInstruction(index : int):
 	for i in range(instructions.size()):
-		instructions[i].setHighlight(i == index)
+		instructions[i].setHighlight(i == index - 1) # -1 because the reader always steps to the next instruction already
 
 func updated():
 	if selectionBox.button_pressed: changed.emit(self)
