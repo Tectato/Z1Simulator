@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://ceb0uoxccx70w"]
+
+[ext_resource type="Script" uid="uid://b0ed3q6tjcc6l" path="res://Scripts/Parts/Peripherals/crank.gd" id="1_3csfj"]
+[ext_resource type="PackedScene" uid="uid://dg7us4r3ditiy" path="res://Models/Crank.glb" id="1_66odk"]
+[ext_resource type="Script" uid="uid://b0xpfo3xmwryf" path="res://Scripts/Parts/Peripherals/Visuals/crankVis.gd" id="2_p4jsa"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3csfj"]
+size = Vector3(1.65, 0.234375, 1.65)
+
+[node name="Crank" type="Node3D" unique_id=46005466 node_paths=PackedStringArray("collider")]
+script = ExtResource("1_3csfj")
+collider = NodePath("Area3D")
+
+[node name="Crank2" parent="." unique_id=2137824425 instance=ExtResource("1_66odk")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.045137405, 0)
+
+[node name="Crank" parent="Crank2/CrankFrame" parent_id_path=PackedInt32Array(2137824425, 629981744) index="0" unique_id=4481164]
+script = ExtResource("2_p4jsa")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1749653934]
+collision_layer = 3
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=592111688]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.115234375, 0)
+shape = SubResource("BoxShape3D_3csfj")
+
+[editable path="Crank2"]

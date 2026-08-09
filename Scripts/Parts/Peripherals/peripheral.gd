@@ -1,7 +1,7 @@
 extends Selectable
 class_name Peripheral
 
-enum Type {DataDriven, InputExponent, OutputExponent, ProgramReader, ResetInput, ConfirmInput}
+enum Type {DataDriven, InputExponent, OutputExponent, ProgramReader, ResetInput, ConfirmInput, Crank}
 
 @export var inputs : Array[Pin]
 @export var outputs : Array[Pin]

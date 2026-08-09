@@ -2,6 +2,7 @@ extends Hole
 class_name PointHole
 
 const CUTOUT = preload("res://Scenes/Parts/SheetElements/Cutouts/PointCutout.tscn")
+const CUTOUT_HQ = preload("res://Scenes/Parts/SheetElements/Cutouts/PointCutoutHQ.tscn")
 
 var radius = 0.04
 var gizmo
@@ -18,7 +19,7 @@ func checkPos(pos : Vector3):
 	return dist < radius
 
 func getCutout():
-	var cutout = CUTOUT.instantiate()
+	var cutout = CUTOUT.instantiate() if radius <= 0.1 else CUTOUT_HQ.instantiate()
 	cutout.radius = radius
 	return cutout
 

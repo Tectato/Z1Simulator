@@ -152,7 +152,10 @@
 [ext_resource type="Texture2D" uid="uid://ccjsi1bufy4xi" path="res://Sprites/Buttons/Parts/confirmInput.png" id="114_5q1b5"]
 [ext_resource type="PackedScene" uid="uid://bid61jor6cuxs" path="res://Scenes/Parts/Peripherals/ConfirmInput.tscn" id="114_m8o71"]
 [ext_resource type="Texture2D" uid="uid://cig7qw528l5g7" path="res://Sprites/Buttons/Parts/confirmInput_lit.png" id="115_rs51l"]
+[ext_resource type="Texture2D" uid="uid://f5ywh8ieoyb8" path="res://Sprites/Buttons/Parts/crank.png" id="117_h2lem"]
 [ext_resource type="PackedScene" uid="uid://b04evgug7pjy5" path="res://Scenes/ValueInterface/valueInterface.tscn" id="118_h6sg5"]
+[ext_resource type="Texture2D" uid="uid://c60f7mmfedosn" path="res://Sprites/Buttons/Parts/crank_lit.png" id="118_jrag7"]
+[ext_resource type="PackedScene" uid="uid://ceb0uoxccx70w" path="res://Scenes/Parts/Peripherals/Crank.tscn" id="119_2bltu"]
 [ext_resource type="Script" uid="uid://c4roeaqq88nwi" path="res://Scripts/Editor/commentDisplay.gd" id="120_ix1yp"]
 [ext_resource type="Script" uid="uid://cetuxuiwg12my" path="res://Scripts/Editor/Programming/programmer.gd" id="123_ixopf"]
 [ext_resource type="Texture2D" uid="uid://bratdmc6cuuk7" path="res://Sprites/selectionBox.png" id="127_m3vij"]
@@ -2332,6 +2335,13 @@ texture_normal = ExtResource("114_5q1b5")
 texture_hover = ExtResource("115_rs51l")
 script = ExtResource("112_kifs4")
 part = ExtResource("114_m8o71")
+
+[node name="Crank" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=1681094521]
+layout_mode = 2
+texture_normal = ExtResource("117_h2lem")
+texture_hover = ExtResource("118_jrag7")
+script = ExtResource("112_kifs4")
+part = ExtResource("119_2bltu")
 
 [node name="ButtonCommon" type="Button" parent="Camera3D/Interface/VisibilityParent/PartPlacers" unique_id=1602735433]
 layout_mode = 1

@@ -170,7 +170,9 @@ func _on_move_complete_timeout() -> void:
 	stepDone.emit()
 	if nudging:
 		nudging = false
+		await get_tree().process_frame
 		return
+	await get_tree().process_frame
 	#Pin.printDebugInfo()
 	#Sheet.printDebugInfo()
 	$PulsingReset.start()

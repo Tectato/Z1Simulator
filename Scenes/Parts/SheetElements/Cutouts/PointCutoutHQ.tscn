@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://81dhv64lwoca"]
+
+[node name="Cutout" type="CSGCylinder3D" unique_id=1708121940]
+operation = 2
+height = 0.2
+sides = 12

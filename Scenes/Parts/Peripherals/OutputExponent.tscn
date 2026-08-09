@@ -93,7 +93,7 @@ collider = NodePath("Area3D")
 [node name="Slider" type="Node3D" parent="." unique_id=1041090930 node_paths=PackedStringArray("sliderArmature", "inputs", "labels", "collider")]
 script = ExtResource("1_db2qt")
 sliderArmature = NodePath("outputExponent")
-valueRange = [-6, 10]
+valueRange = [-8, 10]
 inputs = [NodePath("ShiftLeft"), NodePath("ShiftRight")]
 labels = [NodePath("IndexLabel")]
 collider = NodePath("Area3D")

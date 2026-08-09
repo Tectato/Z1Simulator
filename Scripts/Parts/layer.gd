@@ -10,6 +10,7 @@ const P_OUTPUTEXPONENT = preload("res://Scenes/Parts/Peripherals/OutputExponent.
 const P_READER = preload("res://Scenes/Parts/Peripherals/ProgramReader.tscn")
 const P_RESETINPUT = preload("res://Scenes/Parts/Peripherals/ResetInput.tscn")
 const P_CONFIRMINPUT = preload("res://Scenes/Parts/Peripherals/ConfirmInput.tscn")
+const P_CRANK = preload("res://Scenes/Parts/Peripherals/Crank.tscn")
 const ECCENTRIC = preload("res://Scenes/Parts/Basement/Eccentric.tscn")
 
 @onready var collider = $BoundingBox
@@ -144,6 +145,8 @@ func deserialize(source : Dictionary):
 					newPart = P_RESETINPUT.instantiate()
 				5:
 					newPart = P_CONFIRMINPUT.instantiate()
+				6:
+					newPart = P_CRANK.instantiate()
 			if newPart:
 				addPart(newPart)
 				newPart.deserialize(part)
