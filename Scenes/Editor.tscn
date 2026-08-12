@@ -187,6 +187,10 @@ font_color = Color(0, 1, 0.5921569, 1)
 font_size = 20
 font_color = Color(0.29803923, 1, 0, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_h2lem"]
+font_size = 20
+font_color = Color(0.7529412, 0.9411765, 0.7529412, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_ue6jr"]
 font_size = 20
 
@@ -781,7 +785,8 @@ custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
 text = "[b][Right click][/b]
-For [color=00FFFF]output pins[/color]: Nudges pin, moving connected [color=008CFF]sheets[/color] along with it. (Requires having a set directionality)
+For [color=00FFFF]interactible pins/sheets[/color]: Nudges part, moving connected parts along with it. (Requires having a set directionality)
+For [color=A090FF]levers[/color]: Pulls lever.
 For [color=008CFF]sheets[/color]: If the sheet has [i]one[/i] [color=00FF97]pin[/color] intersecting a circular hole, hold right-click and drag to pivot it precisely around that [color=00FF97]pin[/color]."
 fit_content = true
 autowrap_mode = 2
@@ -889,6 +894,178 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Locking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=112886820]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking" unique_id=106843931]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header" unique_id=2013125296]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header/Control" unique_id=1931545888]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("34_jk3a4")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header" unique_id=501387044]
+layout_mode = 2
+text = "Lock editing"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking" unique_id=1313921408]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+text = "If active, prevents you from accidentally moving parts of a finished machine."
+autowrap_mode = 2
+
+[node name="Comments" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=2106406573]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Comments" unique_id=1777964592]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Comments/Header" unique_id=1820087222]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Comments/Header/Control" unique_id=1984801904]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("12_ix1yp")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Comments/Header" unique_id=1097788922]
+layout_mode = 2
+text = "Show comments"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Comments" unique_id=1422732221]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+text = "Toggle to set the visibility of comments."
+autowrap_mode = 2
+
+[node name="Baseplates" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=273636376]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=361772686]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header" unique_id=374285065]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header/Control" unique_id=2110186007]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("56_8faq4")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header" unique_id=39344335]
+layout_mode = 2
+text = "Show placement grids"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=1395792706]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+text = "Toggles whether the placement grid is shown for all layers."
+autowrap_mode = 2
+
+[node name="UnselectedLayers" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=729463276]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers" unique_id=1773682173]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header" unique_id=1656129544]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header/Control" unique_id=1839388631]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("33_dcdig")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header" unique_id=67897579]
+layout_mode = 2
+text = "Show unselected layers"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers" unique_id=160625015]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+text = "Toggles whether unselected layers and machines are visible when resolution is set to Part"
+autowrap_mode = 2
+
+[node name="PowerFlow" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=349087389]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow" unique_id=353779123]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header" unique_id=133547846]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header/Control" unique_id=780675308]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("16_o5g20")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header" unique_id=994798065]
+layout_mode = 2
+text = "Show movement propagation"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow" unique_id=785848156]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "If enabled, whenever a [i]selected[/i] part moves, the chain of parts that led to its movement will be shown."
+fit_content = true
+autowrap_mode = 2
+
+[node name="StaticVis" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=259675048]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis" unique_id=1621241439]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header" unique_id=1205443070]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header/Control" unique_id=1595266645]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(2, 2)
+texture = ExtResource("19_qikgm")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header" unique_id=970953025]
+layout_mode = 2
+text = "Show static sheets"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis" unique_id=889432850]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "Toggles visibility of static [color=00C2FF]sheets[/color]."
+fit_content = true
+autowrap_mode = 2
 
 [node name="Resolution" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=32833291]
 layout_mode = 2
@@ -1013,148 +1190,6 @@ layout_mode = 2
 text = "Sets the render mode."
 autowrap_mode = 2
 
-[node name="StaticVis" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=259675048]
-layout_mode = 2
-
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis" unique_id=1621241439]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header" unique_id=1205443070]
-texture_filter = 1
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header/Control" unique_id=1595266645]
-texture_filter = 1
-position = Vector2(16, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("19_qikgm")
-
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis/Header" unique_id=970953025]
-layout_mode = 2
-text = "Show static sheets"
-label_settings = SubResource("LabelSettings_msmja")
-
-[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/StaticVis" unique_id=889432850]
-custom_minimum_size = Vector2(100, 24)
-layout_mode = 2
-bbcode_enabled = true
-text = "Toggles visibility of static [color=00C2FF]sheets[/color]."
-fit_content = true
-autowrap_mode = 2
-
-[node name="PowerFlow" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=349087389]
-layout_mode = 2
-
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow" unique_id=353779123]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header" unique_id=133547846]
-texture_filter = 1
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header/Control" unique_id=780675308]
-texture_filter = 1
-position = Vector2(16, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("16_o5g20")
-
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow/Header" unique_id=994798065]
-layout_mode = 2
-text = "Show movement propagation"
-label_settings = SubResource("LabelSettings_msmja")
-
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/PowerFlow" unique_id=468691938]
-custom_minimum_size = Vector2(100, 24)
-layout_mode = 2
-text = "If enabled, whenever a selected part moves, the chain of parts that led to its movement will be shown."
-autowrap_mode = 2
-
-[node name="UnselectedLayers" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=729463276]
-layout_mode = 2
-
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers" unique_id=1773682173]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header" unique_id=1656129544]
-texture_filter = 1
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header/Control" unique_id=1839388631]
-texture_filter = 1
-position = Vector2(16, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("33_dcdig")
-
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers/Header" unique_id=67897579]
-layout_mode = 2
-text = "Show unselected layers"
-label_settings = SubResource("LabelSettings_msmja")
-
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/UnselectedLayers" unique_id=160625015]
-custom_minimum_size = Vector2(100, 24)
-layout_mode = 2
-text = "Toggles whether unselected layers and machines are visible when resolution is set to Part"
-autowrap_mode = 2
-
-[node name="Baseplates" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=273636376]
-layout_mode = 2
-
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=361772686]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header" unique_id=374285065]
-texture_filter = 1
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header/Control" unique_id=2110186007]
-texture_filter = 1
-position = Vector2(16, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("56_8faq4")
-
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates/Header" unique_id=39344335]
-layout_mode = 2
-text = "Show placement grids"
-label_settings = SubResource("LabelSettings_msmja")
-
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=1395792706]
-custom_minimum_size = Vector2(100, 24)
-layout_mode = 2
-text = "Toggles whether the placement grid is shown for all layers."
-autowrap_mode = 2
-
-[node name="Locking" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=112886820]
-layout_mode = 2
-
-[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking" unique_id=106843931]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header" unique_id=2013125296]
-texture_filter = 1
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header/Control" unique_id=1931545888]
-texture_filter = 1
-position = Vector2(16, 16)
-scale = Vector2(2, 2)
-texture = ExtResource("34_jk3a4")
-
-[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking/Header" unique_id=501387044]
-layout_mode = 2
-text = "Lock editing"
-label_settings = SubResource("LabelSettings_msmja")
-
-[node name="Description" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Locking" unique_id=1313921408]
-custom_minimum_size = Vector2(100, 24)
-layout_mode = 2
-text = "If active, prevents you from accidentally moving parts of a finished machine."
-autowrap_mode = 2
-
 [node name="Editing" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer" unique_id=576482778]
 visible = false
 layout_mode = 2
@@ -1174,7 +1209,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label10" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1250147960]
+[node name="Tab" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1250147960]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1185,25 +1220,25 @@ autowrap_mode = 2
 [node name="HSeparator9" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1316229483]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1864331233]
+[node name="R" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1864331233]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
 text = "[b][R][/b] / [b][Shift][/b] + [b][R][/b] -> Rotate selected parts.
-For [color=00FFFF]output pins[/color]: configures directionality"
+For [color=00FFFF]interactible pins/sheets[/color]: configures directionality"
 fit_content = true
 autowrap_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=661584949]
 layout_mode = 2
 
-[node name="Label5" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1633374216]
+[node name="F" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1633374216]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
 text = "[b][F][/b] -> Toggle static state of [color=00C2FF]sheets[/color]/[color=00FF97]pins[/color]
 For [color=4CFF00]clock pins[/color]: toggles movement behavior
-For [color=00FFFF]output pins[/color]: toggles output value
+For [color=00FFFF]interactible pins[/color]: toggles output value
 For [color=FF3E00]springs[/color]: toggles tension state"
 fit_content = true
 autowrap_mode = 2
@@ -1211,18 +1246,18 @@ autowrap_mode = 2
 [node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1861132186]
 layout_mode = 2
 
-[node name="Label6" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=65495952]
+[node name="O" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=65495952]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
-text = "[b][O][/b] -> Toggle [color=00FF97]pin[/color] being an [color=00FFFF]output[/color]"
+text = "[b][O][/b] -> Toggle [color=00FF97]pin[/color] or [color=00C2FF]sheet[/color] being a [color=00FFFF]interactible[/color]"
 fit_content = true
 autowrap_mode = 2
 
 [node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1737268460]
 layout_mode = 2
 
-[node name="Label7" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1270422743]
+[node name="I" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1270422743]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1233,7 +1268,7 @@ autowrap_mode = 2
 [node name="HSeparator6" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=2123108300]
 layout_mode = 2
 
-[node name="Label8" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1687499517]
+[node name="QE" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1687499517]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1244,7 +1279,7 @@ autowrap_mode = 2
 [node name="HSeparator7" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1927533104]
 layout_mode = 2
 
-[node name="Label2" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=762401847]
+[node name="Links" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=762401847]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1257,7 +1292,21 @@ autowrap_mode = 2
 [node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1754108374]
 layout_mode = 2
 
-[node name="Label9" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=2006966084]
+[node name="PageUpDown" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=813563871]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b][Page Up / Page Down][/b]
+For [color=00FF97]global pins[/color], [color=4CFF00]clock pins[/color], and [color=C0F0C0]eccentrics[/color]: Moves their upper bound layer up and down. Hold [b][Ctrl][/b] to affect the lower bound layer instead.
+For [color=00C2FF]sheets[/color], layers, and machines: Nudges the object up or down by one step.
+"
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator13" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1520879010]
+layout_mode = 2
+
+[node name="F2" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=2006966084]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1267,7 +1316,7 @@ autowrap_mode = 2
 [node name="HSeparator8" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1400616359]
 layout_mode = 2
 
-[node name="Label3" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=572007530]
+[node name="XDel" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=572007530]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1277,7 +1326,7 @@ autowrap_mode = 2
 [node name="HSeparator3" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=259347454]
 layout_mode = 2
 
-[node name="Label4" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1834992532]
+[node name="CopyPaste" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1834992532]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1288,7 +1337,7 @@ autowrap_mode = 2
 [node name="HSeparator10" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1784934859]
 layout_mode = 2
 
-[node name="Label12" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=510895082]
+[node name="SelectAll" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=510895082]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1299,7 +1348,7 @@ autowrap_mode = 2
 [node name="HSeparator11" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=936063452]
 layout_mode = 2
 
-[node name="Label13" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=444442695]
+[node name="InvertSelection" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=444442695]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
@@ -1310,11 +1359,11 @@ autowrap_mode = 2
 [node name="HSeparator12" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=1024762385]
 layout_mode = 2
 
-[node name="Label11" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=991772089]
+[node name="Repeat" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Editing/ScrollContainer/VBoxContainer" unique_id=991772089]
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
-text = "[b][Ctrl][/b] + [b][R][/b] -> Repeat the last \"add part\" action."
+text = "[b][Ctrl][/b] + [b][R][/b] -> Repeat the last action (adding parts or connections)."
 fit_content = true
 autowrap_mode = 2
 
@@ -1393,7 +1442,7 @@ label_settings = SubResource("LabelSettings_yjo3m")
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
-text = "Basic pins, only act within the layer they're part of. Interact with [color=00C2FF]sheets[/color]. Can be configured to be static or an [color=00FFFF]output[/color] displaying a binary state that toggles with movement."
+text = "Basic [color=00FF97]pins[/color], only act within the layer they're part of. Interact with [color=00C2FF]sheets[/color]. Can be configured to be static or [color=00FFFF]interactible[/color], displaying a binary state that toggles with movement."
 fit_content = true
 autowrap_mode = 2
 
@@ -1462,6 +1511,40 @@ fit_content = true
 autowrap_mode = 2
 
 [node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=2115147469]
+layout_mode = 2
+
+[node name="Eccentrics" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=1317574185]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Eccentrics" unique_id=1286072406]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Eccentrics/Header" unique_id=622432994]
+texture_filter = 1
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Eccentrics/Header/Control" unique_id=1231341524]
+texture_filter = 1
+position = Vector2(16, 16)
+texture = ExtResource("98_3451d")
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Eccentrics/Header" unique_id=1475159587]
+layout_mode = 2
+text = "Eccentrics"
+label_settings = SubResource("LabelSettings_h2lem")
+
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List/Eccentrics" unique_id=1715509995]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "Axle for eccentric arms.
+[color=FF6A00]Link[/color] to a [color=00FF97]pin[/color] to create an arm that will rotate as the [color=00FF97]pin[/color] moves.
+[color=FF6A00]Link[/color] to another [color=C0F0C0]eccentric[/color] (preferably above or below) to connect their rotation."
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator5" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=768007806]
 layout_mode = 2
 
 [node name="Comments" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Parts/ScrollContainer/List" unique_id=720680863]
@@ -1672,6 +1755,27 @@ autowrap_mode = 2
 [node name="HSeparator2" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=858704256]
 layout_mode = 2
 
+[node name="Programming" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=1043790051]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Programming" unique_id=999339929]
+layout_mode = 2
+text = "Programming"
+label_settings = SubResource("LabelSettings_msmja")
+
+[node name="Description" type="RichTextLabel" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List/Programming" unique_id=1333561055]
+custom_minimum_size = Vector2(100, 24)
+layout_mode = 2
+bbcode_enabled = true
+text = "Interface for writing programs. Press the [b]+[/b] button to add a new entry. Press the instruction buttons at the bottom of an entry to add instructions.
+
+Press the checkbox in the header of an entry to select the program. If a tape reader exists in the scene, it will step through the program when instructed by the machine and provide the instruction codes. Press the [b]Reset[/b] button on the reader to return to the start of the selected program."
+fit_content = true
+autowrap_mode = 2
+
+[node name="HSeparator4" type="HSeparator" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=1293639931]
+layout_mode = 2
+
 [node name="Sequencer" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Side Window/ScrollContainer/List" unique_id=1367730967]
 layout_mode = 2
 
@@ -1704,8 +1808,11 @@ label_settings = SubResource("LabelSettings_msmja")
 custom_minimum_size = Vector2(100, 24)
 layout_mode = 2
 bbcode_enabled = true
-text = "Shows groups of [color=00FFFF]output pins[/color] as values in decimal and binary. Both representations can be edited and the other and corresponding [color=00FFFF]pins[/color] will reflect the change.
-To create an entry, select the desired [color=00FFFF]output pins[/color] in the 3D scene from least significant bit to highest while holding shift, then press the [b]+[/b] button."
+text = "Shows groups of [color=00FFFF]interactible pins[/color] as values in decimal and binary. Both representations can be edited and the other and corresponding [color=00FFFF]pins[/color] will reflect the change. Values can be defined as signed and as a fixed point number with configurable radix point.
+
+To create an entry, select the desired [color=00FFFF]interactible pins[/color] in the 3D scene from least significant bit to highest while holding shift, then press the [b]+ Pin value[/b] button.
+
+Floating point entries can be created by pressing the [b]+ Compound value[/b] button, then selecting an integer (exponent) and fixed point (mantissa) value with the newly appeared checkboxes. If an [color=00FFFF]interactible pin[/color] is also selected it will become the sign bit."
 fit_content = true
 autowrap_mode = 2
 
@@ -2310,20 +2417,21 @@ texture_hover = ExtResource("97_ttmut")
 
 [node name="OutputExponentSlider2" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=1636840348]
 layout_mode = 2
-tooltip_text = "Place output exponent slider"
+tooltip_text = "Place output exponent slider and output reset lever"
 texture_normal = ExtResource("96_1q8bw")
 texture_pressed = ExtResource("99_6xrox")
 texture_hover = ExtResource("100_cfdn2")
 
 [node name="ProgramReader" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=1186478368]
 layout_mode = 2
-tooltip_text = "Place output exponent slider"
+tooltip_text = "Place tape reader"
 texture_normal = ExtResource("106_lte3c")
 texture_pressed = ExtResource("107_ixopf")
 texture_hover = ExtResource("108_kklpi")
 
 [node name="ResetInput" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=772094418]
 layout_mode = 2
+tooltip_text = "Place input reset lever"
 texture_normal = ExtResource("110_c0c04")
 texture_hover = ExtResource("111_m8o71")
 script = ExtResource("112_kifs4")
@@ -2331,6 +2439,7 @@ part = ExtResource("113_5q1b5")
 
 [node name="ConfirmInput" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=419239652]
 layout_mode = 2
+tooltip_text = "Place input confirmation lever"
 texture_normal = ExtResource("114_5q1b5")
 texture_hover = ExtResource("115_rs51l")
 script = ExtResource("112_kifs4")
@@ -2338,6 +2447,7 @@ part = ExtResource("114_m8o71")
 
 [node name="Crank" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/PartPlacers/Specific/List" unique_id=1681094521]
 layout_mode = 2
+tooltip_text = "Place crank"
 texture_normal = ExtResource("117_h2lem")
 texture_hover = ExtResource("118_jrag7")
 script = ExtResource("112_kifs4")
@@ -2354,6 +2464,7 @@ offset_right = -8.0
 offset_bottom = 15.0
 grow_horizontal = 0
 scale = Vector2(0.5, 0.5)
+tooltip_text = "Common parts"
 disabled = true
 text = "1"
 
@@ -2368,6 +2479,7 @@ offset_right = -17.0
 offset_bottom = 15.0
 grow_horizontal = 0
 scale = Vector2(0.5, 0.5)
+tooltip_text = "Peripherals"
 text = "2"
 
 [node name="AxesGizmoViewport" type="SubViewport" parent="Camera3D/Interface/VisibilityParent" unique_id=2065483624]

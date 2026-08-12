@@ -21,6 +21,7 @@
 [ext_resource type="AudioStream" uid="uid://b3f4llayiqqta" path="res://Audio/Mechanical/sliders/sliderNotch5.wav" id="19_f6d1g"]
 [ext_resource type="AudioStream" uid="uid://bqj05v7gvnbgu" path="res://Audio/Mechanical/sliders/sliderNotch6.wav" id="20_nfciw"]
 [ext_resource type="PackedScene" uid="uid://bauwk8nww0rbb" path="res://Models/SliderReaders.glb" id="21_nm68o"]
+[ext_resource type="Script" uid="uid://oq3i26ekoa8d" path="res://Scripts/Parts/Peripherals/Visuals/callableBumper.gd" id="22_ppw08"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t4572"]
 size = Vector3(3.0073853, 0.2175293, 0.40427017)
@@ -249,12 +250,13 @@ texture = ExtResource("5_p55in")
 [node name="inputExponentFrame" parent="Frame" unique_id=328670094 instance=ExtResource("7_h0teq")]
 transform = Transform3D(-20, 0, -1.7484556e-06, 0, 20, 0, 1.7484556e-06, 0, -20, 0, 0.2, 0)
 
-[node name="inputExponent" parent="." unique_id=673034786 node_paths=PackedStringArray("moverLeft", "moverRight", "sliderCarriage", "notchAudio") instance=ExtResource("8_07oxj")]
+[node name="inputExponent" parent="." unique_id=673034786 node_paths=PackedStringArray("moverLeft", "moverRight", "sliderCarriage", "notchStopper", "notchAudio") instance=ExtResource("8_07oxj")]
 transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0.38968664, -1.1920929e-07, -1.7441158)
 script = ExtResource("9_2tt0q")
 moverLeft = NodePath("InputSlider/Skeleton3D/MoverLeft")
 moverRight = NodePath("InputSlider/Skeleton3D/MoverRight")
 sliderCarriage = NodePath("InputSlider/Skeleton3D/Slider_2")
+notchStopper = NodePath("../SliderReaders/SliderReaderBlock/SliderReader")
 notchAudio = NodePath("../NotchAudio")
 
 [node name="MoverLeft" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="0" unique_id=1259951929]
@@ -296,6 +298,12 @@ stream = SubResource("AudioStreamRandomizer_h7v2x")
 
 [node name="SliderReaders" parent="." unique_id=1179345766 instance=ExtResource("21_nm68o")]
 transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 1, 0, -1.7)
+
+[node name="SliderReader" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1901096453) index="0" unique_id=866099355]
+transform = Transform3D(0.9985835, 0, -0.053207405, 0, 1, 0, 0.053207405, 0, 0.9985835, 0, 0.044, 0.03)
+script = ExtResource("22_ppw08")
+startAngle = -3.0
+angleDiff = 3.0
 
 [node name="SliderReader_001" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1901096453) index="1" unique_id=136187004 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")

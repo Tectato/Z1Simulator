@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cpobe3vm8jd4h" path="res://Scripts/Parts/Peripherals/Visuals/stepTracker.gd" id="6_38fv1"]
 [ext_resource type="PackedScene" uid="uid://b7jvhmxdbxm1d" path="res://Scenes/Parts/Pin.tscn" id="7_xalbg"]
 [ext_resource type="PackedScene" uid="uid://dmyprqrkfq6al" path="res://Models/292_7.glb" id="8_38fv1"]
+[ext_resource type="Script" uid="uid://oq3i26ekoa8d" path="res://Scripts/Parts/Peripherals/Visuals/callableBumper.gd" id="9_xalbg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7ebva"]
 size = Vector3(0.030883789, 0.016906738, 0.01977539)
@@ -91,8 +92,12 @@ forwardAxis = Vector3(1, 0, 0)
 [node name="InputConfirmed" parent="." unique_id=805540248 instance=ExtResource("7_xalbg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.040151626, 0, 0.8997278)
 
-[node name="292_72" parent="." unique_id=1302982737 instance=ExtResource("8_38fv1")]
-transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, -0.27903914, 0.041017696, 1.04)
+[node name="292_72" parent="." unique_id=1302982737 node_paths=PackedStringArray("pin") instance=ExtResource("8_38fv1")]
+transform = Transform3D(-0.3489946, 0, -9.993908, 0, 10, 0, 9.993908, 0, -0.3489946, -0.27903914, 0.041017696, 1.04)
+script = ExtResource("9_xalbg")
+startAngle = -92.0
+angleDiff = 8.0
+pin = NodePath("../InputConfirmed")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=306862269]
 libraries/ = SubResource("AnimationLibrary_xalbg")

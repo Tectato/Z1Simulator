@@ -85,7 +85,7 @@ func pinInput(pin : Pin):
 func shift(dir, machineInitiated = false):
 	var newValue = exponent + dir
 	if newValue < valueRange[0] or newValue > valueRange[1]:
-		Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
+		#Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
 		return
 	exponent += dir
 	lastMove = dir

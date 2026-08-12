@@ -7,6 +7,8 @@ extends Node3D
 @export var resetLeft : Node3D
 @export var resetRight : Node3D
 
+@export var notchStopper : Node3D
+
 @export var notchAudio : AudioStreamPlayer
 @export var resetAudio : AudioStreamPlayer
 
@@ -36,10 +38,12 @@ func setValue(newValue : int, machineInitiated = true):
 		if machineInitiated: moverLeft.moveForward()
 		sliderCarriage.moveBack(abs(dir), true)
 		if notchAudio: notchAudio.play()
+		if notchStopper: notchStopper.bump()
 	elif dir > 0:
 		if machineInitiated: moverRight.moveForward()
 		sliderCarriage.moveForward(abs(dir), true)
 		if notchAudio: notchAudio.play()
+		if notchStopper: notchStopper.bump()
 	
 	if resetLeft and resetRight:
 		var newMax = max(maxSinceReset, abs(value))
