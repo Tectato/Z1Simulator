@@ -4,6 +4,7 @@ class_name Movable
 const LINK = preload("res://Scenes/Parts/Relations/Link.tscn")
 const SPRING = preload("res://Scenes/Parts/Relations/Spring.tscn")
 const ECCENTRICARM = preload("res://Scenes/Parts/Basement/EccentricArm.tscn")
+const IMPULSEROD = preload("res://Scenes/Parts/Relations/ImpulseRod.tscn")
 
 var storedPos : Vector3
 
@@ -229,8 +230,10 @@ func rewind():
 
 func addRelation(type : Relation.Type, other : Selectable):
 	grabUUID()
-	if hasRelation(self, other):
-		return null
+	var existingRelation = hasRelation(self, other)
+	if existingRelation:
+		existingRelation.delete()
+		#return null
 	var newRelation
 	match type:
 		Relation.Type.Link:
@@ -242,6 +245,8 @@ func addRelation(type : Relation.Type, other : Selectable):
 		Relation.Type.InputLink:
 			return
 			#newRelation = INPUTLINK.instantiate()
+		Relation.Type.ImpulseRod:
+			newRelation = IMPULSEROD.instantiate()
 	add_child(newRelation)
 	newRelation.A = self
 	newRelation.B = other
@@ -281,10 +286,10 @@ func exists(thing):
 func hasRelation(A, B):
 	for relation in relations:
 		if relation.A == A and relation.B == B:
-			return true
+			return relation
 		if relation.A == B and relation.B == A:
-			return true
-	return false
+			return relation
+	return null
 
 func getBounds():
 	return [Vector3(-0.2,-0.05,-0.2),Vector3(0.2,0.05,0.2)]

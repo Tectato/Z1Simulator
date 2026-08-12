@@ -295,6 +295,8 @@ func deserializeFromDict(source):
 					A.addRelation(Relation.Type.InputLink, B)
 				"arm":
 					A.addRelation(Relation.Type.EccentricArm, B)
+				"rod":
+					A.addRelation(Relation.Type.ImpulseRod, B)
 	if source.has("comments"):
 		for comment in source["comments"]:
 			var newComment = COMMENT.instantiate()

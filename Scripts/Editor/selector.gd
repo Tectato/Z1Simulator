@@ -494,7 +494,10 @@ func addRelation(partA : Movable, partB : Movable):
 				else:
 					partA.addRelation(Relation.Type.EccentricArm, partB)
 			else:
-				partA.addRelation(Relation.Type.Link, partB)
+				if Input.is_key_pressed(KEY_CTRL):
+					partA.addRelation(Relation.Type.Link, partB)
+				else:
+					partA.addRelation(Relation.Type.ImpulseRod, partB)
 
 func getMidPoint(selection):
 	var min = Vector3(1,1,1)*1000

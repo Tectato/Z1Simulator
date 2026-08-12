@@ -246,7 +246,13 @@ func modifyExtent(upper : bool, dir : int):
 	place()
 
 func isPartialGlobal():
-	return endLayer >= 0
+	return global and endLayer >= 0
+
+func getBottomHeight():
+	if isPartialGlobal():
+		return getMachine().getLayer(startLayer).global_position.y
+	else:
+		return global_position.y
 
 func setHeight(value):
 	var floor = 0.0

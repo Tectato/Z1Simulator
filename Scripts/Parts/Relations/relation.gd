@@ -1,7 +1,7 @@
 extends Node3D
 class_name Relation
 
-enum Type {Link, InputLink, Spring, EccentricArm}
+enum Type {Link, InputLink, Spring, EccentricArm, ImpulseRod}
 
 var A : Movable
 var AParent : Machine

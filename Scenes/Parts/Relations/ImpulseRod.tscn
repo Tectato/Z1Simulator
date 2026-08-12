@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://btcwkeold8ajw"]
+
+[ext_resource type="Script" uid="uid://dycjch00s0dr2" path="res://Scripts/Parts/Relations/impulseRod.gd" id="1_7f5r6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7f5r6"]
+albedo_color = Color(0.18, 0.16812001, 0.14760001, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_7f5r6"]
+size = Vector3(0.08, 0.02, 1)
+
+[node name="ImpulseRod" type="Node3D" unique_id=1538236721]
+script = ExtResource("1_7f5r6")
+
+[node name="LinePivot" type="Node3D" parent="." unique_id=1173245667]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LinePivot" unique_id=1666396985]
+material_override = SubResource("StandardMaterial3D_7f5r6")
+mesh = SubResource("BoxMesh_7f5r6")
+skeleton = NodePath("../..")
