@@ -1,4 +1,5 @@
 extends Link
+class_name ImpulseRod
 
 @onready var pivot = $LinePivot
 @onready var mesh = $LinePivot/MeshInstance3D

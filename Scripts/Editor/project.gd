@@ -128,6 +128,11 @@ func removeProject(project : Project):
 	subprojects.erase(project)
 	if machines.is_empty() and subprojects.is_empty(): delete()
 
+func getTopLevelProject():
+	if topLevelInstance: return self
+	else:
+		return parent.getTopLevelProject()
+
 func delete():
 	while !subprojects.is_empty():
 		var toRemove = subprojects.pop_back()

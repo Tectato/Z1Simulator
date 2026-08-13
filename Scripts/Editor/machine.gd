@@ -106,7 +106,8 @@ func removeLayer(layer):
 		updateLayerPositions()
 	if index > 0 and not beingDeleted:
 		Global.editor.selector.call_deferred("select", layers[index-1].collider)
-	updatePinExtents(currentState)
+	if !beingDeleted:
+		updatePinExtents(currentState)
 
 func updatePinExtents(previousState : Array):
 	if Global.editor and Global.editor.loading: return
@@ -118,6 +119,14 @@ func updatePinExtents(previousState : Array):
 		if part.endLayer < 0: return
 		var currentTop = part.endLayer
 		var currentBot = part.startLayer
+		if !indexDiff.has(currentTop) or !indexDiff.has(currentBot): return
+		if part is Eccentric:
+			var layerExisted = indexDiff.values().has(part.layer.height)
+			if !layerExisted:
+				part.modifyExtent(true, 1)
+				part.modifyExtent(false, 1)
+				return
+		
 		var newTop = indexDiff[currentTop]
 		while(newTop < 0 and currentTop > 0):
 			currentTop -= 1
@@ -152,6 +161,12 @@ func getLayerBelow(layer):
 	if layerIndex > 0:
 		return layers[layerIndex-1]
 	return null
+
+func getTopLevelProject():
+	if parent:
+		return parent.getTopLevelProject()
+	else:
+		return null
 
 func updateLayerPositions():
 	var prevLayer = null

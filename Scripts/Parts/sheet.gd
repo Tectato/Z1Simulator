@@ -1028,7 +1028,10 @@ func setupAfterDuplication(source = null):
 		if child is ClipZone:
 			child.queue_free()
 	loadSVG(source.sheetData.path)
-	pass
+	super.setupAfterDuplication()
+	if fixed:
+		fixed = false
+		setFixed(true, false)
 	#if holes.is_empty():
 		#if source == null:
 			#print("Invalid sheet duplication call")

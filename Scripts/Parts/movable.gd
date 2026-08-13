@@ -388,7 +388,9 @@ func setUseColor(value : bool):
 	pass
 
 func setupAfterDuplication(source = null):
-	pass
+	if source:
+		id = source.id
+		fixed = source.fixed
 
 func visualizeChain(chain, success):
 	if chain.front() is ClockPin or (chain.front() is Array and chain.front()[0] is ClockPin):

@@ -323,6 +323,8 @@ func deserialize(path, parent = self):
 				A.addRelation(Relation.Type.Link, B)
 			"spring":
 				A.addRelation(Relation.Type.Spring, B)
+			"rod":
+				A.addRelation(Relation.Type.ImpulseRod, B)
 	if !sequences.is_empty():
 		Global.editor.sequencer.call_deferred("deserialize", [sequences, parent != self])
 	if !programs.is_empty():

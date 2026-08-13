@@ -288,3 +288,9 @@ func visibilityChanged():
 func cullRelations():
 	super.cullRelations()
 	links = links.filter(exists)
+
+func setupAfterDuplication(source = null):
+	super.setupAfterDuplication(source)
+	if source:
+		startLayer = source.startLayer
+		endLayer = source.endLayer

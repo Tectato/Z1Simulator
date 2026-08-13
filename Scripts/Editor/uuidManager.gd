@@ -23,7 +23,7 @@ func registerID(part, id : int, writeSrcUUID = true):
 		if part is Machine: part.srcUUID = id
 	if parts.has(id) and parts[id] != null:
 		if parts[id] != part:
-			print("Registering %s: UUID already exists. Assigning new one..." % part.name)
+			print("Registering %s: UUID %d already exists. Assigning new one..." % [part.name, id])
 			request(part, true)
 	else:
 		parts[id] = part

@@ -470,6 +470,13 @@ func paste():
 				other = mapping[other]
 			if relation is Spring:
 				mapping[part].addRelation(Relation.Type.Spring, other)
+			elif relation is EccentricArm:
+				if other is Eccentric:
+					mapping[part].addRelation(Relation.Type.EccentricArm, other)
+				else:
+					other.addRelation(Relation.Type.EccentricArm, mapping[part])
+			elif relation is ImpulseRod:
+				mapping[part].addRelation(Relation.Type.ImpulseRod, other)
 			elif relation is Link:
 				mapping[part].addRelation(Relation.Type.Link, other)
 
@@ -494,7 +501,7 @@ func addRelation(partA : Movable, partB : Movable):
 				else:
 					partA.addRelation(Relation.Type.EccentricArm, partB)
 			else:
-				if Input.is_key_pressed(KEY_CTRL):
+				if AEccentric or (Input.is_key_pressed(KEY_CTRL) and not Input.is_action_just_pressed("repeat")):
 					partA.addRelation(Relation.Type.Link, partB)
 				else:
 					partA.addRelation(Relation.Type.ImpulseRod, partB)
