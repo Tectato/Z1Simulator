@@ -952,6 +952,7 @@ text = "Toggle to set the visibility of comments."
 autowrap_mode = 2
 
 [node name="Baseplates" type="VBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer" unique_id=273636376]
+visible = false
 layout_mode = 2
 
 [node name="Header" type="HBoxContainer" parent="Camera3D/Interface/HelpWindow/TabContainer/Interface/ScrollContainer/VBoxContainer/Baseplates" unique_id=361772686]
@@ -2086,9 +2087,9 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -448.0
+offset_left = -414.0
 offset_top = 1.0
-offset_right = -224.0
+offset_right = -207.0
 offset_bottom = 34.0
 grow_horizontal = 0
 scale = Vector2(2, 2)
@@ -2120,6 +2121,7 @@ texture_pressed = ExtResource("12_ix1yp")
 texture_hover = ExtResource("13_scrla")
 
 [node name="IntermediatePlateVis" type="TextureButton" parent="Camera3D/Interface/VisibilityParent/Toggles/Visibility" unique_id=466238351]
+visible = false
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 0
