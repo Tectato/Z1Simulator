@@ -297,7 +297,8 @@ moveDiff = Vector3(0.008, 0, 0)
 
 [node name="Slider" parent="Slider/outputExponent/OutputSlider/Skeleton3D" parent_id_path=PackedInt32Array(1957429822, 1268939296) index="5" unique_id=541317318]
 script = ExtResource("10_wxu7i")
-moveDiff = Vector3(0.008, 0, 0)
+moveScale = 0.1
+moveDiff = Vector3(0.075, 0, 0)
 
 [node name="TwistReset" parent="Slider/outputExponent/OutputSlider/Skeleton3D" parent_id_path=PackedInt32Array(1957429822, 1268939296) index="6" unique_id=935167409]
 script = ExtResource("12_sfwdp")
@@ -315,7 +316,7 @@ angleDiff = -24.0
 transform = Transform3D(0.9848077, 0, -0.17364818, 0, 1, 0, 0.17364818, 0, 0.9848077, 0.05549997, -0.007999999, 0.030999996)
 script = ExtResource("15_lm312")
 startAngle = -10.0
-angleDiff = 5.0
+angleDiff = 3.0
 
 [node name="Reset" type="Node3D" parent="." unique_id=1244986054 node_paths=PackedStringArray("lever", "animator", "outputs")]
 script = ExtResource("13_wxu7i")
@@ -375,7 +376,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9683292, -5.9604645e-08, 1.
 transform = Transform3D(-0.3489946, 0, -9.993908, 0, 10, 0, 9.993908, 0, -0.3489946, -0.65009826, 0.041017696, 3.0490937)
 script = ExtResource("15_lm312")
 startAngle = -92.0
-angleDiff = 8.0
+angleDiff = 5.0
 pin = NodePath("../OutputReset")
 
 [node name="NotchAudio" type="AudioStreamPlayer" parent="." unique_id=970819756]

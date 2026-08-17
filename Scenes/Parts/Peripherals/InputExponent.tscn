@@ -251,7 +251,7 @@ texture = ExtResource("5_p55in")
 transform = Transform3D(-20, 0, -1.7484556e-06, 0, 20, 0, 1.7484556e-06, 0, -20, 0, 0.2, 0)
 
 [node name="inputExponent" parent="." unique_id=673034786 node_paths=PackedStringArray("moverLeft", "moverRight", "sliderCarriage", "notchStopper", "notchAudio") instance=ExtResource("8_07oxj")]
-transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0.38968664, -1.1920929e-07, -1.7441158)
+transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 0.38968664, 0.08072686, -1.441361)
 script = ExtResource("9_2tt0q")
 moverLeft = NodePath("InputSlider/Skeleton3D/MoverLeft")
 moverRight = NodePath("InputSlider/Skeleton3D/MoverRight")
@@ -259,35 +259,36 @@ sliderCarriage = NodePath("InputSlider/Skeleton3D/Slider_2")
 notchStopper = NodePath("../SliderReaders/SliderReaderBlock/SliderReader")
 notchAudio = NodePath("../NotchAudio")
 
-[node name="MoverLeft" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="0" unique_id=1259951929]
+[node name="MoverLeft" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="0" unique_id=1798735171]
 script = ExtResource("10_2aibh")
 moveDiff = Vector3(-0.008, 0, 0)
 
-[node name="291_5_2" parent="inputExponent/InputSlider/Skeleton3D/MoverLeft" index="0" unique_id=1106364190 node_paths=PackedStringArray("targetPin")]
+[node name="291_5_2" parent="inputExponent/InputSlider/Skeleton3D/MoverLeft" index="0" unique_id=1041496364 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")
 targetPin = NodePath("../../../../../ShiftLeft")
 forwardAxis = Vector3(1, 0, 0)
 
-[node name="MoverRight" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="1" unique_id=266968858]
+[node name="MoverRight" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="1" unique_id=465703956]
 script = ExtResource("10_2aibh")
 moveDiff = Vector3(0.008, 0, 0)
 
-[node name="291_5_1" parent="inputExponent/InputSlider/Skeleton3D/MoverRight" index="0" unique_id=293330035 node_paths=PackedStringArray("targetPin")]
+[node name="291_5_1" parent="inputExponent/InputSlider/Skeleton3D/MoverRight" index="0" unique_id=1043225538 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")
 targetPin = NodePath("../../../../../ShiftRight")
 forwardAxis = Vector3(1, 0, 0)
 
-[node name="Slider_2" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="2" unique_id=736536845]
+[node name="Slider_2" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="2" unique_id=1269891074]
 script = ExtResource("10_2aibh")
-moveDiff = Vector3(0.008, 0, 0)
+moveScale = 0.1
+moveDiff = Vector3(0.075, 0, 0)
 
-[node name="TwistReset" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="3" unique_id=982088149]
+[node name="TwistReset" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="3" unique_id=43812950]
 script = ExtResource("10_48fsg")
 activeStep = 1
 startAngle = -12.0
 angleDiff = 24.0
 
-[node name="TwistSet" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 289905580) index="4" unique_id=1385593843]
+[node name="TwistSet" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="4" unique_id=1216235517]
 script = ExtResource("10_48fsg")
 activeStep = 3
 startAngle = 12.0
@@ -299,18 +300,18 @@ stream = SubResource("AudioStreamRandomizer_h7v2x")
 [node name="SliderReaders" parent="." unique_id=1179345766 instance=ExtResource("21_nm68o")]
 transform = Transform3D(-4.371139e-07, 0, -10, 0, 10, 0, 10, 0, -4.371139e-07, 1, 0, -1.7)
 
-[node name="SliderReader" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1901096453) index="0" unique_id=866099355]
+[node name="SliderReader" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1715137811) index="0" unique_id=1560432273]
 transform = Transform3D(0.9985835, 0, -0.053207405, 0, 1, 0, 0.053207405, 0, 0.9985835, 0, 0.044, 0.03)
 script = ExtResource("22_ppw08")
 startAngle = -3.0
 angleDiff = 3.0
 
-[node name="SliderReader_001" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1901096453) index="1" unique_id=136187004 node_paths=PackedStringArray("targetPin")]
+[node name="SliderReader_001" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1715137811) index="1" unique_id=1915047197 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")
 targetPin = NodePath("../../../AtMinus6")
 forwardAxis = Vector3(-1, 0, 0)
 
-[node name="SliderReader_002" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1901096453) index="2" unique_id=2040258161 node_paths=PackedStringArray("targetPin")]
+[node name="SliderReader_002" parent="SliderReaders/SliderReaderBlock" parent_id_path=PackedInt32Array(1179345766, 1715137811) index="2" unique_id=172715779 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")
 targetPin = NodePath("../../../AtZeroOrMinus6")
 forwardAxis = Vector3(-1, 0, 0)

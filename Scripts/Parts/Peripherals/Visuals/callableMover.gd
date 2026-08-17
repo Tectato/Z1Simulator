@@ -1,5 +1,6 @@
 extends Node3D
 
+@export var moveScale = 1.0
 @export var moveDiff = Vector3(0,0,0)
 @export var startOffset = Vector3(0,0,0)
 var moving = false
@@ -9,6 +10,7 @@ var stepsFromRestPos = 0
 
 func _ready() -> void:
 	position += startOffset
+	moveDiff *= moveScale
 
 func _process(_delta: float) -> void:
 	if moving:

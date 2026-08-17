@@ -96,7 +96,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.040151626, 0, 0.8997278)
 transform = Transform3D(-0.3489946, 0, -9.993908, 0, 10, 0, 9.993908, 0, -0.3489946, -0.27903914, 0.041017696, 1.04)
 script = ExtResource("9_xalbg")
 startAngle = -92.0
-angleDiff = 8.0
+angleDiff = 5.0
 pin = NodePath("../InputConfirmed")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=306862269]
