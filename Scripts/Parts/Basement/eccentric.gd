@@ -75,14 +75,20 @@ func canMove(dir : Vector2, initiator : Relation, chain = []):
 	if angle >= 0.6: return MoveState.Blocked
 	
 	var rotDir = getTurnDir(dir, initiator.A)
+	if(setToMove[0] != Simulator.totalStep):
+		movedBy.clear()
+	movedBy[initiator] = initiator
 	var dirScaled = dir.length() / r_init
 	var canTurnSelf = canTurn(rotDir, dirScaled, chain)
 	if canTurnSelf == MoveState.Blocked: return canTurnSelf
+	setToMove[0] = Simulator.totalStep
 	var canTurnLinked = true
 	for link in links:
-		canTurnLinked = canTurnLinked and link.getOppositeOf(self).canTurn(rotDir, dirScaled, chain)
+		var other = link.getOppositeOf(self)
+		canTurnLinked = canTurnLinked and other.canTurn(rotDir, dirScaled, chain)
 		if !canTurnLinked:
 			return MoveState.Blocked
+		movedBy[other] = other
 	return MoveState.Moved
 
 func move(dir : Vector2, initiator : Relation, chain = []):

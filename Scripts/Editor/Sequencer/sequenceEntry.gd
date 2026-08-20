@@ -44,6 +44,7 @@ func deserialize(src : Dictionary):
 	for entry in arr:
 		var machine = Global.workspace.uuidManager.getPart(int(entry["parent"]))
 		var pin = machine.uuidManager.getPart(int(entry["uuid"]))
+		if !pin: continue
 		var newPinEntry = addPin(pin)
 		newPinEntry.deserialize(entry["activations"])
 	updateLength()
