@@ -487,8 +487,8 @@ func intersects(pos : Vector3, pin = null):
 	return withinOutline and not withinHole
 
 func intersectsOutline(pos : Vector3, pin = null):
-	#var posRelative = outline.to_local(pos)
-	var posRelative = pos * $Outline.global_transform
+	var posRelative = $Outline.to_local(pos)
+	#var posRelative = pos * $Outline.global_transform
 	var coarseCheck = sheetData.boundingRect.has_point(Space.toVec2(posRelative))
 	if !coarseCheck: return false
 	if localClipZones.is_empty():

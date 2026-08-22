@@ -106,6 +106,7 @@ func canTurn(rotDir : int, scaledMoveDist : float, chain = []):
 	if chain.has(self):
 		return MoveState.AlreadyMoving
 	
+	var initiator = chain.back()
 	chain.append(self)
 	
 	if selected:
@@ -121,7 +122,7 @@ func canTurn(rotDir : int, scaledMoveDist : float, chain = []):
 	#var pivotToInit = initPosARelative
 	var moveCandidates = {}
 	for pin in pins.keys():
-		if pin == chain.back(): continue
+		if pin == initiator: continue
 		var pivotToPin = Space.toVec2(pin.position - position)
 		var r_pin = pins[pin][1]
 		#var pinAngleDiff = dirIDDiff(pins[initiator.A][0], pins[pin][0])#pivotToInit.angle_to(pivotToPin)

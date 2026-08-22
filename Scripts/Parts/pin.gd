@@ -542,6 +542,9 @@ func checkPropagation(offset : Vector3, dir : Vector2, initiator, chain = []):
 				continue
 			#s_partsChecked += 1
 			if part[0].intersectsOutline(global_position+globalOffset, self):
+				#if selected:
+					#Simulator.spawnIndicator(global_position+globalOffset, EventIndicator.Type.Attention)
+					#Global.editor.selector.selectSet([part[0]])
 				moveCandidates[part[0]] = part[0]
 				if part[0].fixed: break
 		else:

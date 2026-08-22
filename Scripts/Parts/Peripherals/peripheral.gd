@@ -77,10 +77,12 @@ func serializeDiff():
 	return null
 
 func deserializeDiff(src : Dictionary):
-	for entry in src["inputs"]:
-		inputs[int(entry[0])].deserializeDiff(entry[1])
-	for entry in src["outputs"]:
-		outputs[int(entry[0])].deserializeDiff(entry[1])
+	if src.has("inputs"):
+		for entry in src["inputs"]:
+			inputs[int(entry[0])].deserializeDiff(entry[1])
+	if src.has("outputs"):
+		for entry in src["outputs"]:
+			outputs[int(entry[0])].deserializeDiff(entry[1])
 
 func grabUUID():
 	if uuid < 0:

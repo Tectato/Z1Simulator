@@ -16,13 +16,13 @@ func _ready():
 func _process(delta: float) -> void:
 	if turning:
 		if risingEdge:
-			rotation.y = lerp_angle(deg_to_rad(currentAngle), deg_to_rad(targetAngle), Simulator.stepProgress * 2)
+			rotation.y = lerp_angle(deg_to_rad(currentAngle), deg_to_rad(targetAngle), clamp(Simulator.stepProgress * 2,0,1))
 			if Simulator.stepProgress >= 0.5:
 				risingEdge = false
-				currentAngle = rotation.y
+				currentAngle = rad_to_deg(rotation.y)
 				targetAngle = startAngle
 		else:
-			rotation.y = lerp_angle(deg_to_rad(currentAngle), deg_to_rad(targetAngle), (Simulator.stepProgress-0.5) * 2)
+			rotation.y = lerp_angle(deg_to_rad(currentAngle), deg_to_rad(targetAngle), clamp((Simulator.stepProgress-0.5) * 2,0,1))
 			if Simulator.stepProgress >= 1.0: turning = false
 
 func bump():
