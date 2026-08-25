@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://61axf1o1flh2"]
+[gd_scene format=3 uid="uid://61axf1o1flh2"]
 
 [ext_resource type="Script" uid="uid://0yxip6vgusmd" path="res://Scripts/Parts/layer.gd" id="1_g1kvl"]
 [ext_resource type="Script" uid="uid://bmdvu12efsgfp" path="res://Scripts/Editor/3DUI/billboard.gd" id="2_0wuba"]
@@ -17,7 +17,7 @@ shader = ExtResource("3_kifm5")
 shader_parameter/albedo = ExtResource("4_wghbl")
 shader_parameter/applyTint = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ffeya"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_wghbl"]
 resource_local_to_scene = true
 size = Vector2(8, 8)
 
@@ -27,88 +27,88 @@ resource_local_to_scene = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_ffeya"]
 size = Vector3(0.15, 0.1, 0.05)
 
-[node name="Layer" type="Node3D"]
+[node name="Layer" type="Node3D" unique_id=769240114]
 script = ExtResource("1_g1kvl")
 
-[node name="Baseplate" parent="." instance=ExtResource("2_ffeya")]
+[node name="Baseplate" parent="." unique_id=165551387 instance=ExtResource("2_ffeya")]
 
-[node name="MeshInstance3D" parent="Baseplate" index="0"]
+[node name="MeshInstance3D" parent="Baseplate" index="0" unique_id=758005601]
 material_override = SubResource("ShaderMaterial_wle4w")
-mesh = SubResource("PlaneMesh_ffeya")
+mesh = SubResource("PlaneMesh_wghbl")
 
-[node name="BoundingBox" type="Area3D" parent="."]
+[node name="BoundingBox" type="Area3D" parent="." unique_id=29693625]
 collision_layer = 8
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundingBox"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundingBox" unique_id=1136350292]
 shape = SubResource("BoxShape3D_g1kvl")
 
-[node name="Widgets" type="Node3D" parent="."]
+[node name="Widgets" type="Node3D" parent="." unique_id=1267286506]
 visible = false
 script = ExtResource("2_0wuba")
 
-[node name="Add" type="Node3D" parent="Widgets"]
+[node name="Add" type="Node3D" parent="Widgets" unique_id=649168775]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
 script = ExtResource("3_vgsk8")
 
-[node name="Sprite3D" type="Sprite3D" parent="Widgets/Add"]
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/Add" unique_id=846446229]
 texture_filter = 0
 texture = ExtResource("3_nqt8m")
 
-[node name="Area3D" type="Area3D" parent="Widgets/Add"]
+[node name="Area3D" type="Area3D" parent="Widgets/Add" unique_id=1758454226]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/Add/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/Add/Area3D" unique_id=1497427019]
 shape = SubResource("BoxShape3D_ffeya")
 
-[node name="Duplicate" type="Node3D" parent="Widgets"]
+[node name="Duplicate" type="Node3D" parent="Widgets" unique_id=212536165]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.18, 0)
 script = ExtResource("3_vgsk8")
 
-[node name="Sprite3D" type="Sprite3D" parent="Widgets/Duplicate"]
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/Duplicate" unique_id=1795899614]
 texture_filter = 0
 texture = ExtResource("8_wghbl")
 
-[node name="Area3D" type="Area3D" parent="Widgets/Duplicate"]
+[node name="Area3D" type="Area3D" parent="Widgets/Duplicate" unique_id=258391378]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/Duplicate/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/Duplicate/Area3D" unique_id=716517098]
 shape = SubResource("BoxShape3D_ffeya")
 
-[node name="MoveUp" type="Node3D" parent="Widgets"]
+[node name="MoveUp" type="Node3D" parent="Widgets" unique_id=2112080074]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 script = ExtResource("3_vgsk8")
 
-[node name="Sprite3D" type="Sprite3D" parent="Widgets/MoveUp"]
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/MoveUp" unique_id=139879577]
 texture_filter = 0
 texture = ExtResource("3_htluw")
 
-[node name="Area3D" type="Area3D" parent="Widgets/MoveUp"]
+[node name="Area3D" type="Area3D" parent="Widgets/MoveUp" unique_id=1166168133]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/MoveUp/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/MoveUp/Area3D" unique_id=575746457]
 shape = SubResource("BoxShape3D_ffeya")
 
-[node name="MoveDown" type="Node3D" parent="Widgets"]
+[node name="MoveDown" type="Node3D" parent="Widgets" unique_id=1495117843]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
 script = ExtResource("3_vgsk8")
 
-[node name="Sprite3D" type="Sprite3D" parent="Widgets/MoveDown"]
+[node name="Sprite3D" type="Sprite3D" parent="Widgets/MoveDown" unique_id=1086648054]
 texture_filter = 0
 texture = ExtResource("5_vgsk8")
 
-[node name="Area3D" type="Area3D" parent="Widgets/MoveDown"]
+[node name="Area3D" type="Area3D" parent="Widgets/MoveDown" unique_id=1589558778]
 collision_layer = 32
 collision_mask = 0
 monitoring = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/MoveDown/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Widgets/MoveDown/Area3D" unique_id=777454717]
 shape = SubResource("BoxShape3D_ffeya")
 
 [connection signal="clicked" from="Widgets/Add" to="." method="addLayer"]

@@ -134,6 +134,7 @@ func _process(_delta: float) -> void:
 			selectionBox.position = Space.vector2Min(boxStart, mousePos)
 			selectionBox.size = Space.vector2Max(boxStart, mousePos) - Space.vector2Min(boxStart, mousePos)
 	if !selected.is_empty() and !focusElsewhere:
+		var preventPerPartAction = false
 		if selected.size() == 1 and selected[0] is Sheet and selected[0].hasPivot() and Input.is_action_pressed("mouse_right"):
 			mover.spin()
 		if Input.is_action_just_pressed("select_all"):
@@ -174,73 +175,81 @@ func _process(_delta: float) -> void:
 					else:
 						current = null
 			selectSet(toSelect)
+		if Input.is_key_pressed(KEY_SHIFT):
+			if Input.is_action_just_pressed("nudge_up"):
+				preventPerPartAction = true
+				reassignLayer(1)
+			if Input.is_action_just_pressed("nudge_down"):
+				preventPerPartAction = true
+				reassignLayer(-1)
 				
 		#var i = -1
-		for part in selected:
-			#i += 1
-			if part.canBeMoved():
-				if Input.is_action_just_pressed("rotate_ccw") and not Input.is_key_pressed(KEY_CTRL):
-					#var bounds = part.getBounds()
-					#var midPoint = (bounds[1]-bounds[0])/2
-					#mouseRelative[i] -= midPoint
-					#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
-					#mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
-					part.rotatePart(-PI/2)
-					part.place()
-				elif Input.is_action_just_pressed("rotate_cw") and not Input.is_key_pressed(KEY_CTRL):
-					#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
-					part.rotatePart(PI/2)
-					part.place()
-				
-				if part.getValidMoveDirections()[1]:
-					if Input.is_action_just_pressed("nudge_up"):
-						part.position.y += Global.workspace.sheetSpacing
+		if !preventPerPartAction:
+			for part in selected:
+				#i += 1
+				if part.canBeMoved():
+					if Input.is_action_just_pressed("rotate_ccw") and not Input.is_key_pressed(KEY_CTRL):
+						#var bounds = part.getBounds()
+						#var midPoint = (bounds[1]-bounds[0])/2
+						#mouseRelative[i] -= midPoint
+						#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,-PI/2)
+						#mouseRelative[i] += midPoint.rotated(Vector3.UP,-PI/2)
+						part.rotatePart(-PI/2)
 						part.place()
-					elif Input.is_action_just_pressed("nudge_down"):
-						part.position.y -= Global.workspace.sheetSpacing
+					elif Input.is_action_just_pressed("rotate_cw") and not Input.is_key_pressed(KEY_CTRL):
+						#mouseRelative[i] = mouseRelative[i].rotated(Vector3.UP,PI/2)
+						part.rotatePart(PI/2)
 						part.place()
-				
-			if part is Machine:
-				if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
-					part.clock.increaseOffset()
-			if (part is ClockPin or part is Sheet) and part.canModify():
-				if part is ClockPin:
+					
+					if part.getValidMoveDirections()[1]:
+						if Input.is_action_just_pressed("nudge_up"):
+							part.position.y += Global.workspace.sheetSpacing
+							part.place()
+						elif Input.is_action_just_pressed("nudge_down"):
+							part.position.y -= Global.workspace.sheetSpacing
+							part.place()
+					
+				if part is Machine:
 					if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
-						part.setStep(part.forwardStep+1)
-					if Input.is_action_just_pressed("cycle_clock_pin_step_bckwd"):
-						part.setStep(part.forwardStep-1)
+						part.clock.increaseOffset()
+				if (part is ClockPin or part is Sheet) and part.canModify():
+					if part is ClockPin:
+						if Input.is_action_just_pressed("cycle_clock_pin_step_fwd"):
+							part.setStep(part.forwardStep+1)
+						if Input.is_action_just_pressed("cycle_clock_pin_step_bckwd"):
+							part.setStep(part.forwardStep-1)
+						if Input.is_action_just_pressed("flip"):
+							part.setPulsing(!part.pulsing)
+						if Input.is_action_just_pressed("toggle_input"):
+							part.setInput(!part.input)
+						if Input.is_action_just_pressed("nudge_up"):
+							part.modifyExtent(!ctrl, 1)
+						elif Input.is_action_just_pressed("nudge_down"):
+							part.modifyExtent(!ctrl, -1)
+					if part is Sheet:
+						if Input.is_action_just_pressed("flip"):
+							part.setFixed(!part.fixed)
+						if Input.is_action_just_pressed("toggle_output"):
+							part.cycleTab()
+				elif part is Pin:# and part.canModify(): # Stored in diff if enabled now
+					if Input.is_action_just_pressed("toggle_output"):
+						part.setOutput(!part.output)
 					if Input.is_action_just_pressed("flip"):
-						part.setPulsing(!part.pulsing)
-					if Input.is_action_just_pressed("toggle_input"):
-						part.setInput(!part.input)
+						part.flipOutput()
+					
 					if Input.is_action_just_pressed("nudge_up"):
 						part.modifyExtent(!ctrl, 1)
 					elif Input.is_action_just_pressed("nudge_down"):
 						part.modifyExtent(!ctrl, -1)
-				if part is Sheet:
-					if Input.is_action_just_pressed("flip"):
-						part.setFixed(!part.fixed)
-					if Input.is_action_just_pressed("toggle_output"):
-						part.cycleTab()
-			elif part is Pin:# and part.canModify(): # Stored in diff if enabled now
-				if Input.is_action_just_pressed("toggle_output"):
-					part.setOutput(!part.output)
-				if Input.is_action_just_pressed("flip"):
-					part.flipOutput()
-				
-				if Input.is_action_just_pressed("nudge_up"):
-					part.modifyExtent(!ctrl, 1)
-				elif Input.is_action_just_pressed("nudge_down"):
-					part.modifyExtent(!ctrl, -1)
-			elif part is SelectableHitbox:
-				if part.parent is Spring:
-					if Input.is_action_just_pressed("flip"):
-						part.parent.flipTension()
-			elif part is Eccentric:
-				if Input.is_action_just_pressed("nudge_up"):
-					part.modifyExtent(!ctrl, 1)
-				elif Input.is_action_just_pressed("nudge_down"):
-					part.modifyExtent(!ctrl, -1)
+				elif part is SelectableHitbox:
+					if part.parent is Spring:
+						if Input.is_action_just_pressed("flip"):
+							part.parent.flipTension()
+				elif part is Eccentric:
+					if Input.is_action_just_pressed("nudge_up"):
+						part.modifyExtent(!ctrl, 1)
+					elif Input.is_action_just_pressed("nudge_down"):
+						part.modifyExtent(!ctrl, -1)
 		if !focusElsewhere and Input.is_action_just_pressed("delete") and canModify():
 			transformGizmo.hide()
 			while !selected.is_empty():
@@ -479,6 +488,25 @@ func paste():
 				mapping[part].addRelation(Relation.Type.ImpulseRod, other)
 			elif relation is Link:
 				mapping[part].addRelation(Relation.Type.Link, other)
+
+func reassignLayer(dir : int):
+	var validToMove = []
+	for part in selected:
+		if part.layer: validToMove.append(part)
+	var srcLayer = validToMove[0].layer
+	var dstLayer = srcLayer.machine.getLayer(srcLayer.height + dir)
+	if !dstLayer: return
+	dstLayer.deserializing = true # Prevent collider updates
+	for part in validToMove:
+		srcLayer.removePart(part)
+		if part is Sheet:
+			var heightCache = part.heightIndex
+			dstLayer.addPart(part)
+			part.heightIndex = heightCache
+			part.updateHeight()
+		else:
+			dstLayer.addPart(part)
+	dstLayer.deserializing = false
 
 func link():
 	Global.editor.previousAction = link

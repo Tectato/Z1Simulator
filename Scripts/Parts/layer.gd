@@ -185,6 +185,9 @@ func addPart(newPart):
 
 func removePart(part):
 	parts.erase(part)
+	if machine.beingDeleted:
+		return
+	remove_child(part)
 	updateCollider()
 
 func updateCollider():
@@ -287,7 +290,7 @@ func delete():
 func updateWidgets():
 	height = machine.getLayerIndex(self)
 	var totalLayers = machine.layers.size()
-	add.visible = height == totalLayers-1
+	#add.visible = height == totalLayers-1
 	button_up.visible = height < totalLayers-1
 	button_down.visible = height > 0
 
@@ -298,7 +301,7 @@ func moveDown():
 	machine.moveLayer(self, -1)
 
 func addLayer():
-	machine.addLayer()
+	machine.addLayer(height)
 
 func duplicateLayer():
 	machine.duplicateLayer(self)

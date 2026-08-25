@@ -174,6 +174,7 @@ func appendRelation(relation : Relation):
 	place()
 
 func removeRelation(relation : Relation):
+	if layer.machine.beingDeleted: return
 	if relation is EccentricArm:
 		relations.erase(relation)
 	else:
@@ -232,6 +233,10 @@ func updateHeight():
 	top = (top - floor) * 10.0
 	var effectiveHeight = top
 	mesh.scale = Vector3(1,effectiveHeight,1)
+	if !is_inside_tree():
+		pass
+	if !mesh.is_inside_tree():
+		pass
 	mesh.position = Vector3.UP * (floor + 0.1 * effectiveHeight / 2 - global_position.y)
 	#$Highlight.transform = mesh.transform
 	pinCollider.transform = mesh.transform
@@ -247,6 +252,8 @@ func place():
 		endLayer = startLayer
 	# No need for gridLibrary updates, we don't interact with anything directly
 	updatePositions()
+	if !is_inside_tree():
+		pass
 	schedule(updateHeight)
 	pins.clear()
 	for relation in relations:

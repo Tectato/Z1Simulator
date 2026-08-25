@@ -17,7 +17,10 @@ func init():
 	B.appendRelation(self)
 	AParent = A.getMachine()
 	BParent = B.getMachine()
-	if isInterMachineRelation() and AParent.getTopLevelProject() != BParent.getTopLevelProject():
+	var AProject = AParent.getTopLevelProject()
+	var BProject = BParent.getTopLevelProject()
+	#								[between different proj's] or [Same project but neither instanced]
+	if isInterMachineRelation() and ((AProject != BProject) or (!AProject and !BProject)):
 		Global.workspace.interMachineRelations[self] = null
 	updatePos()
 	pass

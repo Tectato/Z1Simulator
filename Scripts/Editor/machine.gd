@@ -53,11 +53,15 @@ func rename(newID):
 func canBeMoved():
 	return true
 
-func addLayer():
+func addLayer(above = -1):
 	var currentState = layers.duplicate()
 	var newLayer = LAYER.instantiate()
 	add_child(newLayer)
-	layers.append(newLayer)
+	if above < 0 or above == layers.size()-1:
+		layers.append(newLayer)
+	else:
+		layers.insert(above + 1, newLayer)
+		gridLibrary.insertLayer(above + 1)
 	newLayer.machine = self
 	newLayer.updateCollider()
 	if !deserializing:
@@ -95,6 +99,7 @@ func moveLayer(layer : Layer, direction = 1):
 	updatePinExtents(currentState)
 
 func removeLayer(layer):
+	if beingDeleted: return
 	var currentState = layers.duplicate()
 	var index = layers.find(layer)
 	layers.erase(layer)

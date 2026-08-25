@@ -23,7 +23,7 @@ extends Peripheral
 @export var valueRange = [-6, 6]
 
 var exponent = 0
-var lastMove = 0
+var upcomingValue = 0
 var history = []
 var updateScheduled = false
 var sliderStartPos : Vector3
@@ -80,15 +80,14 @@ func pinInput(pin : Pin):
 		1:
 			shift(1, true)
 		2:
-			reset()
+			updatePos()
 
 func shift(dir, machineInitiated = false):
-	var newValue = exponent + dir
-	if newValue < valueRange[0] or newValue > valueRange[1]:
+	upcomingValue = exponent + dir
+	if upcomingValue < valueRange[0] or upcomingValue > valueRange[1]:
 		#Simulator.spawnIndicator(global_position, EventIndicator.Type.Error)
 		return
-	exponent += dir
-	lastMove = dir
+	#exponent += dir
 	if !machineInitiated:
 		updatePos()
 	else:
@@ -96,16 +95,19 @@ func shift(dir, machineInitiated = false):
 
 func reset():
 	exponent = 0
+	upcomingValue = 0
 	sliderArmature.reset()
 	#updatePos()
 
 func checkUpdate():
-	if updateScheduled:
+	if updateScheduled and inputs.size() < 3:
 		if Simulator.currentStep != 3: return
 		updatePos()
-		updateScheduled = false
+		#updateScheduled = false
 
 func updatePos():
+	updateScheduled = false
+	exponent = upcomingValue
 	if sliderArmature: sliderArmature.setValue(exponent, updateScheduled)
 	else: slider.position = sliderStartPos + slideDir * exponent * Workspace.pinTravel
 	labels[0].text = str(exponent)

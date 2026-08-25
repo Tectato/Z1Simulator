@@ -259,36 +259,36 @@ sliderCarriage = NodePath("InputSlider/Skeleton3D/Slider_2")
 notchStopper = NodePath("../SliderReaders/SliderReaderBlock/SliderReader")
 notchAudio = NodePath("../NotchAudio")
 
-[node name="MoverLeft" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="0" unique_id=1798735171]
+[node name="MoverLeft" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 1313559812) index="0" unique_id=463477198]
 script = ExtResource("10_2aibh")
 moveDiff = Vector3(-0.008, 0, 0)
 
-[node name="291_5_2" parent="inputExponent/InputSlider/Skeleton3D/MoverLeft" index="0" unique_id=1041496364 node_paths=PackedStringArray("targetPin")]
+[node name="291_5_2" parent="inputExponent/InputSlider/Skeleton3D/MoverLeft" index="0" unique_id=918680354 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")
 targetPin = NodePath("../../../../../ShiftLeft")
 forwardAxis = Vector3(1, 0, 0)
 
-[node name="MoverRight" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="1" unique_id=465703956]
+[node name="MoverRight" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 1313559812) index="1" unique_id=1981749953]
 script = ExtResource("10_2aibh")
 moveDiff = Vector3(0.008, 0, 0)
 
-[node name="291_5_1" parent="inputExponent/InputSlider/Skeleton3D/MoverRight" index="0" unique_id=1043225538 node_paths=PackedStringArray("targetPin")]
+[node name="291_5_1" parent="inputExponent/InputSlider/Skeleton3D/MoverRight" index="0" unique_id=2137946533 node_paths=PackedStringArray("targetPin")]
 script = ExtResource("11_0jlyt")
 targetPin = NodePath("../../../../../ShiftRight")
 forwardAxis = Vector3(1, 0, 0)
 
-[node name="Slider_2" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="2" unique_id=1269891074]
+[node name="Slider_2" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 1313559812) index="2" unique_id=830996231]
 script = ExtResource("10_2aibh")
 moveScale = 0.1
 moveDiff = Vector3(0.075, 0, 0)
 
-[node name="TwistReset" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="3" unique_id=43812950]
+[node name="TwistReset" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 1313559812) index="3" unique_id=1237689551]
 script = ExtResource("10_48fsg")
 activeStep = 1
 startAngle = -12.0
 angleDiff = 24.0
 
-[node name="TwistSet" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 898454770) index="4" unique_id=1216235517]
+[node name="TwistSet" parent="inputExponent/InputSlider/Skeleton3D" parent_id_path=PackedInt32Array(673034786, 1313559812) index="4" unique_id=1551675944]
 script = ExtResource("10_48fsg")
 activeStep = 3
 startAngle = 12.0
