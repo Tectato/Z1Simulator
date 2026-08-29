@@ -1,0 +1,158 @@
+import bpy
+import json
+import math
+import mathutils
+from pathlib import Path
+
+c_scaleFactor = 0.1
+c_moveDist = 0.08
+c_frameSpacing = 4
+
+
+def read_data(context, filepath):
+    f = open(filepath, "r", encoding="utf-8")
+    data = f.read()
+    f.close()
+
+    dict = json.loads(data)
+    
+    for machineUUID in dict.keys():
+        machineCandidates = [obj for obj in bpy.data.objects if ("part_uuids" in obj and obj["uuid"] == int(machineUUID))]
+        machine = machineCandidates[0]
+        print("Importing recording for " + machine.name)
+        importRecording(dict[machineUUID], machine)
+
+    return {'FINISHED'}
+
+
+
+def importRecording(dict, machine):
+    if bpy.context.active_object != None:
+        bpy.context.active_object.select_set(False)
+    parts = machine["part_uuids"]
+    for partUUID in parts.keys():
+        if partUUID in dict:
+            #print(parts[partUUID].name + " has animation data")
+            importTrack(dict[partUUID], parts[partUUID])
+            
+
+def importTrack(dict, part):
+    if part is None: return
+    if not part in bpy.context.selectable_objects:
+        print(part.name + " not selectable")
+        return
+    if bpy.context.active_object != None:
+        bpy.context.active_object.select_set(False)
+    hasPos = "pos" in dict
+    hasRot = "rot" in dict
+    keySet = "BUILTIN_KSI_LocRot" if (hasPos and hasRot) else ("Location" if hasPos else "Rotation")
+    if not hasPos and not hasRot: return
+    part.select_set(True)
+    bpy.context.view_layer.objects.active = part
+
+    if hasPos:
+        part.location = (float(dict["pos"][0][0])*c_scaleFactor, -float(dict["pos"][0][1])*c_scaleFactor, part.location[2])
+        bpy.context.object.keyframe_insert(data_path='location', frame=0)
+    if hasRot:
+        part.rotation_euler[2] = parseAngle(dict["rot"][0])
+        bpy.context.object.keyframe_insert(data_path='rotation_euler', frame=0)
+    
+    #bpy.context.scene.frame_set(0)
+    #bpy.ops.anim.keyframe_insert_by_name(type=keySet, frame=int(0))
+    #print(part.name + " location:" + str(part.location))
+    
+    sequenceLength = 1
+    if hasPos and hasRot:
+        sequenceLength = min(len(dict["pos"]), len(dict["rot"]))
+    else:
+        sequenceLength = len(dict["pos"] if hasPos else dict["rot"])
+    for i in range(1,sequenceLength):
+        if hasPos:
+            entry = dict["pos"][i]
+            offset = None
+            if hasattr(entry, "__len__"): # Check if array. I do not like python.
+                offset = mathutils.Vector((float(entry[0]),-float(entry[1]),0)) * c_scaleFactor
+            else:
+                offset = intToOffset(entry)
+            
+            part.location = part.location + offset#intToOffset(dict["pos"][i])
+            bpy.context.object.keyframe_insert(data_path='location', frame=int(i * c_frameSpacing))
+            #print(part.name + " location:" + str(part.location))
+        if hasRot:
+            part.rotation_euler[2] = part.rotation_euler[2] + float(dict["rot"][i])
+            bpy.context.object.keyframe_insert(data_path='rotation_euler', frame=int(i * c_frameSpacing))
+        #bpy.context.scene.frame_set(i * c_frameSpacing)
+        #bpy.ops.anim.change_frame(frame=i * c_frameSpacing)
+        #bpy.ops.anim.keyframe_insert_by_name(type=keySet, frame=int(i * c_frameSpacing))
+        
+    part.select_set(False)
+    
+
+def intToOffset(i):
+    match(i):
+        case 0:
+            return mathutils.Vector((0,1,0)) * c_moveDist * c_scaleFactor
+        case 1:
+            return mathutils.Vector((1,0,0)) * c_moveDist * c_scaleFactor
+        case 2:
+            return mathutils.Vector((0,-1,0)) * c_moveDist * c_scaleFactor
+        case 3:
+            return mathutils.Vector((-1,0,0)) * c_moveDist * c_scaleFactor
+        case 5:
+            return mathutils.Vector((0,0,0))
+
+def parseAngle(angleRaw):
+    angle = 0.0
+    if angleRaw.endswith("q"):
+        angle = float(angleRaw.rstrip("q")) * math.pi/2.0
+    else:
+        angle = float(angleRaw)#/360 * 2.0*math.pi
+    return angle
+
+
+# ImportHelper is a helper class, defines filename and
+# invoke() function which calls the file selector.
+from bpy_extras.io_utils import ImportHelper
+from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.types import Operator
+
+
+class ImportRecording(Operator, ImportHelper):
+    """This appears in the tooltip of the operator and in the generated docs"""
+    bl_idname = "import_project.animation"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import Recording"
+
+    # ImportHelper mix-in class uses this.
+    filename_ext = ".json"
+
+    filter_glob: StringProperty(
+        default="*.json",
+        options={'HIDDEN'},
+        maxlen=255,  # Max internal buffer length, longer would be clamped.
+    )
+
+    def execute(self, context):
+        return read_data(context, self.filepath)
+
+
+# Only needed if you want to add into a dynamic menu.
+def menu_func_import(self, context):
+    self.layout.operator(ImportSomeData.bl_idname, text="Z1 Recording")
+
+
+# Register and add to the "file selector" menu (required to use F3 search "Text Import Operator" for quick access).
+def register():
+    bpy.utils.register_class(ImportRecording)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
+
+
+def unregister():
+    bpy.utils.unregister_class(ImportRecording)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+
+
+if __name__ == "__main__":
+    register()
+
+    # Test call.
+    bpy.ops.import_project.animation('INVOKE_DEFAULT')

@@ -1,0 +1,425 @@
+import bpy
+import json
+import math
+import mathutils
+from pathlib import Path
+
+# c_X -> const
+# g_X -> global variable
+
+c_scaleFactor = 0.2
+pinMaterial = None
+staticPinMaterial = None
+sheetMaterial = None
+staticSheetMaterial = None
+targetCollection = None
+
+sheetLibrary = {}
+pinPrefabLogic = None
+pinPrefabStatic = None
+
+c_sheetThickness = 0.002
+c_sheetSpacing = 0.004
+c_sheetScalant = 0.709 # ?
+
+g_highestSheetIndex = 0
+g_uuids = {}
+
+def import_project(context, filepath):
+    ### Set up materials
+    # Logic pin
+    global pinMaterial # What the hell, python?
+    if pinMaterial == None:
+        pinMaterial = bpy.data.materials.get("PinMaterial")
+        if pinMaterial is None:
+            print("No pin material found, creating...")
+            pinMaterial = bpy.data.materials.new(name="PinMaterial")
+            pinMaterial.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 1
+        else:
+            print(pinMaterial)
+        
+        # Static pin
+        global staticPinMaterial
+        staticPinMaterial = bpy.data.materials.get("StaticPinMaterial")
+        if staticPinMaterial is None:
+            print("No static pin material found, creating...")
+            staticPinMaterial = bpy.data.materials.new(name="StaticPinMaterial")
+            staticPinMaterial.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 1
+        else:
+            print(pinMaterial)
+        
+        # Sheet
+        global sheetMaterial
+        sheetMaterial = bpy.data.materials.get("SheetMaterial")
+        if sheetMaterial is None:
+            print("No sheet material found, creating...")
+            sheetMaterial = bpy.data.materials.new(name="SheetMaterial")
+            sheetMaterial.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 1
+        
+        # Static sheet
+        global staticSheetMaterial
+        staticSheetMaterial = bpy.data.materials.get("StaticSheetMaterial")
+        if staticSheetMaterial is None:
+            print("No static sheet material found, creating...")
+            staticSheetMaterial = bpy.data.materials.new(name="StaticSheetMaterial")
+            staticSheetMaterial.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 1
+    
+    ### Set up pin prefabs
+    # Logic pin
+    global pinPrefabLogic
+    if pinPrefabLogic == None:
+        bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.005, depth=0.01, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+        pinPrefabLogic = bpy.context.active_object
+        bpy.ops.object.shade_auto_smooth()
+        bpy.context.object.modifiers["Smooth by Angle"]["Input_1"] = 0.698132
+        bpy.ops.transform.translate(value=(0,0,0.005))
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+        pinPrefabLogic.name = "pin_prefab_logic"
+        if pinPrefabLogic.data.materials:
+            pinPrefabLogic.data.materials[0] = pinMaterial
+        else:
+            pinPrefabLogic.data.materials.append(pinMaterial)
+    
+    # Static pin
+    global pinPrefabStatic
+    if pinPrefabStatic == None:
+        bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.005, depth=0.01, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+        pinPrefabStatic = bpy.context.active_object
+        bpy.ops.object.shade_auto_smooth()
+        bpy.context.object.modifiers["Smooth by Angle"]["Input_1"] = 0.698132
+        bpy.ops.transform.translate(value=(0,0,0.005))
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+        pinPrefabStatic.name = "pin_prefab_static"
+        if pinPrefabStatic.data.materials:
+            pinPrefabStatic.data.materials[0] = staticPinMaterial
+        else:
+            pinPrefabStatic.data.materials.append(staticPinMaterial)
+    
+    ### Reference to selected collection
+    global targetCollection
+    targetCollection = bpy.context.collection
+    if targetCollection is None:
+        print("No collection selected")
+        return {'FINISHED'}
+    else:
+        print(targetCollection)
+    
+    activeLayerCollection = bpy.context.view_layer.active_layer_collection
+    
+    print("Importing project...")
+    read_data(targetCollection, filepath)
+    return {'FINISHED'}
+    
+
+def read_data(parent, filepath):
+    pathObj = Path(filepath)
+    pathObj = pathObj.parent
+    print("Importing: " + str(pathObj))
+    
+    instanceCollection = bpy.data.collections.new(Path(filepath).stem)
+    parent.children.link(instanceCollection)
+    layer_instanceCollection = bpy.context.view_layer.active_layer_collection.children[instanceCollection.name]
+    bpy.context.view_layer.active_layer_collection = layer_instanceCollection
+    instanceCollection["machines"] = []
+    
+    if bpy.context.active_object != None:
+        bpy.context.active_object.select_set(False)
+    f = open(filepath, "r", encoding="utf-8")
+    data = f.read()
+    f.close()
+    
+    dict = json.loads(data)
+    
+    ### Deserialize project
+    for machine in dict["machines"]:
+        print("============")
+        #print(machine)
+        if "machine" in machine:
+            newMachine = deserializeMachine(machine["machine"], pathObj, instanceCollection)
+            #newMachine["uuid"] = int(machine["uuid"])
+            instanceCollection["machines"] += newMachine
+        elif "path" in machine:
+            relativePath = Path(machine["path"])
+            project = read_data(pathObj+relativePath)
+            if "overrides" in machine:
+                for entryID in range(len(machine["overrides"])):
+                    overrideEntry = machine["overrides"][entryID]
+                    machineEntry = project["machines"][entryID]
+                    
+    
+    #pinPrefabLogic.hide_viewport = True
+    pinPrefabLogic.hide_render = True
+    #pinPrefabStatic.hide_viewport = True
+    pinPrefabStatic.hide_render = True
+    
+    return instanceCollection
+    
+
+def deserializeMachine(dict, basePath, collection):
+    bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+    machineRoot = bpy.context.active_object
+    machineRoot.name = basePath.name
+    
+    global g_highestSheetIndex
+    layerIndex = 0
+    for layer in dict["layers"]:
+        layerInstance = deserializeLayer(layer, basePath, layerIndex, g_highestSheetIndex, collection)
+        layerInstance.parent = machineRoot
+        layerIndex += 1
+        g_highestSheetIndex += 1
+    
+    globalPinHeight = g_highestSheetIndex * c_sheetSpacing
+    globalPinScale = mathutils.Vector((1.0, 1.0, globalPinHeight * 100.0))
+    for pin in dict["globalPins"]:
+        pinInstance = deserializePin(pin, collection)
+        pinInstance.parent = machineRoot
+        pinInstance.scale = globalPinScale
+    
+    for pin in dict["clockPins"]:
+        pinInstance = deserializePin(pin, collection)
+        pinInstance.parent = machineRoot
+        pinInstance.scale = globalPinScale
+    
+    global g_uuids
+    machineRoot["part_uuids"] = g_uuids
+    machineRoot["srcUUID"] = dict["uuid"]
+    machineRoot["uuid"] = dict["uuid"]
+
+    g_uuids = {} # Clear global var for next machine
+
+    #print(dict)
+    return machineRoot
+
+def deserializeLayer(dict, basePath, index, startHeight, collection):
+    bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, startHeight * c_sheetSpacing), scale=(1, 1, 1))
+    layerRoot = bpy.context.active_object
+    if "id" in dict:
+        layerRoot.name = dict["id"]
+    else:
+        layerRoot.name = "Layer " + str(index)
+    print("- " + layerRoot.name)
+    
+    localHighestSheetIndex = 0
+    global g_highestSheetIndex
+    for sheet in dict["sheets"]:
+        sheetInstance = deserializeSheet(sheet, basePath, collection)
+        sheetInstance.parent = layerRoot
+        g_highestSheetIndex = max(g_highestSheetIndex, startHeight + int(sheet["pos_y"]))
+        localHighestSheetIndex = max(localHighestSheetIndex, int(sheet["pos_y"]))
+    #sheetInstance = deserializeSheet(dict["sheets"][0], basePath)
+    #sheetInstance.parent = layerRoot
+    
+    localPinHeight = (localHighestSheetIndex+1) * c_sheetSpacing
+    for pin in dict["pins"]:
+        pinInstance = deserializePin(pin, collection)
+        pinInstance.parent = layerRoot
+        pinInstance.scale = mathutils.Vector((1.0, 1.0, localPinHeight * 100.0))
+    
+    return layerRoot
+
+def deserializePin(dict, collection):
+    if bpy.context.active_object != None:
+        bpy.context.active_object.select_set(False)
+    pin = None
+    if "static" in dict:
+        global pinPrefabStatic
+        pin = pinPrefabStatic.copy()
+        pin.data = pinPrefabStatic.data
+        #pinPrefabStatic.select_set(True)
+        #bpy.context.view_layer.objects.active = pinPrefabStatic
+    else:
+        global pinPrefabLogic
+        pin = pinPrefabLogic.copy()
+        pin.data = pinPrefabLogic.data
+        #pinPrefabLogic.select_set(True)
+        #bpy.context.view_layer.objects.active = pinPrefabLogic
+    collection.objects.link(pin)
+    #bpy.ops.object.duplicate(linked=True)
+    #pin = bpy.context.active_object
+    pin.location = (float(dict["pos_x"])*c_scaleFactor, -float(dict["pos_z"])*c_scaleFactor, 0)
+    
+    if "id" in dict:
+        pin.name = dict["id"]
+    else:
+        pin.name = "pin_" + str(dict["uuid"])
+    
+    pin["uuid"] = int(dict["uuid"])
+    global g_uuids
+    g_uuids[str(pin["uuid"])] = pin
+
+    return pin
+
+def deserializeSheet(dict, basePath, collection):
+    if bpy.context.active_object != None:
+        bpy.context.active_object.select_set(False)
+    file = dict["file"]
+    sheet = None
+    global sheetLibrary
+    if file in sheetLibrary:
+        #print("Sheet " + file + " exists, duplicating...")
+        toDuplicate = sheetLibrary[file]
+        #toDuplicate.select_set(True)
+        #bpy.context.view_layer.objects.active = toDuplicate
+        #bpy.ops.object.duplicate(linked=True)
+        #sheet = bpy.context.active_object
+        sheet = toDuplicate.copy()
+        sheet.data = toDuplicate.data
+        collection.objects.link(sheet)
+    else:
+        print("\t> Importing " + file + "...")
+        bpy.ops.import_curve.svg(filepath=(str(basePath) + "\\" + file))
+        importCollection = bpy.data.collections.get(Path(file).name)
+        parts = importCollection.objects
+        
+        # Get midpoint
+        outline = parts[0]
+        vMin = mathutils.Vector((1.0, 1.0, 1.0)) * 1000
+        vMax = mathutils.Vector((1.0, 1.0, 1.0)) * -1000
+        midPoint = mathutils.Vector((0.0, 0.0, 0.0))
+        for point in outline.data.splines.active.bezier_points:
+            #midPoint += point.co
+            vMin = mathutils.Vector((
+                min(vMin.x,point.co.x),
+                min(vMin.y,point.co.y),
+                min(vMin.z,point.co.z)
+                ))
+            vMax = mathutils.Vector((
+                max(vMax.x,point.co.x),
+                max(vMax.y,point.co.y),
+                max(vMax.z,point.co.z)
+                ))
+        #midPoint /= len(outline.data.splines.active.bezier_points)
+        midPoint = (vMax+vMin)/2
+        
+        # Join elements
+        root = parts[0]
+        root.data.splines[0].use_smooth = False
+        toRemove = []
+        for i in range(1, len(parts)):
+            part = parts[i]
+            toRemove.append(part)
+            type = part.name.split("_")[0]
+            if not (type == "pointHole" or type == "longHole"):
+                part.data.splines[0].use_smooth = False
+            newSpline = root.data.splines.new('BEZIER')
+            pointsToCopy = part.data.splines[0].bezier_points
+            
+            newSpline.bezier_points.add(len(pointsToCopy)-1)
+            newSpline.use_smooth = part.data.splines[0].use_smooth
+            newSpline.use_cyclic_u = True
+            for j in range(len(pointsToCopy)):
+                newSpline.bezier_points[j].handle_left = pointsToCopy[j].handle_left
+                newSpline.bezier_points[j].handle_left_type = pointsToCopy[j].handle_left_type
+                newSpline.bezier_points[j].co = pointsToCopy[j].co
+                newSpline.bezier_points[j].handle_right = pointsToCopy[j].handle_right
+                newSpline.bezier_points[j].handle_right_type = pointsToCopy[j].handle_right_type
+        for part in toRemove:
+            bpy.data.objects.remove(part, do_unlink = True)
+        bpy.context.view_layer.objects.active = root
+        
+        # Offset
+        for spline in outline.data.splines:
+            for point in spline.bezier_points:
+                point.co -= midPoint
+                point.handle_left -= midPoint
+                point.handle_right -= midPoint
+        
+        # Cleanup
+        sheet = bpy.context.active_object
+        sheet.data.resolution_u = 2
+        importCollection.objects.unlink(sheet)
+        collection.objects.link(sheet)
+        bpy.data.collections.remove(importCollection)
+        sheetLibrary[file] = sheet
+        #bpy.ops.object.shade_flat()
+        
+        material = None
+        if "static" in dict:
+            material = staticSheetMaterial
+        else:
+            material = sheetMaterial
+        if sheet.data.materials:
+             #assign to 1st material slot
+            sheet.data.materials[0] = material
+        else:
+            # no slots
+            sheet.data.materials.append(material)
+    
+    # Parse info
+    #bpy.ops.transform.translate(value=(float(dict["pos_x"]) * scaleFactor, -float(dict["pos_z"]) * scaleFactor, float(dict["pos_y"]) * 0.003))
+    # Account for different coordinate handedness!
+    sheet.location = (float(dict["pos_x"]) * c_scaleFactor, -float(dict["pos_z"]) * c_scaleFactor, float(dict["pos_y"]) * c_sheetSpacing + c_sheetThickness/2.0)
+    angleRaw = dict["rotation"]
+    angle = 0.0
+    if angleRaw.endswith("q"):
+        angle = float(angleRaw.rstrip("q")) * math.pi/2.0
+    else:
+        angle = float(angleRaw)/360 * 2.0*math.pi
+    #angle += math.pi
+    
+    #bpy.ops.transform.resize(value=(0.75,0.75,0.75)) # ?
+    global c_sheetScalant
+    sheet.scale = mathutils.Vector((1.0, 1.0, 1.0)) * c_sheetScalant
+    #bpy.ops.transform.rotate(value=angle, orient_axis='Z')
+    sheet.rotation_euler[2] = angle
+    sheet.data.extrude = c_sheetThickness
+    if "id" in dict:
+        sheet.name = dict["id"]
+    else:
+        sheet.name = dict["file"] + "_" + str(dict["uuid"])
+    
+    sheet["uuid"] = int(dict["uuid"])
+    global g_uuids
+    g_uuids[str(sheet["uuid"])] = sheet
+        
+    return sheet
+
+
+
+
+# ImportHelper is a helper class, defines filename and
+# invoke() function which calls the file selector.
+from bpy_extras.io_utils import ImportHelper
+from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.types import Operator
+
+
+class ImportZ1Project(Operator, ImportHelper):
+    """This appears in the tooltip of the operator and in the generated docs"""
+    bl_idname = "import_project.data"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import Project"
+
+    # ImportHelper mix-in class uses this.
+    filename_ext = ".json"
+
+    filter_glob: StringProperty(
+        default="*.json",
+        options={'HIDDEN'},
+        maxlen=255,  # Max internal buffer length, longer would be clamped.
+    )
+
+    def execute(self, context):
+        return import_project(context, self.filepath)
+
+
+# Only needed if you want to add into a dynamic menu.
+def menu_func_import(self, context):
+    self.layout.operator(ImportZ1Project.bl_idname, text="Z1 Project")
+
+
+# Register and add to the "file selector" menu (required to use F3 search "Text Import Operator" for quick access).
+def register():
+    bpy.utils.register_class(ImportZ1Project)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
+
+
+def unregister():
+    bpy.utils.unregister_class(ImportZ1Project)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
+
+
+if __name__ == "__main__":
+    register()
+
+    # Test call.
+    bpy.ops.import_project.data('INVOKE_DEFAULT')
