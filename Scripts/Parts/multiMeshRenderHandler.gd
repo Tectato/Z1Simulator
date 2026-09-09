@@ -170,7 +170,8 @@ func setTransform(key : String, index : int, transform : Transform3D, showHighli
 		else:
 			toTransform[key] = {index : transform}
 		return
-	renderers[key].multimesh.set_instance_transform(index, transform)
+	var hideRegularMesh = !(!hasHighlights or !showHighlight) and (Global.editor.currentVisMode == Editor.VisMode.Realistic)
+	renderers[key].multimesh.set_instance_transform(index, transform if !hideRegularMesh else transform.scaled(Vector3.ZERO))
 	if hasHighlights:
 		if showHighlight:
 			highlightRenderers[key].visible = true

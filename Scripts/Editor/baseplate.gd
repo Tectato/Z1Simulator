@@ -3,12 +3,20 @@ extends Node3D
 @onready var mesh = $MeshInstance3D
 @onready var box = $MeshInstance3D/Area3D/CollisionShape3D
 
+@export var defaultMaterial : Material
+@export var shadedMaterial : Material
+
 func _ready() -> void:
 	visibility_changed.connect(visibilityChanged)
 	pass
 	#if get_parent() is Layer:
 		#Global.workspace.intermediatePlateVisChanged.connect(setVisible)
 		#call_deferred("setVisible", Global.workspace.intermediatePlateVis)
+	call_deferred("lateReady")
+
+func lateReady():
+	if !(get_parent() is Layer):
+		Global.editor.visModeChanged.connect(visModeChanged)
 
 func setVisible(value):
 	if get_parent() is Layer and get_parent().machine.getLayerBelow(get_parent()):
@@ -23,3 +31,9 @@ func setBounds(bounds = []):
 
 func visibilityChanged():
 	box.disabled = !is_visible_in_tree()
+
+func visModeChanged(newVisMode):
+	setShadedMaterial(newVisMode == Editor.VisMode.Realistic)
+
+func setShadedMaterial(value : bool):
+	mesh.material_override = shadedMaterial if value else defaultMaterial

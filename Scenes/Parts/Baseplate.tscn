@@ -10,6 +10,10 @@ shader = ExtResource("1_83lyt")
 shader_parameter/albedo = ExtResource("2_83lyt")
 shader_parameter/applyTint = false
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ax0fx"]
+albedo_color = Color(0.1771, 0.19649667, 0.23, 1)
+roughness = 0.59
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_frs87"]
 resource_local_to_scene = true
 size = Vector2(8, 8)
@@ -19,6 +23,8 @@ size = Vector3(1, 0.1, 1)
 
 [node name="Baseplate" type="Node3D" unique_id=2067660797]
 script = ExtResource("1_3p2xn")
+defaultMaterial = SubResource("ShaderMaterial_3p2xn")
+shadedMaterial = SubResource("StandardMaterial3D_ax0fx")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=758005601]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)

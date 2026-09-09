@@ -25,7 +25,11 @@ func _on_store_diff_toggled(toggled_on: bool) -> void:
 	Global.workspace.saveDiff = toggled_on
 
 func _on_brass_toggled(toggled_on: bool) -> void:
-	Global.workspace.setBrassMode(toggled_on)
+	pass
+	#Global.workspace.setBrassMode(toggled_on)
+
+func setShadedStaticColor(id : int):
+	Global.workspace.setShadedStaticColor(id)
 
 func _on_set_default_scene_pressed() -> void:
 	Global.config.values["default_scene"] = Global.editor.currentlyLoadedPath

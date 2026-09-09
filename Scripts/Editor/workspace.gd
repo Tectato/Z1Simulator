@@ -26,7 +26,7 @@ var moveSpeed = 1.1
 signal moveSpeedChanged
 var saveDiff = true
 var comments = []
-var brassMode = false
+var shadedStaticColor = 0
 var maxVolume = 1.0
 signal volumeChanged(newVal)
 
@@ -86,6 +86,7 @@ func visModeChanged(mode : Editor.VisMode):
 	else:
 		$DirectionalLight3D.light_energy = 1.0 if shaded else 1.0
 	$WorldEnvironment.environment.ssao_enabled = shaded
+	$Axes.visible = !shaded
 
 func setResolution(newRes):
 	if newRes != resolution and !Global.editor.loading:
@@ -556,8 +557,8 @@ func insertSingleEntry(target = {}, source = []):
 				workingDict[entry] = {}
 			workingDict = workingDict[entry]
 
-func setBrassMode(value):
-	brassMode = value
+func setShadedStaticColor(value):
+	shadedStaticColor = value
 	Global.editor.visModeChanged.emit(Global.editor.currentVisMode)
 
 func startRecording():

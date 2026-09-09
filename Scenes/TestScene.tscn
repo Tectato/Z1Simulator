@@ -39,7 +39,7 @@ stencil_flags = 2
 stencil_color = Color(0.85882354, 0.35686275, 0, 0.7411765)
 
 [sub_resource type="BoxMesh" id="BoxMesh_c264a"]
-size = Vector3(1, 0.02, 1)
+size = Vector3(1, 1, 0.02)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qsjrb"]
 render_priority = 0
@@ -145,23 +145,28 @@ operation = 2
 polygon = PackedVector2Array(0, 0, 0, 0.2, 0.2, 0.2, 0.2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=373741629]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.55949, 1.88813, 0.524549)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.55949, 1.88813, 0.524549)
 material_override = SubResource("StandardMaterial3D_6xh1p")
 mesh = SubResource("BoxMesh_c264a")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=1196692902]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2763102, 1.923655, 0.7493798)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.2763102, 1.923655, 0.7493798)
 material_override = ExtResource("6_6xh1p")
 mesh = SubResource("BoxMesh_c264a")
 skeleton = NodePath("../MeshInstance3D")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=1463356459]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.60134, 1.86201, 0.178206)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2.60134, 1.86201, 0.178206)
 material_override = SubResource("StandardMaterial3D_c264a")
 mesh = SubResource("BoxMesh_c264a")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=61141774]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.69626, 1.86201, 0.178206)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.696, 1.8, 0.096642464)
+material_override = ExtResource("7_5rbs6")
+mesh = SubResource("BoxMesh_c264a")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="." unique_id=972722147]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.777, 1.779, 0.188)
 material_override = ExtResource("7_5rbs6")
 mesh = SubResource("BoxMesh_c264a")
 

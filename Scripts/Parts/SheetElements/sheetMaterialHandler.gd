@@ -4,6 +4,7 @@ extends GeometryInstance3D
 #@export var materialShaded : Material
 
 @onready var parent = get_parent()
+@onready var textureOffset = randf_range(0.0, 1.0)
 #const standardColor = Color(0.078, 0.257, 0.71, 1.0) # Forward?
 #const standardColor = Color(0.239, 0.411, 0.834, 1.0)
 const standardColor = Color(0.22, 0.518, 0.918, 1.0) # Compat
@@ -25,13 +26,25 @@ func updateMaterial():
 			currentColor = markerColor
 			#material_override = materialFlat
 		Editor.VisMode.Realistic:
-			currentColor = Color(0.8, 0.8, 0.8, 1.0)
+			currentColor = Color(0.8, 0.8, 0.8)
+			currentColor.a = textureOffset
 			#material_override = materialFlat if parent.selected else materialShaded
 	if parent.selected:
-		currentColor = currentColor.blend(Color(1.0, 0.4, 0.4, 0.75))
+		if (Global.editor.currentVisMode == Editor.VisMode.Realistic):
+			currentColor = Color(1.0, 0.715, 0.7)
+			currentColor.a = textureOffset
+		else:
+			currentColor = currentColor.blend(Color(1.0, 0.4, 0.4, 0.75))
 	if parent.fixed:
-		if Global.workspace.brassMode and Global.editor.currentVisMode == Editor.VisMode.Realistic:
-			currentColor = Color(0.996, 0.235, 0.0, 1.0) if parent.selected else Color(0.85, 0.629, 0.298, 1.0)
+		if (Global.workspace.shadedStaticColor > 0) and Global.editor.currentVisMode == Editor.VisMode.Realistic:
+			var colorOverride = null
+			match(Global.workspace.shadedStaticColor):
+				1:
+					colorOverride = Color(0.8, 0.8, 0.8)
+				2:
+					colorOverride = Color(0.85, 0.629, 0.298, 1.0)
+			currentColor = Color(0.996, 0.235, 0.0, 1.0) if parent.selected else colorOverride
+			currentColor.a = textureOffset
 		else:
 			currentColor *= fixedFac
 	#materialFlat.emission_energy_multiplier = 0.5 if parent.selected else 0.0

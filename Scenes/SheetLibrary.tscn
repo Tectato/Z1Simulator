@@ -18,7 +18,7 @@ stencil_compare = 5
 metadata/_stencil_owned = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpvvm"]
-render_priority = 1
+render_priority = 5
 next_pass = SubResource("StandardMaterial3D_qsjrb")
 albedo_color = Color(0.91, 0.40040007, 0.14560002, 1)
 emission_enabled = true

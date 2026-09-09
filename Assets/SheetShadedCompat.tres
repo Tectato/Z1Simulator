@@ -3,12 +3,22 @@
 [ext_resource type="Shader" uid="uid://do1e3mk50epxh" path="res://Shaders/SheetMesh/CompatBevelMetallic.gdshader" id="1_16qq5"]
 [ext_resource type="Shader" uid="uid://elyt8nlbykvd" path="res://Shaders/NormalToAlbedo.gdshader" id="2_rcwep"]
 
+[sub_resource type="Gradient" id="Gradient_16qq5"]
+colors = PackedColorArray(0.84, 0.84, 0.84, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_rcwep"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6xyf1"]
+noise = SubResource("FastNoiseLite_rcwep")
+color_ramp = SubResource("Gradient_16qq5")
+seamless = true
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5rbs6"]
 render_priority = 0
 shader = ExtResource("1_16qq5")
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/bevel_size = 0.125
+shader_parameter/surface_texture = SubResource("NoiseTexture2D_6xyf1")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/roughness = 0.6
 
 [resource]
 render_priority = 0

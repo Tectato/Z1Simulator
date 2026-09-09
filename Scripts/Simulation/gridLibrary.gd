@@ -10,12 +10,14 @@ var gizmoB
 var toUpdate = {}
 var toNotify = {}
 
+var updateScheduled = false
+
 func requestUpdate(part : Movable):
-	var notScheduled = toUpdate.is_empty()
 	toUpdate[part] = null
 	#executeUpdate()
 	#return
-	if notScheduled:
+	if !updateScheduled:
+		updateScheduled = true
 		await get_tree().create_timer(0.2).timeout
 		call_deferred("executeUpdate")
 
@@ -31,9 +33,10 @@ func executeUpdate():
 		if part == null: continue
 		part.updateInteractionCandidates()
 	for existingPart in toNotify.keys():
-		if existingPart in toUpdate: continue
+		if toUpdate.has(existingPart): continue
 		existingPart.updateInteractionCandidates()
 	toUpdate.clear()
+	updateScheduled = false
 
 func registerPart(part : Movable, notifyNeighbors = true):
 	var bounds = part.getBounds()
@@ -157,14 +160,14 @@ func getIntersectionCandidates(part : Movable):
 		for cell in occupies[part]:
 			for layer in layers:
 				for candidate in getIntersectionCandidatesAtCell(cell, layer, part is Pin):
-					output.set(candidate,null)
+					output[candidate] = null
 	return output.keys()
 
 func getIntersectionCandidatesAtCell(pos : Vector2, layer : int, querySheets : bool):
 	var key = toPosKey(pos)
 	var output = []
-	getDict(true, layer)
-	getDict(false, layer)
+	#getDict(true, layer)
+	#getDict(false, layer)
 	var occupancy = sheetOccupancy if querySheets else pinOccupancy
 	if layer >= 0:
 		# DEBUG
@@ -229,10 +232,10 @@ func getDict(sheet : bool, layer : int):
 		else:
 			return globalPinOccupancy
 
-func toGridPos(pos : Vector3):
+static func toGridPos(pos : Vector3):
 	return Vector2(floor(pos.x / Global.workspace.gridSize),floor(pos.z / Global.workspace.gridSize)) 
 
-func toPosKey(gridPos : Vector2):
+static func toPosKey(gridPos : Vector2):
 	return str(int(gridPos.x)) + "_" + str(int(gridPos.y))
 
 func insertLayer(index):

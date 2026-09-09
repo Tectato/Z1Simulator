@@ -369,8 +369,12 @@ events = [SubResource("InputEventKey_v5nsg")]
 
 [sub_resource type="Theme" id="Theme_pd6ol"]
 CheckBox/icons/checked = ExtResource("100_kkpsg")
+CheckBox/icons/radio_checked = ExtResource("100_kkpsg")
+CheckBox/icons/radio_unchecked = ExtResource("101_msmja")
 CheckBox/icons/unchecked = ExtResource("101_msmja")
 CheckBox/icons/unchecked_disabled = ExtResource("102_u1ej8")
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_h2lem"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_00thf"]
 device = -1
@@ -3059,23 +3063,37 @@ tooltip_text = "If enabled, saves things like part positions of imported machine
 theme = SubResource("Theme_pd6ol")
 button_pressed = true
 
-[node name="Brass" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=2040293791]
+[node name="ShadedStaticCol" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=2040293791]
 layout_mode = 2
-theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=217922308]
+[node name="Label" type="Label" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol" unique_id=217922308]
 layout_mode = 2
 mouse_filter = 1
-text = "Brass static sheets in shaded view"
+text = "Static sheet color in shaded view"
 
-[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=401848149]
+[node name="VSeparator" type="VSeparator" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol" unique_id=401848149]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/separator = SubResource("StyleBoxEmpty_q6d0a")
 
-[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass" unique_id=911802341]
+[node name="CheckBox" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol" unique_id=911802341]
 layout_mode = 2
+tooltip_text = "Darker"
 theme = SubResource("Theme_pd6ol")
+button_pressed = true
+button_group = SubResource("ButtonGroup_h2lem")
+
+[node name="CheckBox2" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol" unique_id=301769755]
+layout_mode = 2
+tooltip_text = "Same as moving sheets"
+theme = SubResource("Theme_pd6ol")
+button_group = SubResource("ButtonGroup_h2lem")
+
+[node name="CheckBox3" type="CheckBox" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol" unique_id=76569031]
+layout_mode = 2
+tooltip_text = "Brass"
+theme = SubResource("Theme_pd6ol")
+button_group = SubResource("ButtonGroup_h2lem")
 
 [node name="Debug" type="HBoxContainer" parent="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer" unique_id=1257706290]
 layout_mode = 2
@@ -3295,6 +3313,7 @@ mesh = SubResource("CylinderMesh_cl6md")
 [node name="Sprite3D" type="Sprite3D" parent="FocusPoint" unique_id=828052372]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
 billboard = 1
+double_sided = false
 fixed_size = true
 alpha_cut = 1
 texture_filter = 0
@@ -3547,7 +3566,9 @@ lineMesh = SubResource("CylinderMesh_qikgm")
 [connection signal="timeout" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/MovementSpeed/MoveSpeedTimeout" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_move_speed_timeout_timeout"]
 [connection signal="drag_ended" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Volume/HSlider" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_h_slider_drag_ended"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Store diff/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_store_diff_toggled"]
-[connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Brass/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_brass_toggled"]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="setShadedStaticColor" binds= [0]]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol/CheckBox2" to="Camera3D/Interface/VisibilityParent/Settings" method="setShadedStaticColor" binds= [1]]
+[connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/ShadedStaticCol/CheckBox3" to="Camera3D/Interface/VisibilityParent/Settings" method="setShadedStaticColor" binds= [2]]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/Debug/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_debug_toggled"]
 [connection signal="toggled" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/FancyOutput/CheckBox" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_verbose_toggled"]
 [connection signal="pressed" from="Camera3D/Interface/VisibilityParent/Settings/VBoxContainer/SetDefaultScene" to="Camera3D/Interface/VisibilityParent/Settings" method="_on_set_default_scene_pressed"]

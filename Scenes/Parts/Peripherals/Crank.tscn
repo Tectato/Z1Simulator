@@ -14,7 +14,7 @@ collider = NodePath("Area3D")
 [node name="Crank2" parent="." unique_id=2137824425 instance=ExtResource("1_66odk")]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.045137405, 0)
 
-[node name="Crank" parent="Crank2/CrankFrame" parent_id_path=PackedInt32Array(2137824425, 629981744) index="0" unique_id=4481164]
+[node name="Crank" parent="Crank2/CrankFrame" parent_id_path=PackedInt32Array(2137824425, 1593978636) index="0" unique_id=1005441472]
 script = ExtResource("2_p4jsa")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1749653934]
