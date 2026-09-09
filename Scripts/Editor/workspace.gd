@@ -162,6 +162,7 @@ func clear():
 	while !projects.is_empty():
 		var toRemove = projects.pop_back()
 		if toRemove: toRemove.delete()
+	SheetLibrary.onClear()
 	Simulator.reset()
 	interMachineRelations.clear()
 	selectedMachine = null

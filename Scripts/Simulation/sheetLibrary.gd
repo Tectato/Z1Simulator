@@ -2,7 +2,8 @@ extends Node
 
 var users = {}
 @onready var meshCompiler = $SheetCompiler
-@onready var renderHandler = $RenderHandler
+@onready var renderHandler = $SheetRenderHandler
+@onready var zoneRenderHandler = $ZoneRenderers
 
 func query(path : String):
 	if !meshCompiler.hasSheet(path):
@@ -70,6 +71,9 @@ func cleanUnusedSheets():
 			#batch = 20
 			#await get_tree().process_frame
 	#print("Cleanup took " + str(framesTaken) + " frames")
+
+func onClear():
+	zoneRenderHandler.clearInstances()
 
 func getStats():
 	var staticSheets = 0

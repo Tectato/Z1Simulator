@@ -7,7 +7,7 @@
 [ext_resource type="Material" uid="uid://01c4w4t3fels" path="res://Assets/SheetShadedCompat.tres" id="5_cpvvm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qsjrb"]
-render_priority = 2
+render_priority = 6
 transparency = 1
 no_depth_test = true
 shading_mode = 0
@@ -46,13 +46,19 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 visible = false
 script = ExtResource("2_7bnwt")
 
-[node name="RenderHandler" type="Node3D" parent="." unique_id=135042431 node_paths=PackedStringArray("debug")]
+[node name="SheetRenderHandler" type="Node3D" parent="." unique_id=135042431 node_paths=PackedStringArray("debug")]
 script = ExtResource("3_lqynr")
 materialFlat = ExtResource("4_cpvvm")
 materialShaded = ExtResource("5_cpvvm")
 materialHighlight = SubResource("StandardMaterial3D_cpvvm")
 debug = NodePath("Node3D")
 
-[node name="Node3D" type="MeshInstance3D" parent="RenderHandler" unique_id=94355976]
+[node name="Node3D" type="MeshInstance3D" parent="SheetRenderHandler" unique_id=94355976]
 visible = false
 mesh = SubResource("BoxMesh_cpvvm")
+
+[node name="ZoneRenderers" type="Node3D" parent="." unique_id=1367854977]
+script = ExtResource("3_lqynr")
+materialFlat = ExtResource("4_cpvvm")
+materialShaded = ExtResource("5_cpvvm")
+materialHighlight = SubResource("StandardMaterial3D_cpvvm")

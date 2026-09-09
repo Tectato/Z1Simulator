@@ -188,6 +188,10 @@ func setColor(key : String, index : int, color : Color):
 		return
 	renderers[key].multimesh.set_instance_color(index, color)
 
+func getColor(key : String, index : int):
+	if index < 0: return null
+	return renderers[key].multimesh.get_instance_color(index)
+
 func setAABB(box : AABB):
 	for key in renderers:
 		renderers[key].multimesh.set_custom_aabb(box)

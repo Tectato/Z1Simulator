@@ -17,6 +17,7 @@ var boundingRect : Rect2
 var holes = []
 var stickers = []
 var clipZones = []
+var zoneCutouts = []
 var spriteTex : Texture2D
 var id = ""
 var path = ""
@@ -48,30 +49,8 @@ func loadSVG(filepath : String):
 	if id.length() == 0:
 		id = path.get_file().trim_suffix(".import").trim_suffix(".svg")
 		name = id
-	#var cached = SheetLibrary.query(path)
-	#var image
-	#if cached:
-		#SheetLibrary.registerUser(self, path)
-		#image = cached[1]
-		#outline.polygon = cached[2]
-		#if cached[3] == null:
-			#call_deferred("updateBakedMesh")
-		#else:
-			#updateBakedMesh()
-	#else:
 # TIMING	numInstances += 1
 # TIMING	var startTime = Time.get_ticks_usec()
-	
-	#spriteTex = ImageTexture.create_from_image(Image.load_from_file(path))
-	
-# TIMING	t_spriteCreation += Time.get_ticks_usec() - startTime
-# TIMING	startTime = Time.get_ticks_usec()
-	#sprite.set_texture(image)
-	#TODO sheet -> sprite.material_overlay.set_shader_parameter("albedo", sprite.texture)
-	#if (cached and cached[0]):
-		#return
-	#if !holes.is_empty():
-		#return
 	
 	var rawString = FileAccess.get_file_as_string(path)
 # TIMING	t_readFile += Time.get_ticks_usec() - startTime
@@ -104,29 +83,13 @@ func loadSVG(filepath : String):
 	#$MeshInstance3D.position = -midPoint + offset - Vector3.UP * 0.02
 	for i in range(polygon.size()):
 		polygon[i] = polygon[i] + Space.toVec2(-midPoint + offset)
-	
-	#if cached:
-		#for sticker in stickers:
-			#sticker.position -= midPoint - offset
-		#for hole in holes:
-			#hole.position -= midPoint - offset
-		#return
+
 	for sticker in stickers:
 		sticker.position -= midPoint - offset
 	for hole in holes:
 		hole.position -= midPoint - offset
-		#var cutout = hole.getCutout()
-		#add_child(cutout)
-		#cutout.position = (cutout.position + hole.position).rotated(Vector3.RIGHT, -PI/2)
-		#cutout.rotate_y(hole.rotation.y)
-		#cutout.rotate_x(-PI/2)
 	for zone in clipZones:
 		zone.position -= midPoint - offset
-		#var cutout = zone.getCutout()
-		#add_child(cutout)
-		#cutout.position = (cutout.position + zone.position).rotated(Vector3.RIGHT, -PI/2)
-		#cutout.rotate_y(zone.rotation.y)
-		#cutout.rotate_x(-PI/2)
 	
 # TIMING	t_applyOffset += Time.get_ticks_usec() - startTime
 	
@@ -151,6 +114,7 @@ func setupCSG():
 		cutout.position = (cutout.position + zone.position).rotated(Vector3.RIGHT, -PI/2)
 		cutout.rotate_y(zone.rotation.y)
 		cutout.rotate_x(-PI/2)
+		zoneCutouts.append(cutout)
 	
 # TIMING	t_buildCSG += Time.get_ticks_usec() - startTime
 
@@ -160,15 +124,6 @@ func updateBakedMesh():
 	bakedMesh = bake_static_mesh()
 # TIMING	t_compileMesh += Time.get_ticks_usec() - startTime
 	meshReady.emit(path, bakedMesh)
-	#var cached = SheetLibrary.query(path)
-	#if cached[3] == null:
-		#await get_tree().process_frame
-		#call_deferred("updateBakedMesh")
-		#return
-	#mesh = $MeshInstance3D
-	#mesh.visible = false
-	#$MeshInstance3D.mesh = cached[3]
-	#visModeChanged(Global.editor.currentVisMode)
 
 func isValidElement(string : String):
 	return string.contains("svg") or string.contains("path") or string.contains("circle") or string.contains("rect") or string.contains("image")
@@ -298,6 +253,7 @@ func addClipZone(pos : Vector2, size : Vector2):
 	var newZone = CLIPZONE.instantiate()
 	add_child(newZone)
 	clipZones.append(newZone)
+	newZone.source = true
 	newZone.position = Space.toVec3(pos)/1000 + Vector3(partOffset.x,0,partOffset.y)
 	newZone.init(size/1000)
 	return newZone

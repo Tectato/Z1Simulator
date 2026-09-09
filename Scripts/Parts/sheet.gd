@@ -213,9 +213,9 @@ func postParseSetup():
 			#sheetData.remove_child(copy)
 			var copy = CLIPZONE.instantiate()
 			add_child(copy)
+			copy.parent = self
 			copy.setupAfterDuplication(zone)
 			localClipZones.append(copy)
-			copy.parent = self
 	
 		#t_cloneZones += Time.get_ticks_usec() - startTime	# TIMING
 		#startTime = Time.get_ticks_usec()					# TIMING
@@ -292,12 +292,12 @@ func setSelected(value):
 	super.setSelected(value)
 	if !sheetData: return
 	if preSelected == selected: return
+	mesh.updateMaterial()
 	for zone in localClipZones:
 		zone.hitbox.disabled = !value
 		#zone.mesh.visible = value
 		zone.updateMaterial()
 	#sprite.set_instance_shader_parameter("selected", value)
-	mesh.updateMaterial()
 	SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 	#sprite.visible = value
 	if directionIndicator: directionIndicator.setSelected(selected)
@@ -1007,6 +1007,9 @@ func setColor(newColor : Color):
 	#sprite.set_instance_shader_parameter("partColor", vec3)
 	mesh.setColor(color)
 	#mesh.set_instance_shader_parameter("partColor", vec3)
+
+func getColor():
+	return mesh.currentColor
 
 func setUseColor(value : bool):
 	#sprite.set_instance_shader_parameter("usePartColor", value)
