@@ -34,7 +34,7 @@ var rotHistory = []
 var forces = {}
 var movedPins = {}
 var gizmo
-var localClipZones = []
+var localClipZones = null
 var toClip = []
 var nearestZonesToPin = {}
 var sheetData : SheetData
@@ -88,7 +88,7 @@ func serialize():
 			#else:
 			if !relation.isInterMachineRelation() and not relation is LinearConstraint:
 				getMachine().relations[relation.serialize()] = null
-	if !localClipZones.is_empty():
+	if localClipZones:
 		localClipZones.sort_custom(sortClipZone)
 		var clipStates = []
 		for zone in localClipZones:
@@ -129,7 +129,7 @@ func deserialize(source : Dictionary):
 	if !sheetData:
 		loadSVG(PathHandler.toAbsolutePath(source["file"]))
 	if source.has("clipped"):
-		if !localClipZones.is_empty():
+		if localClipZones:
 			for i in range(localClipZones.size()):
 				if source["clipped"][i] > 0: localClipZones[i].flipClipped()
 		else:
@@ -206,6 +206,7 @@ func postParseSetup():
 	
 	if !sheetData.clipZones.is_empty():
 		#numWithZones += 1
+		localClipZones = []
 		for zone in sheetData.clipZones:
 			#var copy = zone.duplicate()
 			#copy.name = zone.name
@@ -220,7 +221,7 @@ func postParseSetup():
 		#t_cloneZones += Time.get_ticks_usec() - startTime	# TIMING
 		#startTime = Time.get_ticks_usec()					# TIMING
 			
-		if !localClipZones.is_empty():
+		if localClipZones:
 			localClipZones.sort_custom(sortClipZone)
 			if !toClip.is_empty():
 				for i in range(localClipZones.size()):
@@ -491,7 +492,7 @@ func intersectsOutline(pos : Vector3, pin = null):
 	#var posRelative = pos * $Outline.global_transform
 	var coarseCheck = sheetData.boundingRect.has_point(Space.toVec2(posRelative))
 	if !coarseCheck: return false
-	if localClipZones.is_empty():
+	if !localClipZones:
 		return Geometry2D.is_point_in_polygon(Vector2(posRelative.x,posRelative.z), sheetData.polygon)
 	else:
 		if !pin: return false
@@ -515,7 +516,7 @@ func getIntersector(pos : Vector3):
 	return null
 
 func getCloseClipZones(pos : Vector3):
-	if localClipZones.is_empty(): return null
+	if !localClipZones: return null
 	var posRelative = pos * $Outline.global_transform
 	var candidates = []
 	for zone in localClipZones:
@@ -575,7 +576,7 @@ func updateInteractionCandidates():
 						#if actuallyInRange: break
 					#if actuallyInRange: break
 			if !actuallyInRange: key = null
-			elif !localClipZones.is_empty():
+			elif localClipZones:
 				var closeZones = getCloseClipZones(pin.global_position)
 				nearestZonesToPin[pin] = closeZones
 		if key:
@@ -969,6 +970,9 @@ func delete():
 	if beingDeleted: return
 	beingDeleted = true
 	SheetLibrary.unregisterUser(self, sheetData.path)
+	if localClipZones:
+		for zone in localClipZones:
+			zone.delete()
 	super.delete()
 
 func hasPivot():

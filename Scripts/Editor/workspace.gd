@@ -148,6 +148,7 @@ func setVolume(newVal):
 		volumeChanged.emit(newVal)
 
 func clear():
+	SheetLibrary.onClear()
 	uuidManager.clear()
 	Global.editor.selector.deselect()
 	Global.editor.sequencer.clear()
@@ -162,7 +163,6 @@ func clear():
 	while !projects.is_empty():
 		var toRemove = projects.pop_back()
 		if toRemove: toRemove.delete()
-	SheetLibrary.onClear()
 	Simulator.reset()
 	interMachineRelations.clear()
 	selectedMachine = null

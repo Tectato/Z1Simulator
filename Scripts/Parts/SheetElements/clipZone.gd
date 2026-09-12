@@ -33,6 +33,7 @@ func updateMaterial():
 		visible = parent.selected or !clipped
 		if visible:
 			SheetLibrary.zoneRenderHandler.setColor(rendererID, meshIndex, parent.getColor() if !clipped else Color(0.26, 0.101, 0.226, 1.0))
+			SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform, parent.selected if !clipped else false)
 
 func getCutout():
 	var cutout = CUTOUT.instantiate()
@@ -101,16 +102,19 @@ func _notification(what):
 			SheetLibrary.zoneRenderHandler.removeInstance(rendererID, meshIndex)
 			return
 		if is_visible_in_tree():
-			SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform, selected)
+			SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform, parent.selected)
 
 func visibilityChanged():
 	if is_visible_in_tree():
-		SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform, selected)
+		SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform, parent.selected)
 	else:
-		SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform.scaled(Vector3.ZERO), selected)
+		SheetLibrary.zoneRenderHandler.setTransform(rendererID, meshIndex, mesh.global_transform.scaled(Vector3.ZERO), parent.selected)
 
 func checkPos(pos : Vector3):
 	return rect.has_point(Space.toVec2(pos))
 
 func isInRange(pos : Vector3):
 	return rect.grow(Global.workspace.pinTravel * 2).has_point(Space.toVec2(pos))
+
+func delete():
+	SheetLibrary.zoneRenderHandler.removeInstance(rendererID, meshIndex)
