@@ -92,7 +92,8 @@ func setupAfterDuplication(src : ClipZone):
 func updateMesh(newMesh : Mesh):
 	if rendererID.is_empty(): rendererID = parent.sheetData.name + "_" + name
 	mesh.mesh = newMesh
-	meshIndex = SheetLibrary.zoneRenderHandler.addInstance(rendererID)
+	if meshIndex < 0:
+		meshIndex = SheetLibrary.zoneRenderHandler.addInstance(rendererID)
 	visibilityChanged()
 	updateMaterial()
 
