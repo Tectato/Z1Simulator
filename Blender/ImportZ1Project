@@ -2,6 +2,7 @@ import bpy
 import json
 import math
 import mathutils
+import time
 from pathlib import Path
 
 # c_X -> const
@@ -12,20 +13,48 @@ pinMaterial = None
 staticPinMaterial = None
 sheetMaterial = None
 staticSheetMaterial = None
+eccentricMaterial = None
 targetCollection = None
 
 sheetLibrary = {}
 pinPrefabLogic = None
 pinPrefabStatic = None
+eccentricEndPrefab = None
+eccentricArmPrefab = None
 
 c_sheetThickness = 0.002
 c_sheetSpacing = 0.004
 c_sheetScalant = 0.709 # ?
+c_sheetScaleVec = mathutils.Vector((1.0, 1.0, 1.0)) * c_sheetScalant
 
 g_highestSheetIndex = 0
+g_eccentrics = []
 g_uuids = {}
 
+
+g_meshingTime = 0.0
+g_numSheets = 0
+g_instancingTimePins = 0.0
+g_instancingTimeSheets = 0.0
+g_numInstancesPins = 0
+g_numInstancesSheets = 0
+
 def import_project(context, filepath):
+    ### Reference to selected collection
+    global targetCollection
+    targetCollection = bpy.context.collection
+    if targetCollection is None:
+        print("No collection selected")
+        return {'FINISHED'}
+    else:
+        print(targetCollection)
+    
+    projectCollection = bpy.data.collections.new(Path(filepath).stem)
+    targetCollection.children.link(projectCollection)
+    layer_projectCollection = bpy.context.view_layer.active_layer_collection.children[projectCollection.name]
+    bpy.context.view_layer.active_layer_collection = layer_projectCollection
+    print("Created collection " + projectCollection.name)
+    
     ### Set up materials
     # Logic pin
     global pinMaterial # What the hell, python?
@@ -63,15 +92,33 @@ def import_project(context, filepath):
             print("No static sheet material found, creating...")
             staticSheetMaterial = bpy.data.materials.new(name="StaticSheetMaterial")
             staticSheetMaterial.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 1
+        
+        # Eccentric
+        global eccentricMaterial
+        eccentricMaterial = bpy.data.materials.get("EccentricMaterial")
+        if eccentricMaterial is None:
+            print("No eccentric material found, creating...")
+            eccentricMaterial = bpy.data.materials.new(name="EccentricMaterial")
+            eccentricMaterial.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (0.08,0.08,0.08,1)
+            eccentricMaterial.node_tree.nodes["Principled BSDF"].inputs[1].default_value = 1
+            eccentricMaterial.node_tree.nodes["Principled BSDF"].inputs[2].default_value = 0.8
+        else:
+            print(pinMaterial)
     
-    ### Set up pin prefabs
+    ### Set up prefabs
+    prefabCollection = bpy.data.collections.new("Prefabs")
+    projectCollection.children.link(prefabCollection)
+    layer_prefabCollection = bpy.context.view_layer.active_layer_collection.children[prefabCollection.name]
+    bpy.context.view_layer.active_layer_collection = layer_prefabCollection
+    print("Created collection " + prefabCollection.name)
+    
     # Logic pin
     global pinPrefabLogic
     if pinPrefabLogic == None:
         bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.005, depth=0.01, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
         pinPrefabLogic = bpy.context.active_object
         bpy.ops.object.shade_auto_smooth()
-        bpy.context.object.modifiers["Smooth by Angle"]["Input_1"] = 0.698132
+        bpy.context.object.modifiers["Smooth by Angle"].properties.inputs.Input_1.value = 0.698132
         bpy.ops.transform.translate(value=(0,0,0.005))
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
         pinPrefabLogic.name = "pin_prefab_logic"
@@ -86,7 +133,7 @@ def import_project(context, filepath):
         bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.005, depth=0.01, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
         pinPrefabStatic = bpy.context.active_object
         bpy.ops.object.shade_auto_smooth()
-        bpy.context.object.modifiers["Smooth by Angle"]["Input_1"] = 0.698132
+        bpy.context.object.modifiers["Smooth by Angle"].properties.inputs.Input_1.value = 0.698132
         bpy.ops.transform.translate(value=(0,0,0.005))
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
         pinPrefabStatic.name = "pin_prefab_static"
@@ -95,32 +142,73 @@ def import_project(context, filepath):
         else:
             pinPrefabStatic.data.materials.append(staticPinMaterial)
     
-    ### Reference to selected collection
-    global targetCollection
-    targetCollection = bpy.context.collection
-    if targetCollection is None:
-        print("No collection selected")
-        return {'FINISHED'}
-    else:
-        print(targetCollection)
+    # Eccentric end
+    global eccentricEndPrefab
+    if eccentricEndPrefab == None:
+        bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.0075, depth=0.005, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+        eccentricEndPrefab = bpy.context.active_object
+        bpy.ops.object.shade_auto_smooth()
+        bpy.context.object.modifiers["Smooth by Angle"].properties.inputs.Input_1.value = 0.698132
+        bpy.ops.transform.translate(value=(0,0,0.005))
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+        eccentricEndPrefab.name = "eccentric_end_prefab"
+        if eccentricEndPrefab.data.materials:
+            eccentricEndPrefab.data.materials[0] = eccentricMaterial
+        else:
+            eccentricEndPrefab.data.materials.append(eccentricMaterial)
     
-    activeLayerCollection = bpy.context.view_layer.active_layer_collection
+    # Eccentric arm
+    global eccentricArmPrefab
+    if eccentricArmPrefab == None:
+        bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+        eccentricArmPrefab = bpy.context.active_object
+        bpy.ops.transform.resize(value=(0.015,1,0.0049))
+        bpy.ops.transform.translate(value=(0,0.5,0.005))
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=True)
+        eccentricArmPrefab.name = "eccentric_arm_prefab"
+        if eccentricArmPrefab.data.materials:
+            eccentricArmPrefab.data.materials[0] = eccentricMaterial
+        else:
+            eccentricArmPrefab.data.materials.append(eccentricMaterial)
+    
+    #activeLayerCollection = bpy.context.view_layer.active_layer_collection
+    bpy.context.view_layer.active_layer_collection = layer_projectCollection
+    print("Active layer collection: " + layer_projectCollection.name)
     
     print("Importing project...")
-    read_data(targetCollection, filepath)
+    read_data(projectCollection, filepath)
+    
+    global g_meshingTime, g_numSheets, g_instancingTimeSheets, g_instancingTimePins, g_numInstancesSheets, g_numInstancesPins
+    print("Done.")
+    if g_numSheets > 0:
+        print("Sheet meshing:")
+        print(" - Total time for sheet creation: " + str(g_meshingTime) + "s")
+        print(" - Total sheets created: " + str(g_numSheets) + "")
+        print(" - Avg. time per sheet: " + str(g_meshingTime / g_numSheets) + "s")
+    if g_numInstancesSheets > 0:
+        print("Sheet instancing:")
+        print(" - Total time for sheet instancing: " + str(g_instancingTimeSheets) + "s")
+        print(" - Total sheets created: " + str(g_numInstancesSheets) + "")
+        print(" - Avg. time per sheet: " + str(g_instancingTimeSheets / g_numInstancesSheets) + "s")
+    if g_numInstancesPins > 0:
+        print("Pin instancing:")
+        print(" - Total time for pin instancing: " + str(g_instancingTimePins) + "s")
+        print(" - Total pins created: " + str(g_numInstancesPins) + "")
+        print(" - Avg. time per pin: " + str(g_instancingTimePins / g_numInstancesPins) + "s")
     return {'FINISHED'}
     
 
 def read_data(parent, filepath):
     pathObj = Path(filepath)
     pathObj = pathObj.parent
-    print("Importing: " + str(pathObj))
+    print("Importing: " + str(filepath))
     
     instanceCollection = bpy.data.collections.new(Path(filepath).stem)
     parent.children.link(instanceCollection)
     layer_instanceCollection = bpy.context.view_layer.active_layer_collection.children[instanceCollection.name]
     bpy.context.view_layer.active_layer_collection = layer_instanceCollection
-    instanceCollection["machines"] = []
+    machineList = []
+    projectList = []
     
     if bpy.context.active_object != None:
         bpy.context.active_object.select_set(False)
@@ -130,21 +218,44 @@ def read_data(parent, filepath):
     
     dict = json.loads(data)
     
+    bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+    projectRoot = bpy.context.active_object
+    projectRoot.name = instanceCollection.name
+    instanceCollection["projectRoot"] = projectRoot
+    
     ### Deserialize project
     for machine in dict["machines"]:
         print("============")
         #print(machine)
-        if "machine" in machine:
+        if "machine" in machine: # Direct machine definition
             newMachine = deserializeMachine(machine["machine"], pathObj, instanceCollection)
-            #newMachine["uuid"] = int(machine["uuid"])
-            instanceCollection["machines"] += newMachine
-        elif "path" in machine:
+            if not "uuid" in newMachine:
+                newMachine["uuid"] = int(machine["uuid"])
+                newMachine["srcUUID"] = int(machine["uuid"])
+            machineList.append(newMachine)
+            newMachine.parent = projectRoot
+        elif "path" in machine: # Path reference to different file
             relativePath = Path(machine["path"])
-            project = read_data(pathObj+relativePath)
+            project = read_data(instanceCollection, Path(pathObj,relativePath))
+            projectList.append(project)
+            for childObject in project.objects:
+                if childObject.parent == None:
+                    childObject.parent = projectRoot
             if "overrides" in machine:
-                for entryID in range(len(machine["overrides"])):
-                    overrideEntry = machine["overrides"][entryID]
-                    machineEntry = project["machines"][entryID]
+                applyOverrides(project, machine["overrides"])
+                #if "machines" in machine["overrides"]:
+                #    for entryID in range(len(machine["overrides"]["machines"])):
+                #        machineEntry = project["machines"][entryID]
+                #        overrideEntry = machine["overrides"]["machines"][str(machineEntry["uuid"])]
+                #        machineEntry["uuid"] = overrideEntry["uuid_override"]
+            if "pos_x" in machine:
+                offset = mathutils.Vector((float(machine["pos_x"])*c_scaleFactor, -float(machine["pos_z"])*c_scaleFactor, float(machine["pos_y"])*c_sheetSpacing))
+                print("Offset: " + str(offset))
+                #for machine in project["machines"]:
+                #    print("Applying offset to " + machine.name)
+                #    machine.location = machine.location + offset
+                project["projectRoot"].location += offset
+        bpy.context.view_layer.active_layer_collection = layer_instanceCollection
                     
     
     #pinPrefabLogic.hide_viewport = True
@@ -152,6 +263,8 @@ def read_data(parent, filepath):
     #pinPrefabStatic.hide_viewport = True
     pinPrefabStatic.hide_render = True
     
+    instanceCollection["machines"] = machineList
+    instanceCollection["projects"] = projectList
     return instanceCollection
     
 
@@ -162,30 +275,56 @@ def deserializeMachine(dict, basePath, collection):
     
     global g_highestSheetIndex
     layerIndex = 0
+    layers = []
     for layer in dict["layers"]:
         layerInstance = deserializeLayer(layer, basePath, layerIndex, g_highestSheetIndex, collection)
         layerInstance.parent = machineRoot
         layerIndex += 1
         g_highestSheetIndex += 1
+        layers.append(layerInstance)
+    machineRoot["layers"] = layers
     
     globalPinHeight = g_highestSheetIndex * c_sheetSpacing
     globalPinScale = mathutils.Vector((1.0, 1.0, globalPinHeight * 100.0))
-    for pin in dict["globalPins"]:
+    global g_eccentrics
+    pinsToResize = [] + g_eccentrics
+    for pin in dict["globalPins"] + dict["clockPins"]:
         pinInstance = deserializePin(pin, collection)
-        pinInstance.parent = machineRoot
-        pinInstance.scale = globalPinScale
-    
-    for pin in dict["clockPins"]:
-        pinInstance = deserializePin(pin, collection)
-        pinInstance.parent = machineRoot
-        pinInstance.scale = globalPinScale
+        pinsToResize.append([pinInstance, pin])
+    for pinInfo in pinsToResize:
+        if "bounds" in pinInfo[1]:
+            min = pinInfo[1]["bounds"][0]
+            max = pinInfo[1]["bounds"][1]
+            pinInfo[0].parent = layers[min]
+            totalPinHeight = 0
+            for i in range(min, max+1):
+                totalPinHeight += layers[i]["height"]
+            pinInfo[0].scale = mathutils.Vector((1.0, 1.0, totalPinHeight * c_sheetSpacing * 100.0))
+        else:
+            pinInfo[0].parent = machineRoot
+            pinInfo[0].scale = globalPinScale
     
     global g_uuids
     machineRoot["part_uuids"] = g_uuids
-    machineRoot["srcUUID"] = dict["uuid"]
-    machineRoot["uuid"] = dict["uuid"]
+    if "uuid" in dict:
+        machineRoot["srcUUID"] = dict["uuid"]
+        machineRoot["uuid"] = dict["uuid"]
+    
+    if "pos_x" in dict:
+        machineRoot.location = (float(dict["pos_x"])*c_scaleFactor, -float(dict["pos_z"])*c_scaleFactor, float(dict["pos_y"])*c_sheetSpacing)
+    
+    bpy.context.view_layer.update()
+    if "relations" in dict:
+        for relation in dict["relations"]:
+            if relation["type"] == "arm":
+                uuidA = str(relation["A"])
+                uuidB = str(relation["B"])
+                if uuidA in g_uuids and uuidB in g_uuids:
+                    addEccentricRelation(g_uuids[uuidA], g_uuids[uuidB], machineRoot, collection)
 
-    g_uuids = {} # Clear global var for next machine
+    g_uuids = {} # Clear global vars for next machine
+    g_highestSheetIndex = 0
+    g_eccentrics = []
 
     #print(dict)
     return machineRoot
@@ -201,23 +340,44 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
     
     localHighestSheetIndex = 0
     global g_highestSheetIndex
+    sheets = []
     for sheet in dict["sheets"]:
         sheetInstance = deserializeSheet(sheet, basePath, collection)
         sheetInstance.parent = layerRoot
         g_highestSheetIndex = max(g_highestSheetIndex, startHeight + int(sheet["pos_y"]))
         localHighestSheetIndex = max(localHighestSheetIndex, int(sheet["pos_y"]))
+        sheets.append(sheetInstance)
     #sheetInstance = deserializeSheet(dict["sheets"][0], basePath)
     #sheetInstance.parent = layerRoot
     
     localPinHeight = (localHighestSheetIndex+1) * c_sheetSpacing
+    pins = []
     for pin in dict["pins"]:
         pinInstance = deserializePin(pin, collection)
         pinInstance.parent = layerRoot
         pinInstance.scale = mathutils.Vector((1.0, 1.0, localPinHeight * 100.0))
+        pins.append(pinInstance)
+    
+    if "arms" in dict:
+        global g_eccentrics
+        eccentrics = []
+        for eccentric in dict["arms"]:
+            eccentricInstance = deserializePin(eccentric, collection, True)
+            eccentricInstance.parent = layerRoot
+            eccentricInstance["layer"] = index
+            eccentrics.append(pinInstance)
+            g_eccentrics.append([eccentricInstance, eccentric])
+        layerRoot["eccentrics"] = eccentrics
+    
+    layerRoot["height"] = (localHighestSheetIndex+1)
+    layerRoot["sheets"] = sheets
+    layerRoot["pins"] = pins
     
     return layerRoot
 
-def deserializePin(dict, collection):
+def deserializePin(dict, collection, eccentric = False):
+    global g_instancingTimePins, g_numInstancesPins
+    startTime = time.process_time()
     if bpy.context.active_object != None:
         bpy.context.active_object.select_set(False)
     pin = None
@@ -241,12 +401,17 @@ def deserializePin(dict, collection):
     if "id" in dict:
         pin.name = dict["id"]
     else:
-        pin.name = "pin_" + str(dict["uuid"])
+        pin.name = ("pin_" if not eccentric else "eccentric_") + str(dict["uuid"])
+    
+    if eccentric:
+        pin["eccentric"] = None
     
     pin["uuid"] = int(dict["uuid"])
     global g_uuids
     g_uuids[str(pin["uuid"])] = pin
 
+    g_numInstancesPins += 1
+    g_instancingTimePins += time.process_time() - startTime
     return pin
 
 def deserializeSheet(dict, basePath, collection):
@@ -254,8 +419,11 @@ def deserializeSheet(dict, basePath, collection):
         bpy.context.active_object.select_set(False)
     file = dict["file"]
     sheet = None
+    global g_meshingTime
     global sheetLibrary
     if file in sheetLibrary:
+        global g_instancingTimeSheets, g_numInstancesSheets
+        startTime = time.process_time()
         #print("Sheet " + file + " exists, duplicating...")
         toDuplicate = sheetLibrary[file]
         #toDuplicate.select_set(True)
@@ -265,7 +433,13 @@ def deserializeSheet(dict, basePath, collection):
         sheet = toDuplicate.copy()
         sheet.data = toDuplicate.data
         collection.objects.link(sheet)
+        
+        g_numInstancesSheets += 1
+        g_instancingTimeSheets += time.process_time() - startTime
     else:
+        global g_numSheets
+        g_numSheets += 1
+        startTime = time.process_time()
         print("\t> Importing " + file + "...")
         bpy.ops.import_curve.svg(filepath=(str(basePath) + "\\" + file))
         importCollection = bpy.data.collections.get(Path(file).name)
@@ -344,6 +518,8 @@ def deserializeSheet(dict, basePath, collection):
         else:
             # no slots
             sheet.data.materials.append(material)
+        
+        g_meshingTime = time.process_time() - startTime
     
     # Parse info
     #bpy.ops.transform.translate(value=(float(dict["pos_x"]) * scaleFactor, -float(dict["pos_z"]) * scaleFactor, float(dict["pos_y"]) * 0.003))
@@ -359,7 +535,7 @@ def deserializeSheet(dict, basePath, collection):
     
     #bpy.ops.transform.resize(value=(0.75,0.75,0.75)) # ?
     global c_sheetScalant
-    sheet.scale = mathutils.Vector((1.0, 1.0, 1.0)) * c_sheetScalant
+    sheet.scale = c_sheetScaleVec
     #bpy.ops.transform.rotate(value=angle, orient_axis='Z')
     sheet.rotation_euler[2] = angle
     sheet.data.extrude = c_sheetThickness
@@ -374,7 +550,54 @@ def deserializeSheet(dict, basePath, collection):
         
     return sheet
 
+def addEccentricRelation(partA, partB, machine, collection):
+    addRing(partA, machine, collection)
+    addRing(partB, machine, collection)
+    global eccentricArmPrefab
+    arm = eccentricArmPrefab.copy()
+    arm.data = eccentricArmPrefab.data
+    arm.parent = partA
+    collection.objects.link(arm)
+    partA["eccArm"] = arm
+    dist = (partA.matrix_world.translation.xy - partB.matrix_world.translation.xy).length
+    #print("Pos A: (" + partA.name + ") " + str(partA.matrix_world.translation))
+    #print("Pos B: (" + partB.name + ") " + str(partB.matrix_world.translation))
+    #print("Dist: " + str(dist))
+    arm.scale = mathutils.Vector((1,dist,1.0/partA.scale.z))
+    bpy.context.view_layer.objects.active = arm
+    bpy.ops.object.constraint_add(type='LOCKED_TRACK')
+    bpy.context.object.constraints["Locked Track"].target = partB
 
+
+def addRing(part, machine, collection):
+    if "eccEnd" in part: return
+    global eccentricEndPrefab
+    ecc = eccentricEndPrefab.copy()
+    ecc.data = eccentricEndPrefab.data
+    ecc.parent = part
+    collection.objects.link(ecc)
+    ecc.scale = mathutils.Vector((1,1,1.0/part.scale.z))
+    if "eccentric" in part:
+        layer = machine["layers"][part["layer"]]
+        ecc.location = mathutils.Vector((0,0,1)) * (layer.matrix_world.translation.z - part.matrix_world.translation.z)/part.scale.z
+    part["eccEnd"] = ecc
+
+
+def applyOverrides(project, dict):
+    if "machines" in dict:
+        for entryID in range(len(dict["machines"])):
+            machineEntry = project["machines"][entryID]
+            overrideEntry = {"uuid_override":-1}
+            if str(machineEntry["uuid"]) in dict["machines"]:
+                overrideEntry = dict["machines"][str(machineEntry["uuid"])]
+            elif str(machineEntry["srcUUID"]) in dict["machines"]:
+                overrideEntry = dict["machines"][str(machineEntry["srcUUID"])]
+            else:
+                print("No override entry for " + str(machineEntry["srcUUID"]) + " (currently " + str(machineEntry["uuid"]) + ")")
+            machineEntry["uuid"] = overrideEntry["uuid_override"]
+    elif "projects" in dict:
+        for entryID in range(len(dict["projects"])):
+            applyOverrides(project["projects"][entryID], dict["projects"][entryID])
 
 
 # ImportHelper is a helper class, defines filename and
