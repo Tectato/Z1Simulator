@@ -79,7 +79,7 @@ def importTrack(dict, part):
             offset = None
             if isinstance(entry, str): # String, run length encoding
                 offset = mathutils.Vector((0,0,0))
-                currentFramePos += int(entry.split("*")[0])
+                currentFramePos += int(entry.split("*")[0]) - 1
             else:
                 if hasattr(entry, "__len__"): # Check if array. I do not like python.
                     offset = mathutils.Vector((float(entry[0]),-float(entry[1]),0)) * c_scaleFactor
@@ -95,7 +95,7 @@ def importTrack(dict, part):
             if "*" in entry: # String, run length encoding
                 split = entry.split("*")
                 rotOffset = 0.0 #float(split[1])
-                currentFrameRot += int(split[0])
+                currentFrameRot += int(split[0]) - 1
             else:
                 rotOffset = float(entry)
             part.rotation_euler[2] = part.rotation_euler[2] + rotOffset
