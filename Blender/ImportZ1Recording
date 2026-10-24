@@ -4,7 +4,7 @@ import math
 import mathutils
 from pathlib import Path
 
-c_scaleFactor = 0.1
+c_scaleFactor = 0.2
 c_moveDist = 0.08
 c_frameSpacing = 4
 
@@ -19,6 +19,10 @@ def read_data(context, filepath):
     for machineUUID in dict.keys():
         machineCandidates = [obj for obj in bpy.data.objects if ("part_uuids" in obj and obj["uuid"] == int(machineUUID))]
         machine = machineCandidates[0]
+        for candidate in machineCandidates:
+            if candidate in bpy.context.selectable_objects:
+                machine = candidate
+                break
         print("Importing recording for " + machine.name)
         importRecording(dict[machineUUID], machine)
 
@@ -66,24 +70,41 @@ def importTrack(dict, part):
         sequenceLength = min(len(dict["pos"]), len(dict["rot"]))
     else:
         sequenceLength = len(dict["pos"] if hasPos else dict["rot"])
+    
+    currentFramePos = 1
+    currentFrameRot = 1
     for i in range(1,sequenceLength):
         if hasPos:
             entry = dict["pos"][i]
             offset = None
-            if hasattr(entry, "__len__"): # Check if array. I do not like python.
-                offset = mathutils.Vector((float(entry[0]),-float(entry[1]),0)) * c_scaleFactor
+            if isinstance(entry, str): # String, run length encoding
+                offset = mathutils.Vector((0,0,0))
+                currentFramePos += int(entry.split("*")[0])
             else:
-                offset = intToOffset(entry)
+                if hasattr(entry, "__len__"): # Check if array. I do not like python.
+                    offset = mathutils.Vector((float(entry[0]),-float(entry[1]),0)) * c_scaleFactor
+                else:
+                    offset = intToOffset(entry)
             
             part.location = part.location + offset#intToOffset(dict["pos"][i])
-            bpy.context.object.keyframe_insert(data_path='location', frame=int(i * c_frameSpacing))
+            bpy.context.object.keyframe_insert(data_path='location', frame=int(currentFramePos * c_frameSpacing))
             #print(part.name + " location:" + str(part.location))
         if hasRot:
-            part.rotation_euler[2] = part.rotation_euler[2] + float(dict["rot"][i])
-            bpy.context.object.keyframe_insert(data_path='rotation_euler', frame=int(i * c_frameSpacing))
+            entry = dict["rot"][i]
+            rotOffset = 0.0
+            if "*" in entry: # String, run length encoding
+                split = entry.split("*")
+                rotOffset = 0.0 #float(split[1])
+                currentFrameRot += int(split[0])
+            else:
+                rotOffset = float(entry)
+            part.rotation_euler[2] = part.rotation_euler[2] + rotOffset
+            bpy.context.object.keyframe_insert(data_path='rotation_euler', frame=int(currentFrameRot * c_frameSpacing))
         #bpy.context.scene.frame_set(i * c_frameSpacing)
         #bpy.ops.anim.change_frame(frame=i * c_frameSpacing)
         #bpy.ops.anim.keyframe_insert_by_name(type=keySet, frame=int(i * c_frameSpacing))
+        currentFramePos += 1
+        currentFrameRot += 1
         
     part.select_set(False)
     

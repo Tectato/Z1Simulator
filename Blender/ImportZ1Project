@@ -178,6 +178,13 @@ def import_project(context, filepath):
     print("Importing project...")
     read_data(projectCollection, filepath)
     
+    #pinPrefabLogic.hide_viewport = True
+    pinPrefabLogic.hide_render = True
+    #pinPrefabStatic.hide_viewport = True
+    pinPrefabStatic.hide_render = True
+    eccentricArmPrefab.hide_render = True
+    eccentricEndPrefab.hide_render = True
+    
     global g_meshingTime, g_numSheets, g_instancingTimeSheets, g_instancingTimePins, g_numInstancesSheets, g_numInstancesPins
     print("Done.")
     if g_numSheets > 0:
@@ -256,12 +263,6 @@ def read_data(parent, filepath):
                 #    machine.location = machine.location + offset
                 project["projectRoot"].location += offset
         bpy.context.view_layer.active_layer_collection = layer_instanceCollection
-                    
-    
-    #pinPrefabLogic.hide_viewport = True
-    pinPrefabLogic.hide_render = True
-    #pinPrefabStatic.hide_viewport = True
-    pinPrefabStatic.hide_render = True
     
     instanceCollection["machines"] = machineList
     instanceCollection["projects"] = projectList
