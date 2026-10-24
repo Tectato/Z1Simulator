@@ -294,10 +294,11 @@ func setSelected(value):
 	if !sheetData: return
 	if preSelected == selected: return
 	mesh.updateMaterial()
-	for zone in localClipZones:
-		zone.hitbox.disabled = !value
-		#zone.mesh.visible = value
-		zone.updateMaterial()
+	if localClipZones:
+		for zone in localClipZones:
+			zone.hitbox.disabled = !value
+			#zone.mesh.visible = value
+			zone.updateMaterial()
 	#sprite.set_instance_shader_parameter("selected", value)
 	SheetLibrary.renderHandler.setTransform(sheetData.path, meshIndex, mesh.global_transform.translated(Vector3.UP * -0.02), selected)
 	#sprite.visible = value
@@ -428,8 +429,9 @@ func snap(srcPos):
 
 func projectDown(ray : RayCast3D):
 	ray.add_exception(collider)
-	for zone in localClipZones:
-		ray.add_exception(zone.collider)
+	if localClipZones:
+		for zone in localClipZones:
+			ray.add_exception(zone.collider)
 	var height = castPoints(ray) + 0.02
 	#ray.global_position = global_position + Vector3.UP
 	#ray.force_raycast_update()
@@ -1102,14 +1104,14 @@ func compileHistory(): #TODO: Encode pivot point
 	if fixed: return {}
 	var out = super.compileHistory()
 	if rotHistory.is_empty(): return out
-	out["rot"] = []
+	var rotHistorySimple = []
 	var startRot = rotHistory.front()
 	var rotationMod = wrapf(startRot, -PI/2, PI/2)
-	var rotationOut = ("%0.6f" % startRot).rstrip("0")
+	var rotationOut = ("%0.6f" % startRot).rstrip("0").rstrip(".")
 	if abs(rotationMod) < 0.01:
 		var quarts = rotation.y/(PI/2.0)
 		rotationOut = str(int(round(quarts))) + "q"
-	out["rot"].append(rotationOut)
+	rotHistorySimple.append(rotationOut)
 	
 	var prevRot = startRot
 	var currentRot
@@ -1117,10 +1119,11 @@ func compileHistory(): #TODO: Encode pivot point
 	for i in range(1,rotHistory.size()):
 		currentRot = rotHistory[i]
 		var rotDiff = currentRot - prevRot
-		out["rot"].append(("%0.6f" % rotDiff).rstrip("0"))
+		rotHistorySimple.append(("%0.6f" % rotDiff).rstrip("0").rstrip("."))
 		prevRot = currentRot
 		if !nonZeroEntry:
 			nonZeroEntry = abs(rotDiff) > 0
-	if !nonZeroEntry:
-		out.erase("rot")
+	if nonZeroEntry:
+		var rotHistoryShort = compressHistory(rotHistorySimple, "0")
+		out["rot"] = rotHistoryShort
 	return out

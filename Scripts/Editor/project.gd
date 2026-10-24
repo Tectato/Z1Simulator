@@ -124,6 +124,13 @@ func removeMachine(machine : Machine):
 	machines.erase(machine)
 	if machines.is_empty() and subprojects.is_empty(): delete()
 
+func getMachines(recursive = false):
+	var out = machines.duplicate()
+	if recursive:
+		for subproject in subprojects:
+			out.append_array(subproject.getMachines())
+	return out
+
 func removeProject(project : Project):
 	subprojects.erase(project)
 	if machines.is_empty() and subprojects.is_empty(): delete()

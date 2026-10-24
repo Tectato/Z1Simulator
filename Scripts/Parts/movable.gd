@@ -419,8 +419,9 @@ func clearHistory():
 func compileHistory():
 	if fixed: return {}
 	var out = {"pos":[]}
+	var posHistorySimple = []
 	var startPos = posHistory.front()
-	out["pos"].append([
+	posHistorySimple.append([
 		("%0.4f" % startPos.x).rstrip("0"),
 		("%0.4f" % startPos.z).rstrip("0")
 	])
@@ -433,12 +434,35 @@ func compileHistory():
 		var posDiff = currentPos - prevPos
 		var diffMagnitude = posDiff.length_squared()
 		if diffMagnitude > 0.0 and abs(diffMagnitude - Workspace.pinTravelSquared) > 0.0001:
-			out["pos"].append([("%0.4f" % posDiff.x).rstrip("0"), ("%0.4f" % posDiff.z).rstrip("0")])
+			posHistorySimple.append([("%0.4f" % posDiff.x).rstrip("0"), ("%0.4f" % posDiff.z).rstrip("0")])
 		else:
-			out["pos"].append(dirToInt(Space.toVec2(posDiff), true))
+			posHistorySimple.append(dirToInt(Space.toVec2(posDiff), true))
 		if !nonZeroEntry:
-			nonZeroEntry = out["pos"].back() is Array or out["pos"].back() != 5
+			nonZeroEntry = posHistorySimple.back() is Array or posHistorySimple.back() != 5
 		prevPos = currentPos
 	if !nonZeroEntry:
 		out = {}
+	else:
+		var posHistoryShort = compressHistory(posHistorySimple, 5)
+		out["pos"] = posHistoryShort
+	return out
+
+func compressHistory(history : Array, idleChar):
+	var out = [history.pop_front()] # First element is always starting state
+	var currentChar = history.pop_front()
+	var runLength = 1
+	while currentChar != null:
+		var newChar = history.pop_front()
+		if typeof(currentChar) == typeof(idleChar) and currentChar == idleChar:
+			if typeof(newChar) == typeof(idleChar) and newChar == idleChar:
+				runLength += 1
+			else:
+				if runLength < 2:
+					out.append(currentChar)
+				else:
+					out.append(str(runLength) + "*" + str(idleChar))
+				runLength = 1
+		else:
+			out.append(currentChar)
+		currentChar = newChar
 	return out

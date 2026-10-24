@@ -573,10 +573,13 @@ func stopRecording():
 	Simulator.callRecord()
 	
 	var out = {}
+	var loadedMachines = machines.duplicate()
+	for project in projects:
+		loadedMachines.append_array(project.getMachines(true))
 	
 	if !Global.editor.currentlyLoadedPath:
 		return
-	for machine in machines:
+	for machine in loadedMachines:
 		var machineEntry = {}
 		for part in machine.uuidManager.parts.values():
 			var compiledHistory = part.compileHistory()
