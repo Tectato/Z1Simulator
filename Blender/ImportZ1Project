@@ -3,6 +3,7 @@ import json
 import math
 import mathutils
 import time
+import xml.etree
 from pathlib import Path
 
 # c_X -> const
@@ -229,9 +230,14 @@ def read_data(parent, filepath):
     
     dict = json.loads(data)
     
-    bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
-    projectRoot = bpy.context.active_object
-    projectRoot.name = instanceCollection.name
+    #bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+    #projectRoot = bpy.context.active_object
+    #projectRoot.name = instanceCollection.name
+    projectRoot = bpy.data.objects.new(instanceCollection.name, None)
+    projectRoot.empty_display_type = 'PLAIN_AXES'
+    projectRoot.empty_display_size = 0.1
+
+    instanceCollection.objects.link(projectRoot)
     instanceCollection["projectRoot"] = projectRoot
     
     ### Deserialize project
@@ -274,14 +280,21 @@ def read_data(parent, filepath):
     
 
 def deserializeMachine(dict, basePath, collection):
-    bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
-    machineRoot = bpy.context.active_object
-    machineRoot.name = basePath.name
+    #bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+    machineRoot = bpy.data.objects.new(basePath.name, None)
+    machineRoot.empty_display_type = 'PLAIN_AXES'
+    machineRoot.empty_display_size = 0.1
+
+    collection.objects.link(machineRoot)
+    
+    #machineRoot = bpy.context.active_object
+    #machineRoot.name = basePath.name
     
     global g_highestSheetIndex
     layerIndex = 0
     layers = []
     for layer in dict["layers"]:
+        print("adding layer at height " + str(g_highestSheetIndex))
         layerInstance = deserializeLayer(layer, basePath, layerIndex, g_highestSheetIndex, collection)
         layerInstance.parent = machineRoot
         layerIndex += 1
@@ -298,11 +311,11 @@ def deserializeMachine(dict, basePath, collection):
         pinsToResize.append([pinInstance, pin])
     for pinInfo in pinsToResize:
         if "bounds" in pinInfo[1]:
-            min = pinInfo[1]["bounds"][0]
-            max = pinInfo[1]["bounds"][1]
-            pinInfo[0].parent = layers[min]
+            bmin = pinInfo[1]["bounds"][0]
+            bmax = pinInfo[1]["bounds"][1]
+            pinInfo[0].parent = layers[bmin]
             totalPinHeight = 0
-            for i in range(min, max+1):
+            for i in range(max(bmin, 0), min(bmax+1, len(layers))):
                 totalPinHeight += layers[i]["height"]
             pinInfo[0].scale = mathutils.Vector((1.0, 1.0, totalPinHeight * c_sheetSpacing * 100.0))
         else:
@@ -338,8 +351,15 @@ def deserializeMachine(dict, basePath, collection):
     return machineRoot
 
 def deserializeLayer(dict, basePath, index, startHeight, collection):
-    bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, startHeight * c_sheetSpacing), scale=(1, 1, 1))
-    layerRoot = bpy.context.active_object
+    #bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, startHeight * c_sheetSpacing), scale=(1, 1, 1))
+    #layerRoot = bpy.context.active_object
+    layerRoot = bpy.data.objects.new("Layer", None)
+    layerRoot.empty_display_type = 'PLAIN_AXES'
+    layerRoot.empty_display_size = 0.1
+    layerRoot.location = mathutils.Vector((0, 0, startHeight * c_sheetSpacing))
+
+    collection.objects.link(layerRoot)
+    
     if "id" in dict:
         layerRoot.name = dict["id"]
     else:
@@ -358,7 +378,7 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
     #sheetInstance = deserializeSheet(dict["sheets"][0], basePath)
     #sheetInstance.parent = layerRoot
     
-    if "arms" in dict:
+    if "arms" in dict or dict["pins"]:
         localHighestSheetIndex = max(3, localHighestSheetIndex)
         g_highestSheetIndex = max(g_highestSheetIndex, startHeight + localHighestSheetIndex)
     
@@ -371,7 +391,6 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
         pins.append(pinInstance)
     
     if "arms" in dict:
-        localHighestSheetIndex = min(2, localHighestSheetIndex)
         global g_eccentrics
         eccentrics = []
         for eccentric in dict["arms"]:
@@ -383,6 +402,7 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
         layerRoot["eccentrics"] = eccentrics
     
     layerRoot["height"] = (localHighestSheetIndex+1)
+    print("> layer height: " + str(localHighestSheetIndex+1))
     layerRoot["sheets"] = sheets
     layerRoot["pins"] = pins
     
@@ -455,7 +475,39 @@ def deserializeSheet(dict, basePath, collection):
         g_numSheets += 1
         startTime = time.process_time()
         print("\t> Importing " + file + "...")
-        bpy.ops.import_curve.svg(filepath=fullPath)
+        
+        #svgTree = ElementTree.parse(fullPath)
+        #outline = svgTree.getroot()[0][0]
+        #holes = svgTree.getroot()[0][1]
+        
+        #outputData = bpy.data.curves.new(file, type='CURVE')
+        #outputData.dimensions = '2D'
+        #outputData.resolution_u = 2
+        
+        def parsePath(sequence):
+            spline = outputData.splines.new(type='BEZIER')
+            spline.cyclic_u = True
+            spline.use_smooth = False
+            startPoint = None
+            prevPoint = None
+            chunks = sequence.split(" ")
+            while chunks:
+                type = chunks.pop(0)
+                point = None
+                match(type):
+                    case "M":
+                        x = chunks.pop(0)
+                        y = chunks.pop(0)
+                        point = spline.bezier_points.add(1)
+                        startPoint = point
+                        point.handle_left_type = 'VECTOR'
+                        point.handle_right_type = 'VECTOR'
+                if point:
+                    prevPoint.handle_right = prevPoint.contol_point
+                    # ...
+        
+        
+        bpy.ops.import_curve.svg(filepath=fullPath)                         # TODO: write from scratch
         importCollection = bpy.data.collections.get(Path(file).name)
         parts = importCollection.objects
         
@@ -578,9 +630,14 @@ def addEccentricRelation(partA, partB, machine, collection):
     #print("Pos B: (" + partB.name + ") " + str(partB.matrix_world.translation))
     #print("Dist: " + str(dist))
     arm.scale = mathutils.Vector((1,dist,1.0/partA.scale.z))
-    bpy.context.view_layer.objects.active = arm
-    bpy.ops.object.constraint_add(type='LOCKED_TRACK')
-    bpy.context.object.constraints["Locked Track"].target = partB
+    #bpy.context.view_layer.objects.active = arm
+    #bpy.ops.object.constraint_add(type='LOCKED_TRACK')
+    #bpy.context.object.constraints["Locked Track"].target = partB
+    constraint = arm.constraints.new(type='LOCKED_TRACK')
+    constraint.name = "Locked Track"
+    constraint.target = partB
+    constraint.track_axis = 'TRACK_Y'
+    constraint.lock_axis = 'LOCK_Z'
 
 def addImpulseRodRelation(partA, partB, machine, collection):
     global eccentricArmPrefab
