@@ -34,6 +34,7 @@ PathHandler="*res://Scenes/PathHandler.tscn"
 FileHandler="*res://Scenes/FileHandler.tscn"
 PinRenderHandler="*res://Scenes/PinRenderHandler.tscn"
 SpriteRenderHandler="*uid://ixmqtmnrfewb"
+EccRenderHandler="*uid://dwfq4eyprslii"
 
 [editor]
 

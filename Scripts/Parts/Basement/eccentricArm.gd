@@ -1,8 +1,11 @@
 extends Relation
 class_name EccentricArm
 
+@onready var center = $Center
 @onready var bridge = $Bridge
 @onready var distLabel = $DistLabel
+var eccMeshIndex
+var armMeshIndex
 
 # A is target pin, B is eccentric parent
 var inMotion = false
@@ -13,6 +16,12 @@ func serialize():
 	var out = super.serialize()
 	out["type"] = "arm"
 	return out
+
+func _ready() -> void:
+	eccMeshIndex = EccRenderHandler.addInstance("ecc")
+	armMeshIndex = EccRenderHandler.addInstance("arm")
+	visibility_changed.connect(visibilityChanged)
+	set_notify_transform(true)
 
 func init():
 	super.init()
@@ -45,6 +54,16 @@ func _process(delta: float) -> void:
 		rotation.y = lerp_angle(preMoveRot, targetRot, Simulator.stepProgress)
 		inMotion = Simulator.stepProgress < 1.0
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSFORM_CHANGED and !(A.beingDeleted or B.beingDeleted):
+		if A.getMachine().beingDeleted or B.getMachine().beingDeleted:
+			EccRenderHandler.removeInstance("ecc", eccMeshIndex)
+			EccRenderHandler.removeInstance("arm", armMeshIndex)
+			return
+		if is_visible_in_tree():
+			EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform)
+			EccRenderHandler.setTransform("arm", armMeshIndex, bridge.global_transform)
+
 func updatePos():
 	preMoveRot = rotation.y
 	targetRot = rotation.y
@@ -53,6 +72,15 @@ func updatePos():
 	bridge.scale = Vector3(1, 1, Space.toVec2(A.position - B.position).length())
 	bridge.position = Vector3(0, 0, -bridge.scale.z/2.0)
 
+func visibilityChanged():
+	var vis = is_visible_in_tree()
+	if vis:
+			EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform)
+			EccRenderHandler.setTransform("arm", armMeshIndex, bridge.global_transform)
+	else:
+			EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform.scaled(Vector3.ZERO))
+			EccRenderHandler.setTransform("arm", armMeshIndex, bridge.global_transform.scaled(Vector3.ZERO))
+
 func rewind():
 	call_deferred("moved")
 
@@ -60,3 +88,8 @@ func setSelected(value):
 	distLabel.visible = value
 	distLabel.global_position = Space.toVec3(Space.toVec2(A.global_position)+Space.toVec2(B.global_position))/2 + Vector3.UP * (global_position.y + 0.1)
 	distLabel.text = "%0.2f" % (Space.toVec2(A.global_position).distance_to(Space.toVec2(B.global_position)))
+
+func delete():
+	super.delete()
+	EccRenderHandler.removeInstance("ecc", eccMeshIndex)
+	EccRenderHandler.removeInstance("arm", armMeshIndex)

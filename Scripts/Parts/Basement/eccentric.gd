@@ -4,17 +4,19 @@ class_name Eccentric
 const ARM = preload("res://Scenes/Parts/Basement/EccentricArm.tscn")
 #const PIN = preload("res://Scenes/Parts/Pin.tscn")
 
-@onready var centerPin = $CenterPin
+@export var center : MeshInstance3D
 @onready var pinCollider = $Area3D/PinCollider
-var meshIndex = -1
+var pinMeshIndex = -1
+var eccMeshIndex = -1
 var pins = {} #{pin -> [dirID, dist]} (dirID being the cardinal direction the pin is in relative to center)
 var startLayer = -1
 var endLayer = -1
 var links = []
 
 func _ready():
-	meshIndex = PinRenderHandler.addInstance("pin")
-	PinRenderHandler.setColor("pin", meshIndex, Color("616161ff"))
+	pinMeshIndex = PinRenderHandler.addInstance("pin")
+	eccMeshIndex = EccRenderHandler.addInstance("ecc")
+	PinRenderHandler.setColor("pin", pinMeshIndex, Color("616161ff"))
 	visibility_changed.connect(visibilityChanged)
 	set_notify_transform(true)
 
@@ -57,7 +59,8 @@ func setSelected(value):
 	for relation in relations:
 		relation.setSelected(value)
 	if is_visible_in_tree():
-		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
+		PinRenderHandler.setTransform("pin", pinMeshIndex, mesh.global_transform, selected)
+		EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform, selected)
 
 func getTurnDir(moveDir : Vector2, initiator : Pin):
 	if !pins.has(initiator): return null
@@ -181,16 +184,25 @@ func removeRelation(relation : Relation):
 		links.erase(relation)
 	place()
 
+func clearRelations():
+	super.clearRelations()
+	for link in links:
+		if link:
+			link.call_deferred("delete")
+	links.clear()
+
 func getBounds():
 	return [Vector3(-1,0,-1)*0.4, Vector3(1,0.2,1)*0.4]
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSFORM_CHANGED and !beingDeleted:
 		if getMachine().beingDeleted:
-			PinRenderHandler.removeInstance("pin", meshIndex)
+			PinRenderHandler.removeInstance("pin", pinMeshIndex)
+			EccRenderHandler.removeInstance("ecc", eccMeshIndex)
 			return
 		if is_visible_in_tree():
-			PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
+			PinRenderHandler.setTransform("pin", pinMeshIndex, mesh.global_transform, selected)
+			EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform, selected)
 
 func projectDown(ray : RayCast3D):
 	if layer:
@@ -240,7 +252,8 @@ func updateHeight():
 	mesh.position = Vector3.UP * (floor + 0.1 * effectiveHeight / 2 - global_position.y)
 	#$Highlight.transform = mesh.transform
 	pinCollider.transform = mesh.transform
-	PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
+	PinRenderHandler.setTransform("pin", pinMeshIndex, mesh.global_transform, selected)
+	#EccRenderHandler.setTransform("ecc", eccMeshIndex, mesh.global_transform, selected)
 	cullRelations()
 
 func rotatePart(by):
@@ -285,15 +298,18 @@ func tryEqualize():
 func delete():
 	if beingDeleted: return
 	beingDeleted = true
-	PinRenderHandler.removeInstance("pin", meshIndex)
+	PinRenderHandler.removeInstance("pin", pinMeshIndex)
+	EccRenderHandler.removeInstance("ecc", eccMeshIndex)
 	super.delete()
 
 func visibilityChanged():
 	var vis = is_visible_in_tree()
 	if vis:
-		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform, selected)
+		PinRenderHandler.setTransform("pin", pinMeshIndex, mesh.global_transform, selected)
+		EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform, selected)
 	else:
-		PinRenderHandler.setTransform("pin", meshIndex, mesh.global_transform.scaled(Vector3.ZERO), false)
+		PinRenderHandler.setTransform("pin", pinMeshIndex, mesh.global_transform.scaled(Vector3.ZERO), false)
+		EccRenderHandler.setTransform("ecc", eccMeshIndex, center.global_transform.scaled(Vector3.ZERO), false)
 	for relation in relations:
 		relation.visible = vis
 	for link in links:

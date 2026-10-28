@@ -93,7 +93,7 @@ func serialize():
 	var below = machine.getLayerBelow(self)
 	if below:
 		offset = position.y - (below.position.y + below.getBounds()[1].y)
-	if offset > 0.01:
+	if abs(offset) > 0.01:
 		output["offset"] = ("%0.4f" % offset).rstrip("0")
 	if id.length() > 0:
 		output["id"] = id

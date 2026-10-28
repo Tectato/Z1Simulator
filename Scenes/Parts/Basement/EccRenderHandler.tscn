@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://dwfq4eyprslii"]
+
+[ext_resource type="Script" uid="uid://pqj1vvimgbgd" path="res://Scripts/Parts/multiMeshRenderHandler.gd" id="1_oy7id"]
+[ext_resource type="Script" uid="uid://d1lxtwidrhv45" path="res://Scripts/Parts/pinRendererInit.gd" id="1_xu4rb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tvsh6"]
+albedo_color = Color(0.18039216, 0.16862746, 0.14901961, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oy7id"]
+albedo_color = Color(0.18039216, 0.16862746, 0.14901961, 1)
+metallic = 0.7
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_44xkd"]
+albedo_color = Color(0.18, 0.16812001, 0.14760001, 1)
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xu4rb"]
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.04
+radial_segments = 12
+rings = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_oy7id"]
+size = Vector3(0.08, 0.04, 1)
+
+[node name="EccRenderHandler" type="Node3D" unique_id=1429972473]
+script = ExtResource("1_oy7id")
+materialFlat = SubResource("StandardMaterial3D_tvsh6")
+materialShaded = SubResource("StandardMaterial3D_oy7id")
+materialHighlight = SubResource("StandardMaterial3D_44xkd")
+hasHighlights = false
+
+[node name="EccInitialiser" type="Node" parent="." unique_id=1920987698]
+script = ExtResource("1_xu4rb")
+id = "ecc"
+mesh = SubResource("CylinderMesh_xu4rb")
+
+[node name="ArmInitialiser" type="Node" parent="." unique_id=1490849095]
+script = ExtResource("1_xu4rb")
+id = "arm"
+mesh = SubResource("BoxMesh_oy7id")

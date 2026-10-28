@@ -156,6 +156,7 @@ func clear():
 	Global.editor.valueInterface.clear()
 	SheetLibrary.renderHandler.clearInstances()
 	PinRenderHandler.clearInstances()
+	EccRenderHandler.clearInstances()
 	SpriteRenderHandler.clearInstances()
 	while !machines.is_empty():
 		var toRemove = machines.pop_back()

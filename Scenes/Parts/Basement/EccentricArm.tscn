@@ -21,11 +21,13 @@ size = Vector3(0.08, 0.04, 1)
 script = ExtResource("1_mxhrf")
 
 [node name="Center" type="MeshInstance3D" parent="." unique_id=1509037572]
+visible = false
 material_override = SubResource("StandardMaterial3D_2erm6")
 mesh = SubResource("CylinderMesh_totay")
 
 [node name="Bridge" type="MeshInstance3D" parent="." unique_id=828590723]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.2, 0, 0, -0.1)
+visible = false
 material_override = SubResource("StandardMaterial3D_2erm6")
 mesh = SubResource("BoxMesh_xqxwa")
 

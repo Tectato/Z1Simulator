@@ -21,14 +21,9 @@ height = 0.04
 radial_segments = 12
 rings = 0
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_5drfx"]
-top_radius = 0.025
-bottom_radius = 0.025
-height = 0.1
-rings = 0
-
-[node name="Eccentric" type="Node3D" unique_id=53456505 node_paths=PackedStringArray("collider", "mesh")]
+[node name="Eccentric" type="Node3D" unique_id=53456505 node_paths=PackedStringArray("center", "collider", "mesh")]
 script = ExtResource("1_fbxvq")
+center = NodePath("Center")
 collider = NodePath("Area3D")
 mesh = NodePath("CenterPin")
 
@@ -46,10 +41,10 @@ shape = SubResource("CylinderShape3D_rylth")
 
 [node name="Center" type="MeshInstance3D" parent="." unique_id=1341179201]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_2erm6")
 mesh = SubResource("CylinderMesh_totay")
 
 [node name="CenterPin" type="MeshInstance3D" parent="." unique_id=530938766]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 visible = false
-mesh = SubResource("CylinderMesh_5drfx")

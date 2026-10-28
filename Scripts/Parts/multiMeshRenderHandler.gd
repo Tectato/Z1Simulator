@@ -219,7 +219,7 @@ func schedule(callable : Callable):
 	call_deferred("execute", callable)
 
 func execute(callable : Callable):
-	await get_tree().process_frame
+	#await get_tree().process_frame
 	scheduled.erase(callable)
 	callable.call()
 

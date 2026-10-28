@@ -33,11 +33,10 @@ stencil_mode = 2
 stencil_flags = 2
 stencil_color = Color(0.86, 0.35833335, 0, 0.7411765)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_qhqdv"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_ttsf7"]
 top_radius = 0.025
 bottom_radius = 0.025
 height = 0.1
-radial_segments = 8
 rings = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ttsf7"]
@@ -57,7 +56,7 @@ debug = NodePath("Node3D")
 
 [node name="Initialiser" type="Node" parent="." unique_id=765608683 node_paths=PackedStringArray("debug")]
 script = ExtResource("2_qhqdv")
-mesh = SubResource("CylinderMesh_qhqdv")
+mesh = SubResource("CylinderMesh_ttsf7")
 debug = NodePath("../Node3D")
 
 [node name="Node3D" type="MeshInstance3D" parent="." unique_id=2087017600]
