@@ -3,7 +3,8 @@ import json
 import math
 import mathutils
 import time
-import xml.etree
+import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 # c_X -> const
@@ -34,6 +35,9 @@ c_impulseRodOverhang = 0.0075
 g_highestSheetIndex = 0
 g_eccentrics = []
 g_uuids = {}
+g_relations = {}
+g_interMachineRelations = []
+g_machines = {}
 
 
 g_meshingTime = 0.0
@@ -182,6 +186,8 @@ def import_project(context, filepath):
     
     print("Importing project...")
     read_data(projectCollection, filepath)
+    bpy.context.view_layer.update()
+    applyRelations()
     
     #pinPrefabLogic.hide_viewport = True
     pinPrefabLogic.hide_render = True
@@ -240,6 +246,7 @@ def read_data(parent, filepath):
     instanceCollection.objects.link(projectRoot)
     instanceCollection["projectRoot"] = projectRoot
     
+    global g_machines
     ### Deserialize project
     for machine in dict["machines"]:
         print("============")
@@ -249,6 +256,10 @@ def read_data(parent, filepath):
             if not "uuid" in newMachine:
                 newMachine["uuid"] = int(machine["uuid"])
                 newMachine["srcUUID"] = int(machine["uuid"])
+                if not newMachine["uuid"] in g_machines:
+                    g_machines[newMachine["uuid"]] = [newMachine]
+                else:
+                    g_machines[newMachine["uuid"]].append(newMachine)
             machineList.append(newMachine)
             newMachine.parent = projectRoot
         elif "path" in machine: # Path reference to different file
@@ -274,6 +285,9 @@ def read_data(parent, filepath):
                 project["projectRoot"].location += offset
         bpy.context.view_layer.active_layer_collection = layer_instanceCollection
     
+    if "relations" in dict:
+        g_interMachineRelations.append([instanceCollection, projectRoot, dict["relations"]])
+    
     instanceCollection["machines"] = machineList
     instanceCollection["projects"] = projectList
     return instanceCollection
@@ -294,7 +308,6 @@ def deserializeMachine(dict, basePath, collection):
     layerIndex = 0
     layers = []
     for layer in dict["layers"]:
-        print("adding layer at height " + str(g_highestSheetIndex))
         layerInstance = deserializeLayer(layer, basePath, layerIndex, g_highestSheetIndex, collection)
         layerInstance.parent = machineRoot
         layerIndex += 1
@@ -327,21 +340,19 @@ def deserializeMachine(dict, basePath, collection):
     if "uuid" in dict:
         machineRoot["srcUUID"] = dict["uuid"]
         machineRoot["uuid"] = dict["uuid"]
+        if not machineRoot["uuid"] in g_machines:
+            g_machines[newMachine["uuid"]] = [machineRoot]
+        else:
+            g_machines[newMachine["uuid"]].append(machineRoot)
     
     if "pos_x" in dict:
         machineRoot.location = (float(dict["pos_x"])*c_scaleFactor, -float(dict["pos_z"])*c_scaleFactor, float(dict["pos_y"])*c_sheetSpacing)
     
-    bpy.context.view_layer.update()
+    
     if "relations" in dict:
-        for relation in dict["relations"]:
-            if relation["type"] == "arm" or relation["type"] == "rod":
-                uuidA = str(relation["A"])
-                uuidB = str(relation["B"])
-                if uuidA in g_uuids and uuidB in g_uuids:
-                    if relation["type"] == "arm":
-                        addEccentricRelation(g_uuids[uuidA], g_uuids[uuidB], machineRoot, collection)
-                    else:
-                        addImpulseRodRelation(g_uuids[uuidA], g_uuids[uuidB], machineRoot, collection)
+        global g_relations
+        g_relations[machineRoot] = [collection, dict["relations"]]
+        
 
     g_uuids = {} # Clear global vars for next machine
     g_highestSheetIndex = 0
@@ -349,6 +360,46 @@ def deserializeMachine(dict, basePath, collection):
 
     #print(dict)
     return machineRoot
+
+def applyRelations():
+    global g_relations
+    for machineRoot in g_relations.keys():
+        entry = g_relations[machineRoot]
+        for relation in entry[1]:
+            if relation["type"] == "arm" or relation["type"] == "rod":
+                uuidA = str(relation["A"])
+                uuidB = str(relation["B"])
+                uuids = machineRoot["part_uuids"]
+                if uuidA in uuids and uuidB in uuids:
+                    if relation["type"] == "arm":
+                        addEccentricRelation(uuids[uuidA], uuids[uuidB], machineRoot, entry[0])
+                    else:
+                        addImpulseRodRelation(uuids[uuidA], uuids[uuidB], machineRoot, entry[0])
+    global g_interMachineRelations
+    global g_machines
+    for entry in g_interMachineRelations:
+        collection = entry[0]
+        projectRoot = entry[1]
+        relations = entry[2]
+        for relation in relations:
+            if relation["type"] == "rod":
+                try:
+                    uuidA = str(relation["A"])
+                    uuidB = str(relation["B"])
+                    uuidsAParent = None
+                    for candidate in g_machines[relation["AParent"]]:
+                        if candidate["uuid"] == relation["AParent"]:
+                            uuidsAParent = candidate["part_uuids"]
+                            break
+                    uuidsBParent = None
+                    for candidate in g_machines[relation["BParent"]]:
+                        if candidate["uuid"] == relation["BParent"]:
+                            uuidsBParent = candidate["part_uuids"]
+                            break
+                    if uuidsAParent and uuidsBParent:
+                        addImpulseRodRelation(uuidsAParent[uuidA], uuidsBParent[uuidB], projectRoot, entry[0])
+                except:
+                    print("Inter-machine relation failed to apply")
 
 def deserializeLayer(dict, basePath, index, startHeight, collection):
     #bpy.ops.object.empty_add(type='PLAIN_AXES', radius=0.1, align='WORLD', location=(0, 0, startHeight * c_sheetSpacing), scale=(1, 1, 1))
@@ -402,7 +453,6 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
         layerRoot["eccentrics"] = eccentrics
     
     layerRoot["height"] = (localHighestSheetIndex+1)
-    print("> layer height: " + str(localHighestSheetIndex+1))
     layerRoot["sheets"] = sheets
     layerRoot["pins"] = pins
     
@@ -447,6 +497,281 @@ def deserializePin(dict, collection, eccentric = False):
     g_instancingTimePins += time.process_time() - startTime
     return pin
 
+
+### SVG Parser written mostly by AI because I can't be bothered
+
+# Slop Start
+# ---------- SVG path parsing ----------
+
+TOKEN_RE = re.compile(
+    r"[A-Za-z]|[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?"
+)
+
+def path_subpaths(d):
+    """Yield subpaths as lists of cubic segments: (p0, c1, c2, p1)."""
+    tokens = TOKEN_RE.findall(d)
+    i = 0
+    command = None
+    current = (0.0, 0.0)
+    start = None
+    segments = []
+
+    def number():
+        nonlocal i
+        if i >= len(tokens) or tokens[i].isalpha():
+            raise ValueError("Unexpected end of SVG path data")
+        value = float(tokens[i])
+        i += 1
+        return value
+
+    def finish():
+        nonlocal segments
+        if segments:
+            yield_segments = segments
+            segments = []
+            return yield_segments
+        return None
+
+    while i < len(tokens):
+        if tokens[i].isalpha():
+            command = tokens[i]
+            i += 1
+        elif command is None:
+            raise ValueError("Path data must start with a command")
+
+        if command == "Z":
+            if segments and segments[-1][3] != start:
+                p0 = segments[-1][3]
+                p1 = start
+                segments.append((p0, p0, p1, p1))
+            done = finish()
+            if done:
+                yield done
+            current = start
+            command = None
+            continue
+
+        if command == "M":
+            x, y = number(), number()
+            done = finish()
+            if done:
+                yield done
+            current = start = (x, y)
+            # Further coordinate pairs after M are implicit L commands.
+            command = "L"
+            continue
+
+        if command == "L":
+            x, y = number(), number()
+            p0, p1 = current, (x, y)
+            segments.append((p0, p0, p1, p1))
+            current = p1
+            continue
+
+        if command == "H":
+            x = number()
+            p0, p1 = current, (x, current[1])
+            segments.append((p0, p0, p1, p1))
+            current = p1
+            continue
+
+        if command == "V":
+            y = number()
+            p0, p1 = current, (current[0], y)
+            segments.append((p0, p0, p1, p1))
+            current = p1
+            continue
+
+        if command == "A":
+            rx, ry, rotation, large_arc, sweep, x, y = (
+                number(), number(), number(), number(), number(), number(), number()
+            )
+            p0, p1 = current, (x, y)
+
+            #if not math.isclose(rx, ry, rel_tol=1e-6, abs_tol=1e-6):
+            #    raise ValueError("Only circular SVG arcs (rx == ry) are supported")
+            #if not math.isclose(rotation % 360.0, 0.0, abs_tol=1e-6):
+            #    raise ValueError("Rotated SVG arcs are not supported")
+            #if large_arc != 0:
+            #    raise ValueError("Only 90-degree SVG arcs are supported")
+
+            # For a quarter-circle, the cubic handle length is r * 4/3*tan(22.5°).
+            # Find the center from the two endpoints and sweep direction.
+            dx, dy = p1[0] - p0[0], p1[1] - p0[1]
+            chord = math.hypot(dx, dy)
+            r = rx
+            #if r <= 0 or not math.isclose(chord, r * math.sqrt(2),
+            #                               rel_tol=1e-5, abs_tol=1e-5):
+            #    raise ValueError("Arc is not a 90-degree circular arc")
+
+            mid = ((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2)
+            h = math.sqrt(max(0.0, r*r - chord*chord/4))
+            # Unit perpendicular to the chord; sweep selects which center.
+            perp = (-dy / chord, dx / chord)
+            sign = -1 if not sweep else 1
+            center = (mid[0] + sign*h*perp[0], mid[1] + sign*h*perp[1])
+
+            a0 = math.atan2(p0[1] - center[1], p0[0] - center[0])
+            a1 = math.atan2(p1[1] - center[1], p1[0] - center[0])
+            delta = (a1 - a0) % (2 * math.pi) if sweep else -((a0 - a1) % (2 * math.pi))
+            #if not math.isclose(abs(delta), math.pi / 2, abs_tol=1e-5):
+            #    raise ValueError("Arc sweep is not 90 degrees")
+
+            k = 4.0 / 3.0 * math.tan(abs(delta) / 4.0)
+            sign_delta = 1.0 if delta > 0 else -1.0
+            c1 = (
+                p0[0] - sign_delta*k*(p0[1] - center[1]),
+                p0[1] + sign_delta*k*(p0[0] - center[0]),
+            )
+            c2 = (
+                p1[0] + sign_delta*k*(p1[1] - center[1]),
+                p1[1] - sign_delta*k*(p1[0] - center[0]),
+            )
+            segments.append((p0, c1, c2, p1))
+            current = p1
+            continue
+
+        raise ValueError(f"Unsupported SVG path command: {command}")
+
+    done = finish()
+    if done:
+        yield done
+
+
+# ---------- Curve creation ----------
+
+def add_spline(curve, segments):
+    if not segments:
+        return None
+
+    # A connected chain of cubic segments has one more point than segments.
+    points = [segments[0][0]] + [seg[3] for seg in segments]
+    spline = curve.splines.new("BEZIER")
+    spline.bezier_points.add(len(points) - 1)
+    spline.use_cyclic_u = True
+
+    def blender_point(p):
+        x, y = p
+        return (x, -y, 0.0)
+
+    for i, bp in enumerate(spline.bezier_points):
+        bp.co = blender_point(points[i])
+        bp.handle_left_type = "FREE"
+        bp.handle_right_type = "FREE"
+
+        # Default handles make straight segments.
+        bp.handle_left = bp.co
+        bp.handle_right = bp.co
+
+    for i, (p0, c1, c2, p1) in enumerate(segments):
+        spline.bezier_points[i].handle_right = blender_point(c1)
+        spline.bezier_points[i + 1].handle_left = blender_point(c2)
+
+    # Ensure straight segments remain straight rather than being smoothed.
+    for i, (p0, c1, c2, p1) in enumerate(segments):
+        if c1 == p0:
+            spline.bezier_points[i].handle_right_type = "VECTOR"
+        if c2 == p1:
+            spline.bezier_points[i + 1].handle_left_type = "VECTOR"
+    return spline
+
+
+def compile_svg(filepath, object_name, collection):
+    root = ET.parse(filepath).getroot()
+    curve = bpy.data.curves.new(object_name, "CURVE")
+    curve.dimensions = "2D"
+    curve.resolution_u = 2
+    curve.fill_mode = "BOTH"
+    
+    outline = None
+
+    def visit(element):
+        tag = element.tag.rsplit("}", 1)[-1]
+
+        if tag == "path":
+            d = element.get("d", "")
+            for subpath in path_subpaths(d):
+                spline = add_spline(curve, subpath)
+                if element.get("id") == "outlinePath":
+                    nonlocal outline
+                    outline = spline
+                    spline.use_smooth = False
+                else:
+                    type = element.get("id").split("_")[0]
+                    if not (type == "pointHole" or type == "longHole"):
+                        spline.use_smooth = False
+
+        elif tag == "circle":
+            cx = float(element.get("cx", 0))
+            cy = float(element.get("cy", 0))
+            r = float(element.get("r", 0))
+            if r <= 0:
+                return
+            k = 4.0 / 3.0 * math.tan(math.pi / 8.0)
+            p = [
+                (cx + r, cy), (cx, cy + r),
+                (cx - r, cy), (cx, cy - r),
+            ]
+            segs = []
+            for i in range(4):
+                p0, p1 = p[i], p[(i + 1) % 4]
+                c1 = (p0[0] - (p0[1]-cy)*k, p0[1] + (p0[0]-cx)*k)
+                c2 = (p1[0] + (p1[1]-cy)*k, p1[1] - (p1[0]-cx)*k)
+                segs.append((p0, c1, c2, p1))
+            add_spline(curve, segs)
+
+        elif tag == "rect":
+            x = float(element.get("x", 0))
+            y = float(element.get("y", 0))
+            w = float(element.get("width", 0))
+            h = float(element.get("height", 0))
+            if w <= 0 or h <= 0:
+                return
+            corners = [(x, y), (x+w, y), (x+w, y+h), (x, y+h)]
+            segs = []
+            for i, p0 in enumerate(corners):
+                p1 = corners[(i + 1) % 4]
+                segs.append((p0, p0, p1, p1))
+            spline = add_spline(curve, segs)
+            spline.use_smooth = False
+
+        # Recurse into groups and the document root. Other elements are ignored.
+        for child in element:
+            visit(child)
+
+    visit(root)
+    
+    # Calculate and apply offset plus scale
+    vMin = outline.bezier_points[0].co #mathutils.Vector((1.0, 1.0, 1.0)) * 1000000
+    vMax = outline.bezier_points[0].co #mathutils.Vector((1.0, 1.0, 1.0)) * -1000000
+    midPoint = mathutils.Vector((0.0, 0.0, 0.0))
+    for point in outline.bezier_points:
+        vMin = mathutils.Vector((
+            min(vMin.x,point.co.x),
+            min(vMin.y,point.co.y),
+            min(vMin.z,point.co.z)
+            ))
+        vMax = mathutils.Vector((
+            max(vMax.x,point.co.x),
+            max(vMax.y,point.co.y),
+            max(vMax.z,point.co.z)
+            ))
+    midPoint = (vMax+vMin)/2
+    
+    for spline in curve.splines:
+        for point in spline.bezier_points:
+            point.co = (point.co - midPoint) * 0.0002
+            point.handle_left = (point.handle_left - midPoint) * 0.0002
+            point.handle_right = (point.handle_right - midPoint) * 0.0002
+
+    obj = bpy.data.objects.new(object_name, curve)
+    collection.objects.link(obj)
+    return obj
+
+### Slop end
+
+
+
 def deserializeSheet(dict, basePath, collection):
     if bpy.context.active_object != None:
         bpy.context.active_object.select_set(False)
@@ -476,100 +801,8 @@ def deserializeSheet(dict, basePath, collection):
         startTime = time.process_time()
         print("\t> Importing " + file + "...")
         
-        #svgTree = ElementTree.parse(fullPath)
-        #outline = svgTree.getroot()[0][0]
-        #holes = svgTree.getroot()[0][1]
+        sheet = compile_svg(fullPath, file, collection)
         
-        #outputData = bpy.data.curves.new(file, type='CURVE')
-        #outputData.dimensions = '2D'
-        #outputData.resolution_u = 2
-        
-        def parsePath(sequence):
-            spline = outputData.splines.new(type='BEZIER')
-            spline.cyclic_u = True
-            spline.use_smooth = False
-            startPoint = None
-            prevPoint = None
-            chunks = sequence.split(" ")
-            while chunks:
-                type = chunks.pop(0)
-                point = None
-                match(type):
-                    case "M":
-                        x = chunks.pop(0)
-                        y = chunks.pop(0)
-                        point = spline.bezier_points.add(1)
-                        startPoint = point
-                        point.handle_left_type = 'VECTOR'
-                        point.handle_right_type = 'VECTOR'
-                if point:
-                    prevPoint.handle_right = prevPoint.contol_point
-                    # ...
-        
-        
-        bpy.ops.import_curve.svg(filepath=fullPath)                         # TODO: write from scratch
-        importCollection = bpy.data.collections.get(Path(file).name)
-        parts = importCollection.objects
-        
-        # Get midpoint
-        outline = parts[0]
-        vMin = mathutils.Vector((1.0, 1.0, 1.0)) * 1000
-        vMax = mathutils.Vector((1.0, 1.0, 1.0)) * -1000
-        midPoint = mathutils.Vector((0.0, 0.0, 0.0))
-        for point in outline.data.splines.active.bezier_points:
-            #midPoint += point.co
-            vMin = mathutils.Vector((
-                min(vMin.x,point.co.x),
-                min(vMin.y,point.co.y),
-                min(vMin.z,point.co.z)
-                ))
-            vMax = mathutils.Vector((
-                max(vMax.x,point.co.x),
-                max(vMax.y,point.co.y),
-                max(vMax.z,point.co.z)
-                ))
-        #midPoint /= len(outline.data.splines.active.bezier_points)
-        midPoint = (vMax+vMin)/2
-        
-        # Join elements
-        root = parts[0]
-        root.data.splines[0].use_smooth = False
-        toRemove = []
-        for i in range(1, len(parts)):
-            part = parts[i]
-            toRemove.append(part)
-            type = part.name.split("_")[0]
-            if not (type == "pointHole" or type == "longHole"):
-                part.data.splines[0].use_smooth = False
-            newSpline = root.data.splines.new('BEZIER')
-            pointsToCopy = part.data.splines[0].bezier_points
-            
-            newSpline.bezier_points.add(len(pointsToCopy)-1)
-            newSpline.use_smooth = part.data.splines[0].use_smooth
-            newSpline.use_cyclic_u = True
-            for j in range(len(pointsToCopy)):
-                newSpline.bezier_points[j].handle_left = pointsToCopy[j].handle_left
-                newSpline.bezier_points[j].handle_left_type = pointsToCopy[j].handle_left_type
-                newSpline.bezier_points[j].co = pointsToCopy[j].co
-                newSpline.bezier_points[j].handle_right = pointsToCopy[j].handle_right
-                newSpline.bezier_points[j].handle_right_type = pointsToCopy[j].handle_right_type
-        for part in toRemove:
-            bpy.data.objects.remove(part, do_unlink = True)
-        bpy.context.view_layer.objects.active = root
-        
-        # Offset
-        for spline in outline.data.splines:
-            for point in spline.bezier_points:
-                point.co -= midPoint
-                point.handle_left -= midPoint
-                point.handle_right -= midPoint
-        
-        # Cleanup
-        sheet = bpy.context.active_object
-        sheet.data.resolution_u = 2
-        importCollection.objects.unlink(sheet)
-        collection.objects.link(sheet)
-        bpy.data.collections.remove(importCollection)
         sheetLibrary[fullPath] = sheet
         #bpy.ops.object.shade_flat()
         
@@ -601,7 +834,7 @@ def deserializeSheet(dict, basePath, collection):
     
     #bpy.ops.transform.resize(value=(0.75,0.75,0.75)) # ?
     global c_sheetScalant
-    sheet.scale = c_sheetScaleVec
+    #sheet.scale = c_sheetScaleVec
     #bpy.ops.transform.rotate(value=angle, orient_axis='Z')
     sheet.rotation_euler[2] = angle
     sheet.data.extrude = c_sheetThickness
@@ -678,6 +911,7 @@ def addRing(part, machine, collection):
 
 
 def applyOverrides(project, dict):
+    global g_machines
     if "machines" in dict:
         for entryID in range(len(dict["machines"])):
             machineEntry = project["machines"][entryID]
@@ -689,6 +923,10 @@ def applyOverrides(project, dict):
             else:
                 print("No override entry for " + str(machineEntry["srcUUID"]) + " (currently " + str(machineEntry["uuid"]) + ")")
             machineEntry["uuid"] = overrideEntry["uuid_override"]
+            if not machineEntry["uuid"] in g_machines:
+                g_machines[machineEntry["uuid"]] = [machineEntry]
+            else:
+                g_machines[machineEntry["uuid"]].append(machineEntry)
     elif "projects" in dict:
         for entryID in range(len(dict["projects"])):
             applyOverrides(project["projects"][entryID], dict["projects"][entryID])
