@@ -1,0 +1,45 @@
+import bpy
+import mathutils
+
+targetHeight = 0.16
+
+targetCollection = bpy.context.collection
+machinesWithBasement = []
+machines = [obj for obj in targetCollection.objects if ("part_uuids" in obj)]
+for machine in machines:
+    layers = machine["layers"]
+    basementStart = -1
+    for i in range(0,len(layers)):
+        layer = layers[i]
+        nameStart = layer.name.split(".")[0]
+        if nameStart == "N1" or nameStart == "N2" or nameStart == "N3":
+            basementStart = i
+            break
+    if basementStart < 0:
+        print("No basement found in " + machine.name)
+        continue
+    else:
+        machinesWithBasement.append(machine)
+    basementLayers = []
+    for i in range(basementStart + 4):
+        basementLayers.append(layers[i])
+    machine["basementLayers"] = basementLayers
+    machine["basementStart"] = basementStart
+
+averageFloorHeight = 0
+
+for machine in machinesWithBasement:
+    averageFloorHeight += machine["layers"][machine["basementStart"] + 5].location[2] / len(machinesWithBasement)
+print("Average floor height: " + str(averageFloorHeight))
+
+basementLayerHeight = targetHeight / 5
+
+for machine in machinesWithBasement:
+    print("adjusting " + machine.name)
+    basementStart = machine["basementStart"]
+    step = basementStart + 5
+    for i in range(basementStart + 5):
+        layer = machine["layers"][i]
+        layer.location = layer.location * mathutils.Vector((1,1,0)) + mathutils.Vector((0,0,averageFloorHeight - (basementLayerHeight * step)))
+        print(layer.name + " moved to height " + str(layer.location[2]))
+        step -= 1

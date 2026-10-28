@@ -1,0 +1,37 @@
+import bpy
+import mathutils
+
+
+c_sheetSpacing = 0.004
+
+def adjustHeight():
+    #targetCollection = bpy.context.collection
+    #if targetCollection is None:
+    #    print("No collection selected")
+    #    return
+
+    machines = [obj for obj in bpy.data.objects if ("part_uuids" in obj)]
+    
+    global c_sheetSpacing
+    for machine in machines:
+        layers = machine["layers"]
+        globalPinScale = 0
+        for i in range(0, len(layers)-1):
+            layers[i]["effectiveHeight"] = layers[i+1].location.z - layers[i].location.z
+            globalPinScale += layers[i]["effectiveHeight"]
+        layers[len(layers)-1]["effectiveHeight"] = layers[len(layers)-1]["height"] * c_sheetSpacing
+        globalPinScale += layers[len(layers)-1]["effectiveHeight"]
+        
+        for pin in machine["globalPins"]:
+            if "layer_min" in pin:
+                bmin = max(0, pin["layer_min"])
+                bmax = min(len(layers), pin["layer_max"])
+                totalPinHeight = 0
+                for i in range(bmin, bmax+1):
+                    totalPinHeight += layers[i]["effectiveHeight"]
+                pin.scale = mathutils.Vector((1.0, 1.0, totalPinHeight * 100))
+                #pin.location = pin.location * mathutils.Vector((1,1,0)) + mathutils.Vector((0,0,layers[bmin].location[2]))
+            else:
+                pin.scale = globalPinScale
+                
+adjustHeight()

@@ -35,6 +35,7 @@ c_impulseRodOverhang = 0.0075
 g_highestSheetIndex = 0
 g_eccentrics = []
 g_uuids = {}
+g_globalPins = []
 g_relations = {}
 g_interMachineRelations = []
 g_machines = {}
@@ -322,6 +323,8 @@ def deserializeMachine(dict, basePath, collection):
     for pin in dict["globalPins"] + dict["clockPins"]:
         pinInstance = deserializePin(pin, collection)
         pinsToResize.append([pinInstance, pin])
+    global g_globalPins
+    machineRoot["globalPins"] = g_globalPins
     for pinInfo in pinsToResize:
         if "bounds" in pinInfo[1]:
             bmin = pinInfo[1]["bounds"][0]
@@ -357,6 +360,7 @@ def deserializeMachine(dict, basePath, collection):
     g_uuids = {} # Clear global vars for next machine
     g_highestSheetIndex = 0
     g_eccentrics = []
+    g_globalPins = []
 
     #print(dict)
     return machineRoot
@@ -495,6 +499,12 @@ def deserializePin(dict, collection, eccentric = False):
 
     g_numInstancesPins += 1
     g_instancingTimePins += time.process_time() - startTime
+    
+    global g_globalPins
+    if "bounds" in dict:
+        pin["layer_min"] = dict["bounds"][0]
+        pin["layer_max"] = dict["bounds"][1]
+        g_globalPins.append(pin)
     return pin
 
 
