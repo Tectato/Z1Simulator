@@ -27,6 +27,9 @@ c_sheetSpacing = 0.004
 c_sheetScalant = 0.709 # ?
 c_sheetScaleVec = mathutils.Vector((1.0, 1.0, 1.0)) * c_sheetScalant
 
+c_eccentricThickness = 0.005
+c_impulseRodOverhang = 0.0075
+
 g_highestSheetIndex = 0
 g_eccentrics = []
 g_uuids = {}
@@ -142,10 +145,11 @@ def import_project(context, filepath):
         else:
             pinPrefabStatic.data.materials.append(staticPinMaterial)
     
+    global c_eccentricThickness
     # Eccentric end
     global eccentricEndPrefab
     if eccentricEndPrefab == None:
-        bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.0075, depth=0.005, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
+        bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.0075, depth=c_eccentricThickness, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
         eccentricEndPrefab = bpy.context.active_object
         bpy.ops.object.shade_auto_smooth()
         bpy.context.object.modifiers["Smooth by Angle"].properties.inputs.Input_1.value = 0.698132
@@ -162,7 +166,7 @@ def import_project(context, filepath):
     if eccentricArmPrefab == None:
         bpy.ops.mesh.primitive_cube_add(size=1, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
         eccentricArmPrefab = bpy.context.active_object
-        bpy.ops.transform.resize(value=(0.015,1,0.0049))
+        bpy.ops.transform.resize(value=(0.015,1,c_eccentricThickness*0.99))
         bpy.ops.transform.translate(value=(0,0.5,0.005))
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=True)
         eccentricArmPrefab.name = "eccentric_arm_prefab"
@@ -317,11 +321,14 @@ def deserializeMachine(dict, basePath, collection):
     bpy.context.view_layer.update()
     if "relations" in dict:
         for relation in dict["relations"]:
-            if relation["type"] == "arm":
+            if relation["type"] == "arm" or relation["type"] == "rod":
                 uuidA = str(relation["A"])
                 uuidB = str(relation["B"])
                 if uuidA in g_uuids and uuidB in g_uuids:
-                    addEccentricRelation(g_uuids[uuidA], g_uuids[uuidB], machineRoot, collection)
+                    if relation["type"] == "arm":
+                        addEccentricRelation(g_uuids[uuidA], g_uuids[uuidB], machineRoot, collection)
+                    else:
+                        addImpulseRodRelation(g_uuids[uuidA], g_uuids[uuidB], machineRoot, collection)
 
     g_uuids = {} # Clear global vars for next machine
     g_highestSheetIndex = 0
@@ -351,6 +358,10 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
     #sheetInstance = deserializeSheet(dict["sheets"][0], basePath)
     #sheetInstance.parent = layerRoot
     
+    if "arms" in dict:
+        localHighestSheetIndex = max(3, localHighestSheetIndex)
+        g_highestSheetIndex = max(g_highestSheetIndex, startHeight + localHighestSheetIndex)
+    
     localPinHeight = (localHighestSheetIndex+1) * c_sheetSpacing
     pins = []
     for pin in dict["pins"]:
@@ -360,13 +371,14 @@ def deserializeLayer(dict, basePath, index, startHeight, collection):
         pins.append(pinInstance)
     
     if "arms" in dict:
+        localHighestSheetIndex = min(2, localHighestSheetIndex)
         global g_eccentrics
         eccentrics = []
         for eccentric in dict["arms"]:
             eccentricInstance = deserializePin(eccentric, collection, True)
             eccentricInstance.parent = layerRoot
             eccentricInstance["layer"] = index
-            eccentrics.append(pinInstance)
+            eccentrics.append(eccentricInstance)
             g_eccentrics.append([eccentricInstance, eccentric])
         layerRoot["eccentrics"] = eccentrics
     
@@ -382,7 +394,7 @@ def deserializePin(dict, collection, eccentric = False):
     if bpy.context.active_object != None:
         bpy.context.active_object.select_set(False)
     pin = None
-    if "static" in dict:
+    if eccentric or "static" in dict:
         global pinPrefabStatic
         pin = pinPrefabStatic.copy()
         pin.data = pinPrefabStatic.data
@@ -422,11 +434,12 @@ def deserializeSheet(dict, basePath, collection):
     sheet = None
     global g_meshingTime
     global sheetLibrary
-    if file in sheetLibrary:
+    fullPath = str(basePath) + "\\" + file
+    if fullPath in sheetLibrary:
         global g_instancingTimeSheets, g_numInstancesSheets
         startTime = time.process_time()
         #print("Sheet " + file + " exists, duplicating...")
-        toDuplicate = sheetLibrary[file]
+        toDuplicate = sheetLibrary[fullPath]
         #toDuplicate.select_set(True)
         #bpy.context.view_layer.objects.active = toDuplicate
         #bpy.ops.object.duplicate(linked=True)
@@ -442,7 +455,7 @@ def deserializeSheet(dict, basePath, collection):
         g_numSheets += 1
         startTime = time.process_time()
         print("\t> Importing " + file + "...")
-        bpy.ops.import_curve.svg(filepath=(str(basePath) + "\\" + file))
+        bpy.ops.import_curve.svg(filepath=fullPath)
         importCollection = bpy.data.collections.get(Path(file).name)
         parts = importCollection.objects
         
@@ -505,7 +518,7 @@ def deserializeSheet(dict, basePath, collection):
         importCollection.objects.unlink(sheet)
         collection.objects.link(sheet)
         bpy.data.collections.remove(importCollection)
-        sheetLibrary[file] = sheet
+        sheetLibrary[fullPath] = sheet
         #bpy.ops.object.shade_flat()
         
         material = None
@@ -568,6 +581,29 @@ def addEccentricRelation(partA, partB, machine, collection):
     bpy.context.view_layer.objects.active = arm
     bpy.ops.object.constraint_add(type='LOCKED_TRACK')
     bpy.context.object.constraints["Locked Track"].target = partB
+
+def addImpulseRodRelation(partA, partB, machine, collection):
+    global eccentricArmPrefab
+    rod = eccentricArmPrefab.copy()
+    rod.data = eccentricArmPrefab.data
+    rod.parent = partA
+    collection.objects.link(rod)
+    diffVec = (partB.matrix_world.translation - partA.matrix_world.translation) * mathutils.Vector((1,1,0))
+    global c_impulseRodOverhang
+    dist = diffVec.xy.length + 2 * c_impulseRodOverhang
+    angle = -mathutils.Vector((0,1)).angle_signed(diffVec.xy)
+    #print("Pos A: (" + partA.name + ") " + str(partA.matrix_world.translation))
+    #print("Pos B: (" + partB.name + ") " + str(partB.matrix_world.translation))
+    #print("Dist: " + str(dist))
+    rod.scale = mathutils.Vector((1,dist,1.0/partA.scale.z))
+    rod.rotation_euler[2] = angle
+    global c_eccentricThickness
+    rod.location = -diffVec.normalized() * c_impulseRodOverhang + mathutils.Vector((0,0,c_eccentricThickness/partA.scale.z))
+    #bpy.context.view_layer.objects.active = rod
+    #bpy.ops.object.constraint_add(type='LOCKED_TRACK')
+    #bpy.context.object.constraints["Locked Track"].target = partB
+    
+
 
 
 def addRing(part, machine, collection):
