@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://l6fb0y0o2qx4" path="res://Scripts/Simulation/Program/instruction.gd" id="2_n8cvq"]
 [ext_resource type="PackedScene" uid="uid://m8aac6l8xsbs" path="res://Scenes/Parts/Peripherals/Button3D.tscn" id="5_4c02h"]
 [ext_resource type="PackedScene" uid="uid://croe28elkiam2" path="res://Models/readerImported.tscn" id="6_pcqj8"]
+[ext_resource type="Script" uid="uid://cpobe3vm8jd4h" path="res://Scripts/Parts/Peripherals/Visuals/stepTracker.gd" id="7_bycd1"]
+[ext_resource type="Script" uid="uid://c0fhe4qsj4wqi" path="res://Scripts/Parts/Peripherals/Visuals/callableMover.gd" id="7_eks20"]
 
 [sub_resource type="Resource" id="Resource_4c02h"]
 script = ExtResource("2_n8cvq")
@@ -36,44 +38,44 @@ size = Vector3(0.9, 0.01, 1.2)
 script = ExtResource("1_h45j8")
 program = SubResource("Resource_n8cvq")
 inputs = [NodePath("Inputs/Set"), NodePath("Inputs/Advance")]
-outputs = [NodePath("Opcode/Pin"), NodePath("Opcode/Pin2"), NodePath("Opcode/Pin3"), NodePath("Opcode/Pin4"), NodePath("Opcode/Pin5"), NodePath("Opcode/Pin6"), NodePath("Opcode/Pin7"), NodePath("Opcode/Pin8")]
+outputs = [NodePath("Opcode/Bit0"), NodePath("Opcode/Bit1"), NodePath("Opcode/Bit2"), NodePath("Opcode/Bit3"), NodePath("Opcode/Bit4"), NodePath("Opcode/Bit5"), NodePath("Opcode/Bit6"), NodePath("Opcode/Bit7")]
 collider = NodePath("Area3D")
 
 [node name="Opcode" type="Node3D" parent="." unique_id=1693911732]
 
-[node name="Pin" parent="Opcode" unique_id=805540248 instance=ExtResource("1_prl8f")]
+[node name="Bit0" parent="Opcode" unique_id=805540248 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 
-[node name="Pin2" parent="Opcode" unique_id=618755978 instance=ExtResource("1_prl8f")]
+[node name="Bit1" parent="Opcode" unique_id=618755978 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
 
-[node name="Pin3" parent="Opcode" unique_id=1259592631 instance=ExtResource("1_prl8f")]
+[node name="Bit2" parent="Opcode" unique_id=1259592631 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.6)
 
-[node name="Pin4" parent="Opcode" unique_id=172343809 instance=ExtResource("1_prl8f")]
+[node name="Bit3" parent="Opcode" unique_id=172343809 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.3)
 
-[node name="Pin5" parent="Opcode" unique_id=727440288 instance=ExtResource("1_prl8f")]
+[node name="Bit4" parent="Opcode" unique_id=727440288 instance=ExtResource("1_prl8f")]
 
-[node name="Pin6" parent="Opcode" unique_id=592803751 instance=ExtResource("1_prl8f")]
+[node name="Bit5" parent="Opcode" unique_id=592803751 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3)
 
-[node name="Pin7" parent="Opcode" unique_id=1322479302 instance=ExtResource("1_prl8f")]
+[node name="Bit6" parent="Opcode" unique_id=1322479302 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
 
-[node name="Pin8" parent="Opcode" unique_id=1587057911 instance=ExtResource("1_prl8f")]
+[node name="Bit7" parent="Opcode" unique_id=1587057911 instance=ExtResource("1_prl8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.9)
 
 [node name="Inputs" type="Node3D" parent="." unique_id=2046813085]
 
 [node name="Set" parent="Inputs" unique_id=1406902947 instance=ExtResource("1_prl8f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.525, 0, -0.8)
 
 [node name="Advance" parent="Inputs" unique_id=1980238348 instance=ExtResource("1_prl8f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0.65)
 
 [node name="Reset" parent="." unique_id=490697296 instance=ExtResource("5_4c02h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20858559, 0.9840356, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2867774, 1.3304794, 0.25910062)
 
 [node name="Label3D" parent="Reset" index="1" unique_id=1904010434]
 text = "Reset"
@@ -93,9 +95,107 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 0)
 visible = false
 mesh = SubResource("BoxMesh_pcqj8")
 
+[node name="Vis" type="Node3D" parent="." unique_id=1593949461]
+
+[node name="AdvanceTracker" type="Node3D" parent="Vis" unique_id=764802602 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56181955, 0, 0.37390214)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Inputs/Advance")
+transferTo = NodePath("../../reader2/Reader/159_6")
+transferAxis = Vector3(0, 0, -1)
+
+[node name="AdvanceTracker2" type="Node3D" parent="Vis" unique_id=679701576 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56181955, 0, 0.37390214)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Inputs/Advance")
+transferTo = NodePath("../../reader2/Reader/159_6/159_7")
+transferAxis = Vector3(0, 0, 1)
+
+[node name="ReadTracker" type="Node3D" parent="Vis" unique_id=1924374195 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4980558, 0, -1.1636245)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Inputs/Set")
+transferTo = NodePath("../../reader2/Reader/Skeleton3D/RetractA")
+transferAxis = Vector3(0, 0, -1)
+
+[node name="ReadTracker2" type="Node3D" parent="Vis" unique_id=2093657074 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4980558, 0, -1.1636245)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Inputs/Set")
+transferTo = NodePath("../../reader2/Reader/Skeleton3D/RetractB")
+transferAxis = Vector3(0, 0, 1)
+
+[node name="BitTracker0" type="Node3D" parent="Vis" unique_id=2119423720 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0.03)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit0")
+transferTo = NodePath("../../reader2/Reader/ReadingLever")
+transferAxis = Vector3(0, 0, -0.5)
+
+[node name="BitTracker1" type="Node3D" parent="Vis" unique_id=11392228 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -0.04)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit1")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_001")
+transferAxis = Vector3(0, 0, -0.5)
+
+[node name="BitTracker2" type="Node3D" parent="Vis" unique_id=8713366 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -0.11)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit2")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_002")
+transferAxis = Vector3(0, 0, -0.5)
+
+[node name="BitTracker3" type="Node3D" parent="Vis" unique_id=1934722558 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -0.18)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit3")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_003")
+transferAxis = Vector3(0, 0, -0.5)
+
+[node name="BitTracker4" type="Node3D" parent="Vis" unique_id=1600631213 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34096736, 0, 0.03)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit4")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_004")
+transferAxis = Vector3(0, 0, 0.5)
+transferOffset = Vector3(0, 3.142, 0)
+
+[node name="BitTracker5" type="Node3D" parent="Vis" unique_id=323859059 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.341, 0, -0.04)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit5")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_005")
+transferAxis = Vector3(0, 0, 0.5)
+transferOffset = Vector3(0, 3.142, 0)
+
+[node name="BitTracker6" type="Node3D" parent="Vis" unique_id=1054119823 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.341, 0, -0.11)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit6")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_006")
+transferAxis = Vector3(0, 0, 0.5)
+transferOffset = Vector3(0, 3.142, 0)
+
+[node name="BitTracker7" type="Node3D" parent="Vis" unique_id=1379141313 node_paths=PackedStringArray("targetPin", "transferTo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.341, 0, -0.18)
+script = ExtResource("7_bycd1")
+targetPin = NodePath("../../Opcode/Bit7")
+transferTo = NodePath("../../reader2/Reader/ReadingLever_007")
+transferAxis = Vector3(0, 0, 0.5)
+transferOffset = Vector3(0, 3.142, 0)
+
 [node name="reader2" parent="." unique_id=1629438163 instance=ExtResource("6_pcqj8")]
-transform = Transform3D(-10, 0, -8.742278e-07, 0, 10, 0, 8.742278e-07, 0, -10, 7.6948233, -2.4919453, 0.5705126)
+transform = Transform3D(-10, 0, -8.742278e-07, 0, 10, 0, 8.742278e-07, 0, -10, 0, 0, 0)
+
+[node name="159_11" parent="reader2/Reader" parent_id_path=PackedInt32Array(1629438163, 719704163) index="2" unique_id=147028169 node_paths=PackedStringArray("trigger")]
+script = ExtResource("7_eks20")
+moveScale = 0.1
+moveDiff = Vector3(-0.08, 0, 0)
+startOffset = Vector3(0.004, 0, 0)
+trigger = NodePath("../../../Inputs/Advance")
 
 [connection signal="clicked" from="Reset" to="." method="_on_reset_clicked"]
 
 [editable path="Reset"]
+[editable path="reader2"]

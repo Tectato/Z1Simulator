@@ -50,11 +50,11 @@ func updatePos():
 	var differentTypes = A.getValidMoveDirections()[1] != B.getValidMoveDirections()[1]
 	var height = 0
 	if differentTypes:
-		height = A.global_position.y if A.getValidMoveDirections()[1] else B.global_position.y
+		height = A.getOrigin().y if A.getValidMoveDirections()[1] else B.getOrigin().y
 	else:
-		height = (A.global_position.y + B.global_position.y) / 2
-	var pointA = (A.global_position * Vector3(1,0,1) + Vector3.UP * height) if differentTypes else A.global_position
-	var pointB = (B.global_position * Vector3(1,0,1) + Vector3.UP * height) if differentTypes else B.global_position
+		height = (A.getOrigin().y + B.getOrigin().y) / 2
+	var pointA = (A.getOrigin() * Vector3(1,0,1) + Vector3.UP * height) if differentTypes else A.getOrigin()
+	var pointB = (B.getOrigin() * Vector3(1,0,1) + Vector3.UP * height) if differentTypes else B.getOrigin()
 	$LinePivot.global_position = pointA
 	if Space.toVec2(pointA).distance_squared_to(Space.toVec2(pointB)) > 0.001:
 		$LinePivot.look_at(pointB)

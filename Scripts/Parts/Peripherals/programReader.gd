@@ -3,6 +3,7 @@ extends Peripheral
 @export var program : Program
 var programEntry : ProgramEntry
 var index = -1
+var bitPinMoveDist = 0.06
 
 func _ready() -> void:
 	super._ready()
@@ -31,9 +32,14 @@ func setInstruction():
 	var code = program.getCode(index)
 	for i in range(outputs.size()):
 		if bool(code & 0b1) != outputs[i].outputState:
-			outputs[i].nudge()
+			outputs[i].nudge(bitPinMoveDist)
 		code >>= 1
 	Global.editor.programmer.highlightInstruction(index)
+
+func resetBits():
+	for i in range(outputs.size()):
+		if outputs[i].outputState:
+			outputs[i].nudge(bitPinMoveDist)
 
 func advance():
 	index += 1
@@ -41,11 +47,14 @@ func advance():
 func pinInput(pin : Pin):
 	var index = inputs.find(pin)
 	if index < 0: return
-	if !pin.outputState: return
 	match(index):
 		0:
-			setInstruction()
+			if pin.outputState:
+				setInstruction()
+			else:
+				resetBits()
 		1:
+			if !pin.outputState: return
 			advance()
 
 func _on_reset_clicked() -> void:

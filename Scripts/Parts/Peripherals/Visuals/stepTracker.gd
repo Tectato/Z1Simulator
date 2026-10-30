@@ -2,6 +2,9 @@ extends Node3D
 
 @export var targetPin : Pin
 @export var forwardAxis = Vector3.BACK
+@export var transferTo : Node3D
+@export var transferAxis = Vector3(1,0,0)
+@export var transferOffset = Vector3.ZERO
 
 var currentAngle = 0.0
 var targetAngle = 0.0
@@ -16,6 +19,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if turning:
 		rotation.y = lerp_angle(currentAngle, targetAngle, Simulator.stepProgress)
+		if transferTo:
+			transferTo.rotation = transferAxis * rotation.y + transferOffset
 		if Simulator.stepProgress >= 1.0: turning = false
 
 func updateCurrentRot():
@@ -25,6 +30,8 @@ func updateCurrentRot():
 	var facingPos = forwardAxis
 	var angleDiff = Vector2(0,-1).angle_to(Space.toVec2(facingPos))
 	rotation.y += angleDiff
+	if transferTo:
+		transferTo.rotation = transferAxis * rotation.y + transferOffset
 
 func pinMoved(pin):
 	var currentPinPos = to_local(pin.global_position)

@@ -109,6 +109,7 @@ func compile(machines : Array, projects : Array):
 				"uuid":entry.uuid
 			})
 	for project in projects:
+		if !project: continue
 		out.append({
 			"path":PathHandler.toRelativePath(project.path),
 			"pos_x" : ("%0.4f" % project.totalOffset.x).rstrip("0"),

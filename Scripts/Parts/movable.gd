@@ -108,6 +108,7 @@ func canMove(dir : Vector2, initiator, chain = []):
 func move(dir : Vector2, initiator, chain = []):
 	var dirID = dirToInt(dir)
 	if selected:
+		#print("Move dist: " + str(dir))
 		pass
 	if !setToMove[dirID] == Simulator.totalStep:
 		return MoveState.AlreadyMoving
@@ -293,6 +294,9 @@ func hasRelation(A, B):
 
 func getBounds():
 	return [Vector3(-0.2,-0.05,-0.2),Vector3(0.2,0.05,0.2)]
+
+func getOrigin():
+	return global_position
 
 func snap(srcPos):
 	global_position = srcPos

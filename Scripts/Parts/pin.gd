@@ -174,6 +174,12 @@ func _ready() -> void:
 func getBounds():
 	return [Vector3(-0.025, 0, -0.025), Vector3(0.025, $MeshInstance3D.scale.y * 0.08, 0.025)]
 
+func getOrigin():
+	if isPartialGlobal():
+		return global_position * Vector3(1,0,1) + Vector3.UP * getMachine().layers[startLayer].global_position.y
+	else:
+		return super.getOrigin()
+
 func setSelected(value):
 	super.setSelected(value)
 	#$Highlight.visible = value
@@ -604,7 +610,7 @@ func getMachine():
 func getValidMoveDirections():
 	return [true,false,true]
 
-func nudge():
+func nudge(distance = Workspace.pinTravel):
 	if output and directionality > 0:
 		if inMotion:
 			var cooldown = Simulator.getCooldown()
@@ -614,11 +620,11 @@ func nudge():
 		var dirN
 		var flipOrder = -1 if outputState else 1
 		if directionality == 1:
-			dirP = Vector2(1,0)*Workspace.pinTravel * flipOrder
-			dirN = Vector2(-1,0)*Workspace.pinTravel * flipOrder
+			dirP = Vector2(1,0)*distance * flipOrder
+			dirN = Vector2(-1,0)*distance * flipOrder
 		else:
-			dirP = Vector2(0,1)*Workspace.pinTravel * flipOrder
-			dirN = Vector2(0,-1)*Workspace.pinTravel * flipOrder
+			dirP = Vector2(0,1)*distance * flipOrder
+			dirN = Vector2(0,-1)*distance * flipOrder
 		if canMove(dirP, self, []):
 			move(dirP, self, [])
 			Simulator.nudge()

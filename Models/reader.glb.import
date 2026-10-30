@@ -44,8 +44,13 @@ _subresources={
 "use_external/fallback_path": "res://Assets/OverrideMaterials/Brass.tres",
 "use_external/path": "uid://yxjljdu38vd2"
 },
+"Dark": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://Assets/OverrideMaterials/MetalDark.tres",
+"use_external/path": "uid://6ljpmqxy3scm"
+},
 "MetalSmooth": {
-"use_external/enabled": false,
+"use_external/enabled": true,
 "use_external/fallback_path": "res://Assets/SheetShadedCompat.tres",
 "use_external/path": "uid://01c4w4t3fels"
 },
