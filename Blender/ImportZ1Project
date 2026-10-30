@@ -731,6 +731,8 @@ def compile_svg(filepath, object_name, collection):
             add_spline(curve, segs)
 
         elif tag == "rect":
+            if element.get("id").startswith("zone"):
+                return
             x = float(element.get("x", 0))
             y = float(element.get("y", 0))
             w = float(element.get("width", 0))
@@ -860,33 +862,50 @@ def deserializeSheet(dict, basePath, collection):
     return sheet
 
 def addEccentricRelation(partA, partB, machine, collection):
-    addRing(partA, machine, collection)
-    addRing(partB, machine, collection)
+    eccRingA = addRing(partA, machine, collection)
+    eccRingB = addRing(partB, machine, collection)
+    
+    #eccLayer = machine["layers"][partB["layer"]]
+    #eccHeight = eccLayer.matrix_world.translation.z
     global eccentricArmPrefab
     arm = eccentricArmPrefab.copy()
     arm.data = eccentricArmPrefab.data
-    arm.parent = partA
+    arm.parent = eccRingA if eccRingA else partA
     collection.objects.link(arm)
-    partA["eccArm"] = arm
+    #partA["eccArm"] = arm
     dist = (partA.matrix_world.translation.xy - partB.matrix_world.translation.xy).length
     #print("Pos A: (" + partA.name + ") " + str(partA.matrix_world.translation))
     #print("Pos B: (" + partB.name + ") " + str(partB.matrix_world.translation))
     #print("Dist: " + str(dist))
-    arm.scale = mathutils.Vector((1,dist,1.0/partA.scale.z))
+    arm.scale = mathutils.Vector((1,dist,1 if eccRingA else 1.0/partA.scale.z))
+    eccRingB.parent = arm
+    eccRingB.location = mathutils.Vector((0,1,0))
+    eccRingB.scale[1] = 1.0/dist
     #bpy.context.view_layer.objects.active = arm
     #bpy.ops.object.constraint_add(type='LOCKED_TRACK')
     #bpy.context.object.constraints["Locked Track"].target = partB
-    constraint = arm.constraints.new(type='LOCKED_TRACK')
+    constraint = (eccRingA if eccRingA else arm).constraints.new(type='LOCKED_TRACK')
     constraint.name = "Locked Track"
     constraint.target = partB
     constraint.track_axis = 'TRACK_Y'
     constraint.lock_axis = 'LOCK_Z'
+    
+    #for part in [eccRingA, eccRingB, arm]:
+    #    if part:
+    #        heightDiff = eccHeight - part.matrix_world.translation.z
+    #        part.location[2] += heightDiff / part.parent.scale[2]
+    #        part["eccHeight"] = eccHeight
+    #        part["heightDiff"] = heightDiff / part.parent.scale[2]
 
 def addImpulseRodRelation(partA, partB, machine, collection):
     global eccentricArmPrefab
     rod = eccentricArmPrefab.copy()
     rod.data = eccentricArmPrefab.data
     rod.parent = partA
+    if "rods" in partA:
+        partA["rods"].append(rod)
+    else:
+        partA["rods"] = [rod]
     collection.objects.link(rod)
     diffVec = (partB.matrix_world.translation - partA.matrix_world.translation) * mathutils.Vector((1,1,0))
     global c_impulseRodOverhang
@@ -907,17 +926,20 @@ def addImpulseRodRelation(partA, partB, machine, collection):
 
 
 def addRing(part, machine, collection):
-    if "eccEnd" in part: return
+    if "eccEnd" in part: return None
+    isEccentric = "eccentric" in part
     global eccentricEndPrefab
     ecc = eccentricEndPrefab.copy()
     ecc.data = eccentricEndPrefab.data
-    ecc.parent = part
     collection.objects.link(ecc)
-    ecc.scale = mathutils.Vector((1,1,1.0/part.scale.z))
-    if "eccentric" in part:
-        layer = machine["layers"][part["layer"]]
-        ecc.location = mathutils.Vector((0,0,1)) * (layer.matrix_world.translation.z - part.matrix_world.translation.z)/part.scale.z
-    part["eccEnd"] = ecc
+    if not isEccentric:
+        ecc.parent = part
+        ecc.scale = mathutils.Vector((1,1,1.0/part.scale.z))
+        part["eccEnd"] = ecc
+    #if isEccentric:
+        #layer = machine["layers"][part["layer"]]
+        #ecc.location = mathutils.Vector((0,0,1)) * (layer.matrix_world.translation.z - part.matrix_world.translation.z)/part.scale.z
+    return ecc
 
 
 def applyOverrides(project, dict):

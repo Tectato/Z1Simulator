@@ -5,10 +5,10 @@ import mathutils
 c_sheetSpacing = 0.004
 
 def adjustHeight():
-    #targetCollection = bpy.context.collection
-    #if targetCollection is None:
-    #    print("No collection selected")
-    #    return
+    targetCollection = bpy.context.collection
+    if targetCollection is None:
+        print("No collection selected")
+        return
 
     machines = [obj for obj in bpy.data.objects if ("part_uuids" in obj)]
     
@@ -23,9 +23,10 @@ def adjustHeight():
         globalPinScale += layers[len(layers)-1]["effectiveHeight"]
         
         for pin in machine["globalPins"]:
+            heightBefore = pin.scale[2]
             if "layer_min" in pin:
                 bmin = max(0, pin["layer_min"])
-                bmax = min(len(layers), pin["layer_max"])
+                bmax = min(len(layers)-1, pin["layer_max"])
                 totalPinHeight = 0
                 for i in range(bmin, bmax+1):
                     totalPinHeight += layers[i]["effectiveHeight"]
@@ -33,5 +34,18 @@ def adjustHeight():
                 #pin.location = pin.location * mathutils.Vector((1,1,0)) + mathutils.Vector((0,0,layers[bmin].location[2]))
             else:
                 pin.scale = globalPinScale
+            
+            scalant = pin.scale[2]/heightBefore
+            inverseHeight = 1.0/pin.scale[2]
+            setToScale = []
+            if "rods" in pin:
+                setToScale = pin["rods"]
+            if "eccArm" in pin:
+                setToScale.append(pin["eccArm"])
+            if "eccEnd" in pin:
+                setToScale.append(pin["eccEnd"])
+            for part in setToScale:
+                part.scale[2] = inverseHeight
+                part.location[2] = part.location[2]/scalant
                 
 adjustHeight()
