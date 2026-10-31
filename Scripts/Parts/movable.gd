@@ -25,6 +25,7 @@ var movedBy = {}
 var toMove = {}
 var moved = []
 var beingDeleted = false
+var hideInExport = false
 
 # Don't impact simulation, just for visualization later
 var stateX = false

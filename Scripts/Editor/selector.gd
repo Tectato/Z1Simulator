@@ -250,6 +250,11 @@ func _process(_delta: float) -> void:
 						part.modifyExtent(!ctrl, 1)
 					elif Input.is_action_just_pressed("nudge_down"):
 						part.modifyExtent(!ctrl, -1)
+				if part is Movable:
+					if Input.is_action_just_pressed("hide"):
+						part.hideInExport = true
+					elif Input.is_action_just_pressed("unhide"):
+						part.hideInExport = false
 		if !focusElsewhere and Input.is_action_just_pressed("delete") and canModify():
 			transformGizmo.hide()
 			while !selected.is_empty():

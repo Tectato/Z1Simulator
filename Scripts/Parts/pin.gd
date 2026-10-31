@@ -54,6 +54,8 @@ func serialize():
 	}
 	if id.length() > 0:
 		output["id"] = id
+	if hideInExport:
+		output["hide"] = true
 	if self.output:
 		output["output"] = [outputState, directionality]
 	elif fixed:
@@ -80,6 +82,8 @@ func deserialize(source : Dictionary):
 	position = Vector3(float(source["pos_x"]), 0, float(source["pos_z"]))
 	if source.has("id"):
 		id = source["id"]
+	if source.has("hide"):
+		hideInExport = true
 	if source.has("output"):
 		setOutput(true)
 		var value = source["output"]

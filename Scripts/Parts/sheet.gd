@@ -78,6 +78,8 @@ func serialize():
 	}
 	if id.length() > 0 and id != relativePath.get_file().trim_suffix(".svg"):
 		output["id"] = id
+	if hideInExport:
+		output["hide"] = true
 	output["uuid"] = uuid
 	if fixed:
 		output["static"] = true
@@ -123,6 +125,8 @@ func deserialize(source : Dictionary):
 		id = source["id"]
 	else:
 		id = source["file"].trim_suffix(".svg")
+	if source.has("hide"):
+		hideInExport = true
 	if source.has("uuid"):
 		uuid = int(source["uuid"])
 		getMachine().uuidManager.registerID(self, uuid)

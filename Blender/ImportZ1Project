@@ -507,6 +507,9 @@ def deserializePin(dict, collection, eccentric = False):
         pin["layer_min"] = dict["bounds"][0]
         pin["layer_max"] = dict["bounds"][1]
         g_globalPins.append(pin)
+    if "hide" in dict:
+        pin.hide_render = True
+        pin.hide_viewport = True
     return pin
 
 
@@ -856,6 +859,9 @@ def deserializeSheet(dict, basePath, collection):
         sheet.name = dict["id"]
     else:
         sheet.name = dict["file"] + "_" + str(dict["uuid"])
+    if "hide" in dict:
+        sheet.hide_render = True
+        sheet.hide_viewport = True
     
     sheet["uuid"] = int(dict["uuid"])
     global g_uuids
@@ -867,8 +873,8 @@ def addEccentricRelation(partA, partB, machine, collection):
     eccRingA = addRing(partA, machine, collection)
     eccRingB = addRing(partB, machine, collection)
     
-    #eccLayer = machine["layers"][partB["layer"]]
-    #eccHeight = eccLayer.matrix_world.translation.z
+    eccLayer = machine["layers"][partB["layer"]]
+    eccHeight = eccLayer.matrix_world.translation.z
     global eccentricArmPrefab
     arm = eccentricArmPrefab.copy()
     arm.data = eccentricArmPrefab.data
@@ -891,6 +897,13 @@ def addEccentricRelation(partA, partB, machine, collection):
     constraint.target = partB
     constraint.track_axis = 'TRACK_Y'
     constraint.lock_axis = 'LOCK_Z'
+    
+    if eccRingA and abs(partA.matrix_world.translation.z - eccHeight) > 0.01:
+        ringConstraint = eccRingA.constraints.new(type='COPY_LOCATION')
+        ringConstraint.name = "Copy Height"
+        ringConstraint.target = partB
+        ringConstraint.use_x = False
+        ringConstraint.use_y = False
     
     #for part in [eccRingA, eccRingB, arm]:
     #    if part:
@@ -967,6 +980,7 @@ def applyOverrides(project, dict):
 
 def applyDiff(project, dict):
     global g_machines
+    if not "machines" in dict: return
     for machineID in dict["machines"].keys():
         machine = None
         for candidate in project["machines"]:
