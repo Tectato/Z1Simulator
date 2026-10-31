@@ -277,6 +277,8 @@ def read_data(parent, filepath):
                 #        machineEntry = project["machines"][entryID]
                 #        overrideEntry = machine["overrides"]["machines"][str(machineEntry["uuid"])]
                 #        machineEntry["uuid"] = overrideEntry["uuid_override"]
+            if "diff" in machine:
+                applyDiff(project, machine["diff"])
             if "pos_x" in machine:
                 offset = mathutils.Vector((float(machine["pos_x"])*c_scaleFactor, -float(machine["pos_z"])*c_scaleFactor, float(machine["pos_y"])*c_sheetSpacing))
                 print("Offset: " + str(offset))
@@ -962,6 +964,30 @@ def applyOverrides(project, dict):
     elif "projects" in dict:
         for entryID in range(len(dict["projects"])):
             applyOverrides(project["projects"][entryID], dict["projects"][entryID])
+
+def applyDiff(project, dict):
+    global g_machines
+    for machineID in dict["machines"].keys():
+        machine = None
+        for candidate in project["machines"]:
+            if candidate["uuid"] == int(machineID):
+                machine = candidate
+                break
+        diffList = dict["machines"][machineID]
+        for uuid in diffList:
+            diff = diffList[uuid]
+            part = machine["part_uuids"][uuid]
+            if "pos_x" in diff:
+                part.location[0] =  float(diff["pos_x"])*c_scaleFactor
+                part.location[1] = -float(diff["pos_z"])*c_scaleFactor
+            if "rotation" in diff:
+                angleRaw = diff["rotation"]
+                angle = 0.0
+                if angleRaw.endswith("q"):
+                    angle = float(angleRaw.rstrip("q")) * math.pi/2.0
+                else:
+                    angle = float(angleRaw)/360 * 2.0*math.pi
+                part.rotation_euler[2] = angle
 
 
 # ImportHelper is a helper class, defines filename and
